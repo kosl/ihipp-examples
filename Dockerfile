@@ -1,5 +1,4 @@
-FROM jupyter/base-notebook:d990a62010ae
-#FROM jupyter/base-notebook:612aa5710bf9 
+FROM jupyter/minimal-notebook:d990a62010ae
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
 # See https://hub.docker.com/r/jupyter/minimal-notebook/tags 
@@ -42,10 +41,11 @@ RUN conda install -c conda-forge xeus-cling=0.12.1 openmpi openmp openssh
 #RUN pip install nbgitpuller jupyter-resource-usage
 
 # Prepare kernels for OpenMP and MPI
-RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
+RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' \
+   -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
 ENV LIBRARY_PATH /opt/conda/lib
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
-ENV PATH=/usr/bin:$PATH
+#ENV PATH=/usr/bin:$PATH
 
 USER root
 # Disable Save icon on the toolbar 
