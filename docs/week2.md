@@ -184,6 +184,7 @@ They are enclosed dynamically within the parallel region. Examples:
 • single
 
 1. Section constuct
+
 So we have sections. We have a foreclosed and tasks and single so maybe you will know the for Clause so which is basically the for Loop that is executed in parallel.So here we will take a look at the sections construct. So on the left side, you can let's see the code we can specify the sections concert by specifying directive sections and you can see on the screen and when you use sections construct multiple blocks of code are executed in parallel. Yes, so if I specify section and good. Let's say at asking to it. Then this specific task will execute in one thread. And then if I go on to another section this section will execute in in a different in a different direction and so on so you can add this sections. So you can see here, for example, so we move we specify section inside this section heaven and be variable and then when the code is executed a new trade is generated with those with variables and the same goes for C and D variables which are specified in a different section and plus mean a different threat.
 ~~~c
 #pragma omp parallel {
@@ -193,6 +194,7 @@ So we have sections. We have a foreclosed and tasks and single so maybe you will
 ~~~
 
 2. For construct
+
 And the next one is the for construct. So for constant basically means let's say a for Loop that is paralyzed app. So you can see how we can specify this for constructs. So again, we start with pragma OMP and then. We use the for keyword and we can use different closes again. So private shared and so on. And the corresponding for Loop has a canonical shape. So this is we can see that this is basically a c Syntax for the for the for Loop and the iterator is not modified inside the loop body. So because each let's say iterator is by default a private variable and is shared by only one threat escrow that this is not. Excess by every threatened because otherwise our for Loop would get corrupted.
 So the closes again private and then we have a few other. So for example, the schedule close classifies car detailing how the iterations of Loops are divided among different tracks one. For example, the collapse close can move the iterations into just one larger iteration space. So we take a look at this later.
 So here for example, you can see an example of the for construct used in the code. Yes. So let's say we start with pregnant went a parallel then we added a private variable named F. And then we do pragma OMP and for construct. Yeah, so we write a for Loop and let's say this for Loop will go from 0 to 10.So that would be 10 different iterations. And private variable f is then fixed in every threat and the a list is updated in parallel because because the index need of each
@@ -210,6 +212,7 @@ a[i] = b[i]*f;
 ~~~
 
 3. Synchronization
+
 Then the next thing is the synchronization. So synchronization can be said by either increasing barrier or an ecstasy barrier. So implicit value we have been using it in both examples. So implicit barrier basically represents a barrier for the beginning and end of a parallel construct. Yes. So this is achieved with let's say in C++ with with parentheses. Yes. There is an example here. So let's let's say this first segment statement drag my only comparable. This would be the implicit barrier you specify the entry into parallel region and the last parentheses is basically the implicit barrier that specifies the end of the parallel crop construct and then we move to the
 To the serial execution of the code as well. And so in case you increase interested, you can try to use the Google the no wait clothes for the overall openmp and we check some examples of how we can remove the indices synchronization with this Clause there. But of course we have the other one, which is excess in value. So explicit value is basically means that you can
 Use a class and we disclose your basically specified it here is the barrier. So this is the so called critical cross so cold it is enclosed in critical classes executed by everything. That's all but is restricted to only one-third at a time. So you specify with pragma OMP critical then the name so we will maybe take a look at it here.
@@ -234,8 +237,6 @@ f=10;
 } /* end for */
 } /*omp end parallel */
 ~~~
-
-
 
 
 
