@@ -1,8 +1,7 @@
-FROM jupyter/minimal-notebook:612aa5710bf9
+FROM jupyter/base-notebook:bf9660a054aa
+#FROM jupyter/minimal-notebook:612aa5710bf9 
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
-#FROM jupyter/scipy-notebook:latest
-#FROM jupyter/minimal-notebook:612aa5710bf9
-#FROM jupyter/base-notebook
+# https://jupyter-docker-stacks.readthedocs.io/en/latest/
    
 # create user with a home directory
 ARG NB_USER
@@ -16,7 +15,7 @@ USER root
 # Make sure the contents of our repo are in ${HOME}
 RUN ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 /lib64
 RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /usr/lib64
-COPY . ${HOME}
+COPY *.ipnyb OpenMP/ ${HOME}
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
