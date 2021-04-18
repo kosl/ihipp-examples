@@ -23,6 +23,25 @@ So part of the parallel construct is the basic or the fundamental contruct using
 
 
 ## V: Clauses and directive format
+### Directive format
+So now we will take a look at Clauses and directives inside openmp. So so far we have just specified a parrallel region and that was it. Then the code came executed in serial and master fed. 
+(IMAGE: 
+Directive format • Format:
+#pragma omp directive_name [clause[clause]...]
+• Conditionals: #ifdef _OPENMP
+block of code to be executed if code was compiled with OpenMP, for example
+      printf(“Number of threads: %d“, omp_get_num_threads);
+   #else
+block of code to be executed if code was compiled without OpenMP
+#endif
+)
+You get no such file or directory for dot. F opening T So f openmp is a flag is so if I put a command you mean when you compile the file, I assume this this is the problem and that you get so yes, so I will put the comment in the chat. So how do you compile it? So you put GC c - F open pee 
+
+
+And then you specify the flex of - F open in D. So this - F open until basically tells the compiler that we are compiling the problem with openmp if you don't specify this.
+
+You have you will not be able to run a comparable. So this - F openmp is basically a flag for the GCC compiler and for other compilers you have let's say different flags do for Intel compiler is just open empty without DF and so on. I have those Flex specified in the lighting in the fourth slide if you go back so
+
 
 ## E: Calculate pi!
 ### Goal
@@ -96,7 +115,7 @@ int main(int argc, char** argv)
 }
 
 ~~~
-### Expected outpu
+### Expected output
 • If compiled with OpenMP, the program should output and ID of each thread and number of all threads
 • If not compiled with OpenMP, the program should output “The program was not compiled with OpenMP“
 
