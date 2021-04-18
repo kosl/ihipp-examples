@@ -1,0 +1,9 @@
+name: cling-environment
+channels:
+  - conda-forge
+dependencies:
+  - notebook
+  - xeus-cling=0.12.1
+  - openmpi
+  - openmp
+  - openssh
