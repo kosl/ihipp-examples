@@ -1,3 +1,4 @@
+FROM jupyter/base-notebook:d990a62010ae
 FROM jupyter/base-notebook:612aa5710bf9 
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
@@ -43,6 +44,7 @@ RUN conda install xeus-cling=0.12.1 -c conda-forge
 RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
 ENV LIBRARY_PATH /opt/conda/lib
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
+ENV PATH=$PATH:/opt/conda/compiler_compat
 
 
 # Disable Save icon on the toolbar 
