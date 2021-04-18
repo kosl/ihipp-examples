@@ -14,4 +14,6 @@ Parallel programming in C language consist of OpenMP and MPI examples such as:
 Please visit [PRACE at FutureLearn course](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming)
 ## Requirements for running tutorials outside FutureLearn
 
-Just use public cloud by clicking [IHIPP Examples](https://mybinder.org/v2/gh/kosl/ihipp-examples/cc0603de8732a995cb67528a7915e3cd1f3b1980)
+Just use public cloud by clicking [IHIPP Examples](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD)
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD)
