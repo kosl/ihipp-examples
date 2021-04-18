@@ -1,5 +1,5 @@
 FROM jupyter/minimal-notebook:d990a62010ae
-FROM jupyter/base-notebook:612aa5710bf9 
+#FROM jupyter/base-notebook:612aa5710bf9 
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
 # See https://hub.docker.com/r/jupyter/minimal-notebook/tags 
@@ -47,12 +47,12 @@ ENV LIBRARY_PATH /opt/conda/lib
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
 #ENV PATH=$PATH:/opt/conda/compiler_compat
 
-
+USER root
 # Disable Save icon on the toolbar 
-RUN sed -i -e '/var grps =/{n;N;N;N;d}' /opt/conda/lib/python3.8/site-packages/notebook/static/notebook/js/maintoolbar.js
-RUN sed -i -e '/var grps =/{n;N;N;N;d}' /opt/conda/lib/python3.8/site-packages/notebook/static/notebook/js/main.min.js
+RUN sed -i -e '/var grps =/{n;N;N;N;d}' /opt/conda/lib/python*/site-packages/notebook/static/notebook/js/maintoolbar.js
+RUN sed -i -e '/var grps =/{n;N;N;N;d}' /opt/conda/lib/python*/site-packages/notebook/static/notebook/js/main.min.js
 # Disable detection of dirty notebook so that beforeunload will not be called
 RUN sed -i -e "/events.trigger(.set_dirty.Notebook./d" -e '/env.notebook.set_dirty(true)/d' \
-    /opt/conda/lib/python3.8/site-packages/notebook/static/notebook/js/*.js
+    /opt/conda/lib/python*/site-packages/notebook/static/notebook/js/*.js
     
 
