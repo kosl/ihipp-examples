@@ -5,6 +5,24 @@
 ## V: Runtime functions, variables and constructs
 ### Runtime functions
 So for C++ and C, you can add to the cache, include OLP that H can apply that to your code in the beginning of the file and then display that includes basically all the runtime functions that you need and you want to use some of the more standard runtime functions. And the ones that are using our tutorial today are seen on the screen. So for example, when he said as a threat, so in your part of the program that open up, you can specify the desired number of threats that you want to use.
+ Examples:
+ 
+ – To set the desired number of threads
+ ~~~c
+  omp_set_num_threads(n)
+  ~~~
+ – To return the current number of threads
+ ~~~c
+ omp_get_num_threads()
+ ~~~
+– To return the ID of this thread
+~~~c
+omp_get_thread_num() 
+~~~
+ – To return .true. If inside parallel region
+ ~~~c
+ omp_in_parallel()
+ ~~~
 
 For example, if you want your plot on your program on, let's say, 12 threats, you put no threats to the program, only use the only [00:20:00] word test. So we set a number of threats and we will return the current number of threats. So if you specify a number of threats. To 12 and then you use this function, so get contest is getting on offense will return to that number of steps that are being used in their program. So help you get further down. Here is the idea of this track. So when you are in a specific time, then you call these functions, these functions return an integer. And this integer is unique for every thread that you use. In your coat of the two pair of eyes, your task, some. And the functional area in parallel will return true, this function will return true if it is specified inside of the region. If it is not, it is specified in the region to return false. And again, so if you want to those functions, you need to specify the appropriate header file at the beginning of your second. Of course, there are multiple other open and parenting functions that are available in open entities are not the only ones. So you can click on the link on the on the slide and you will see all the open entry functions with some tutorials and explanations on how to use them in your program. OK, so now we have taken a look at runtime functions, so these runtime functions are basically used inside your code.
 
@@ -13,7 +31,21 @@ The next thing that we have to take a look at our environment, that in this envi
 
 And so the purpose of unfettered access to control the execution of. Part of the program and basically the programs that we're compiling. So this is not specified in the code, but you specified in a saying that it looks to me not only for you compiling that on your program and so on the screen, that basically the three environmental factors that are the same are common. So the only underscore no text specifies a number of threats to use. Yes. So you can send see my handwriting written very well by, for example, if you're using the best you can export this matter. This is very good and specified a number of threats and the program will only work with.
 
-The number of threats to specify the environment better, but the same goes for use in other countries, for example, age, the usage of the virus is about using the word set and the key safe. And you can specify the number of threats use the most similar way. The next society places, so this message specifies on which city visitors should be placed and the displayed in an environment basically shows the open, empty version and that you are then, of course, again, there are multiple other environmental NGOs that you can use. For example, for the GCSE compiler, we can tweak the link and check the environment that it was that you want to use yourself on and all the explanation and examples on how to use those environment.
+Purpose of environment variables is to control the execution of parallel program at runtime. These variables are not specified in the code itself but in the environment in which the parallel program is executed.
+ – To specify the number of threads to use
+ ~~~c
+ OMP_NUM_THREADS
+ ~~~
+– To specify on which CPUs the threads should be placed
+~~~c
+OMP_PLACES 
+~~~
+– To show OpenMP version and environment
+~~~c
+ OMP_DISPLAY_ENV
+ ~~~
+
+The number of threads to specify the environment better, but the same goes for use in other countries, for example, age, the usage of the virus is about using the word set and the key safe. And you can specify the number of threats use the most similar way. The next society places, so this message specifies on which city visitors should be placed and the displayed in an environment basically shows the open, empty version and that you are then, of course, again, there are multiple other environmental NGOs that you can use. For example, for the GCSE compiler, we can tweak the link and check the environment that it was that you want to use yourself on and all the explanation and examples on how to use those environment.
 
 ### Parallel Constructs
 The next thing that we take a look at is a parrallel constructs.
@@ -25,16 +57,25 @@ So part of the parallel construct is the basic or the fundamental contruct using
 ## V: Clauses and directive format
 ### Directive format
 So now we will take a look at Clauses and directives inside openmp. So so far we have just specified a parrallel region and that was it. Then the code came executed in serial and master fed. 
-(IMAGE: 
-Directive format • Format:
+ 
+Directive format 
+~~~c
 #pragma omp directive_name [clause[clause]...]
-• Conditionals: #ifdef _OPENMP
-block of code to be executed if code was compiled with OpenMP, for example
-      printf(“Number of threads: %d“, omp_get_num_threads);
-   #else
-block of code to be executed if code was compiled without OpenMP
+~~~
+Conditionals: 
+~~~c 
+#ifdef _OPENMP
+~~~
+-Block of code to be executed if code was compiled with OpenMP, for example
+~~~c
+printf(“Number of threads: %d“, omp_get_num_threads);
+#else
+   ~~~
+-Block of code to be executed if code was compiled without OpenMP
+~~~c
 #endif
-)
+~~~ 
+
 You get no such file or directory for dot. F opening T So f openmp is a flag is so if I put a command you mean when you compile the file, I assume this this is the problem and that you get so yes, so I will put the comment in the chat. So how do you compile it? So you put GC c - F open pee 
 
 
@@ -42,6 +83,18 @@ And then you specify the flex of - F open in D. So this - F open until basically
 
 You have you will not be able to run a comparable. So this - F openmp is basically a flag for the GCC compiler and for other compilers you have let's say different flags do for Intel compiler is just open empty without DF and so on. I have those Flex specified in the lighting in the fourth slide if you go back so
 
+### Clauses
+In C/C++ clauses can be:
+• private (list) – in this case the variable is private to each thread
+• shared (list) – in this case the variable is shared between threads
+C/C++:
+~~~c
+int A;
+#pragma omp parallel private(A) {
+A=omp_get_thread_num();
+...
+}
+~~~
 
 ## E: Calculate pi!
 ### Goal
