@@ -16,7 +16,7 @@ USER $NB_USER
 RUN conda update conda
 RUN conda update conda-build
 ENV LIBRARY_PATH /opt/conda/lib
-RUN conda install xeus-cling=0.12.1 -c conda-forge
+RUN conda install xeus-cling -c conda-forge
 RUN conda install openmpi -c conda-forge
 RUN conda install openmp -c conda-forge
 RUN conda install openssh -c conda-forge
