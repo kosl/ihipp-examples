@@ -13,8 +13,6 @@ RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /
 USER $NB_USER
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
-RUN conda update conda
-RUN conda update conda-build
 ENV LIBRARY_PATH /opt/conda/lib
 RUN conda install xeus-cling -c conda-forge
 RUN conda install openmpi -c conda-forge
