@@ -4,7 +4,7 @@
 
 ## V: Runtime functions, variables and constructs
 ### Runtime functions
-So for C++ and C, you can add to the cache, include OLP that H can apply that to your code in the beginning of the file and then display that includes basically all the runtime functions that you need and you want to use some of the more standard runtime functions. And the ones that are using our tutorial today are seen on the screen. So for example, when he said as a threat, so in your part of the program that open up, you can specify the desired number of threats that you want to use.
+So for C++ and C, you can add to the cache, include OLP that H can apply that to your code in the beginning of the file and then display that includes basically all the runtime functions that you need and you want to use some of the more standard runtime functions. And the ones that are using our tutorial today are seen on the screen. So for example, when he said as a thread, so in your part of the program that open up, you can specify the desired number of threats that you want to use.
  Examples:
  
  – To set the desired number of threads
@@ -24,7 +24,7 @@ omp_get_thread_num()
  omp_in_parallel()
  ~~~
 
-For example, if you want your plot on your program on, let's say, 12 threats, you put no threats to the program, only use the only [00:20:00] word test. So we set a number of threats and we will return the current number of threats. So if you specify a number of threats. To 12 and then you use this function, so get contest is getting on offense will return to that number of steps that are being used in their program. So help you get further down. Here is the idea of this track. So when you are in a specific time, then you call these functions, these functions return an integer. And this integer is unique for every thread that you use. In your coat of the two pair of eyes, your task, some. And the functional area in parallel will return true, this function will return true if it is specified inside of the region. If it is not, it is specified in the region to return false. And again, so if you want to those functions, you need to specify the appropriate header file at the beginning of your second. Of course, there are multiple other open and parenting functions that are available in open entities are not the only ones. So you can click on the link on the on the slide and you will see all the open entry functions with some tutorials and explanations on how to use them in your program. OK, so now we have taken a look at runtime functions, so these runtime functions are basically used inside your code.
+For example, if you want your plot on your program on, let's say, 12 threads, you put no threads to the program, only use the only [00:20:00] word test. So we set a number of threats and we will return the current number of threats. So if you specify a number of threats. To 12 and then you use this function, so get contest is getting on offense will return to that number of steps that are being used in their program. So help you get further down. Here is the idea of this track. So when you are in a specific time, then you call these functions, these functions return an integer. And this integer is unique for every thread that you use. In your coat of the two pair of eyes, your task, some. And the functional area in parallel will return true, this function will return true if it is specified inside of the region. If it is not, it is specified in the region to return false. And again, so if you want to those functions, you need to specify the appropriate header file at the beginning of your second. Of course, there are multiple other open and parenting functions that are available in open entities are not the only ones. So you can click on the link on the on the slide and you will see all the open entry functions with some tutorials and explanations on how to use them in your program. OK, so now we have taken a look at runtime functions, so these runtime functions are basically used inside your code.
 
 ### Environment Varibales
 The next thing that we have to take a look at our environment, that in this environment, variables are not used in the recording but are specified in the environment, whereas you are compiling them down on your code.
@@ -173,6 +173,72 @@ int main(int argc, char** argv)
 • If not compiled with OpenMP, the program should output “The program was not compiled with OpenMP“
 
 ## V: OpenMP constructs and Synchronisations 
+### Worksharing constructs
+So we will take a look at the so called work-sharing construct the same so work-sharing constructs divides the execution of the code region among different members of Team threads threads teams. So these are would say constructed do not launch the new threads and they are.
+
+They divide the execution of code region among the members of the team. Constructs do not launch new threads
+They are enclosed dynamically within the parallel region. Examples:
+• sections
+• for
+• task
+• single
+
+1. Section constuct
+So we have sections. We have a foreclosed and tasks and single so maybe you will know the for Clause so which is basically the for Loop that is executed in parallel.So here we will take a look at the sections construct. So on the left side, you can let's see the code we can specify the sections concert by specifying directive sections and you can see on the screen and when you use sections construct multiple blocks of code are executed in parallel. Yes, so if I specify section and good. Let's say at asking to it. Then this specific task will execute in one thread. And then if I go on to another section this section will execute in in a different in a different direction and so on so you can add this sections. So you can see here, for example, so we move we specify section inside this section heaven and be variable and then when the code is executed a new trade is generated with those with variables and the same goes for C and D variables which are specified in a different section and plus mean a different threat.
+~~~c
+#pragma omp parallel {
+#pragma omp sections {{a=...; b=...;} #pragma omp section
+{ c=...; d=...; }
+}// end of sections }// end of parallel
+~~~
+
+2. For construct
+And the next one is the for construct. So for constant basically means let's say a for Loop that is paralyzed app. So you can see how we can specify this for constructs. So again, we start with pragma OMP and then. We use the for keyword and we can use different closes again. So private shared and so on. And the corresponding for Loop has a canonical shape. So this is we can see that this is basically a c Syntax for the for the for Loop and the iterator is not modified inside the loop body. So because each let's say iterator is by default a private variable and is shared by only one threat escrow that this is not. Excess by every threatened because otherwise our for Loop would get corrupted.
+So the closes again private and then we have a few other. So for example, the schedule close classifies car detailing how the iterations of Loops are divided among different tracks one. For example, the collapse close can move the iterations into just one larger iteration space. So we take a look at this later.
+So here for example, you can see an example of the for construct used in the code. Yes. So let's say we start with pregnant went a parallel then we added a private variable named F. And then we do pragma OMP and for construct. Yeah, so we write a for Loop and let's say this for Loop will go from 0 to 10.So that would be 10 different iterations. And private variable f is then fixed in every threat and the a list is updated in parallel because because the index need of each
+
+Each array is let's say individual of each other. So every thread can access just one place of the
+So this is why we can update this list in part of it. Yeah. So for example on the right screen we can see.If we are working on two threads, yes. Oh and we have let's say 10. Ten iterations. So this iterations will let us say be split between two threats from 0 to 4 and 5 to 9 and each place in on a list will be updated by itself is for which the citrate it modifies just one place of ASL because this iterators are independent of each other and we can do this you can update the
+Each place of the a list quite easy. Yes. This is an example of the for construct.
+~~~c
+#pragma omp parallel private(f) {
+f=10;
+#pragma omp for
+for (i=0; i<10; i++)
+a[i] = b[i]*f;
+} /* omp end parallel */
+~~~
+
+3. Synchronization
+Then the next thing is the synchronization. So synchronization can be said by either increasing barrier or an ecstasy barrier. So implicit value we have been using it in both examples. So implicit barrier basically represents a barrier for the beginning and end of a parallel construct. Yes. So this is achieved with let's say in C++ with with parentheses. Yes. There is an example here. So let's let's say this first segment statement drag my only comparable. This would be the implicit barrier you specify the entry into parallel region and the last parentheses is basically the implicit barrier that specifies the end of the parallel crop construct and then we move to the
+To the serial execution of the code as well. And so in case you increase interested, you can try to use the Google the no wait clothes for the overall openmp and we check some examples of how we can remove the indices synchronization with this Clause there. But of course we have the other one, which is excess in value. So explicit value is basically means that you can
+Use a class and we disclose your basically specified it here is the barrier. So this is the so called critical cross so cold it is enclosed in critical classes executed by everything. That's all but is restricted to only one-third at a time. So you specify with pragma OMP critical then the name so we will maybe take a look at it here.
+Yes, so here you can see that say the scheme of the critical process. So if we go over this code quickly, so we have specified variables CMT and F and in the parallel region, we specified the for construct.
+And inside the if statement we specified the pragma OMP critical for the next Plant which is in t plus plus here and then we close it. So pragma OMP critical is valid only for this variable and we can observe what is happening basically in the execution of the threats on the right side. Yes, so we have
+Before we enter the park pragma OMP parallel region, we were in serial execution style. This was executed cereal seriously, then we entered our momentum parallel and this is basically divided. So again, we are doing a for Loop for let's say two to threats. So everything is executed parallely until the first read in counters the CNT. Yeah the same thing variable. So in this case is simply variable is
+First executed and during this time the second thread is trying to access it. It cannot do it because CMT is already Modified by the first treasure. So after the first thread modifies the CNT plus plus the specified.
+Then the next thread will get access to it and it will execute in between modified in whichever way you specify after all the threats have let's say modified it the code begins to execute in parallel as well.
+So further until we reach the implicit barrier that we have specified at the end and then we go back to then we go back to Syria execution. Yes, so due to click critical cloths as I explained only one thread at a time is executed for this sin T variable s so if you the critical flaws and you paralyze the program so whenever you will reach the critical. Cross only one thread will be able to modify or to run the the code that you specified in the critical closed hand. And then when the when the when the first red finish is the next word is executed and so on for all the other threats and well all the other all the threats have modified this variable. Then the program will start to execute back in parallel until we until we reach the implicit better.
+~~~c
+cnt = 0;
+f=10;
+#pragma omp parallel
+{
+#pragma omp for
+     for (i=0; i<10; i++) {
+       if (b[i] == 0) {
+          #pragma omp critical
+          cnt ++;
+       } /* endif */
+       a[i] = b[i]*f;
+} /* end for */
+} /*omp end parallel */
+~~~
+
+
+
+
+
 
 ## E: For and critical directive
 
