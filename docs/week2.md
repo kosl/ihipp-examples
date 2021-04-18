@@ -243,3 +243,26 @@ f=10;
 
 ## E: For and critical directive
 
+### Goal
+To use a worksharing construct for and critical directive.
+
+### Excercise
+1.Use the result from Exercise 2.
+2.Add parallel region and for directive in e2.c and compile it
+3.Set environment variable OMP_NUM_THREADS to 2 and run the file. 
+• The result is wrong
+4.Set environment variable OMP_NUM_THREADS to 12 and run again 
+• The result is wrong
+5.Add private (x) clause in e2.c and compile
+6.Set environment variable OMP_NUM_THREADS to 2 and run 
+• Still incorrect
+7.Set environment variable OMP_NUM_THREADS to 12 and run 
+• Still incorrect
+8.Add critical directive in e2.c before the sum variable in for loop and compile again
+• What is the CPU time?
+9.How to optimize the code? Try to modify the code and move the critical directive outside for loop to decrease computational time
+
+### Solution
+
+
+
