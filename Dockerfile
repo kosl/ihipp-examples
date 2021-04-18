@@ -21,10 +21,11 @@ ENV HOME /home/${NB_USER}
 # file to ensure the image runs as a unprivileged user by default.
 RUN conda update -n base conda
 RUN conda config --set allow_conda_downgrades true
-#RUN conda install xeus-cling -c conda-forge
+
 RUN conda install openmpi -c conda-forge
 RUN conda install openmp -c conda-forge
 RUN conda install openssh -c conda-forge
+RUN conda install xeus-cling -c conda-forge
 #RUN conda install git -c conda-forge
 # Add RISE to the mix as well so user can show live slideshows from their notebooks
 # More info at https://rise.readthedocs.io
