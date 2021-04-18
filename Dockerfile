@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:latest
+FROM jupyter/minimal-notebook:612aa5710bf9
 #FROM python:3.7-slim
 # install the notebook package
 #RUN pip install --no-cache --upgrade pip && \
@@ -20,7 +20,7 @@ ENV HOME /home/${NB_USER}
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
 RUN conda config --set allow_conda_downgrades true
-RUN conda install xeus-cling -c conda-forge
+#RUN conda install xeus-cling -c conda-forge
 RUN conda install openmpi -c conda-forge
 RUN conda install openmp -c conda-forge
 RUN conda install openssh -c conda-forge
