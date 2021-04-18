@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook:612aa5710bf9 
+FROM jupyter/base-notebook:612aa5710bf9 
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
 # See https://hub.docker.com/r/jupyter/minimal-notebook/tags 
@@ -16,7 +16,7 @@ USER root
 # Make sure the contents of our repo are in ${HOME}
 RUN ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 /lib64
 RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /usr/lib64
-COPY *.ipnyb OpenMP/ ${HOME}
+COPY . ${HOME}
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
@@ -25,6 +25,7 @@ USER ${NB_USER}
 # file to ensure the image runs as a unprivileged user by default.
 #RUN conda update -n base conda
 RUN conda config --set allow_conda_downgrades true
+RUN conda config --set notify_outdated_conda false
 
 RUN conda install openmpi -c conda-forge
 RUN conda install openmp -c conda-forge
