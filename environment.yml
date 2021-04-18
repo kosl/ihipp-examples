@@ -7,3 +7,6 @@ dependencies:
   - openmpi
   - openmp
   - openssh
+variables:
+  - LIBRARY_PATH: /opt/conda/lib
+  - LD_LIBRARY_PATH: /opt/conda/lib:$LD_LIBRARY_PATH
