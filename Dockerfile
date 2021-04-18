@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:bf9660a054aa5e133feedebee804bf955828d3e7
+FROM jupyter/base-notebook:latest
 #FROM jupyter/minimal-notebook:612aa5710bf9 
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
