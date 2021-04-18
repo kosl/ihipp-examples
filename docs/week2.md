@@ -2,8 +2,8 @@
 
 ## Getting started with OpenMP 
 
-
 ## V: Runtime functions, variables and constructs
+### Runtime functions
 
 ## V: Clauses and directive format
 
