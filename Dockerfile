@@ -28,10 +28,11 @@ USER ${NB_USER}
 RUN conda config --set allow_conda_downgrades true
 RUN conda config --set notify_outdated_conda false
 
+RUN conda install xeus-cling=0.12.1 -c conda-forge
 RUN conda install openmpi -c conda-forge
 RUN conda install openmp -c conda-forge
 RUN conda install openssh -c conda-forge
-RUN conda install xeus-cling=0.12.1 -c conda-forge
+
 #RUN conda install git -c conda-forge
 # Add RISE to the mix as well so user can show live slideshows from their notebooks
 # More info at https://rise.readthedocs.io
@@ -44,7 +45,7 @@ RUN conda install xeus-cling=0.12.1 -c conda-forge
 RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
 ENV LIBRARY_PATH /opt/conda/lib
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
-ENV PATH=$PATH:/opt/conda/compiler_compat
+#ENV PATH=$PATH:/opt/conda/compiler_compat
 
 
 # Disable Save icon on the toolbar 
