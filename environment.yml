@@ -8,5 +8,5 @@ dependencies:
   - openmp
   - openssh
 variables:
-  - LIBRARY_PATH: /opt/conda/lib
-  - LD_LIBRARY_PATH: /opt/conda/lib:$LD_LIBRARY_PATH
+  - LIBRARY_PATH: /srv/conda/envs/notebook/lib
+  - LD_LIBRARY_PATH: /srv/conda/envs/notebook/lib:$LD_LIBRARY_PATH
