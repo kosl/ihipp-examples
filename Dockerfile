@@ -1,4 +1,5 @@
-FROM jupyter/minimal-notebook:d990a62010ae
+FROM jupyter/base-notebook:notebook-6.3.0
+#FROM jupyter/minimal-notebook:d990a62010ae
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
 # See https://hub.docker.com/r/jupyter/minimal-notebook/tags 
