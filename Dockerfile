@@ -19,6 +19,7 @@ ENV HOME /home/${NB_USER}
 #USER $NB_USER
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
+RUN conda update -n base conda
 RUN conda config --set allow_conda_downgrades true
 #RUN conda install xeus-cling -c conda-forge
 RUN conda install openmpi -c conda-forge
@@ -31,7 +32,7 @@ RUN conda install openssh -c conda-forge
 #RUN conda install rise
 # Add nbgitpuller
 #RUN pip install nbgitpuller jupyter-resource-usage
-RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
+#RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
 ENV LIBRARY_PATH /opt/conda/lib
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
 
