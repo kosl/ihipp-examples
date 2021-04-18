@@ -1,22 +1,26 @@
 FROM jupyter/minimal-notebook:612aa5710bf9
-#FROM python:3.7-slim
-# install the notebook package
-#RUN pip install --no-cache --upgrade pip && \
-#    pip install --no-cache notebook 
-    
+# See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
+#FROM jupyter/scipy-notebook:latest
+#FROM jupyter/minimal-notebook:612aa5710bf9
+#FROM jupyter/base-notebook
+   
 # create user with a home directory
 ARG NB_USER
 ARG NB_UID
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
-
-#FROM jupyter/scipy-notebook:latest
-#FROM jupyter/minimal-notebook:612aa5710bf9
-#FROM jupyter/base-notebook
-
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
+# Add a "USER root" statement followed by RUN statements to install system packages using apt-get,
+# change file permissions, etc.
+USER root
+# Make sure the contents of our repo are in ${HOME}
+RUN ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 /lib64
+RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /usr/lib64
+COPY . ${HOME}
+USER root
+RUN chown -R ${NB_UID} ${HOME}
+USER ${NB_USER}
 
-#USER $NB_USER
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
 RUN conda update -n base conda
@@ -25,7 +29,7 @@ RUN conda config --set allow_conda_downgrades true
 RUN conda install openmpi -c conda-forge
 RUN conda install openmp -c conda-forge
 RUN conda install openssh -c conda-forge
-RUN conda install xeus-cling -c conda-forge
+RUN conda install xeus-cling=0.12.1 -c conda-forge
 #RUN conda install git -c conda-forge
 # Add RISE to the mix as well so user can show live slideshows from their notebooks
 # More info at https://rise.readthedocs.io
@@ -33,7 +37,9 @@ RUN conda install xeus-cling -c conda-forge
 #RUN conda install rise
 # Add nbgitpuller
 #RUN pip install nbgitpuller jupyter-resource-usage
-#RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
+
+# Prepare kernels for OpenMP and MPI
+RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
 ENV LIBRARY_PATH /opt/conda/lib
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
 
@@ -45,10 +51,4 @@ RUN sed -i -e '/var grps =/{n;N;N;N;d}' /opt/conda/lib/python3.8/site-packages/n
 RUN sed -i -e "/events.trigger(.set_dirty.Notebook./d" -e '/env.notebook.set_dirty(true)/d' \
     /opt/conda/lib/python3.8/site-packages/notebook/static/notebook/js/*.js
     
-# Add a "USER root" statement followed by RUN statements to install system packages using apt-get,
-# change file permissions, etc.
-USER root
-RUN ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 /lib64
-RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /usr/lib64
-#RUN apt-get install openssh-server
 
