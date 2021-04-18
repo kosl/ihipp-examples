@@ -13,9 +13,6 @@ RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /
 USER $NB_USER
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
-RUN conda create -n cling
-RUN echo "source activate env" > ~/.bashrc
-ENV PATH /opt/conda/envs/env/bin:$PATH
 ENV LIBRARY_PATH /opt/conda/lib
 RUN conda install xeus-cling=0.12.1 -c conda-forge
 RUN conda install openmpi -c conda-forge
@@ -23,8 +20,6 @@ RUN conda install openmp -c conda-forge
 RUN conda install openssh -c conda-forge
 #RUN conda install git -c conda-forge
 ENV LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
-COPY jupyter_notebook_config_update.py /tmp
-RUN cat /tmp/jupyter_notebook_config_update.py >> ~/.jupyter/jupyter_notebook_config.py
 # Add RISE to the mix as well so user can show live slideshows from their notebooks
 # More info at https://rise.readthedocs.io
 # Note: Installing RISE with --no-deps because all the neeeded deps are already present.
