@@ -1,6 +1,8 @@
 FROM jupyter/minimal-notebook:612aa5710bf9 
 # See https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
 # https://jupyter-docker-stacks.readthedocs.io/en/latest/
+# See https://hub.docker.com/r/jupyter/minimal-notebook/tags 
+# and https://hub.docker.com/r/jupyter/base-notebook/tags for latest tags
    
 # create user with a home directory
 ARG NB_USER
@@ -21,7 +23,7 @@ USER ${NB_USER}
 
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
-RUN conda update -n base conda
+#RUN conda update -n base conda
 RUN conda config --set allow_conda_downgrades true
 
 RUN conda install openmpi -c conda-forge
