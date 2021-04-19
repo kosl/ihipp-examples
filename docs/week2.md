@@ -1,6 +1,5 @@
-# Introduction to OpenMP
 
-## Getting started with OpenMP 
+# Getting started with OpenMP 
 
 ## V: Runtime functions, variables and constructs
 ### Runtime functions
