@@ -1,7 +1,7 @@
 
-# Getting started with OpenMP 
+# Week 2: Getting started with OpenMP 
 
-## V: Runtime functions, variables and constructs
+## 1.V: Runtime functions, variables and constructs
 ### Runtime functions
 So for C++ and C, you can add to the cache, include OLP that H can apply that to your code in the beginning of the file and then display that includes basically all the runtime functions that you need and you want to use some of the more standard runtime functions. And the ones that are using our tutorial today are seen on the screen. So for example, when he said as a thread, so in your part of the program that open up, you can specify the desired number of threats that you want to use.
  Examples:
@@ -53,7 +53,7 @@ So part of the parallel construct is the basic or the fundamental contruct using
 
 
 
-## V: Clauses and directive format
+## 2. V: Clauses and directive format
 ### Directive format
 So now we will take a look at Clauses and directives inside openmp. So so far we have just specified a parrallel region and that was it. Then the code came executed in serial and master fed. 
  
@@ -98,7 +98,7 @@ A=omp_get_thread_num();
 }
 ~~~
 
-## E: Calculate pi!
+## 3. E: Calculate pi!
 ### Goal
 To use runtime library calls, conditional compilations, environment variables and parallel regions by calculating pi constant.
 ### Excercise
@@ -174,7 +174,7 @@ int main(int argc, char** argv)
 • If compiled with OpenMP, the program should output and ID of each thread and number of all threads
 • If not compiled with OpenMP, the program should output “The program was not compiled with OpenMP“
 
-## V: OpenMP constructs and Synchronisations 
+## 4. V: OpenMP constructs and Synchronisations 
 ### Worksharing constructs
 So we will take a look at the so called work-sharing construct the same so work-sharing constructs divides the execution of the code region among different members of Team threads threads teams. So these are would say constructed do not launch the new threads and they are.
 
@@ -243,7 +243,7 @@ f=10;
 
 
 
-## E: For and critical directive
+## 5. E: For and critical directive
 
 ### Goal
 To use a worksharing construct for and critical directive.
