@@ -84,8 +84,11 @@ You have you will not be able to run a comparable. So this - F openmp is basical
 
 ### Clauses
 In C/C++ clauses can be:
+
 • private (list) – in this case the variable is private to each thread
+
 • shared (list) – in this case the variable is shared between threads
+
 C/C++:
 ~~~c
 int A;
