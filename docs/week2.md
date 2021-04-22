@@ -2,94 +2,161 @@
 # Week 2: Getting started with OpenMP 
 
 ## 1.V: Runtime functions, variables and constructs
-### Runtime functions
-So for C++ and C, you can add to the cache, include OLP that H can apply that to your code in the beginning of the file and then display that includes basically all the runtime functions that you need and you want to use some of the more standard runtime functions. And the ones that are using our tutorial today are seen on the screen. So for example, when he said as a thread, so in your part of the program that open up, you can specify the desired number of threats that you want to use.
- Examples:
+## Runtime functions
+
+The purpose of runtime functions is the management or modification of the parallel processes that we want to use in our code. They come with the OMP library.  
+For C++ and C, you can add the 
+
+~~~c
+#include<omp.h>  
+~~~ 
+
+header file to your code in the beginning of the file and then this library includes all the standard runtime functions that you need and you want to use. The functions that we would be using in our tutorial today can be accessed from the link in the transcript or in the resources. So for example, 
  
- – To set the desired number of threads
+ To set the desired number of threads
+
  ~~~c
-  omp_set_num_threads(n)
+
+ omp_set_num_threads(n)
+
   ~~~
- – To return the current number of threads
+
+For example, if you want to 'parallelise'  your program with, let's say, 12 threads, you specify number of threads to the program using the function
+
+~~~c
+
+omp_set_num_threads(n)
+
+~~~
+
+With this the program will only work with 12 threads. 
+
+To return the current number of threads
+
  ~~~c
+
  omp_get_num_threads()
+
  ~~~
-– To return the ID of this thread
+
+With this we set a number of threads and we will return the current number of threads. So, like our previous example, if you specify the number of threads to 12 then calling this function will return the number of threads that are being used in the program. 
+
+To return the ID of this thread
+
 ~~~c
+
 omp_get_thread_num() 
+
 ~~~
- – To return .true. If inside parallel region
+
+So calling this function, when you are in a specific thread would return an integer that is unique for every thread that is used in the code to 'parallelise'  your task. 
+
+– To return 'true' if inside parallel region
+
  ~~~c
+
  omp_in_parallel()
+
  ~~~
 
-For example, if you want your plot on your program on, let's say, 12 threads, you put no threads to the program, only use the only [00:20:00] word test. So we set a number of threats and we will return the current number of threats. So if you specify a number of threats. To 12 and then you use this function, so get contest is getting on offense will return to that number of steps that are being used in their program. So help you get further down. Here is the idea of this track. So when you are in a specific time, then you call these functions, these functions return an integer. And this integer is unique for every thread that you use. In your coat of the two pair of eyes, your task, some. And the functional area in parallel will return true, this function will return true if it is specified inside of the region. If it is not, it is specified in the region to return false. And again, so if you want to those functions, you need to specify the appropriate header file at the beginning of your second. Of course, there are multiple other open and parenting functions that are available in open entities are not the only ones. So you can click on the link on the on the slide and you will see all the open entry functions with some tutorials and explanations on how to use them in your program. OK, so now we have taken a look at runtime functions, so these runtime functions are basically used inside your code.
+This function returns 'true' if it is specified inside a parallel region. If it is not, i.e if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in openMP . So you can click on the link on the on the slide and you will see all the openMP functions with some tutorials and explanations on how to use them in your program.
 
-### Environment Varibales
-The next thing that we have to take a look at our environment, that in this environment, variables are not used in the recording but are specified in the environment, whereas you are compiling them down on your code.
+## Environment Variables
 
-And so the purpose of unfettered access to control the execution of. Part of the program and basically the programs that we're compiling. So this is not specified in the code, but you specified in a saying that it looks to me not only for you compiling that on your program and so on the screen, that basically the three environmental factors that are the same are common. So the only underscore no text specifies a number of threats to use. Yes. So you can send see my handwriting written very well by, for example, if you're using the best you can export this matter. This is very good and specified a number of threats and the program will only work with.
+The next thing that we have to take a look at are environment variables. Contrary to runtime functions, environment variables are not used in the code but are specified in the environment, where you are compiling and running your code. Purpose of environment variables is to control the execution of parallel program at runtime. As these are not specified in the code, you could specify them for example in a linux terminal before you compile and run your program. Let's go through the three most common environment variables.
 
-Purpose of environment variables is to control the execution of parallel program at runtime. These variables are not specified in the code itself but in the environment in which the parallel program is executed.
- – To specify the number of threads to use
- ~~~c
- OMP_NUM_THREADS
- ~~~
-– To specify on which CPUs the threads should be placed
+To specify the number of threads to use
+
 ~~~c
-OMP_PLACES 
+
+OMP_UM_THREADS 
+
 ~~~
-– To show OpenMP version and environment
+
+With this you can set the environment variable. For example, if you're using the batch terminal you can export this variable and specify a fixed number of threads and the program will only work with this specified number of threads. The same goes if you are using other terminals. For example, TCSH, the usage of the environment variable is achieved through using the word set and the key  word 'setenv' and you can specify the number of threads to be used in the similar way :
+
+~~~csh
+
+setenv OMP_NUM_THREADS n
+
+~~~
+
+To  specify on which CPUs the threads should be placed
+
 ~~~c
- OMP_DISPLAY_ENV
- ~~~
 
-The number of threads to specify the environment better, but the same goes for use in other countries, for example, age, the usage of the virus is about using the word set and the key safe. And you can specify the number of threats use the most similar way. The next society places, so this message specifies on which city visitors should be placed and the displayed in an environment basically shows the open, empty version and that you are then, of course, again, there are multiple other environmental NGOs that you can use. For example, for the GCSE compiler, we can tweak the link and check the environment that it was that you want to use yourself on and all the explanation and examples on how to use those environment.
+ OMP_PLACES 
 
-### Parallel Constructs
-The next thing that we take a look at is a parrallel constructs.
-So part of the parallel construct is the basic or the fundamental contruct using open pit. So every trade basically executes the same statements which are inside this, the so-called parallel region simultaneously, as you can see on the right image. So first, we have a master plan that executes the serial portion of the code. Then we come to this statement. Yes. So the master first encountered this on construct and creates multiple so-called slave trade safe tracks that run in parallel and master and slave traders then divide between each other. And in the end, we specify an implicit barrier. So when these batteries when these batteries reached, basically the threats finish and we wait for all threats to finish the execution, and when all the tests have finished, the execution will go back to M. M.. That basically presumes the execution of the code. And the threats are, of course, gone because they have completed their test, so this is embedded in the CI A. specified with. You can see the specification for the police that on the bottom left side and trying to specify the bitcoin and bottom line. Yes, and this is basically the end of your bottom of the region and the message that moves on to execute the code in Syria and the slave states and all the other threats and part of the finish line drop in the.
+~~~
+
+To show OpenMP version and environment
+
+~~~c
+
+OMP_DISPLAY_ENV  
+
+~~~
+
+This basically shows the openMP version and that you are in. 
+Of course, there are multiple other environmental variables that you can use. 
+For GCC compiler you can check the link and check the environment variables that you want to use yourself along with all the explanation and examples on how to use those environment.
+
+## Parallel constructs
+Parallel construct is the basic or the fundamental construct using openMP. So every thread basically executes the same statements which are inside the 'parallel region' simultaneously, as you can see on the right image. So first, we have a master thread that executes the serial portion of the code. Then we come to this 'pragma omp' statement. We can see here that the master first encounters this omp construct and creates multiple, what we call 'slave threads' that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier,  so,  when these barrier is  reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution we go back to master thread that finally resumes the execution of the code. In this step, of course,  the slave threats are gone because they have completed their task.
+In 'C' this implicit barrier is specified with:   
+
+~~~c
+
+#pragma omp parallel
+{
+...
+ }
+
+~~~
+
 
 
 
 
 ## 2. V: Clauses and directive format
-### Directive format
-So now we will take a look at Clauses and directives inside openmp. So so far we have just specified a parrallel region and that was it. Then the code came executed in serial and master fed. 
- 
-Directive format 
+## Directive format
+
+So far we have just specified a parallel region and the code was executed in serial. Now we will move ahead to see directives for the openMP. The format for using a directive is as follows
+
 ~~~c
+
 #pragma omp directive_name [clause[clause]...]
+
 ~~~
-Conditionals: 
-~~~c 
-#ifdef _OPENMP
-~~~
--Block of code to be executed if code was compiled with OpenMP, for example
+
+We have already seen and used 'pragma omp parallel'  that was a directive to execute the region in parallel. In this format we also have 'clauses' in order to specify different parameters.  For example, what is private variable i.e a variable that has access to only one thread whereas a shared variable is one that will be updated anytime a thread gets access to it. We will explore the clauses more in the following subsection. For now we will learn about the  'conditionals'. Similar to any programming language openMP also has conditional statements. So for example we can also specify an 'if' statement in openMP in the following way
+
 ~~~c
-printf(“Number of threads: %d“, omp_get_num_threads);
-#else
-   ~~~
--Block of code to be executed if code was compiled without OpenMP
-~~~c
+
+ #ifdef _OPENMP
+//block of code to be executed if code was compiled with OpenMP, for example
+      printf(“Number of threads: %d“, omp_get_num_threads);
+   #else
+//block of code to be executed if code was compiled without OpenMP
 #endif
-~~~ 
 
-You get no such file or directory for dot. F opening T So f openmp is a flag is so if I put a command you mean when you compile the file, I assume this this is the problem and that you get so yes, so I will put the comment in the chat. So how do you compile it? So you put GC c - F open pee 
+~~~
+When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with openMP. In this case if it was compiled with openMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
 
+## Clauses
 
-And then you specify the flex of - F open in D. So this - F open until basically tells the compiler that we are compiling the problem with openmp if you don't specify this.
+The directive format we just learnt:
 
-You have you will not be able to run a comparable. So this - F openmp is basically a flag for the GCC compiler and for other compilers you have let's say different flags do for Intel compiler is just open empty without DF and so on. I have those Flex specified in the lighting in the fourth slide if you go back so
+~~~c
 
-### Clauses
-In C/C++ clauses can be:
+#pragma omp directive_name [clause[clause]...]
 
-• private (list) – in this case the variable is private to each thread
+~~~
+Is an important keyword with openMP that we put in the beginning of our code on the line where we want the 'parallel' region to start and then we mention  the 'directive name' and the 'clause'. In this subsection we will learn about 'clauses'.
 
-• shared (list) – in this case the variable is shared between threads
+There are basically two kind of clauses. i.e private or shared. 
+A private variable would be a variable that is private to each thread. So if we execute [image D1P2S18] 
 
-C/C++:
 ~~~c
 int A;
 #pragma omp parallel private(A) {
@@ -97,6 +164,20 @@ A=omp_get_thread_num();
 ...
 }
 ~~~
+
+So, here we define an integer A in C code Then we Define the OMP directive i.e the 'omp parallel' and the 'private A'. So what happens here is that any time we will get a new thread this variable 'A' will be assigned inside of each thread individually. This would imply that the value of 'A' will go to the number of threads. So in the in the first thread it will be '0' in the second thread the value of this variable will be '1' because this would be the 'id' of the thread and in the third the value will be '2' and so on. We can see clearly that these variables are basically private, meaning that they are existing inside each thread.  This implies that the variable 'A' (0) in the first thread can can not be accessed by the variable 'A' (1) in the second thread. 
+So this infers that this variable is basically private to each individual thread in our program. 
+And of course the opposite of this is the shared variable. If we specify that a variable is a shared variable this would signify that  the variable will be shared between the threads. If we specify the variable outside of the parallel region, so right before the 
+
+~~~c
+
+#pragma omp parallel
+
+~~~
+this variable will be accessed by every thread. To exemplify, let's say if we have a 'for' loop and you we add a number to it  in every iteration we can just specify it to be a shared. In this case whenever any thread that will update the shared variable simultaneously therefore adding numbers to it. This is a adequate way to use the 'for' Loop that we will see soon in the following subsections. 
+
+So, to sum up the distinction between private and shared, the private variable is available only to one thread and cannot be accessed by any other thread whereas a  shared variable can not only be accessed by every thread in the part of the program but it can also be updated, changed and modified by by each thread simultaneously.
+
 
 ## 3. E: Calculate pi!
 ### Goal
@@ -175,24 +256,33 @@ int main(int argc, char** argv)
 • If not compiled with OpenMP, the program should output “The program was not compiled with OpenMP“
 
 ## 4. V: OpenMP constructs and Synchronisations 
-### Worksharing constructs
-So we will take a look at the so called work-sharing construct the same so work-sharing constructs divides the execution of the code region among different members of Team threads threads teams. So these are would say constructed do not launch the new threads and they are.
-
-They divide the execution of code region among the members of the team. Constructs do not launch new threads
-They are enclosed dynamically within the parallel region. Examples:
+## Worksharing constructs
+The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region
+ Some of the examples of the work sharing constructs are:
 • sections
 • for
 • task
 • single
 
-1. Section constuct
+### Section construct
 
-So we have sections. We have a foreclosed and tasks and single so maybe you will know the for Clause so which is basically the for Loop that is executed in parallel.So here we will take a look at the sections construct. So on the left side, you can let's see the code we can specify the sections concert by specifying directive sections and you can see on the screen and when you use sections construct multiple blocks of code are executed in parallel. Yes, so if I specify section and good. Let's say at asking to it. Then this specific task will execute in one thread. And then if I go on to another section this section will execute in in a different in a different direction and so on so you can add this sections. So you can see here, for example, so we move we specify section inside this section heaven and be variable and then when the code is executed a new trade is generated with those with variables and the same goes for C and D variables which are specified in a different section and plus mean a different threat.
+We will first see the code for using the sections construct where we can we specify it through directive sections .
+
 ~~~c
+
 #pragma omp parallel {
 #pragma omp sections {{a=...; b=...;} #pragma omp section
 { c=...; d=...; }
 }// end of sections }// end of parallel
+
+~~~
+
+When we use sections construct multiple blocks of code are executed in parallel. (image D1P2S22). When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section that will execute its task in a different thread. In this way we can add these sections inside our 'pragma OMP parallel' code by specifying a section per each thread that will be executed in that each individual thread.
+
+In the example code above we can see that inside the section we have specified variables 'a' and 'b'. When this code is executed a new thread is generated with these variables and the same follows for the variables 'c' and 'd' which are specified in a different section and hence are in a different thread. 
+
+
+### For construct
 ~~~
 
 2. For construct
