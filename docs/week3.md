@@ -40,5 +40,8 @@ What do you observe when you run the program multiple times?
 
 ## 4. V: Messages and communications
 
+Until now, we have introduced the MPI and we have used some simple routines such as rank and size, to distinguish between different processes and to actually assign them some numbers that we can recognise and use later. But until now, we haven't done anything useful in a way that we haven't sent any information between the processes. This is where we need to gain an understanding in messages.  For example when we are developing different advanced applications, at one point you will need to exchange information from one process to another.  Usually, this information could be some integer, some values or some arrays etc. This is where messages are used. Messages are packets of data moving between sub-programs. So, as said earlier, if we pack this information to be shred between processses into some message, we can send them over communication network so the other process can receive this message. This is how the data and information is shared bewteen the processes. And you will learn throughout the state, actually, when you will be using those routines that there are some important information that you will always need to specify in order for the message to actually be sent and received. So suppose, as in this example, we are trying to send a message from ranking zero to rank due process, and in order for this to work, you have to specify some information. So first of all, you will need to know the sender will need to specify what so what data we are sending. Basically, what is the size of the data? So number of data, suppose we are sending an array.
+
+
 
 
