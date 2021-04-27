@@ -65,7 +65,15 @@ and similarly with double, long, character and so on.
 However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we  can define that struct as a new MPI data type. This proves to be very useful  because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming weeks. For today's section we're only using simple data types and that would mostly mean either an int or a double or maybe even a character. 
 
 ## 2. Types of communication in MPI
-There are two criterias by which we divide the types of communications in MPI. 
+There are two criterias by which we divide the types of communications in MPI.
+First way to define types of communication is to divide it according to the number of processes that are involved. So, if there are only two processes involved in the communication, meaning only one sender and one receiver then it is reffered to as point to point communication. This is the simplest form of message passing where one process sends a message to another. 
+The other type of communication is the collective communication in which we have multiple processes that are involved. This implicates communication between either one processes with many other processes or even many processes communicating with several other processes. So, there are different ways that this can be executed. 
+So this is one criteria for distingushing the types of communication i.e  distinction by the number of processes involved.
+
+The second criteria and perhaps more complex is by defining the type of communication into blocking and non blocking types. 
+A Blocking routine returns only when the operation has completed. This means that blocking basically implies that if we send a message, we can't proceed to the next steps until the receiver actually returns us information that it has received the message. 
+(image S19)
+The non blocking communication is more complicated than the simpler blocking counterpart. In this case it eturns immediately and allows the  sub-program to perform other work. It differs from the blocking communication in a way that if we send something to the receiver, we can execute some other tasks in between and after some time, we can check if the receiver has actually returned the information that it has receieved the message, or everything is OK. Many real applications, usually employ this type of communication because sometimes they can send something and work in between and then after a while they can check whether the receiver received the message.  
 
 
 
