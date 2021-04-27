@@ -64,7 +64,7 @@ MPI_INT
 and similarly with double, long, character and so on. 
 However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we  can define that struct as a new MPI data type. This proves to be very useful  because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming weeks. For today's section we're only using simple data types and that would mostly mean either an int or a double or maybe even a character. 
 
-## 2. Types of communication in MPI
+## 2.1 Types of communication in MPI
 There are two criterias by which we divide the types of communications in MPI.
 First way to define types of communication is to divide it according to the number of processes that are involved. So, if there are only two processes involved in the communication, meaning only one sender and one receiver then it is reffered to as point to point communication. This is the simplest form of message passing where one process sends a message to another. 
 The other type of communication is the collective communication in which we have multiple processes that are involved. This implicates communication between either one processes with many other processes or even many processes communicating with several other processes. So, there are different ways that this can be executed. 
@@ -83,7 +83,7 @@ In order to send a message with Point-to-Point Communication , we use the functi
 ~~~c
  MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm);
  ~~~
- We will now see what arguments to see what actually this routine needs
+ We will now see what arguments this routine actually needs
  
 - 'buf' is the pointer to the data with 'count' elements and each of them described with datatype. So first of all, we have to specify the address of the data that we would like to send. So it's a pointer to the data of the center and then the second argument is actually the number of the elements we send. For example if we just send a number one, one integer, for instance, this will be one. If you send an array with 100 integers, this will be one hundred and so on. The third argument this function would like to have is the 'datatype'. So this as we discussed previously, if we are sending an integer, we will have to specify here MPI_int, or  if we're sending a double, this will be a double and so on.
 - 'dest' is the rank of the destination process. In this argument we specify the rank of the receiver. So, for instance, in the previous example, this will be '5'.
@@ -92,7 +92,29 @@ In order to send a message with Point-to-Point Communication , we use the functi
 So these are the arguments that are the most important information the MPI environment needs in order to know what data is sent and to whom.
 
 ## Receiving paradigms
-Quite obviously the receiver has to call the receiver function. This means that we have two ranks in order that one is the sender, the other one is the receiver. So one will call the MPI_send function and the other will similarly call MPI_Recv to receive.
+Quite obviously the receiver has to call the receiver function. This means that we have two ranks in order that one is the sender, the other one is the receiver. So one will call the MPI_send function and the other will similarly call MPI_Recv to receive. To be able to receive we use the function
+~~~c
+MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status);
+~~~
+So the arguments needed by this function are similiar to the MPI_send function.
+- The 'buf/count/datatype' describe the recevied data.
+In the first argument we specify the address of the data, i.e the address where we would like to receive the data and similarly, we put the data type here.
+-'source' is the rank of the sender process. We have the a 'number' of the sender, i.e the rank of the sender. In the previous example we would specify number '3', because the rank with number three is trying to send us a message.
+- Similar to MPI_send, here we also have a tag. It is really important to make sure that we match this number with the sender. So if the sender specifies that the message has tag '0', the receiver also has to specify the same number here. Otherwise, this will be an infinite loop as we will not receive anything because this message would still not be sent.
+-The next argument is the communicator and again we would just use the MPI_Comm world.
+-The last argument is not so important for us at the moment as this is something that we will be learning in the next exercise. For now we will just use
+~~~c
+MPI_STATUS_IGNORE
+~~~
+We will learn more about this status structure in the coming weeks. 
+
+
+So let us go through an example to understand again the prerequisites for this communication to work efficiently and how this woulld actually work in code. (image S24)
+
+
+
+ 
+
 
 
 
