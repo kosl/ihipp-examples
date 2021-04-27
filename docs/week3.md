@@ -73,8 +73,30 @@ So this is one criteria for distingushing the types of communication i.e  distin
 The second criteria and perhaps more complex is by defining the type of communication into blocking and non blocking types. 
 A Blocking routine returns only when the operation has completed. This means that blocking basically implies that if we send a message, we can't proceed to the next steps until the receiver actually returns us information that it has received the message. 
 (image S19)
-The non blocking communication is more complicated than the simpler blocking counterpart. In this case it eturns immediately and allows the  sub-program to perform other work. It differs from the blocking communication in a way that if we send something to the receiver, we can execute some other tasks in between and after some time, we can check if the receiver has actually returned the information that it has receieved the message, or everything is OK. Many real applications, usually employ this type of communication because sometimes they can send something and work in between and then after a while they can check whether the receiver received the message.  
+The non blocking communication is more complicated than the simpler blocking counterpart. In this case it returns immediately and allows the  sub-program to perform other work. It differs from the blocking communication in a way that if we send something to the receiver, we can execute some other tasks in between and after some time, we can check if the receiver has actually returned the information that it has receieved the message, or everything is OK. Many real applications, usually employ this type of communication. 
 
+### Point-to-Point Communication
+
+As we already saw in the previous section, Point-to-Point Communication is the simplest communication as it involves only two processes. One of the processes acts as asender and the other one as the receiver. Here, the source or the sender sends a message via the (image S21) communicator to the receiver. In order to do so, the environment has to know who is the sender and who is the receiver and this is taken care of by specifying the 'ranks' of the processes. 
+### Sending paradigms
+In order to send a message with Point-to-Point Communication , we use the function
+~~~c
+ MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm);
+ ~~~
+ We will now see what arguments to see what actually this routine needs
+ 
+- 'buf' is the pointer to the data with 'count' elements and each of them described with datatype. So first of all, we have to specify the address of the data that we would like to send. So it's a pointer to the data of the center and then the second argument is actually the number of the elements we send. For example if we just send a number one, one integer, for instance, this will be one. If you send an array with 100 integers, this will be one hundred and so on. The third argument this function would like to have is the 'datatype'. So this as we discussed previously, if we are sending an integer, we will have to specify here MPI_int, or  if we're sending a double, this will be a double and so on.
+- 'dest' is the rank of the destination process. In this argument we specify the rank of the receiver. So, for instance, in the previous example, this will be '5'.
+- 'tag' is an additional integer information transfered with the message. 'tag' is basically a number by which we identify the message. So usually if we just send only one message, we can just put '0' tag there or maybe any number that we would like. 
+- The last argument is the communicator and as we already discussed we usually use MPI_Comm world.
+So these are the arguments that are the most important information the MPI environment needs in order to know what data is sent and to whom.
+
+## Receiving paradigms
+Quite obviously the receiver has to call the receiver function. This means that we have two ranks in order that one is the sender, the other one is the receiver. So one will call the MPI_send function and the other will similarly call MPI_Recv to receive.
+
+
+
+ 
 
 
 
