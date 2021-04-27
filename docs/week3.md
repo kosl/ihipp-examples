@@ -1,7 +1,7 @@
 
 ### MPI
 
-## 1.V: Communicator in MPI
+## 1.1 V: Communicator in MPI
 In the introduction to MPI in the first week we already saw the simple excercise of 'Hello world'. In order to actually write some useful applications, we will need to learn some basic routines. To begin with we need to understand what is a communicator in MPI. As we launch MPI, the entire environment puts all the processes and the cores that are involved in this application and binds them together in what is reffered to as a 'communicator' (image D2P1S12). A communicator  is like a set that binds all the processes together corroborates that only those processses are together in application can communicate with each other. The default communicator that we will use most often is the 
 ~~~c
 MPI_COMM_WORLD
@@ -26,7 +26,7 @@ MPI_Comm_size(MPI_Comm comm, int *size);
 ~~~
  (image S13)
  
- ## 2.E: Hello World 2.0
+ ## 1.2.E: Hello World 2.0
  We modify our excercise from the first week.
  
 ### Goal:
@@ -35,12 +35,37 @@ Modify "Hello World" excercise so that
 
 - only process ranked 0 in MPI_COMM_WORLD prints "hello world".
 
-## 3.D: 
+## 1.3.D: 
 What do you observe when you run the program multiple times?
 
-## 4. V: Messages and communications
+## 1.4. V: Messages and communications
 
-Until now, we have introduced the MPI and we have used some simple routines such as rank and size, to distinguish between different processes and to actually assign them some numbers that we can recognise and use later. But until now, we haven't done anything useful in a way that we haven't sent any information between the processes. This is where we need to gain an understanding in messages.  For example when we are developing different advanced applications, at one point you will need to exchange information from one process to another.  Usually, this information could be some integer, some values or some arrays etc. This is where messages are used. Messages are packets of data moving between sub-programs. So, as said earlier, if we pack this information to be shred between processses into some message, we can send them over communication network so the other process can receive this message. This is how the data and information is shared bewteen the processes. And you will learn throughout the state, actually, when you will be using those routines that there are some important information that you will always need to specify in order for the message to actually be sent and received. So suppose, as in this example, we are trying to send a message from ranking zero to rank due process, and in order for this to work, you have to specify some information. So first of all, you will need to know the sender will need to specify what so what data we are sending. Basically, what is the size of the data? So number of data, suppose we are sending an array.
+Until now, we have introduced the MPI and we have used some simple routines such as rank and size, to distinguish between different processes and to actually assign them some numbers that we can recognise and use later. But until now, we haven't done anything useful in a way that we haven't sent any information between the processes. This is where we need to gain an understanding of messages in MPI. For example when we are developing different advanced applications, at one point we will need to exchange information from one process to another.  Usually, this information could be some integer, some values or even arrays etc. This is where messages are used. Messages are packets of data moving between sub-programs. So, as said earlier, if we pack this information to be shared between processses into some message, we can send them over communication network so the other process can receive this message. This is how the data and information is shared bewteen the processes. And of course there is some important information that we will always need to specify in order for the messages to be sent and received efficiently. 
+ (image S16)
+As we can see in this example, we are trying to send a message from a process at rank '0' to process at rank '2', and in order for this to work, we have to specify some information. 
+-Data size and type
+First of all, we will need to know, that means that the sender will need to specify what kind of data are we sending. Size of the data inferrs, what is the the 'number'. So for example if we are sending an array of lets say 100 numbers the size would be 100. And as you probably already guessed we would also need to mention what the 'type' of the data is. So is it a character? Is it a double integer? and so on. 
+- Pointer to sent or received data
+For this data exchange we would need two pointers.These pointers are from the sender that will need to point to its own memory to say, OK, the data I'm trying to send is here. And then the receiver will need to specify the memory where he would like to receive this data. 
+-Sending process and receiving process, i.e., the 'ranks'
+The MPI environment will need to know who is the sender and who is the receiver. This is where the 'ranks come in'. So in our previous exapmle we will specify that the rank '0' is the sender and the rank '2' is the receiver. 
+-Tag of the message
+The next information we will need to specify is the 'tag' of the message. A tag is a simple number that we can assign any value from which a receiver can identify the message. For instance, if we would send two messages we can assign one tag as let's say '0' and the other one as tag '1'. This helps the receiver identify and differentiate which message is which. But usually if we will have only one message, we can just put the tag as '0'.
+-The communicator, i.e. MPI_COMM_WORLD
+The last argument we will need to specify is what is the communicator in which we are sending the messages. In our case here it would be the MPI_COMM_WORLD, but we would eventually learn better about the functions as we will do more excercises and hands on practice. 
+
+### MPI Datatypes
+(table S17)
+The MPI environment defines its own basic data types. However, if you're familiar with 'C' they're really simple because what you have to do is just put MPI in capital letters before the variable and change everything to capital case. 
+So simply put, if you're trying to send an integer, then the type is
+~~~
+MPI_INT
+~~~
+and similarly with double, long, character and so on. 
+However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we  can define that struct as a new MPI data type. This proves to be very useful  because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming weeks. For today's section we're only using simple data types and that would mostly mean either an int or a double or maybe even a character. 
+
+## 2. Types of communication in MPI
+There are two criterias by which we divide the types of communications in MPI. 
 
 
 
