@@ -92,7 +92,7 @@ In order to send a message with Point-to-Point Communication , we use the functi
 So these are the arguments that are the most important information the MPI environment needs in order to know what data is sent and to whom.
 
 ## Receiving paradigms
-Quite obviously the receiver has to call the receiver function. This means that we have two ranks in order that one is the sender, the other one is the receiver. So one will call the MPI_send function and the other will similarly call MPI_Recv to receive. To be able to receive we use the function
+As we saw that sending a message needs a function so quite obviously, the receiver has to call the receiver function. This means that we have two ranks in order that one is the sender, the other one is the receiver. So one will call the MPI_send function and the other will similarly call MPI_Recv to receive. To be able to receive we use the function
 ~~~c
 MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status);
 ~~~
@@ -101,15 +101,18 @@ So the arguments needed by this function are similiar to the MPI_send function.
 In the first argument we specify the address of the data, i.e the address where we would like to receive the data and similarly, we put the data type here.
 -'source' is the rank of the sender process. We have the a 'number' of the sender, i.e the rank of the sender. In the previous example we would specify number '3', because the rank with number three is trying to send us a message.
 - Similar to MPI_send, here we also have a tag. It is really important to make sure that we match this number with the sender. So if the sender specifies that the message has tag '0', the receiver also has to specify the same number here. Otherwise, this will be an infinite loop as we will not receive anything because this message would still not be sent.
--The next argument is the communicator and again we would just use the MPI_Comm world.
--The last argument is not so important for us at the moment as this is something that we will be learning in the next exercise. For now we will just use
+- The next argument is the communicator and again we would just use the MPI_Comm world.
+- The last argument is not so important for us at the moment as this is something that we will be learning in the next exercise. For now we will just use
 ~~~c
 MPI_STATUS_IGNORE
 ~~~
 We will learn more about this status structure in the coming weeks. 
 
 
-So let us go through an example to understand again the prerequisites for this communication to work efficiently and how this woulld actually work in code. (image S24)
+So let us go through an example to understand again the prerequisites for this communication to work efficiently and how this would actually work in code. (image S24)
+Here, the left is the sender and the right is the receiver. Let's suppose that the sender would like to send this buffer array that has 'n' floats over to some other processor. For this it calls this MPI_send routine function. As we already know, the first one is the pointer to the data. So this is 'send buffer'. Then it needs to specify the 'number' of data. In this case, it is 'n'. The second routine is MPI_float, and we need to make sure that this data matches with the one mentioned earlier. As we previously discussed this is the MPI data type that the environment defines, but it has to match with this one, otherwise the communication will not work. Another thing we need to keep in mind is is that this data type has to match with the receiver. So we have to be careful when we write those functions that everything has to match. Now, the receiver has to call the receiver function with the same data type. And he first defined an array where he would like to receive this data.
+
+So the receive buffer. So in summary, Ascender specifies rank, so a number to whom you would like to send the message. The receiver specifies the rank of the source. So who is the sender? The communicator, of course, has to be the same because they are bindert in the same one. But what we usually use is the NPR. Com World communicator. Then the next important part is that the tax. So the numbers of the message has to match after match and then the type, the type of the message or type of the the data has to match. So this is the basic about the send and impressive. 
 
 
 
