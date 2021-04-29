@@ -115,7 +115,8 @@ In 'C' this implicit barrier is specified with:
 ~~~
 
 
-
+[Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
+[Jupyter notebook: Exercise: Parallel region](/OpenMP/Exercise-Parallel-region.ipynb)
 
 
 ## 2. V: Clauses and directive format
@@ -142,6 +143,8 @@ We have already seen and used 'pragma omp parallel'  that was a directive to exe
 
 ~~~
 When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with openMP. In this case if it was compiled with openMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
+
+[Jupyter notebook: Conditionals](/OpenMP/Conditionals.ipynb)
 
 ## Clauses
 
@@ -178,11 +181,13 @@ this variable will be accessed by every thread. To exemplify, let's say if we ha
 
 So, to sum up the distinction between private and shared, the private variable is available only to one thread and cannot be accessed by any other thread whereas a  shared variable can not only be accessed by every thread in the part of the program but it can also be updated, changed and modified by by each thread simultaneously.
 
+[Jupyter notebook: Clauses](/OpenMP/Clauses.ipynb)
+
 
 ## 3. E: Calculate pi!
 ### Goal
 To use runtime library calls, conditional compilations, environment variables and parallel regions by calculating pi constant.
-### Excercise
+### Exercise
 1. Open file e2.c and add an if clause if omp is used. Inside add a parallel region that prints the ID of each thread (with omp_get_thread_num()) and the number of all threads (with omp_get_num_threads()).
 2. Compile and run on 4 CPUs and then on 12 CPUs. Observe output.
 3. Add an else clause if program is not compiled with OpenMP. Add a print statement that says: „The program is not compiled with OpenMP“. Compile the program without OpenMP and run it. Observe the output.
@@ -255,7 +260,9 @@ int main(int argc, char** argv)
 • If compiled with OpenMP, the program should output and ID of each thread and number of all threads
 • If not compiled with OpenMP, the program should output “The program was not compiled with OpenMP“
 
-## 4. V: OpenMP constructs and Synchronisations 
+[Jupyter notebook: Exercise: Compute pi](/OpenMP/Exercise-Compute-Pi.ipynb)
+
+## 4. V: OpenMP constructs and Synchronisations
 ## Worksharing constructs
 The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region
  Some of the examples of the work sharing constructs are:
@@ -303,6 +310,8 @@ a[i] = b[i]*f;
 } /* omp end parallel */
 ~~~
 
+[Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
+
 3. Synchronization
 
 Then the next thing is the synchronization. So synchronization can be said by either increasing barrier or an ecstasy barrier. So implicit value we have been using it in both examples. So implicit barrier basically represents a barrier for the beginning and end of a parallel construct. Yes. So this is achieved with let's say in C++ with with parentheses. Yes. There is an example here. So let's let's say this first segment statement drag my only comparable. This would be the implicit barrier you specify the entry into parallel region and the last parentheses is basically the implicit barrier that specifies the end of the parallel crop construct and then we move to the
@@ -330,7 +339,9 @@ f=10;
 } /*omp end parallel */
 ~~~
 
+[Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
 
+[Jupyter notebook: Combined constructs](/OpenMP/Combined-Constructs.ipynb)
 
 
 ## 5. E: For and critical directive
@@ -338,7 +349,7 @@ f=10;
 ### Goal
 To use a worksharing construct for and critical directive.
 
-### Excercise
+### Exercise
 1.Use the result from Exercise 2.
 2.Add parallel region and for directive in e2.c and compile it
 3.Set environment variable OMP_NUM_THREADS to 2 and run the file. 
@@ -356,5 +367,4 @@ To use a worksharing construct for and critical directive.
 
 ### Solution
 
-
-
+[Jupyter notebook: Exercise: Compute pi again](/OpenMP/Exercise-Compute-Pi-again.ipynb)
