@@ -130,10 +130,10 @@ else if (rank == 1) {
 ### Goal 
 Write a ping pong program using MPI_Send and MPI_Recv.Two processes ping pong a token back and forth, incrementing it until it reaches a given value.
 
--Process 0 sends a message to process 1 (ping).
--After receiving this message, process 1 sends a message back to process 0 (pong).
--Each time a message is send, the token is incremented by one. 
--Repeat this ping pong until the value of token reaches 6, i.e. 3 pings and 3 pongs.
+- Process 0 sends a message to process 1 (ping)
+- After receiving this message, process 1 sends a message back to process 0 (pong)
+- Each time a message is send, the token is incremented by one
+- Repeat this ping pong until the value of token reaches 6, i.e. 3 pings and 3 pongs
 
 ## 2.4 D: 
 Does the program work for different number of pings and pongs, i.e. 3 pings and 2 pongs?
@@ -141,9 +141,9 @@ Does the program work for different number of pings and pongs, i.e. 3 pings and 
 ## 2.4 E: Rotating information around a ring
 
 ### Goal
--A set of processes are arranged in a ring.
--Use MPI_Send and MPI_Recv routines to pass an array of numbers around in a ring, starting from rank 0. 
--Program ends when rank 0 process receives the array back and computes its sum.
+- A set of processes are arranged in a ring.
+- Use MPI_Send and MPI_Recv routines to pass an array of numbers around in a ring, starting from rank 0. 
+- Program ends when rank 0 process receives the array back and computes its sum.
 
 ### Note
 Prevent deadlocks, i.e. something is sent and never received or receiver waits forever.
@@ -152,8 +152,8 @@ Prevent deadlocks, i.e. something is sent and never received or receiver waits f
 
 In the previous excercise when we have implemented the program where we were sending this array along the ring, it was an example of an application in which we already knew that we would be using an array with 100 values. We were already aware of how long it is going to be or in another words how big that message is going to be? How many elements are actually sent? and so on. 
 This was important because if we look back into the send and receive routines, we need to specify this 'count'. So, not knowing these numbers already accounts as a problem. In this subsection we will learn that there are two ways to handle this situation, i.e if the size is not known:
--The first way is to send the size of the data as a separate send/recv operation. Therfore, we would send a seperate messages with MPI_send where we can send for e.g the number of elements in an array that we're going to send out later. This works, but sometimes it's not very efficient. 
--The second and a more efficient way is what we eill learn in this subsection with the help of two functions i.e by using MPI_Probe and MPI_Status to obtain the size of sent data.
+- The first way is to send the size of the data as a separate send/recv operation. Therfore, we would send a seperate messages with MPI_send where we can send for e.g the number of elements in an array that we're going to send out later. This works, but sometimes it's not very efficient. 
+- The second and a more efficient way is what we eill learn in this subsection with the help of two functions i.e by using MPI_Probe and MPI_Status to obtain the size of sent data.
 In order to learn more about these functions and how to use them we need to grasp some concepts that follow.
 
 ### Wildcards
@@ -175,16 +175,16 @@ allowin us to receive a message having any tag.
 ### MPI_Status and MPI_Probe
 MPI_Status is a struct that contains important information such as the following
 
--The rank of the sender as 
+- The rank of the sender as 
 ~~~c
 status.MPI_SOURCE
 ~~~
- -The tag of the message as
+ - The tag of the message as
  ~~~c
  status.MPI_TAG
  ~~~
  
--The length of the message with
+- The length of the message with
 ~~~c
 MPI_Get_count(MPI_Status *status, MPI_Datatype datatype, int *count)
 ~~~
