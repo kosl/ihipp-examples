@@ -204,6 +204,35 @@ We can understand these functions better by the following excercise.
 ### Goal
 Write a program that sends a random amount of numbers from a random sender to process 0. The receiver then uses MPI_Probe and MPI_Status to find out how many numbers were sent and who was the sender.
 
+### 3. Collective communications
+
+## 3.1 V: Basic collective communications
+
+So far all the different methods we learnt and exercises we practiced actually only involved point to point communication i.e communication between two processes. Now we will be introduced to some more advanced communications i.e communications in which more processes are involved. We have to keep in mind that in these communications that involve a group of processes, the routines are called by all processes in a communicator. So, simply put all the processes that are involved in this communication all need to call the same routine. Examples of these types of cummunication are 
+
+- Broadcast
+- Scatter
+- Gather
+- Reductions
+
+### Broadcast
+
+Broadcast us  the simplest one of all the forms of collective communication and it is used to send out user input or parameters to all processes.. The essential idea of the broadcast is that we select one of the processor and it sends the same data to all other processors in the communicator. Usually we use broadcast at the beginning of the algorithm in the cases where we would like to distribute the user input or some parameters of the algorithm. For instance, if we don't use parallel input output, the usual case is that we read a file with one processor and then we distribute the contents with the broadcast.
+
+We will be using the function 
+~~~c
+ MPI_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator);
+ ~~~
+Similiar to most functions we have learnt so far, we would like to specify  the data so pointer to which data we would like to share. Again, we specify how 'many' of those data there is and what is their type, i.e what is the data type. However, an interesting difference we will notice here is that there is no sender source or receiver.But actually what this 'root' tells us is that here we specify the rank of the process that would like to distribute the data. Although the root process and receiver processes do different jobs, they all call the same MPI_Bcast function! We will understand it better through example. At the end of the function  again, we have to specify the communicator.
+
+(image P2S3) For example, suppose we have initialized the MPI application with five processors, which implies ranks zero to four. Now we would like the rank '1' to send a string, a character array that contains the the letters 'red' to all other processes. As mentioned already in order for this to work, the rank '1', as well as all other processes that we would like to be involved in this communication have to call the same function and the prototype of this function. 
+So in this case even though rank '1' will send the data to all others, all the processors will call the same function where instead of root, they will say '1' because that means the root processor, the one that is sending will be the processor at rank '1' . So even if you it is  a receiver process, it would have to specify in the fucntion  instrad of root '1'.
+So the function for this (image P2S3) if we put this into the code would be
+~~~c
+MPI_Bcast(buf, 3, MPI_CHAR, 1, MPI_COMM_WORLD);
+~~~
+So, here suppose the 'red' is contained in array called 'buf'. There are three elements we would like to distribute among all other processes. Their data type is character, so we use MPI_char. The root is '1', so the process that and followed by the communicator comm_world. So it's a pretty simple but very useful routine.
+
 
 
 
