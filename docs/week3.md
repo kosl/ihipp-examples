@@ -173,6 +173,36 @@ MPI_ANY_TAG
 allowin us to receive a message having any tag. 
 
 ### MPI_Status and MPI_Probe
+MPI_Status is a struct that contains important information such as the following
+
+-The rank of the sender as 
+~~~c
+status.MPI_SOURCE
+~~~
+ -The tag of the message as
+ ~~~c
+ status.MPI_TAG
+ ~~~
+ 
+-The length of the message with
+~~~c
+MPI_Get_count(MPI_Status *status, MPI_Datatype datatype, int *count)
+~~~
+
+So this 'Status' struct has some attributes that can provide us additional information about the sender. For instance, like we saw in the previous subsection, if we use the MPI_ANY_SOURCE or MPI_ANY_TAG at a few places then in that case 'Status' is the only way of how we can find out who the sender actually was. So using the first two we can get the information about who is the sender (i.e the rank of the sender) and the tag of the message. . We will also see later in an excercise that we can use Status struct to call the function MPI_Get_count that actually gives us the size of the message. So if we don't know how many numbers or if we don't how large the message is going to be, we can use the MPI_Get_count function to  deduce what is what was the size of the message. We will soon see how this works in an example. 
+
+MPI_Probe is a function that is used to probe for an incoming message before actually receiving it. This function is similar to the receive function, but it is much more quicker as it executes without actually receiving the message. So as the name MPI_probe suggests, it probes for an incoming message. So basically the receiver can check whether there is a message waiting for it. We call it usuing the function
+~~~c
+MPI_Probe(int source, int tag, MPI_Comm comm, MPI_Status* status);
+~~~
+
+It can be thought of as an MPI_Recv that does everything but receive the message but youwe can get a lot of information out of it. Once we have that information, we can actually use MPI_Recv to receive the actual message. 
+We can understand these functions better by the following excercise. 
+
+## 2.6 E: (perhaps optional) Dynamic receiving
+
+### Goal
+Write a program that sends a random amount of numbers from a random sender to process 0. The receiver then uses MPI_Probe and MPI_Status to find out how many numbers were sent and who was the sender.
 
 
 
