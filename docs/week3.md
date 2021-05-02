@@ -231,8 +231,57 @@ So the function for this (image P2S3) if we put this into the code would be
 ~~~c
 MPI_Bcast(buf, 3, MPI_CHAR, 1, MPI_COMM_WORLD);
 ~~~
-So, here suppose the 'red' is contained in array called 'buf'. There are three elements we would like to distribute among all other processes. Their data type is character, so we use MPI_char. The root is '1', so the process that and followed by the communicator comm_world. So it's a pretty simple but very useful routine.
+So, here suppose the 'red' is contained in array called 'buf'. There are three elements we would like to distribute among all other processes. Their data type is character, so we use MPI_char. The root is '1', so the process that is sending or broadcasting the data has rank '1' and followed by the communicator comm_world. So it's a pretty simple but very useful routine.
 
+## 3.2 E: Broadcast
+
+### Goal
+- Write a program that uses MPI_Bcast routine to broadcast an array with 10.000.000 numbers from process with rank 0. 
+- Write your own broadcast function
+~~~c
+my_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator)
+~~~
+and measure the time of both routines with MPI function
+~~~c
+double MPI_Wtime(void);
+~~~
+
+## 3.3 D: What do you observe? (sequential vs. tree based algorithm)
+Are the times for both of the program i.e our program and the one from the library same?
+(image S5)
+
+## 3.4 V: Scatter and gather
+### Scatter 
+As we saw in the broadcast function the root process sends the same data to every other process. However, sometimes in many applications, we might have some data, that we  would like, as the word says, to 'scatter' among other processes. This denotes that we need to divide the data into equal parts so each process has the equal part to receive i.e each process in our communicator will just get a fraction of it. So this is the main difference between scatter and broadcast. We will see through the exercises further on where this would be useful.  
+This is the function prototype
+~~~c
+
+~~~
+
+The function prototype is similar to broadcast, but we will go through the arguments because there are some parts we need to be careful with. The function is, not surprisingly, called MPI scatter. As usual first we have to specify the data, so this is the buffer. In this example, the root processor will be the one with rank '1' that would like to scatter this array of five 'numbers' to all the other processes. To be able to do this it will need to specify this 'sendbuf'. Following that is the number 'sendcount' and a bit later we will see a 'recvcount'. Usually they are the same. This is actually the number that tells you how many elements will be sent to each process and it is important to note that it does nor denote how many elements are sent in total, but only the fraction that each process will get. The next argument is the 'recvbuf' that is the buffer of the the process that will receive the data. Finally, 'root' is the same as in broadcast. It is the process that actually does the scattering and 'comm' indicates the communicator in which the processes reside. 
+The only thing we need to be careful in this function is the 'sendcount' and 'recvount' because this is the number that dictates how many element will be sent to each process and not the number of whole elements.  
+The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends the same piece of data to all processes whereas MPI_Scatter sends chunks of data to different processes. 
+Another important thing to be noted is that when this functions is finished, the sender, i.e the root (in our example the process at rank '1') will not get the information of the whole data. In our example, this would mean that after the communication rank '1' will have only the part to 'B' of the data. 
+
+
+### Gather
+After, the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see  the basic idea in many MPI applications, that we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
+~~~c
+
+~~~
+The main difference here is that since only one process, i.e the root gathers all the information it is the only one that needs to have a valid receive buffer. All other calling processes can pass 'NULL' for 'recv_data' since they do not receive anything as they just send the data to the roots process. Finally, once again to be noted and remembered that the 'recv_count' parameter is the count of elements received per process and not the total summation of counts from all processes!
+
+
+## 3.5 E: Scatter and Gather
+
+### Goal
+Write a MPI program that computes the average of an array of elements in parallel using MPI_Scatter and MPI_Gather.
+
+### Steps
+- Generate a random array of numbers on the root process (process 0). 
+- Scatter the numbers to all processes, giving each process an equal amount of numbers.
+- Each process computes the sum of their subset of numbers.
+- Gather all the sums to the root process. The root process then computes the average of these numbers to get the final average.
 
 
 
