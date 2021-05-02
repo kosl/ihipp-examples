@@ -204,7 +204,7 @@ We can understand these functions better by the following excercise.
 ### Goal
 Write a program that sends a random amount of numbers from a random sender to process 0. The receiver then uses MPI_Probe and MPI_Status to find out how many numbers were sent and who was the sender.
 
-### 3. Collective communications
+## 3. Collective communications
 
 ## 3.1 V: Basic collective communications
 
