@@ -285,7 +285,47 @@ Write a MPI program that computes the average of an array of elements in paralle
 
 
 
+## 4.Advanced Collective operations
 
+### 4.1 MPI_Reduce
+So far in the 'basic collective communication' we have encountered broadcast, scatter and gather. Now we can move on to more 'advanced collective communication' where we will cover routines MPI_Reduce and MPI_Allreduce. Before we go into these routines, lets revise the concepts of 'reduce' or data reduction in practice. Simply put, data reduction involves reducing a set of numbers into a smaller set of numbers via some function. For example, 
+Let’s say we have a list of numbers (1, 2, 3, 4, 5). Then reducing this list of numbers with the sum function would produce 
+sum(1, 2, 3, 4, 5) = 15
+Similiarly if we would to use another function say, multiply, the multiplication reduction would yield
+multiply(1, 2, 3, 4, 5) = 120.
+Quite simply, this is what an MPI reduction function does. 
+
+### MPI_Reduce
+MPI Reduce is basically what we did in the the last excercise of the previous subsection but with one additional functionality. In a way what the reduce routine does is basically similar to scatter/gather, but we also specify an MPI function like MPI sum, some MPU multiplication or MPI max or something similar. We will see later on which functions are available and how we can use those functions. So the MPI library use those functions directly on this data that gives us the reduced result immediately so we don't have to call the gather routine and then manually program to get the sum; instead the library does it for us. Therefore, MPI_Reduce takes an array of input elements on each process and returns an array of output elements to the root process. The output elements contain the reduced result.
+
+Perhaps it would be easier to understand it through an example. (image S11) 
+Lets assume that we're trying to to compute a sum, but different numbers are scattered across different processes. If we would have our numbers (1, 2, 3, 4, 5) we would call MPI reduce on this data and we will also need to mention say the function that we would like to reduce the data is the sum and then the root process will get the sum as a result. To be able to do this we would need the prototype of the MPI_reduce
+~~~c
+MPI_Reduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm communicator);
+~~~
+The arguments of this routine are pretty similiar to the ones we have seen so far. 
+So, the 'send_data' parameter is an array of elements that each process wants to reduce. Following that, the 'recv_data' that is only relevant on the process with a rank of root as it contains the reduced result. Then we mention the 'count'i.e the number or quantity of the data and the datatype. However, this is where the MPI_reduce function is different. Here we also mention the 'operation' in the op parameter i.e  the operation that we wish to apply to our data. The list of reduction operation in the MPI library are as follows: (image TABLE S12)
+
+## 4.2 E: Computing average with MPI_Reduce
+
+### Goal
+Write a MPI program that computes the average of an array of elements in parallel using MPI_Reduce.
+
+### Steps
+- Generate a random array of numbers on each process. 
+- Each process computes the local sum of their subset of numbers.
+- Reduce the local sums on process with rank 0 and compute the average of these numbers to get the final average.
+
+
+## 4.3 Calculate Pi!
+
+### Goal
+To calculate the value of pi derived from integral in calculus by approximation using Riemann sum.
+
+### Steps
+- The rank 0 process asks the user for the number of interval and broadcast the value to other processes.
+- Locally add up areas of a subset of rectangles in each process. 
+- Finally, the sums computed are added together using reduction.
 
 
 
