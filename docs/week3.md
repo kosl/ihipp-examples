@@ -170,7 +170,7 @@ Similiary we can do this to the tag. In the function where we have to mention th
 ~~~c
 MPI_ANY_TAG
 ~~~
-allowin us to receive a message having any tag. 
+allowing us to receive a message having any tag. 
 
 ### MPI_Status and MPI_Probe
 MPI_Status is a struct that contains important information such as the following
@@ -317,7 +317,7 @@ Write a MPI program that computes the average of an array of elements in paralle
 - Reduce the local sums on process with rank 0 and compute the average of these numbers to get the final average.
 
 
-## 4.3 Calculate Pi!
+## 4.3 E: Calculate Pi!
 
 ### Goal
 To calculate the value of pi derived from integral in calculus by approximation using Riemann sum.
@@ -326,6 +326,29 @@ To calculate the value of pi derived from integral in calculus by approximation 
 - The rank 0 process asks the user for the number of interval and broadcast the value to other processes.
 - Locally add up areas of a subset of rectangles in each process. 
 - Finally, the sums computed are added together using reduction.
+
+## 4.4 V/A: MPI_Allreduce
+
+In the MPI_reduce function that we learnt previously, the idea was that one of the processor will take data from different processors to combine them using some MPI operation and use this operation to reduce the data and get the results. The MPI_Allreduce stands out from the MPI_Reduce in a peculiar way that is in 'Allreduce' all of the processes get this result. To understand it simply we reduce the data and somehow broadcast the result at the same time. Of course it is possible to doing it ourself but with MPI_Allreduce the library does it making it not only faster but also easier for us. 
+Many parallel applications require accessing the reduced results across all processes rather than the root process. This is where MPI_Allreduce is mostly used as it reduces the values and distributes the results to all processes. Simply put 'Allreduce' is basically the 'reduce' and the 'broadcast' function combimed. 
+The prototype for MPI_Allreduce is quite similiar to the 'reduce' and it looks like
+~~~c
+MPI_Allreduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op,
+MPI_Comm communicator);
+~~~
+However, a major difference would be that here is no 'root' in the argument because all the processes will get the data. Everything else is pretty much the same. We have two pointers of the send and receive data. We have the number of elements sent by each processor followed by the data type. Then similiar to the reduce function we have the MPI operation that we want to use to reduce the data and of course finally the communicator. 
+Since we are already familiar with the reduce function it would be easier for us to 'learn about the 'Allreduce' through the following excercise.
+
+## 4.5 E: Computing standard deviation
+
+### Goal
+Write a MPI program that computes the standard deviation of an array of numbers in parallel using MPI_Reduce and MPI_Allreduce.
+
+### Note
+We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). 
+Hence we know that mean = (a+b)/2 = 1/2 
+and 
+stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887
 
 
 
