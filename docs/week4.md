@@ -26,3 +26,7 @@ MPI_Wait(MPI_Request *request, MPI_Status *status);
 ~~~
 We will understand this more clearly with the help of the examples.
 
+### Non-blocking Send
+(imageD2P2S20) *would be ideal as an animation*
+
+
