@@ -49,4 +49,7 @@ b)
 1. Repeat 1-2-3 with size (number of process) iterations, i.e. each process computes the sum of all ranks.
 2. Use non-blocking MPI_Isend.
 
+### 1.3 V: One sided communication
+As we already learnt in the begining that in MPI the parellelisation is based on the distributed memory. This means that if we run a program on different cores each core has its own private memory. Since, the memory is private to each process we send messages to exchange data from one process to another. 
+In two-sided and collective communication mode
 
