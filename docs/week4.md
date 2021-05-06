@@ -24,9 +24,29 @@ MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_
 ~~~c
 MPI_Wait(MPI_Request *request, MPI_Status *status);
 ~~~
-We will understand this more clearly with the help of the examples.
+We will understand this more clearly with the help of the following two examples.
 
-### Non-blocking Send
+### Non-blocking send and receive
 (imageD2P2S20) *would be ideal as an animation*
+In this examples let us assume that all the processes would like to share some information along the ring. As the picture shows, process zero would like to send something to one, six would like something to zero and so on. The idea here is that first we initialize the non blocking send and we send the message. So, firstly we initiate non-blocking send to the right neighbour. As we know in non blocking communication after we have done that we can do some work. In our case we will receive the message via the classical receive function. So, in this ring example, receive the message from the left neighbour. And finally at the end, we have to call the MPI_wait function in order to check if everything was done and  for the non-blocking send to complete.  
+Perhaps you can already see it clearly that fundametally it is non blocking in this ring example that helps us so that every process can start the sending i.e we can send information, so send a message, but at the same time, we can still do something else.
+
+In similiar ways we can initiate the non blocking receive. So in our ring example it would mean that we initiate non-blocking receive from the left neighbour. This would imply that we will receive something, but maybe not not now, maybe later, and we do some work. In this case it would mean sending information to the following receiver so, send the message to the right neighbour. Finally, we would call the MPI_wait function to wait for non-blocking receive to complete.
+
+Let us try to furhter consolidate these ideas by implementing them in the following excercise!
+
+### 1.2 E: Rotating information around a ring (non-blocking)
+
+### Goal
+- A set of processes are arranged in a ring. Initialize sum to 0. 
+
+a)
+1. Each process stores its rank into snd_buf. 
+2. 2. Each process passes this on to its neighbour on the right.
+3. Each process adds snd_buf to sum. 
+
+b)
+1. Repeat 1-2-3 with size (number of process) iterations, i.e. each process computes the sum of all ranks.
+2. Use non-blocking MPI_Isend.
 
 
