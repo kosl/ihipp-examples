@@ -51,5 +51,34 @@ b)
 
 ### 1.3 V: One sided communication
 As we already learnt in the begining that in MPI the parellelisation is based on the distributed memory. This means that if we run a program on different cores each core has its own private memory. Since, the memory is private to each process we send messages to exchange data from one process to another. 
-In two-sided and collective communication mode
+In two-sided (i.e point to point communication) and collective communication models the problem is that (even with the that non blocking) both sender and receiver have to participate in data exchange (i.e send and receive) operations explicitly, which requires synchronization. 
+(image S24) In this example we can see when we have the non blocking routine the problem is that when we call the MPI_send and until the message has been recieved my the MPI_recv, there is this time in which both the processes have to wait and they can not do anything. Therefore a signinficant drawback of this approach is that the sender has to wait for the receiver to be ready to receive the data before it can send the data, or vice versa. This causes idle time. To avoid this we use the one sided communication. 
 
+Although MPI is using a distributed memory approach, the MPI standard introduced Remote Memory Access (RMA) routines also called one-sided communication because it requires only one process to transfer data. Simply put it enables a process to access some data from the memory of the other processes. The idea is that  process can have direct access to the memory address space of a remote process without intervention of that remote process.
+(image S25)So we do not have to explicitly call the 'send' and 'receive' routines from both the sides. The process can just 'put' and 'get' the data from the memory of the other processor. This is helpful because the target process can continue executings its tasks, doing its work without waiting for anything. So the most important benefit of one sided communication is that while a process puts or gets data from remote process, the remote process can continue to compute instead of waiting for the data. This reduces communication time and can resolve some problems with scalability of the programs (i.e. on thousands of MPI processes)
+In order to allow other processes to have access into its memory, a process has to explicitly expose its own memory to others. This means that for the origin process to access the memory in the target process, the target process has to allow that the memory can be accessed and used. It does this by declaring a shared memory region, also called a window. This window becomes the region in the memory that is available to all the other processes in the communicator allowing them to put and get data from its memory. The window is created by callin the function 
+~~~c
+MPI_Win_create(void *base, MPI_Aint size, int disp_unit, MPI_Info info, MPI_Comm comm, MPI_Win *win);
+~~~
+The arguments in this function are quite different. They are as follows
+- 'base' is the pointer to local data to expose. i.e the data we would want access to. 
+- 'size' denotes the size of local data in bytes.
+- disp_unit is the  unit size displacements
+- 'info' is the info argument. Most oftenly we use info_NULL. 
+- 'comm' is the communicator that we know from all the previous functions.
+- 'win' represents the window object. 
+
+And at the end of the MPI application we have to free this window with the fucntion
+~~~C
+MPI_Win_free(MPI_Win *win);
+~~~
+So with these functions we create a window around the memory that would be accessible to others. That is why at the end of we have to call this Win_free function to free this window. 
+To better understand lets go through a classic example
+~~~c
+MPI_Win win;
+int shared_buffer[NUM_ELEMENTS];
+MPI_Win_create(shared_buffer, NUM_ELEMENT, sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD, &win);
+... MPI_Win_free(&win);
+~~~
+So here we define an MPI struct variable 'win'. Then we define some data or storage through either dynamic allocation or something similiar. Using this buffer we actually then create the window. So in the MPI_win_create you can see that we would like to share this 'shared_buffer' buffer. The size here is the '{NUM_ELEMENTS}'. Since each data type is 'int' so the discplacement becomes lets say probably 4 bytes wide. The info is usually 'NULL' and the communicator as always is the 'comm_world'.
+Once this is called, this shared buffer can be shared by all the processes by calling the MPI_Put and MPI_Get routines. Of course at the end of the application we free the 'win' window. 
