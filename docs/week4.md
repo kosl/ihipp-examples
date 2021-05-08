@@ -1,6 +1,6 @@
 ## MPI Continued
 
-### 1.1 V: Non Blocking communications
+## 1.1 V: Non Blocking communications
 We saw in the previous week that the types of communication in MPI can be divided by two arguments i.e based on the number of processes involved so
 - Point-to-Point Communication
 - Collective communication
@@ -35,7 +35,7 @@ In similiar ways we can initiate the non blocking receive. So in our ring exampl
 
 Let us try to furhter consolidate these ideas by implementing them in the following excercise!
 
-### 1.2 E: Rotating information around a ring (non-blocking)
+## 1.2 E: Rotating information around a ring (non-blocking)
 
 ### Goal
 - A set of processes are arranged in a ring. Initialize sum to 0. 
@@ -49,7 +49,7 @@ b)
 1. Repeat 1-2-3 with size (number of process) iterations, i.e. each process computes the sum of all ranks.
 2. Use non-blocking MPI_Isend.
 
-### 1.3 V: One sided communication
+## 1.3 V: One sided communication
 As we already learnt in the begining that in MPI the parellelisation is based on the distributed memory. This means that if we run a program on different cores each core has its own private memory. Since, the memory is private to each process we send messages to exchange data from one process to another. 
 In two-sided (i.e point to point communication) and collective communication models the problem is that (even with the that non blocking) both sender and receiver have to participate in data exchange (i.e send and receive) operations explicitly, which requires synchronization. 
 (image S24) In this example we can see when we have the non blocking routine the problem is that when we call the MPI_send and until the message has been recieved my the MPI_recv, there is this time in which both the processes have to wait and they can not do anything. Therefore a signinficant drawback of this approach is that the sender has to wait for the receiver to be ready to receive the data before it can send the data, or vice versa. This causes idle time. To avoid this we use the one sided communication. 
@@ -68,7 +68,7 @@ The arguments in this function are quite different. They are as follows
 - 'comm' is the communicator that we know from all the previous functions.
 - 'win' represents the window object. 
 
-And at the end of the MPI application we have to free this window with the fucntion
+And at the end of the MPI application we have to free this window with the function
 ~~~C
 MPI_Win_free(MPI_Win *win);
 ~~~
@@ -82,3 +82,34 @@ MPI_Win_create(shared_buffer, NUM_ELEMENT, sizeof(int), MPI_INFO_NULL, MPI_COMM_
 ~~~
 So here we define an MPI struct variable 'win'. Then we define some data or storage through either dynamic allocation or something similiar. Using this buffer we actually then create the window. So in the MPI_win_create you can see that we would like to share this 'shared_buffer' buffer. The size here is the '{NUM_ELEMENTS}'. Since each data type is 'int' so the discplacement becomes lets say probably 4 bytes wide. The info is usually 'NULL' and the communicator as always is the 'comm_world'.
 Once this is called, this shared buffer can be shared by all the processes by calling the MPI_Put and MPI_Get routines. Of course at the end of the application we free the 'win' window. 
+
+### MPI_Put and MPI_Get
+
+To access the data we need the two routines we talked about earlier i.e the MPI_Put and MPI_Get. MPI_Put operation is equivalent to a send by origin process and a matching receive by the target process. The prototype of these functions have a bit too many arguments and they look like this
+~~~c
+MPI_Put(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype_target_datatype, MPI_Win win)
+~~~
+In the same manner MPI_Get is similar to the put operation, except that data is transfered from the target memory to the origin process. The prototype of this function looks like this
+~~~c
+MPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype_target_datatype, MPI_Win win);
+~~~
+We will understand in depth about the arguments of these functions in the following excercise. But before we get into that another important thing that we need to discuss is the Synchronization. If you remember we discussed this concept briefly in the (number) week when we were learning about the concepts of OpenMP. 
+In MPI in one sided communication (image S24)  the target process  calls the function to create the window in order to give access of its memory to other processes. However, in the case of multiple users it is already quite plain to see that if these users try to simultaneously access this data can already lead to some problems. For example, lets say two users access the window to put data using the MPI_Put function this is clealry a race condition that needs to be avoided. This is where synchronisation comes into the play. So in order to avoid this before and after each 'one sided communication' function i.e MPI-Get and MPI_Put we need to use this function
+~~~c
+MPI_Win_fence(0, MPI_Win win);
+~~~
+This fucntion actually helps us to synchronise the data in a way that if multiple processes would like to access the same window it makes sure that they go in an order. So the program will allow different processes to access the window but it will ensure that it is not happening in the same time. So it is important that the  one-sided function calls are surrounded by this fucntion.
+
+## 1.4 E: One sided communication in a ring
+
+### Goal
+
+- Write a MPI program that uses MPI_Get and MPI_Put to pass data around in a ring.
+- Each process creates a window containing an array with numbers [10*rank, 10*rank + 1, ..., 10*rank + 9].
+- Each process gets the data from the preceding process and sets this data into the window of the next process.
+- Each process prints its final data.
+- 
+
+
+
+
