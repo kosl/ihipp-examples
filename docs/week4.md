@@ -98,7 +98,7 @@ In MPI in one sided communication (image S24)  the target process  calls the fun
 ~~~c
 MPI_Win_fence(0, MPI_Win win);
 ~~~
-This fucntion actually helps us to synchronise the data in a way that if multiple processes would like to access the same window it makes sure that they go in an order. So the program will allow different processes to access the window but it will ensure that it is not happening in the same time. So it is important that the  one-sided function calls are surrounded by this fucntion.
+This function actually helps us to synchronise the data in a way that if multiple processes would like to access the same window it makes sure that they go in an order. So the program will allow different processes to access the window but it will ensure that it is not happening in the same time. So it is important that the  one-sided function calls are surrounded by this fucntion.
 
 ## 1.4 E: One sided communication in a ring
 
@@ -108,7 +108,7 @@ This fucntion actually helps us to synchronise the data in a way that if multipl
 - Each process creates a window containing an array with numbers [10*rank, 10*rank + 1, ..., 10*rank + 9].
 - Each process gets the data from the preceding process and sets this data into the window of the next process.
 - Each process prints its final data.
-- 
+
 
 
 
