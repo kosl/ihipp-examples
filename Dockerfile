@@ -27,10 +27,11 @@ USER ${NB_USER}
 RUN conda config --set allow_conda_downgrades true
 RUN conda config --set notify_outdated_conda false
 
-RUN conda install -c conda-forge xeus-cling=0.12.1 openmpi openmp openssh
+RUN conda install -c conda-forge xeus-cling=0.12.1 openmpi openmp openssh mpi4py gfortran_linux-64
 #RUN conda install openmpi -c conda-forge
 #RUN conda install openmp -c conda-forge
 #RUN conda install openssh -c conda-forge
+#RUN conda install mpi4py -c conda-forge
 
 #RUN conda install git -c conda-forge
 # Add RISE to the mix as well so user can show live slideshows from their notebooks
