@@ -109,6 +109,11 @@ This function actually helps us to synchronise the data in a way that if multipl
 - Each process gets the data from the preceding process and sets this data into the window of the next process.
 - Each process prints its final data.
 
+## 2. MPI + OpenMP
+
+## 2.1 MPI + threading methods
+
+
 
 
 
