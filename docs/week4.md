@@ -121,7 +121,48 @@ The two main threading paradigms we will share are:
 - MPI + MPI-3 shared memory
 
 ### MPI + OpenMP
-MPI+ OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets i.e cache coherent non-uniform memory. It can be optimised in such a way that if we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous week we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. And the OpenMP or the threading model for it was introduced with MPI-2 so that you can. Use some threading within the MPI-2. And  from that  library, we usually are using OpenMPI API, but also other vendor specific, especially if you buy from prominent vendor, there are tuned API libraries that are best working on the cluster that you have just bought, meaning that it takes into account the topology, the latencies and all architectural differences within the API library itself.
+MPI+ OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets i.e cache coherent non-uniform memory. It can be optimised in such a way that if we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous week we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. The OpenMP or rahter the threading model for it was introduced with MPI-2 so that we can use some threading within the MPI-2. From that  library, we are usually using OpenMPI, but there are also some other vendor specific MPI libraries, especially if you buy from prominent vendors. There are tuned MPI libraries that work best on the cluster that you buy, meaning that it takes into account the topology, the latencies and all architectural differences within the MPI library itself.
+So there are three libraries in C that we can initially query
+~~~c
+int MPI_Init_thread(int * argc, char ** argv[], int thread_level_required,
+                    int * thread_level_provided);
+int MPI_Query_thread(int * thread_level_provided);
+int MPI_Is_main_thread(int * flag);
+~~~
+However we require certain values prior to this to mention the kind of or rather the level of threading we can get from. So, the required values for example are
+~~~c
+MPI_THREAD_SINGLE
+~~~
+- Here only one thread will execute the MPI calls
+
+~~~c
+MPI_THREAD_FUNNELED
+~~~
+- Here only the master thread will make MPI-calls
+
+~~~c
+MPI_THREAD_SERIALIZED
+~~~
+- In this case multiple threads may make MPI-calls, but only one at a time.
+
+~~~c
+MPI_THREAD_MULTIPLE
+~~~
+- Here multiple threads may call MPI, without any restrictions.
+
+## 2.2 E: Calculate pi! Using MPI_THREAD_FUNNLED
+
+### Learning outcomes for the excercise 
+We will see through this excercise that with MPI_THREAD_FUNNLED
+- It Fits nicely with most OpenMP models
+- Expensive loops parallelized with OpenMP
+- Communication and MPI calls between loops
+- Eliminates need for true “thread-safe” MPI
+- Parallel scaling efficiency may be limited (Amdahl’s law) by MPI_THREAD_FUNNLED approach
+- Moving to MPI_THREAD_MULTIPLE does come at a performance price (and programming challenge)
+
+
+
 
 
 
