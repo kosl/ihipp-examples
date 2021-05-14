@@ -19,7 +19,7 @@ MPI_Isend(void *buf, int count, MPI_Datatype datatype,int dest, int tag, MPI_Com
 //and
 MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Request *request);
 ~~~
-- Then we can do soome other work because when we use this routine, it does not block us, so we can do some stuff after this. However, later on we actually have to check whether the message has been received.
+- Then we can do some other work because when we use this routine, it does not block us, so we can do some stuff after this. However, later on we actually have to check whether the message has been received.
 - To do this final phase we need to wait for nonblocking communication to complete and we do this by calling the MPI_wait function. This completes the whole process.  This request is just another struct in MPI similar to 'status', so we just define it as similar to status and then put on the pointer there. The prototype of this function looks like
 ~~~c
 MPI_Wait(MPI_Request *request, MPI_Status *status);
@@ -121,8 +121,7 @@ The two main threading paradigms we will share are:
 - MPI + MPI-3 shared memory
 
 ### MPI + OpenMP
-MPI+ OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets i.e cache coherent non-uniform memory. It can be optimised in such a way that if we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous week we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. And the open MP or the trading order? 
-For it, it was introduced with MPI, too, so that you can. Use some trading within the MPI to. And far from that so library, we usually are using open API, but also other vendor specific, especially if you buy from prominent vendor, there are tuned API libraries that are best working on the cluster that you have just bought, meaning that it takes into account the topology, the latencies and all architectural differences within the API library itself.
+MPI+ OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets i.e cache coherent non-uniform memory. It can be optimised in such a way that if we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous week we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. And the OpenMP or the threading model for it was introduced with MPI-2 so that you can. Use some threading within the MPI-2. And  from that  library, we usually are using OpenMPI API, but also other vendor specific, especially if you buy from prominent vendor, there are tuned API libraries that are best working on the cluster that you have just bought, meaning that it takes into account the topology, the latencies and all architectural differences within the API library itself.
 
 
 
