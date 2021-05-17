@@ -158,8 +158,12 @@ We will see through this excercise that with MPI_THREAD_FUNNLED
 - Expensive loops parallelized with OpenMP
 - Communication and MPI calls between loops
 - Eliminates need for true “thread-safe” MPI
-- Parallel scaling efficiency may be limited (Amdahl’s law) by MPI_THREAD_FUNNLED approach
-- Moving to MPI_THREAD_MULTIPLE does come at a performance price (and programming challenge)
+
+## 2.3 D:
+- Can the parallel scaling efficiency may be limited (Amdahl’s law) by MPI_THREAD_FUNNLED approach?
+- Does moving to MPI_THREAD_MULTIPLE come at a performance price (and programming challenge)?
+
+
 
 
 
