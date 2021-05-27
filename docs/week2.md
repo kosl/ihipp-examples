@@ -114,12 +114,71 @@ In 'C' this implicit barrier is specified with:
 
 ~~~
 
+Let's observe the following code
+
+~~~ c
+
+#include <omp.h>
+#include <stdio.h>
+
+int main () 
+{
+  int num_threads = 4;
+  omp_set_num_threads(num_threads);
+  int rank;
+  #pragma omp parallel
+  {
+  rank = omp_get_thread_num();
+  int nr_threads = omp_get_num_threads();
+  printf("I am thread %i of %i threads\n",
+	 rank,
+	 nr_threads);
+  }
+}
+
+~~~
+
+Take a moment and try to understand what is happening in the code
+above. Note the usage of the construct and runtime functions defined earlier in the article.
+
 
 [Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
-[Jupyter notebook: Exercise: Parallel region](/OpenMP/Exercise-Parallel-region.ipynb)
 
+## 2. Example: Runtime functions
 
-## 2. V: Clauses and directive format
+Let's observe the following example
+
+~~~ c
+#pragma cling load("libomp.so")
+#include <omp.h>
+#include <stdio.h>
+
+int num_threads = 4;
+omp_set_num_threads(num_threads);
+int rank;
+#pragma omp parallel
+{
+    rank = omp_get_thread_num();
+    int nr_threads = omp_get_num_threads();
+    printf("I am thread %i of %i threads\n",
+	 rank,
+	 nr_threads);
+}
+~~~
+
+Take a moment and try to understand what is happening in the code above.
+
+* What is the expected output? What are the values of `rank` and `nr_threads`?
+
+* Is the output always the same? What order are the threads printing in?
+
+* What would happen if we change the number of threads to 12? 
+
+Now go to the exercise, try it out and check if your answers were correct. 
+
+[Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
+
+## 3. V: Clauses and directive format
 ## Directive format
 
 So far we have just specified a parallel region and the code was executed in serial. Now we will move ahead to see directives for the openMP. The format for using a directive is as follows
@@ -143,6 +202,42 @@ We have already seen and used 'pragma omp parallel'  that was a directive to exe
 
 ~~~
 When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with openMP. In this case if it was compiled with openMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
+
+The following example illustrates the use of conditional compilation. With OpenMP compilation, the `_OPENMP` becomes defined. 
+
+~~~c
+#include <omp.h>
+#include <stdio.h>
+
+int main () 
+{
+  int rank;
+  #ifdef _OPENMP
+  #pragma omp parallel
+  {
+    rank = omp_get_thread_num();
+    int nr_threads = omp_get_num_threads();
+    printf("I am thread %i of %i threads\n",
+	   rank,
+	   nr_threads);
+  }
+  #else
+  {
+    printf("This program is not compiled with OpenMP\n");
+  }
+  #endif
+}
+~~~
+
+> >      $ gcc example.c
+> >      This program is not compiled with OpenMP
+> >      
+> >      $ gcc -fopenmp example.c
+> >      I am thread 3 of 4 threads
+> >      I am thread 2 of 4 threads
+> >      I am thread 1 of 4 threads
+> >      I am thread 0 of 4 threads
+
 
 [Jupyter notebook: Conditionals](/OpenMP/Conditionals.ipynb)
 
@@ -181,7 +276,128 @@ this variable will be accessed by every thread. To exemplify, let's say if we ha
 
 So, to sum up the distinction between private and shared, the private variable is available only to one thread and cannot be accessed by any other thread whereas a  shared variable can not only be accessed by every thread in the part of the program but it can also be updated, changed and modified by by each thread simultaneously.
 
+Let's have a look at the code below
+
+~~~c
+#include <omp.h>
+#include <stdio.h>
+
+int main () 
+{
+  int num_threads = 4;
+  omp_set_num_threads(num_threads);
+
+  int private_var = 0;
+  int shared_var = 0;
+  int rank;
+  #pragma omp parallel private(private_var) shared(shared_var)
+  {
+    rank = omp_get_thread_num();
+    printf("Thread ID is: %d\n", rank);  
+    private_var = private_var + num_threads;
+    printf("Value of private_var is: %d\n", private_var);
+    shared_var = shared_var + num_threads;
+    printf("Value of shared_var is: %d\n", shared_var);
+  }
+}
+~~~
+
+Run the code above and observe the output. How does the value of
+private and shared variable changes when accessed by different
+threads. Does the value of shared variable increase when being
+modified by multiple threads? Why? 
+
+
 [Jupyter notebook: Clauses](/OpenMP/Clauses.ipynb)
+
+## 4. Example: Clauses
+
+Let's observe the following example
+
+~~~c
+#pragma cling load("libomp.so")
+#include <omp.h>
+#include <stdio.h>
+
+int num_threads = 4;
+omp_set_num_threads(num_threads);
+
+int private_var = 0;
+int shared_var = 0;
+int rank;
+#pragma omp parallel private(private_var) shared(shared_var)
+{
+  rank = omp_get_thread_num();
+  printf("Thread ID is: %d\n", rank);  
+  private_var = private_var + num_threads;
+  printf("Value of private_var is: %d\n", private_var);
+  shared_var = shared_var + num_threads;
+  printf("Value of shared_var is: %d\n", shared_var);
+}
+~~~
+
+Take a moment and try to understand what is happening in the code above.
+
+* How does the value of private and shared variable change when accessed by different threads?
+
+* Does the value of shared variable increase when being modified by multiple threads? Why?
+
+* Does the value of private variable increase when being modified by multiple threads?
+
+Now go to the exercise, try it out and check if your answers were correct. 
+
+[Jupyter notebook: Runtime functions](/OpenMP/Clauses.ipynb)
+
+
+## 5. Exercise: Parallel region
+
+In this exercise you will get to practice using basic runtime functions, directive format, parallel constructs and clauses which we have learned so far. 
+
+The code for this exercise is under the following instructions in a Jupyter notebook. You will start from this provided Hello world template. What is the expected output?
+
+~~~c
+#pragma cling load("libomp.so")
+#include <stdio.h>
+#include <unistd.h>
+#include <omp.h>
+
+int i;
+i = -1;
+printf("hello world %d\n", i );
+~~~
+
+##Exercise
+
+1. Go to the exercise and set the desired number of threads to 4 using one of the runtime functions. 
+
+2. Set variable i to ID of this thread using one of the runtime functions. 
+
+3. Add a parallel region to make the code run in parallel. 
+
+4. Add the OpenMP conditional clause when including OpenMP header file and using runtime functions. 
+
+Before you run the program, what do you think will happen?
+
+Now run the program and observe the output. You can change the number of threads to 12 or other and observe the output. 
+
+5. Add a private clause to the parallel region for the variable i.
+
+What will happen? Observe the difference in the output. Why is the output different? Check if you get a race condition. 
+
+Race condition: 
+
+* Two threads access the same shared variable and at least one thread modifies the variable and accesses are unsynchonized. 
+
+* The outcome of the program depends on timing of the threads in the team.
+
+* This is caused by unintended shared of data. 
+
+Don't worry if you always get a correct output, because a compiler may use a private register on each thread instead of writing directly into memory. 
+
+## Expected output:
+* If compiled with OpenMP, the program should output »hello world« and the ID of each thread. 
+
+[Jupyter notebook: Exercise: Parallel region](/OpenMP/Exercise-Parallel-region.ipynb)
 
 
 ## 3. E: Calculate pi!
