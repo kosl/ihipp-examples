@@ -400,85 +400,13 @@ Don't worry if you always get a correct output, because a compiler may use a pri
 [Jupyter notebook: Exercise: Parallel region](/OpenMP/Exercise-Parallel-region.ipynb)
 
 
-## 3. E: Calculate pi!
-### Goal
-To use runtime library calls, conditional compilations, environment variables and parallel regions by calculating pi constant.
-### Exercise
-1. Open file e2.c and add an if clause if omp is used. Inside add a parallel region that prints the ID of each thread (with omp_get_thread_num()) and the number of all threads (with omp_get_num_threads()).
-2. Compile and run on 4 CPUs and then on 12 CPUs. Observe output.
-3. Add an else clause if program is not compiled with OpenMP. Add a print statement that says: „The program is not compiled with OpenMP“. Compile the program without OpenMP and run it. Observe the output.
-4. Add a private clause to omp parallel directive for the variable associated with omp_get_thread_num() and observe the difference in the output.
-• Race condition:
-• Two threads access the same shared variable and at least one thread modifies the variable and the accesses are unsynchronized
-• Outcome of the program depends on timing of the threads in the team
-• This is caused by unintended shared of data
-### Solution
-~~~c
-#include <stdio.h>
-#include <time.h>
-#include <sys/time.h>
-#ifdef _OPENMP
-#  include <omp.h>
-#endif
+## 6. Which thread executes which statement or operation?
 
-#define f(A) (4.0/(1.0+A*A))
+In the following steps we learn how to really organize our work in parallel. Please share your ideas on how we can achieve that.
 
-const int n = 10000000;
+Do you know of possible ways of organizing work in parallel? How can the operations be distributed between threads? Is there a way to control the order of threads?
 
-int main(int argc, char** argv)
-{
-  int i;
-  double w,x,sum,pi;
-  clock_t t1,t2;
-  struct timeval tv1,tv2; struct timezone tz;
-# ifdef _OPENMP
-    double wt1,wt2;
-# endif
-
-/* Begin of SPACE for second exercise */
-
-
-/* End of SPACE for second exercise */
-
-  gettimeofday(&tv1, &tz);
-# ifdef _OPENMP
-    wt1=omp_get_wtime();
-# endif
-  t1=clock();
- 
-/* calculate pi = integral [0..1] 4/(1+x**2) dx */
-  /* Begin of SPACE for third exercise */
-  w=1.0/n;
-  sum=0.0;
-  for (i=1;i<=n;i++)
-  {
-    x=w*((double)i-0.5);
-    sum=sum+f(x);
-  }
-  pi=w*sum;
-/* End of SPACE for third exercise */
-  t2=clock();
-# ifdef _OPENMP
-    wt2=omp_get_wtime();
-# endif
-  gettimeofday(&tv2, &tz);
-  printf( "computed pi = %24.16g\n", pi );
-  printf( "CPU time (clock)                = %12.4g sec\n", (t2-t1)/1000000.0 );
-# ifdef _OPENMP
-    printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
-# endif
-  printf( "wall clock time (gettimeofday)  = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
-  return 0;
-}
-
-~~~
-### Expected output
-• If compiled with OpenMP, the program should output and ID of each thread and number of all threads
-• If not compiled with OpenMP, the program should output “The program was not compiled with OpenMP“
-
-[Jupyter notebook: Exercise: Compute pi](/OpenMP/Exercise-Compute-Pi.ipynb)
-
-## 4. V: OpenMP constructs and Synchronisations
+## 7. V: OpenMP constructs and Synchronisations
 ## Worksharing constructs
 The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region
  Some of the examples of the work sharing constructs are:
@@ -526,8 +454,6 @@ a[i] = b[i]*f;
 } /* omp end parallel */
 ~~~
 
-[Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
-
 3. Synchronization
 
 Then the next thing is the synchronization. So synchronization can be said by either increasing barrier or an ecstasy barrier. So implicit value we have been using it in both examples. So implicit barrier basically represents a barrier for the beginning and end of a parallel construct. Yes. So this is achieved with let's say in C++ with with parentheses. Yes. There is an example here. So let's let's say this first segment statement drag my only comparable. This would be the implicit barrier you specify the entry into parallel region and the last parentheses is basically the implicit barrier that specifies the end of the parallel crop construct and then we move to the
@@ -555,32 +481,625 @@ f=10;
 } /*omp end parallel */
 ~~~
 
+In the example above, due to critical clause, only one thread is executed at a time for cnt variable.
+
+## 2.8 Example: Worksharing constructs
+
+Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
+
+[Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
+
+## 2.9 Example: Synchronization constructs
+
+Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
+
 [Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
 
-[Jupyter notebook: Combined constructs](/OpenMP/Combined-Constructs.ipynb)
+## 2.10 Nesting and binding
 
+## Directive Scoping
 
-## 5. E: For and critical directive
+OpenMP specifies a number of scoping rules on how directives may associate (bind) and nest within each other. That is why incorrect programs may result if the OpenMP binding and nesting rules are ignored. These terms are used to explain the impact of OpenMP directives. 
 
-### Goal
-To use a worksharing construct for and critical directive.
+Static (Lexical) Extent:
+
+* The code textually enclosed between the beginning and the end of a structured block following a directive.
+
+* The static extent of a directives does not span multiple routines or code files.
+
+Dynamic Extent:
+
+* The dynamic extent of a directive further includes the routines called from within the construct. 
+
+* It includes both its static (lexical) extent and the extents of its orphaned directives. 
+
+Orphaned Directive:
+
+* An OpenMP directive that appears independently from another enclosing directive is said to be an orphaned directive. They are directives inside the dynamic extent but not within the static extent. 
+
+ * Will span routines and possibly code files.
+
+Let's explain with this example program. We have 2 subroutine calls and both are parallelized. 
+
+Program Test:
+
+~~~c
+...
+#pragma omp parallel
+{
+     ...
+     #pragma omp for
+     {
+          for (int i = 0; i < N; i++) {
+               ...
+               sub1();
+               ...
+          }
+     }
+     ...
+     sub2();
+     ...
+}
+~~~
+
+These are the two subroutines **sub1** and **sub2**. 
+
+~~~c
+void sub1() {
+     ...
+     #pragma omp critical
+     {
+          ...
+     }
+     ...
+     return;
+}
+~~~
+
+~~~c
+void sub2() {
+     ...
+     #pragma omp sections
+     {
+          ...
+     }
+     ...
+     return;
+}
+~~~
+
+In this example
+
+* The static extent of our parallel region are exactly this, the calls inside the parallel region. The FOR directive occurs within an enclosing parallel region. 
+
+* The dynamic extent of our parallel region is the static extent plus including the 2 subroutines that are called inside the parallel region. The CRITICAL and SECTIONS directives occur within the dynamic extent of the FOR and PARALLEL directives.
+
+* In the dynamic extent but not in the static extent we have orphaned CRITICAL and SECTIONS directives. 
+
+## 11. E: Calculate pi!
+
+In this exercise you will get to practice using worksharing construct for and critical directive.
+
+Pi is a mathematical constant. It is defined as a ratio of a circle's circumference to its diameter. It also appears in many other areas of mathematics. There are also many integrals yielding Pi. One of them is shown below.
+
+$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx$$
+
+This integral can be approximated numerically using Riemann sum:
+
+$$Pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+
+Here, n is the number of intervals and $$h = 1/n$$. 
+
+~~~c
+#pragma cling load("libomp.so")
+#include <stdio.h>
+#include <time.h>
+#include <sys/time.h>
+#include <omp.h>
+
+#define f(A) (4.0/(1.0+A*A))
+
+int num_threads = 4;
+omp_set_num_threads(num_threads);
+
+//declarations
+const int n = 10000000;
+int i;
+double w, x, sum, pi;
+clock_t t1, t2;
+struct timeval tv1, tv2;
+struct timezone tz;
+double wt1, wt2;
+
+gettimeofday(&tv1, &tz);
+wt1 = omp_get_wtime();
+t1 = clock();
+
+/* calculate pi = integral [0..1] 4/(1+x**2) dx */
+w = 1.0/n;
+sum = 0.0;
+for (i = 1; i <= n; i++)
+{
+    x = w*((double)i-0.5);
+    sum = sum+f(x);
+}
+pi = w*sum;
+ 
+t2 = clock();
+wt2 = omp_get_wtime();
+gettimeofday(&tv2, &tz);
+printf( "computed pi = %24.16g\n", pi );
+printf( "CPU time (clock)                = %12.4g sec\n", (t2-t1)/1000000.0 );
+printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
+printf( "wall clock time (gettimeofday)  = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
+~~~
+
+The code above calculates the solution of integral in serial. This template should be a starting point for this exercise. The heavy part of computation is performed in the for loop, so this is the part that needs parallelization.
+
+## Exercise
+
+1. Go to the exercise and add a parallel region and for directive to the part that computes pi. Is the calculation of pi correct? Test it out more than once, change number of threads to 2 or 12 and try to find the race-condition.
+
+2. Add private(x) clause. Is it still incorrect?
+
+3. Add a critical directive around the sum statement and compile. Is the value of pi correct? What is the CPU time? How can you optimize your code?
+
+4. Move the critical directive outside for loop to decrease computational time.
+
+Compare the CPU time for the template program and CPU time for our solution. Have we significantly optimized our code?
+
+## Expected result
+
+* Faster execution of the parallel program that calculates the correct value of pi. 
+
+[Jupyter notebook: Exercise: Compute pi](/OpenMP/Exercise-Compute-Pi.ipynb)
+
+## 12. Private and shared variables
+
+## Data Scope Clauses
+
+We have already learned about the **private** clause where we can specify that each thread should have its own instance of a variable. We have also learned about the **shared** clause where we can specify that one or more variables should be shared among all threads. This is normally not needed because the default scope is shared. 
+
+There are several exceptions:
+
+* stack (local) variables in called subroutines are automatically private
+
+* automatic variables within a block are private
+
+* the loop control variables of parallel FOR loops are private
+
+### Private clause
+
+The private clause always creates a local instance of the variable. For each thread a new variable is created with an uninitialized value. This means these private variables have nothing to do with the original variable except they have the same name and type. 
+
+`firstprivate(var)` specifies that each thread should have its own instance of a variable, and that the variable should be initialized with the value of the shared variable existing before the parallel construct.
+
+`lastprivate(var)` specifies that the variable's value after the parallel construct is set equal to the private version of whichever thread executes the final iteration (for-loop construct) or last section (#pragma sections). 
+
+Nested `private(var)` with same variable name allocate new private storage again. 
+
+Let's explain by observing the following code
+
+~~~ c
+#pragma cling load("libomp.so")
+#include <omp.h>
+#include <stdio.h>
+
+int num_threads = 4;
+omp_set_num_threads(num_threads);
+
+int var_shared = -777;
+int var_private = -777;
+int var_firstprivate = -777;
+int var_lastprivate = -777;
+
+#pragma omp parallel shared(var_shared) private(var_private) firstprivate(var_firstprivate)
+{
+    #pragma omp for lastprivate(var_lastprivate)
+    for (int i = 0; i < 1000; i++)
+    {
+        var_shared = i;
+        var_private = i;
+        var_firstprivate = i;
+        var_lastprivate = i;
+    }
+}
+
+printf("after parallel region: %d %d %d %d", 
+       var_shared, var_private, var_firstprivate, var_lastprivate);
+~~~
+
+Take a moment and try to guess the values of variables after the parallel region. Note the usage of the data scope clauses. 
+
+`var_shared` is a shared variable and it is normally updated by the parallel region. 
+
+`var_private` is specified as private so every thread has it's own instance and after the parallel region the value remains the same as before.  
+
+`var_firstprivate` is specified as private and initialized with the value in the shared scope but after the parallel region the value remains the same. 
+
+`var_lastprivate` is updated in the last iteration of the foor loop to use after the parallel region. 
+
+[Jupyter notebook: Data scope](/OpenMP/Data-scope.ipynb)
+
+## 13 Reduction clause
+
+The reduction clause is a data scope clause that can be used to perform some form of recurrence calculations in parallel. It defines the region in which a reduction is computed and specifies an operator and one or more list reduction variables. The syntax of the `reduction` clause is as follows:
+
+~~~c
+reduction (operator : list)
+~~~
+
+Variables in list must not be private in the enclosing context. A private variable cannot be specified in a reduction clause. A variable cannot be specified in both a shared and a reduction clause. 
+
+For each list item, a private copy is created in each iteration and is initialized with the neutral constant value of the operator. In the table below is the list of each operator and its semantic initializer value. 
+
+| Operator      | Initializer                               |
+| -----------------      | ---------------------------------------- |
+| + | var = 0        |
+| -  | var = 0    |
+| *   | var = 1            |
+| & | var = ~ 0 |
+| `|` | var = 0 |
+| ^ | var = 0        |
+| &&  | var = 1    |
+| `||` | var = 0 |
+| max   | var = most negative number            |
+| min | var = most positive number |
+
+After the end of the region, the original list item is updated with the values of the private copies using the combiner associated with the operator. 
+
+Let's observe the following example:
+
+~~~c
+#pragma cling load("libomp.so")
+#include <omp.h>
+
+int sum = 0;
+#pragma omp parallel for reduction(+:sum)
+for (int i = 0; i<20; i++)
+{
+    sum = sum + i;
+}
+printf("sum: %d", sum);
+~~~
+
+The reduction variable is `sum` and the reduction operation is `+`.  The reduction does the operation automatically. It produces a private variable `sum` inside the loop and in the end it sums up the private partial sum to the global variable. 
+
+[Jupyter notebook: Combined Constructs](/OpenMP/Combined-Constructs.ipynb)
+
+## 14. Exercise: Sum and substract
+
+In this exercise you will get to practice a sum and substract reduction within a combined parallel loop construct.  
+
+In the exercise we are generating a number of people and these people are substracting our value of apples. What you need to do is parallelize the code. 
+
+~~~c
+#pragma cling load("libomp.so")
+#import <omp.h>
+
+double generate_people(int i, int j)
+{
+    return (2 * i + 3 * j); // some dummy return value
+}
+
+int num_threads = 4;
+omp_set_num_threads(num_threads);
+
+int num = 10;
+int people = 0;
+int apples = 5000;
+
+for (int i = 0; i < num; i++) {
+    for (int j = i+1; j < num; j++) {
+        int ppl = generate_people(i, j);
+        people += ppl;
+        apples -= ppl;
+    }
+}
+
+printf("people = %d\n", people);
+printf("apples = %d", apples);
+~~~
+
+## Exercise
+
+1. Go to the exercise and add a parallel region with *for* clause. 
+2. Add two reduction clauses: one that adds people, another that substracts apples. 
+
+Then answer this:
+* What happens when we try to make people "shared"? Why can't you?
+
+[Jupyter notebook: Reduction](/OpenMP/Reduction.ipynb)
+
+## 15. Combined parallel worksharing directives
+
+Combined constructs are shortcuts for specifying one construct immediately nested inside another construct. Specifying a combined construct is semantically identical to specifying the first construct that encloses an instance of the second construct and no other statements. Most of the rules, clauses and restrictions that apply to both directives are in effect. The `parallel` construct can be combined with one of the worksharing constructs, for example `for` and `sections`. 
+
+## `parallel for`
+
+When we are using a parallel region that contains only a single `for` directive , we can substitute the separate directives with this combined directive: 
+
+~~~c
+#pragma omp parallel for [clause[[,]clause]...]
+~~~
+
+This directive admits all the clauses of the `parallel` directive and `for` directive except the `nowait` clause is forbidden. 
+
+This combined directive must be directly in from of the `for` loop. An example of the combined construct is shown below: 
+
+~~~c
+int i;
+int f = 7;
+
+#pragma omp parallel for
+     for (i = 0; i<20; i++)  {
+          c[i] = a[i] + b[i];
+     }
+~~~
+
+## 16. Exercise: Calculate Pi with combined constructs
+
+In this exercise you will get to practice using combined constructs. You will get to use the reduction clause and combined construct parallel for.
+
+This is a continuation of the previous exercise when we computed pi using worsharing constructs and critical directive. You will start from the provided solution of that exercise and use the newly learned constructs.
 
 ### Exercise
-1.Use the result from Exercise 2.
-2.Add parallel region and for directive in e2.c and compile it
-3.Set environment variable OMP_NUM_THREADS to 2 and run the file. 
-• The result is wrong
-4.Set environment variable OMP_NUM_THREADS to 12 and run again 
-• The result is wrong
-5.Add private (x) clause in e2.c and compile
-6.Set environment variable OMP_NUM_THREADS to 2 and run 
-• Still incorrect
-7.Set environment variable OMP_NUM_THREADS to 12 and run 
-• Still incorrect
-8.Add critical directive in e2.c before the sum variable in for loop and compile again
-• What is the CPU time?
-9.How to optimize the code? Try to modify the code and move the critical directive outside for loop to decrease computational time
 
-### Solution
+Go to the exercise and remove the critical directive and the additional partial sum variable. Then add reduction clause and compile. Is the value of pi correct?
+
+Now change the parallel region so you use the combined construct parallel for and compile.
 
 [Jupyter notebook: Exercise: Compute pi again](/OpenMP/Exercise-Compute-Pi-again.ipynb)
+
+## 17. Exercise: Heat transfer
+
+In this exercise you will get to practice using directives and clauses that we have learned so far, such as `parallel`, `for`, `single`, `critical`, `private` and `shared`. It is your job to recognize where each of those are required. 
+
+Heat equation is a partial differential equation that describes how the temperature varies in space over time. It can be written as
+
+$$df/dt = \Delta f$$
+
+This program solves the heat equation by using explicit scheme: time forwarding and centered space, and it solves the equation on a unit square domain.
+
+The initial condition is very simple. Everywhere inside the square the temperature equals $$f=0$$ and on the edges the temperature is $$f=x$$. This means the temperature goes from $$0$$ to $$1$$ in the direction of $$x$$. 
+
+The source code is at times hard coded for the purpose of faster loop iterations. Your goal is to: 
+
+* parallelize the program
+
+*  use different parallelization methods with respect to their effect on execution times
+
+~~~c
+#pragma cling load("libomp.so")
+#include <stdio.h>
+#include <sys/time.h>
+#include <omp.h>
+
+// define functions MIN and MAX
+#define min(A,B) ((A) < (B) ? (A) : (B))
+#define max(A,B) ((A) > (B) ? (A) : (B))
+
+// define size of grid points
+#define imax 20
+#define kmax 11
+#define itmax 20000
+
+// function prints the temperature grid, don't parallelize
+void heatpr(double phi[imax+1][kmax+1]){
+    int i,k,kl,kk,kkk;
+    kl = 6; kkk = kl-1;
+    for (k = 0; k <= kmax; k = k+kl){
+        if(k+kkk > kmax) kkk = kmax-k;
+        printf("\ncolumns %5d to %5d\n", k, k+kkk);
+        for (i = 0; i <= imax; i++){
+            printf("%5d ", i);
+            for (kk = 0; kk <= kkk; kk++){
+                printf("%#12.4g", phi[i][k+kk]);
+            }
+            printf("\n");
+        }
+    }
+    return;
+}
+
+// define variables
+double eps = 1.0e-08;
+double phi[imax+1][kmax+1], phin[imax][kmax];
+double dx, dy, dx2, dy2, dx2i, dy2i, dt, dphi, dphimax, dphimax0;
+int i, k, it;
+struct timeval tv1, tv2; struct timezone tz;
+double wt1, wt2;
+
+printf("OpenMP-parallel with %1d threads\n", omp_get_num_threads());
+
+dx = 1.0/kmax; dy = 1.0/imax;
+dx2 = dx*dx; dy2 = dy*dy;
+dx2i = 1.0/dx2; dy2i = 1.0/dy2;
+dt = min(dx2,dy2)/4.0;
+
+// setting initial conditions
+/* start values 0.d0 */
+for (i = 1; i < imax; i++){
+    for (k = 0; k < kmax; k++){
+        phi[i][k] = 0.0;
+    }
+}
+/* start values 1.d0 */
+for (i = 0;i <= imax; i++){
+    phi[i][kmax] = 1.0;
+}
+/* start values dx */
+phi[0][0] = 0.0;
+phi[imax][0] = 0.0;
+for (k = 1; k < kmax; k++){
+    phi[0][k] = phi[0][k-1]+dx;
+    phi[imax][k] = phi[imax][k-1]+dx;
+}
+// print starting values
+printf("\nHeat Conduction 2d\n");
+printf("\ndx = %12.4g, dy = %12.4g, dt = %12.4g, eps = %12.4g\n",
+dx, dy, dt, eps);
+printf("\nstart values\n");
+heatpr(phi);
+
+gettimeofday(&tv1, &tz);
+wt1 = omp_get_wtime();
+/* time step iteration */
+for (it = 1; it <= itmax; it++){
+    dphimax = 0.;
+    dphimax0 = dphimax;
+    for (k = 1; k < imax; k++){
+        for (i = 0; i < kmax; i++){
+            dphi = (phi[i+1][k]+phi[i-1][k]-2.*phi[i][k])*dy2i
+                +(phi[i][k+1]+phi[i][k-1]-2.*phi[i][k])*dx2i;
+            dphi = dphi*dt;
+            dphimax0 = max(dphimax0,dphi);
+            phin[i][k] = phi[i][k]+dphi;
+        }
+    }
+    dphimax = max(dphimax,dphimax0);
+    /* save values */
+    for (i = 1; i < imax; i++){
+        for (k = 0; k < kmax; k++){
+            phi[i][k] = phin[i][k];
+        }
+    }
+    if(dphimax < eps) break;
+}
+wt2 = omp_get_wtime();
+gettimeofday(&tv2, &tz);
+
+// print resulting grid and execution time
+printf("\nphi after %d iterations\n", it);
+heatpr(phi);
+printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
+printf( "wall clock time (gettimeofday) = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
+~~~
+
+The code above calculates the temperature for a grid of points, the main part of code being the time step iteration. `dphi` is the difference of temperature and `phi` is the temperature. Then we add the `dphi` to the `phi` array and we save the new `phin` array. Then in the next for loop we exchange the role of the old and the new array (restoring the data). 
+
+## Exercise
+
+1. Go to the exercise and parallelize the code. 
+
+2. Parallelize all of the for loops and use critical section for global maximum. Think about what variables should be in the private clause. 
+
+Then run the example. Run it with 1, 2, 3, 4 threads and look at the execution time. 
+
+You may see that with more threads it is slower than expected. Do you have any idea about why the parallel version is slower by looking at the code?
+
+~~~c
+for (k = 1; k < imax; k++){
+    for (i = 0; i < kmax; i++){
+        dphi = (phi[i+1][k]+phi[i-1][k]-2.*phi[i][k])*dy2i
+            +(phi[i][k+1]+phi[i][k-1]-2.*phi[i][k])*dx2i;
+        dphi = dphi*dt;
+        dphimax0 = max(dphimax0,dphi);
+        phin[i][k] = phi[i][k]+dphi;
+    }
+}
+~~~
+
+The sequence of the nested loops is wrong. In C/C++, the last array index is running the fastest so the `k` loop should be the inner loop. This is not fixed by the OpenMP compiler, so you will need to 
+
+1. Interchange the sequence of the nested loops. 
+
+Run the code again with 1, 2, 3, 4 threads and look at the execution time. 
+
+Now the parallel version should be a little bit faster. The reason for only a slight improvement might be that the problem is too small and the parallelization overhead is too large. 
+
+
+[Jupyter notebook: Exercise: Heat](/OpenMP/Exercise-Heat.ipynb)
+
+## 2.18 Tasking model
+
+Tasking allows the parallelization of applications where units of work are generated dynamically, as in recursive structures or while loops.
+
+In OpenMP an explicit task is defined using the task directive. The task directive defines the code associated with the task and its data environment. When a thread encounters a task construct, a new task is generated. The task may be executed immediately or at a later time. If task execution is delayed, then the task is placed in a conceptual pool of tasks that is associated with the current parallel region. The threads in the current teams will take tasks out of the pool and execute them until the pool is empty. A thread that executes a task might be different than the one that originally encountered it.
+
+The code associated with the task construct will be executed only once. A task is named to be tied, if it is executed by the same thread from beginning to end. A task is untied if the code can be executed by more than one thread, so that different threads execute different parts of the code. By default, tasks are tied.
+
+## 2.19 Data environment
+
+The task directive takes the following clauses that define the data environment of the task:
+
+default -> defines the default data scope of variable in each task. Only one default clause can be specified on an omp task directive.
+
+shared -> declares the scope of the comma-separated data variables in list to be shared across all threads.
+
+firstprivate -> declares the scope of the data variables to be private in each thread. Each new private object is initialized with the value of the original variable.
+
+private -> declares the scope od the data variables in list to be private in each thread.
+
+Taskwait directive
+
+Completion of tasks can be bound to a given parallel region through the use of the taskwait directive. The taskwait directive specifies a wait on the completion of child tasks generated since the beginning of the current task
+
+## 2.20 Example: Fibonacci
+
+In the following example, the tasking concept is used to compute Fibonacci numbers recursively.
+
+~~~ c
+#pragma cling load("libomp.so")
+#include <stdlib.h>
+#include <stdio.h>
+#include <omp.h>
+
+int fib(int n) {
+    if (n < 2) return n;
+    int x, y;
+    #pragma omp task shared(x) firstprivate(n)
+    {
+        x = fib(n - 1);
+    }
+    #pragma omp task shared(y) firstprivate(n)
+    {
+        y = fib(n - 2);
+    }
+    #pragma omp taskwait
+    return x+y;
+}
+
+omp_set_num_threads(4);
+int n = 8;
+#pragma omp parallel shared(n)
+{
+    #pragma omp single // Only one thread executes single, we only need to print once
+    printf ("fib(%d) = %d\n", n, fib(n));
+}
+~~~
+
+The parallel directive is used to define the parallel region which
+will be executed by four threads. Inside parallel construct, the
+single directive is used to indicate that only one of the threads will execute the print statement that calls finb(n).
+
+In the code, two tasks are generated using the task directive. One of the tasks computes fib(n-1) and the other computes fib(n-2). The return values of both tasks are then added together to obtain the value returned by fib(n). Every time functions fib(n-1) and fib(n-2) are called, two tasks are generated recursively until argument passed to fib() is less than 2.
+
+Furthermore, the taskwait directive ensures that the two tasks
+generated are first completed, before moving on to new stage of
+recursive computation.
+
+Go to the example to see it being done step by step and try it out for yourself. 
+
+[Jupyter notebook: Example: Fibonacci](/OpenMP/Fibonacci.ipynb)
+
+## 2.21 Exercise: Traversing of a tree
+
+The following exercise shows how to traverse a tree-like structure using explicit tasks. 
+
+In the previous step we looked at the Fibonacci example, now we traverse a linked list computing a sequence of Fibonacci numbers at each node. 
+
+Parallelize the provided program using parallel region, tasks and other directives. Then compare your solution’s complexity compared to the approach without tasks.
+
+## Exercise
+
+1. Go to the exercise and parallelize the part where we do processwork for all the nodes. 
+
+2. The printing of the number of threads should be only done by the master thread. Think about what else must be done by one thread only. 
+
+3. Add a task directive. 
+
+Did the parallelization give faster results?
+
+[Jupyter notebook: Exercise: Traversing of a tree](/OpenMP/Traversing-tree.ipynb)
+
