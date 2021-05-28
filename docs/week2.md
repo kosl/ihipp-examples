@@ -483,19 +483,19 @@ f=10;
 
 In the example above, due to critical clause, only one thread is executed at a time for cnt variable.
 
-## 2.8 Example: Worksharing constructs
+## 8. Example: Worksharing constructs
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
 
 [Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
 
-## 2.9 Example: Synchronization constructs
+## 9. Example: Synchronization constructs
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
 
 [Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
 
-## 2.10 Nesting and binding
+## 10. Nesting and binding
 
 ## Directive Scoping
 
@@ -721,7 +721,7 @@ Take a moment and try to guess the values of variables after the parallel region
 
 [Jupyter notebook: Data scope](/OpenMP/Data-scope.ipynb)
 
-## 13 Reduction clause
+## 13. Reduction clause
 
 The reduction clause is a data scope clause that can be used to perform some form of recurrence calculations in parallel. It defines the region in which a reduction is computed and specifies an operator and one or more list reduction variables. The syntax of the `reduction` clause is as follows:
 
@@ -1011,31 +1011,86 @@ Now the parallel version should be a little bit faster. The reason for only a sl
 
 [Jupyter notebook: Exercise: Heat](/OpenMP/Exercise-Heat.ipynb)
 
-## 2.18 Tasking model
+## 18. Tasking model
 
-Tasking allows the parallelization of applications where units of work are generated dynamically, as in recursive structures or while loops.
+Tasking allows the parallelization of applications where units of work
+are generated dynamically, as in recursive structures or while loops.
 
-In OpenMP an explicit task is defined using the task directive. The task directive defines the code associated with the task and its data environment. When a thread encounters a task construct, a new task is generated. The task may be executed immediately or at a later time. If task execution is delayed, then the task is placed in a conceptual pool of tasks that is associated with the current parallel region. The threads in the current teams will take tasks out of the pool and execute them until the pool is empty. A thread that executes a task might be different than the one that originally encountered it.
+In OpenMP an explicit task is defined using the task directive. 
 
-The code associated with the task construct will be executed only once. A task is named to be tied, if it is executed by the same thread from beginning to end. A task is untied if the code can be executed by more than one thread, so that different threads execute different parts of the code. By default, tasks are tied.
+~~~c
+#pragma omp task[clause[[,]clause]...]
+     structured-block
+~~~
 
-## 2.19 Data environment
+The task directive defines the code associated with the task and its data
+environment. When a thread encounters a task directive, a new task is
+generated. The task may be executed immediately or at a later time. If
+task execution is delayed, then the task is placed in a conceptual
+pool of sleeping tasks that is associated with the current parallel region. The threads in the current teams will take tasks out of the pool and
+execute them until the pool is empty. A thread that executes a task
+might be different than the one that originally encountered it.
 
-The task directive takes the following clauses that define the data environment of the task:
+The code associated with the task construct will be executed only
+once. A task is named to be tied, if it is executed by the same thread
+from beginning to end. A task is untied if the code can be executed by
+more than one thread, so that different threads execute different
+parts of the code. By default, tasks are tied. 
 
-default -> defines the default data scope of variable in each task. Only one default clause can be specified on an omp task directive.
+I also want to mention there are several task scheduling points where a task can be put from living into sleeping and back from sleeping to living state. 
 
-shared -> declares the scope of the comma-separated data variables in list to be shared across all threads.
+- In the generating task: after the task generates an explicit task, it can be put into a sleeping state. 
 
-firstprivate -> declares the scope of the data variables to be private in each thread. Each new private object is initialized with the value of the original variable.
+- In the generated task: after the last instruction of the task region
 
-private -> declares the scope od the data variables in list to be private in each thread.
+- If task is "untied": everywhere inside the task. 
 
-Taskwait directive
+- In implicit and explicit barriers.
 
-Completion of tasks can be bound to a given parallel region through the use of the taskwait directive. The taskwait directive specifies a wait on the completion of child tasks generated since the beginning of the current task
+- In `taskwait`.
 
-## 2.20 Example: Fibonacci
+Competion of a task can be guaranteed using task synchronization constructs such as `taskwait` directive. The taskwait construct specifies a wait on the completion of child tasks of the current task. The taskwait construct is a stand-alone directive. 
+
+~~~c
+#pragma omp taskwait [clause[ [,] clause] ... ]
+~~~
+
+
+## 19. Data environment
+
+There are additional clauses that are available with the task directive:
+
+* untied
+
+If the task is tied, it is guaranteed that the same thread will execute all the parts of the task. So the untied clause allows code to be executed by more than one thread. 
+
+* default (shared `|` none `|` private `|` firstprivate )
+
+Default defines the default data scope of variable in each
+task. Only one default clause can be specified on an omp task directive.
+
+* shared (list)
+
+Shared declares the scope of the comma-separated data variables in
+list to be shared across all threads. 
+
+* private (list)
+
+Private declares the scope od the data variables in list to be
+private in each thread. 
+
+* firstprivate (list)
+
+Firstprivate declares the scope of the data variables to be private
+in each thread. Each new private object is initialized with the value
+of the original variable.
+
+* if (scalar expression)
+
+Only if the scalar expression is true will the task be started, otherwise a normal sequential execution will be done. Useful for a good load balancing but limiting the parallelization overhead by doing a limited number of the tasks in total. 
+
+
+## 20. Example: Fibonacci
 
 In the following example, the tasking concept is used to compute Fibonacci numbers recursively.
 
@@ -1083,7 +1138,7 @@ Go to the example to see it being done step by step and try it out for yourself.
 
 [Jupyter notebook: Example: Fibonacci](/OpenMP/Fibonacci.ipynb)
 
-## 2.21 Exercise: Traversing of a tree
+## 21. Exercise: Traversing of a tree
 
 The following exercise shows how to traverse a tree-like structure using explicit tasks. 
 
