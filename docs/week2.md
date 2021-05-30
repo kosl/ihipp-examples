@@ -366,7 +366,7 @@ i = -1;
 printf("hello world %d\n", i );
 ~~~
 
-##Exercise
+## Exercise
 
 1. Go to the exercise and set the desired number of threads to 4 using one of the runtime functions. 
 
@@ -407,9 +407,11 @@ In the following steps we learn how to really organize our work in parallel. Ple
 Do you know of possible ways of organizing work in parallel? How can the operations be distributed between threads? Is there a way to control the order of threads?
 
 ## 7. V: OpenMP constructs and Synchronisations
+
 ## Worksharing constructs
-The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region
- Some of the examples of the work sharing constructs are:
+The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region.
+Some examples of the work sharing constructs are:
+
 • sections
 • for
 • task
@@ -434,17 +436,33 @@ In the example code above we can see that inside the section we have specified v
 
 
 ### For construct
+
+Simply put, a'for' construct can be seen as  a parallelised 'for' loop. We can specify the for construct as
+
+~~~c
+#pragma omp for [clause[[,]clause]...]
 ~~~
 
-2. For construct
+Here also we start with pragma OMP followed by the 'for' keyword and we can use different clauses again i.e private, shared and so on. The corresponding for Loop must have a canonical shape. 
 
-And the next one is the for construct. So for constant basically means let's say a for Loop that is paralyzed app. So you can see how we can specify this for constructs. So again, we start with pragma OMP and then. We use the for keyword and we can use different closes again. So private shared and so on. And the corresponding for Loop has a canonical shape. So this is we can see that this is basically a c Syntax for the for the for Loop and the iterator is not modified inside the loop body. So because each let's say iterator is by default a private variable and is shared by only one threat escrow that this is not. Excess by every threatened because otherwise our for Loop would get corrupted.
-So the closes again private and then we have a few other. So for example, the schedule close classifies car detailing how the iterations of Loops are divided among different tracks one. For example, the collapse close can move the iterations into just one larger iteration space. So we take a look at this later.
+~~~c
+for (int i=it; i<M; i++)
+~~~
+
+Since each iterator is by default a private variable and is shared by only one thread; meaning it is not accesed by every thread because otherwise our for Loop would get corrupted therefore, the iterator is not modified inside the loop body.
+
+We have a few other more clauses than just 'private'. For example, 
+
+- schedule : that classifies how the iterations of loops are divided among the threads.
+- collapse (n) : in which the iterations of 'n' loops are collapsed into one larger iteration space.
+
+
 So here for example, you can see an example of the for construct used in the code. Yes. So let's say we start with pregnant went a parallel then we added a private variable named F. And then we do pragma OMP and for construct. Yeah, so we write a for Loop and let's say this for Loop will go from 0 to 10.So that would be 10 different iterations. And private variable f is then fixed in every threat and the a list is updated in parallel because because the index need of each
 
 Each array is let's say individual of each other. So every thread can access just one place of the
 So this is why we can update this list in part of it. Yeah. So for example on the right screen we can see.If we are working on two threads, yes. Oh and we have let's say 10. Ten iterations. So this iterations will let us say be split between two threats from 0 to 4 and 5 to 9 and each place in on a list will be updated by itself is for which the citrate it modifies just one place of ASL because this iterators are independent of each other and we can do this you can update the
 Each place of the a list quite easy. Yes. This is an example of the for construct.
+
 ~~~c
 #pragma omp parallel private(f) {
 f=10;
