@@ -504,16 +504,12 @@ f=10;
 } /*omp end parallel */
 ~~~
 
-We see that we have specified variables 'cnt' and 'f' and in the parallel region, we specified the for construct so we can do the iteration. Inside the if statement we specified the pragma OMP critical for the next Plant which is in t plus plus here and then we close it. So pragma OMP critical is valid only for this variable and we can observe what is happening basically in the execution of the threats on the right side. Yes, so we have
-Before we enter the park pragma OMP parallel region, we were in serial execution style. This was executed cereal seriously, then we entered our momentum parallel and this is basically divided. So again, we are doing a for Loop for let's say two to threats. So everything is executed parallely until the first read in counters the CNT. Yeah the same thing variable. So in this case is simply variable is
-First executed and during this time the second thread is trying to access it. It cannot do it because CMT is already Modified by the first treasure. So after the first thread modifies the CNT plus plus the specified.
-Then the next thread will get access to it and it will execute in between modified in whichever way you specify after all the threats have let's say modified it the code begins to execute in parallel as well.
-So further until we reach the implicit barrier that we have specified at the end and then we go back to then we go back to Syria execution. Yes, so due to click critical cloths as I explained only one thread at a time is executed for this sin T variable s so if you the critical flaws and you paralyze the program so whenever you will reach the critical. Cross only one thread will be able to modify or to run the the code that you specified in the critical closed hand. And then when the when the when the first red finish is the next word is executed and so on for all the other threats and well all the other all the threats have modified this variable. Then the program will start to execute back in parallel until we until we reach the implicit better.
-~~~c
+We see that we have specified variables 'cnt' and 'f' and in the parallel region, we specified the 'for' construct so we can do the iteration. Inside the 'if' statement we specified the pragma OMP critical for the next line which 'cnt ++'  and then we close it so that the pragma omp critical is valid only for this variable. 
+We can observe what is happening basically in the execution of the threads on the image (imageD1P2S26). Before we enter the pragma OMP parallel region, we were in serial execution so that part was executed serially. Then we entered our pragma parallel region and this is basically divided and one of the parts is the a for loop of two threads. So everything is executed in parallel until the first thread encounters the 'cnt' variable. At this point the 'cnt' variable is
+first executed and during this time the second thread is trying to access it. But of course it cannot do it because cnt is already modified by the first thread. So after the first thread modifies the cnt++ is specified and following that the next thread will get access to it and it will execute or modify in whichever way we specify. After all the threads have modified it, the code begins to execute in parallel as well. It goes further until we reach the implicit barrier that we have specified at the end following which we return to the serial execution. 
+Owing to the critical clause we specified only one thread is executed  at a time for this cnt variable. Therefore when we use the critical clause and we parallelise the program so whenever we will reach the critical clause only one thread will be able to modify or to run the the code that you specified in the critical clause.
 
-~~~
 
-In the example above, due to critical clause, only one thread is executed at a time for cnt variable.
 
 ## 8. Example: Worksharing constructs
 
