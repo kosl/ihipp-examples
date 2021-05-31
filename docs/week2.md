@@ -457,11 +457,7 @@ We have a few other more clauses than just 'private'. For example,
 - collapse (n) : in which the iterations of 'n' loops are collapsed into one larger iteration space.
 
 
-So here for example, you can see an example of the for construct used in the code. Yes. So let's say we start with pregnant went a parallel then we added a private variable named F. And then we do pragma OMP and for construct. Yeah, so we write a for Loop and let's say this for Loop will go from 0 to 10.So that would be 10 different iterations. And private variable f is then fixed in every threat and the a list is updated in parallel because because the index need of each
-
-Each array is let's say individual of each other. So every thread can access just one place of the
-So this is why we can update this list in part of it. Yeah. So for example on the right screen we can see.If we are working on two threads, yes. Oh and we have let's say 10. Ten iterations. So this iterations will let us say be split between two threats from 0 to 4 and 5 to 9 and each place in on a list will be updated by itself is for which the citrate it modifies just one place of ASL because this iterators are independent of each other and we can do this you can update the
-Each place of the a list quite easy. Yes. This is an example of the for construct.
+We can see an example of the for construct used in the code.
 
 ~~~c
 #pragma omp parallel private(f) {
@@ -471,6 +467,10 @@ for (i=0; i<10; i++)
 a[i] = b[i]*f;
 } /* omp end parallel */
 ~~~
+
+We start with  pragma omp parallel followed by private variable named 'f'. then  we do pragma OMP for construct, so we write a for loop  that will go from 0 to 10 i.e there would be 10 different iterations. The private variable 'f' is then fixed in every thread and the 'a' list is updated in parallel. This is because the index need of each array is individual of each other. So every thread can access only one place of the array allowing us to update this list in parrallel.
+(imageD1P2S24)
+Here we can see that if we are working on two threads, with 10 iterations then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easy. 
 
 3. Synchronization
 
