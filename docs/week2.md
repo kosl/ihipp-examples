@@ -437,7 +437,7 @@ In the example code above we can see that inside the section we have specified v
 
 ### For construct
 
-Simply put, a'for' construct can be seen as  a parallelised 'for' loop. We can specify the for construct as
+Simply put, a 'for' construct can be seen as  a parallelised 'for' loop. We can specify the for construct as
 
 ~~~c
 #pragma omp for [clause[[,]clause]...]
@@ -470,19 +470,24 @@ a[i] = b[i]*f;
 
 We start with  pragma omp parallel followed by private variable named 'f'. then  we do pragma OMP for construct, so we write a for loop  that will go from 0 to 10 i.e there would be 10 different iterations. The private variable 'f' is then fixed in every thread and the 'a' list is updated in parallel. This is because the index need of each array is individual of each other. So every thread can access only one place of the array allowing us to update this list in parrallel.
 (imageD1P2S24)
-Here we can see that if we are working on two threads, with 10 iterations then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easy. 
+Here we can see that if we are working on two threads, with 10 iterations then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easily. 
 
 3. Synchronization
 
-Then the next thing is the synchronization. So synchronization can be said by either increasing barrier or an ecstasy barrier. So implicit value we have been using it in both examples. So implicit barrier basically represents a barrier for the beginning and end of a parallel construct. Yes. So this is achieved with let's say in C++ with with parentheses. Yes. There is an example here. So let's let's say this first segment statement drag my only comparable. This would be the implicit barrier you specify the entry into parallel region and the last parentheses is basically the implicit barrier that specifies the end of the parallel crop construct and then we move to the
-To the serial execution of the code as well. And so in case you increase interested, you can try to use the Google the no wait clothes for the overall openmp and we check some examples of how we can remove the indices synchronization with this Clause there. But of course we have the other one, which is excess in value. So explicit value is basically means that you can
-Use a class and we disclose your basically specified it here is the barrier. So this is the so called critical cross so cold it is enclosed in critical classes executed by everything. That's all but is restricted to only one-third at a time. So you specify with pragma OMP critical then the name so we will maybe take a look at it here.
-Yes, so here you can see that say the scheme of the critical process. So if we go over this code quickly, so we have specified variables CMT and F and in the parallel region, we specified the for construct.
-And inside the if statement we specified the pragma OMP critical for the next Plant which is in t plus plus here and then we close it. So pragma OMP critical is valid only for this variable and we can observe what is happening basically in the execution of the threats on the right side. Yes, so we have
-Before we enter the park pragma OMP parallel region, we were in serial execution style. This was executed cereal seriously, then we entered our momentum parallel and this is basically divided. So again, we are doing a for Loop for let's say two to threats. So everything is executed parallely until the first read in counters the CNT. Yeah the same thing variable. So in this case is simply variable is
-First executed and during this time the second thread is trying to access it. It cannot do it because CMT is already Modified by the first treasure. So after the first thread modifies the CNT plus plus the specified.
-Then the next thread will get access to it and it will execute in between modified in whichever way you specify after all the threats have let's say modified it the code begins to execute in parallel as well.
-So further until we reach the implicit barrier that we have specified at the end and then we go back to then we go back to Syria execution. Yes, so due to click critical cloths as I explained only one thread at a time is executed for this sin T variable s so if you the critical flaws and you paralyze the program so whenever you will reach the critical. Cross only one thread will be able to modify or to run the the code that you specified in the critical closed hand. And then when the when the when the first red finish is the next word is executed and so on for all the other threats and well all the other all the threats have modified this variable. Then the program will start to execute back in parallel until we until we reach the implicit better.
+Synchronization can ce acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
+
+- Implicit barrier
+We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is acheived with curly brackets. As we saw in the previous examples, the '{' is the implicit barrier where we specify the entry into parallel region and the last '}' is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the
+serial execution of the code as well. Implicit synchronization can be removed with 'nowait' clause but we will not discuss it in this section. 
+
+- Explicit barrier
+For applying an explicit barrier we use 'critical' clause that basically specifies the presence of the barrier. While using an explicit barrier the code, which is enclosed in critical clause is executed by all threads, but is restricted to only one thread at the time. The critical clause in C/C++ is defined with
+
+~~~c
+#pragma omp critical [(name)]
+~~~
+Here in the following example we can see the scheme of the critical clause. (imageD1P2S26) So if we go over this code quickly
+
 ~~~c
 cnt = 0;
 f=10;
@@ -497,6 +502,15 @@ f=10;
        a[i] = b[i]*f;
 } /* end for */
 } /*omp end parallel */
+~~~
+
+We see that we have specified variables 'cnt' and 'f' and in the parallel region, we specified the for construct so we can do the iteration. Inside the if statement we specified the pragma OMP critical for the next Plant which is in t plus plus here and then we close it. So pragma OMP critical is valid only for this variable and we can observe what is happening basically in the execution of the threats on the right side. Yes, so we have
+Before we enter the park pragma OMP parallel region, we were in serial execution style. This was executed cereal seriously, then we entered our momentum parallel and this is basically divided. So again, we are doing a for Loop for let's say two to threats. So everything is executed parallely until the first read in counters the CNT. Yeah the same thing variable. So in this case is simply variable is
+First executed and during this time the second thread is trying to access it. It cannot do it because CMT is already Modified by the first treasure. So after the first thread modifies the CNT plus plus the specified.
+Then the next thread will get access to it and it will execute in between modified in whichever way you specify after all the threats have let's say modified it the code begins to execute in parallel as well.
+So further until we reach the implicit barrier that we have specified at the end and then we go back to then we go back to Syria execution. Yes, so due to click critical cloths as I explained only one thread at a time is executed for this sin T variable s so if you the critical flaws and you paralyze the program so whenever you will reach the critical. Cross only one thread will be able to modify or to run the the code that you specified in the critical closed hand. And then when the when the when the first red finish is the next word is executed and so on for all the other threats and well all the other all the threats have modified this variable. Then the program will start to execute back in parallel until we until we reach the implicit better.
+~~~c
+
 ~~~
 
 In the example above, due to critical clause, only one thread is executed at a time for cnt variable.
