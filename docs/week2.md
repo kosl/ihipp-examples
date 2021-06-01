@@ -1,8 +1,9 @@
 
 # Week 2: Getting started with OpenMP 
 
-## 1.V: Runtime functions, variables and constructs
-## Runtime functions
+## 1.1 V: Runtime functions
+
+### Runtime functions
 
 The purpose of runtime functions is the management or modification of the parallel processes that we want to use in our code. They come with the OMP library.  
 For C++ and C, you can add the 
@@ -59,7 +60,45 @@ So calling this function, when you are in a specific thread would return an inte
 
  ~~~
 
-This function returns 'true' if it is specified inside a parallel region. If it is not, i.e if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in openMP . So you can click on the link on the on the slide and you will see all the openMP functions with some tutorials and explanations on how to use them in your program.
+This function returns 'true' if it is specified inside a parallel region. If it is not, i.e if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in openMP 
+
+### Example 
+
+Let's observe the following example
+
+~~~ c
+#pragma cling load("libomp.so")
+#include <omp.h>
+#include <stdio.h>
+
+int num_threads = 4;
+omp_set_num_threads(num_threads);
+int rank;
+#pragma omp parallel
+{
+    rank = omp_get_thread_num();
+    int nr_threads = omp_get_num_threads();
+    printf("I am thread %i of %i threads\n",
+	 rank,
+	 nr_threads);
+}
+~~~
+
+Take a moment and try to understand what is happening in the code above.
+
+* What is the expected output? What are the values of `rank` and `nr_threads`?
+
+* Is the output always the same? What order are the threads printing in?
+
+* What would happen if we change the number of threads to 12? 
+
+Now go to the exercise, try it out and check if your answers were correct. 
+
+
+[Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
+
+
+### 1.2. Variables and constructs
 
 ## Environment Variables
 
@@ -144,41 +183,12 @@ above. Note the usage of the construct and runtime functions defined earlier in 
 
 [Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
 
-## 2. Example: Runtime functions
 
-Let's observe the following example
 
-~~~ c
-#pragma cling load("libomp.so")
-#include <omp.h>
-#include <stdio.h>
 
-int num_threads = 4;
-omp_set_num_threads(num_threads);
-int rank;
-#pragma omp parallel
-{
-    rank = omp_get_thread_num();
-    int nr_threads = omp_get_num_threads();
-    printf("I am thread %i of %i threads\n",
-	 rank,
-	 nr_threads);
-}
-~~~
 
-Take a moment and try to understand what is happening in the code above.
+## 1.3 V: Clauses and directive format
 
-* What is the expected output? What are the values of `rank` and `nr_threads`?
-
-* Is the output always the same? What order are the threads printing in?
-
-* What would happen if we change the number of threads to 12? 
-
-Now go to the exercise, try it out and check if your answers were correct. 
-
-[Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
-
-## 3. V: Clauses and directive format
 ## Directive format
 
 So far we have just specified a parallel region and the code was executed in serial. Now we will move ahead to see directives for the openMP. The format for using a directive is as follows
@@ -310,7 +320,7 @@ modified by multiple threads? Why?
 
 [Jupyter notebook: Clauses](/OpenMP/Clauses.ipynb)
 
-## 4. Example: Clauses
+## 1.4. D: Clauses
 
 Let's observe the following example
 
@@ -349,7 +359,7 @@ Now go to the exercise, try it out and check if your answers were correct.
 [Jupyter notebook: Runtime functions](/OpenMP/Clauses.ipynb)
 
 
-## 5. Exercise: Parallel region
+## 1.5. Exercise: Parallel region
 
 In this exercise you will get to practice using basic runtime functions, directive format, parallel constructs and clauses which we have learned so far. 
 
@@ -406,7 +416,7 @@ In the following steps we learn how to really organize our work in parallel. Ple
 
 Do you know of possible ways of organizing work in parallel? How can the operations be distributed between threads? Is there a way to control the order of threads?
 
-## 7. V: OpenMP constructs and Synchronisations
+## 2.1 V: OpenMP constructs
 
 ## Worksharing constructs
 The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region.
@@ -472,7 +482,14 @@ We start with  pragma omp parallel followed by private variable named 'f'. then 
 (imageD1P2S24)
 Here we can see that if we are working on two threads, with 10 iterations then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easily. 
 
-3. Synchronization
+### Example
+
+Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
+
+[Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
+
+
+## 2.2 Synchronization
 
 Synchronization can ce acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
 
@@ -511,19 +528,14 @@ Owing to the critical clause we specified only one thread is executed  at a time
 
 
 
-## 8. Example: Worksharing constructs
-
-Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
-
-[Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
-
-## 9. Example: Synchronization constructs
+### Example
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
 
 [Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
 
-## 10. Nesting and binding
+
+## 2.3. Nesting and binding
 
 ## Directive Scoping
 
@@ -604,7 +616,7 @@ In this example
 
 * In the dynamic extent but not in the static extent we have orphaned CRITICAL and SECTIONS directives. 
 
-## 11. E: Calculate pi!
+## 2.4 E: Calculate pi!
 
 In this exercise you will get to practice using worksharing construct for and critical directive.
 
@@ -682,7 +694,7 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 
 [Jupyter notebook: Exercise: Compute pi](/OpenMP/Exercise-Compute-Pi.ipynb)
 
-## 12. Private and shared variables
+## 2.5 Private and shared variables
 
 ## Data Scope Clauses
 
@@ -749,7 +761,7 @@ Take a moment and try to guess the values of variables after the parallel region
 
 [Jupyter notebook: Data scope](/OpenMP/Data-scope.ipynb)
 
-## 13. Reduction clause
+## 3.1 Reduction clause
 
 The reduction clause is a data scope clause that can be used to perform some form of recurrence calculations in parallel. It defines the region in which a reduction is computed and specifies an operator and one or more list reduction variables. The syntax of the `reduction` clause is as follows:
 
@@ -795,7 +807,7 @@ The reduction variable is `sum` and the reduction operation is `+`.  The reducti
 
 [Jupyter notebook: Combined Constructs](/OpenMP/Combined-Constructs.ipynb)
 
-## 14. Exercise: Sum and substract
+## 3.2 Exercise: Sum and substract
 
 In this exercise you will get to practice a sum and substract reduction within a combined parallel loop construct.  
 
@@ -839,7 +851,7 @@ Then answer this:
 
 [Jupyter notebook: Reduction](/OpenMP/Reduction.ipynb)
 
-## 15. Combined parallel worksharing directives
+## 3.3 Combined parallel worksharing directives
 
 Combined constructs are shortcuts for specifying one construct immediately nested inside another construct. Specifying a combined construct is semantically identical to specifying the first construct that encloses an instance of the second construct and no other statements. Most of the rules, clauses and restrictions that apply to both directives are in effect. The `parallel` construct can be combined with one of the worksharing constructs, for example `for` and `sections`. 
 
@@ -865,7 +877,7 @@ int f = 7;
      }
 ~~~
 
-## 16. Exercise: Calculate Pi with combined constructs
+## 3.4 Exercise: Calculate Pi with combined constructs
 
 In this exercise you will get to practice using combined constructs. You will get to use the reduction clause and combined construct parallel for.
 
@@ -879,7 +891,7 @@ Now change the parallel region so you use the combined construct parallel for an
 
 [Jupyter notebook: Exercise: Compute pi again](/OpenMP/Exercise-Compute-Pi-again.ipynb)
 
-## 17. Exercise: Heat transfer
+## 3.5. Exercise: Heat transfer
 
 In this exercise you will get to practice using directives and clauses that we have learned so far, such as `parallel`, `for`, `single`, `critical`, `private` and `shared`. It is your job to recognize where each of those are required. 
 
@@ -1039,7 +1051,7 @@ Now the parallel version should be a little bit faster. The reason for only a sl
 
 [Jupyter notebook: Exercise: Heat](/OpenMP/Exercise-Heat.ipynb)
 
-## 18. Tasking model
+## 4.1. Tasking model
 
 Tasking allows the parallelization of applications where units of work
 are generated dynamically, as in recursive structures or while loops.
@@ -1084,7 +1096,7 @@ Competion of a task can be guaranteed using task synchronization constructs such
 ~~~
 
 
-## 19. Data environment
+## 4.2. Data environment
 
 There are additional clauses that are available with the task directive:
 
@@ -1118,7 +1130,7 @@ of the original variable.
 Only if the scalar expression is true will the task be started, otherwise a normal sequential execution will be done. Useful for a good load balancing but limiting the parallelization overhead by doing a limited number of the tasks in total. 
 
 
-## 20. Example: Fibonacci
+## 4.3. Example: Fibonacci
 
 In the following example, the tasking concept is used to compute Fibonacci numbers recursively.
 
@@ -1166,7 +1178,7 @@ Go to the example to see it being done step by step and try it out for yourself.
 
 [Jupyter notebook: Example: Fibonacci](/OpenMP/Fibonacci.ipynb)
 
-## 21. Exercise: Traversing of a tree
+## 4.4. Exercise: Traversing of a tree
 
 The following exercise shows how to traverse a tree-like structure using explicit tasks. 
 
