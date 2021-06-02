@@ -412,13 +412,13 @@ Don't worry if you always get a correct output, because a compiler may use a pri
 [Jupyter notebook: Exercise: Parallel region](/OpenMP/Exercise-Parallel-region.ipynb)
 
 
-## 6. Which thread executes which statement or operation?
+## 2.1. Which thread executes which statement or operation?
 
 In the following steps we learn how to really organize our work in parallel. Please share your ideas on how we can achieve that.
 
 Do you know of possible ways of organizing work in parallel? How can the operations be distributed between threads? Is there a way to control the order of threads?
 
-## 2.1 V: OpenMP constructs
+## 2.2 V: OpenMP constructs
 
 ## Worksharing constructs
 The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region.
@@ -493,9 +493,9 @@ https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Worksharing-Construct
 [Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
 
 
-## 2.2 Synchronization
+## 2.3 Synchronization
 
-Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads andinstead run only one thread at the time. This is achieved with a so called 'barriers'. Synchronization can be acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
+Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. This is achieved with a so called 'barriers'. Synchronization can be acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
 
 - Implicit barrier
 We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is acheived with curly brackets. As we saw in the previous examples, the '{' is the implicit barrier where we specify the entry into parallel region and the last '}' is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the
@@ -541,7 +541,7 @@ https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Synchronization-Const
 [Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
 
 
-## 2.3. Nesting and binding
+## 2.4 Nesting and binding
 
 ## Directive Scoping
 
@@ -622,7 +622,7 @@ In this example
 
 * In the dynamic extent but not in the static extent we have orphaned CRITICAL and SECTIONS directives. 
 
-## 2.4 E: Calculate pi!
+## 2.5 E: Calculate pi!
 
 In this exercise you will get to practice using worksharing construct for and critical directive.
 
@@ -700,7 +700,7 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 
 [Jupyter notebook: Exercise: Compute pi](/OpenMP/Exercise-Compute-Pi.ipynb)
 
-## 2.5 Private and shared variables
+## 2.6 Private and shared variables
 
 ## Data Scope Clauses
 
