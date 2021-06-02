@@ -488,12 +488,14 @@ Here we can see that if we are working on two threads, with 10 iterations then t
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
 
+https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Worksharing-Constructs.ipynb?token=7aa0bf315e16ea755b022570663581876e1b14f64f90f0fa
+
 [Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
 
 
 ## 2.2 Synchronization
 
-Synchronization can ce acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
+Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads andinstead run only one thread at the time. This is achieved with a so called 'barriers'. Synchronization can be acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
 
 - Implicit barrier
 We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is acheived with curly brackets. As we saw in the previous examples, the '{' is the implicit barrier where we specify the entry into parallel region and the last '}' is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the
@@ -533,6 +535,8 @@ Owing to the critical clause we specified only one thread is executed  at a time
 ### Example
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
+
+https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Synchronization-Constructs.ipynb?token=7aa0bf315e16ea755b022570663581876e1b14f64f90f0fa
 
 [Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
 
@@ -1199,4 +1203,118 @@ Parallelize the provided program using parallel region, tasks and other directiv
 Did the parallelization give faster results?
 
 [Jupyter notebook: Exercise: Traversing of a tree](/OpenMP/Traversing-tree.ipynb)
+
+### Differences in subsection for & synchronisation in GH and FL
+## Worksharing constructs
+The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region
+ Some of the examples of the work sharing constructs are:
+• sections
+• for
+• task
+• single
+
+### Section construct
+
+We will first see the code for using the sections construct where we
+can we specify it through directive sections .
+
+~~~c
+
+#pragma omp parallel {
+#pragma omp sections {{a=...; b=...;} #pragma omp section
+{ c=...; d=...; }
+}// end of sections }// end of parallel
+
+~~~
+
+When we use sections construct multiple blocks of code are executed in
+parallel. (image D1P2S22). When we specify section and we put a task
+into it, this specific task will execute in one thread. And then when
+we go on to another section that will execute its task in a different
+thread. In this way we can add these sections inside our 'pragma OMP
+parallel' code by specifying a section per each thread that will be
+executed in that each individual thread.
+
+In the example code above we can see that inside the section we have
+specified variables 'a' and 'b'. When this code is executed a new
+thread is generated with these variables and the same follows for the
+variables 'c' and 'd' which are specified in a different section and
+hence are in a different thread.
+
+
+### For construct
+
+In computer science, a for-loop is a control flow statement which
+specifies iteration. This allows code to be executed repeadetly. Such
+tasks, similar in action and executed multiple times, can be
+parallelized as well. In OpenMP, one can use 'for' construct in
+'#pragma omp'. 
+
+~~~c
+#pragma omp for [clause[[,]clause]...]
+~~~
+
+Corresponding for loop must have a canonical shape,
+where an iterator (i) is not modified in the loop body.
+
+~~~c
+for (int i=it; i<M; i++)
+~~~
+
+Here, 'it' is a starting value of iteration and 'M' is the final value
+of iteration. See example below.
+
+~~~c
+#pragma omp parallel private(f)
+{
+f=10;
+#pragma omp for
+for (i=0; i<10; i++)
+a[i] = b[i]*f;
+} /* omp end parallel*/
+~~~
+
+Private variable 'f' is fixed in each thread and list 'a' is updated
+in parallel. If the code is being executed on two threads, the
+iterations from 0 to 4 will be placed in thread 1 and iterations from
+5 to 9 will be placed in thread 2.
+
+## Synchronisation
+
+Sometimes in parallel programming, when dealing with multiple threads
+running in parallel, we want to pause the execution of threads and
+instead run only one thread at the time. This is achieved with a so
+called 'barriers'. There are two kinds of barriers: *implicit* and
+*explicit* barrier. Implicit barrier represents a barrier for
+beginning and end of parallel constructs, as well as all other control
+constructs. Explicit barrier can be achieved using 'critical'
+clause. Code, enclosed in critical clause is executed by all threads,
+but is restricted to only one thread at the time.
+
+~~~c
+#pragma omp critical [(name)]
+~~~
+
+Let's have a look at an example below.
+
+~~~c 
+cnt= 0;
+f=10;
+#pragma omp parallel {
+  #pragma omp for
+  for (i=0; i<10; i++)
+  {
+    if(b[i] == 0) 
+    {
+    #pragma omp critical 
+    cnt++;
+    } /* end if*/a[i] = b[i]*f;
+  } /* end for*/
+} /*omp end parallel*/ 
+
+~~~
+
+In the example above, due to critical clause, only one thread is
+executed at a time for cnt variable.
+
 
