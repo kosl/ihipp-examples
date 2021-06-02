@@ -358,6 +358,8 @@ Now go to the exercise, try it out and check if your answers were correct.
 
 [Jupyter notebook: Runtime functions](/OpenMP/Clauses.ipynb)
 
+https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Clauses.ipynb?token=7aa0bf315e16ea755b022570663581876e1b14f64f90f0fa
+
 
 ## 1.5. Exercise: Parallel region
 
