@@ -120,16 +120,23 @@ Here, the left is the sender and the right is the receiver. Let's suppose that t
 
 ## 2.2 E: Send and receive
 
-### Goal
-Write a basic MPI program which uses MPI_Send and MPI_Recv routines to communicate the number -1 from process 0 to process 1.
+In this exercise you will write a basic MPI program which uses MPI_Send and MPI_Recv routines to send number -1 from process 0 to process 1 (ping). 
 
 ### Hint
 ~~~c
-if (rank == 0) { ...
-}
-else if (rank == 1) {
-... }
+if (rank == 0) { ... }
+else if (rank == 1) { ... }
 ~~~
+
+### Expected output
+
+> >      I am 0 before send ping
+> >      I am 1 after recv ping
+
+#### Possible, but unexpected output
+
+> >      I am 1 after recv ping
+> >      I am 0 before send ping
 
 ## 2.3 E: Ping pong
 
