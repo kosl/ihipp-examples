@@ -27,13 +27,19 @@ MPI_Comm_size(MPI_Comm comm, int *size);
  (image S13)
  
  ## 1.2.E: Hello World 2.0
- We modify our excercise from the first week.
- 
-### Goal:
-Modify "Hello World" excercise so that
-- every process writes its rank and the size of MPI_COMM_WORLD,
+ In this exercise you will create your first MPI program from the provided skeletons for C, Python and Fortran. 
 
-- only process ranked 0 in MPI_COMM_WORLD prints "hello world".
+### Exercise
+
+Go to the exercise and modify the "Hello world" skeleton so that
+
+1. every process writes its rank and the size of MPI_COMM_WORLD
+
+2. only process ranked 0 in MPI_COMM_WORLD prints "hello world".
+
+Now run the program with 4 processes. 
+
+Is it possible for the output of all MPI processes to be in the sequence of the ranks? Or is there no chance to guarantee this?
 
 ## 1.3.D: 
 What do you observe when you run the program multiple times?
