@@ -160,8 +160,47 @@ We will see through this excercise that with MPI_THREAD_FUNNLED
 - Eliminates need for true “thread-safe” MPI
 
 ## 2.3 D:
+
 - Can the parallel scaling efficiency may be limited (Amdahl’s law) by MPI_THREAD_FUNNLED approach?
 - Does moving to MPI_THREAD_MULTIPLE come at a performance price (and programming challenge)?
+
+## 2.4 V: Hybrid MPI
+
+### Hybrid MPI+OpenMP Masteronly Style
+We saw in the previous exercise and the discussion that the scaling efficiency may be limited by the Amdahl's law. It means that, of course, even though all of the computation actually is parallelised we still  have large chunks of serial code actually still present. Serial code means the code that follows after "#pragma omp for reduction" in the previous example. So the reduction clause is a serial portion of code even though it utilizes parallel threads. But this is the last command and the following MPI_Reduce is actually collective communication as we have already learnt. 
+
+If we are doing something like this in the loop, you for surely get a definite amount of serial code, meaning that we will anyways be limited by the Ahmdal's law in scaling. This directly implies that we cannot utilize the abundant thousands or more cores (even a million) that are popping out each day on new and recent hardwares. 
+
+An efficient solution to these problems would be an overlap. Some kind of region where we could do  MPI simultaneously with doing OpenMP so that we would overcome these communications issues. This can be achieved by the Hybrid MPI+OpenMP Masteronly Style. There are quite a few advantages of using this Hybrid however the most prominent are that:
+- There are no message passing inside of the SMP nodes
+- There are no topology problems
+
+An efficient example to explain the need and efficiency of this is lets say if we have do a ray tracing in a room. And the problem of ray tracing is that the volume that we are describing is quite complex. So lets say if we have to do the light tracing and reflections that we see from the lightning and so on, we would need to compute for each ray. This is already several gigabytes of memory and if we have just 60 gigabytes of memory per node, then we are limited by memory to solve the problem. So we cannot do large problems with many cores because each core in MPI actually gets its own problem inside it. There is no sharing of the problem among the empty threads, empty processes or core and this is the problem that we would usually solve quite fine with going to MPI+ OpenMP. 
+So this tracing is one kind of such problems, which is best done with MPI + OpenMP because the description of environment, which is complex, takes a lot of memory. 
+
+### Calling MPI inside of OMP MASTER
+If we would like to do communication, then it is usually best to do OMP master thread. This ensures that one thread only communicates with the SMPI. However, we will still need to do some synchronization. As we learnt in the previous week; Synchronization means that  whenever we do MPI, the old threads will need to stop at some point and do the barrier.
+In OpenMP the MPI is called inside of a parallel region, with “OMP MASTER”• It requires MPI_THREAD_FUNNELED, and we saw in the previous subsection this implies that only master thread will make MPI-calls. However we need to take care that there isn’t any synchronization with “OMP MASTER”! Therefore, “OMP BARRIER” normally necessary to guarantee, that data or buffer space from/for other threads is available before/after the MPI call!
+
+~~~c
+!$OMP BARRIER
+!$OMP MASTER
+call MPI_Xxx(...)
+!$OMP END MASTER
+!$OMP BARRIER
+#pragma omp barrier
+#pragma omp master
+MPI_Xxx(...);
+#pragma omp barrier
+~~~
+
+We can see above that it implies that all threads are sleeping, and the additional barrier implies the necessary cache flush!
+
+Barriere is necessary and you do, for example, NPI receiving this example here is. And so on, and now we come to the. Question. Can we do, let's say, pure MPI with some shared memory, because we have seen that a lot of. MPI problems comes with the. Problem  description, as I said before, MPI would be a good way to do it. Most protesters are done in such a way that NPI works on them quite well. So why we would do. Shared memory or open MP and tred safety and social programming, if we could still live with MPI Pure and nobody really cares unless you do have problems with the.
+
+
+
+
 
 
 
