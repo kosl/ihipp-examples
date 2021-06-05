@@ -204,7 +204,13 @@ Through the following excercise we will see why the barrier is necessary.
 (example from D3P1S9)
 
 
+## 3. User defined datatypes
 
+### 3.1 Derived data type
+So far we have learnt to send messeages that were a continuous sequence of elements and  mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer of any data in memory in one message. We will learn to communicate strided data i.e a chunk of data with holes between the portions and how to communicate various basic datatypes within one message.
+
+So if we have many different types of datatypes such as int, float etc. with gaps how would (image S4)we do that communication in one way with one command. To do this we would first of all need to startt by describing the memory layout that we would like to transfer. This layout will then a processor that compiled the derived type. Do for you in the loop in a correct way, even this can be done on all kinds of broadcasts.
+So and so, so called Pink Daytop. Into continuous array, to be transferred as a single chunk of memory is not actually needed. So there is no waste of memory bandwidth in such a way, meaning that Darius's types are usually
 
 
 
