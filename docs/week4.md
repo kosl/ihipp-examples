@@ -198,7 +198,14 @@ MPI_Xxx(...);
 
 We can see above that it implies that all threads are sleeping, and the additional barrier implies the necessary cache flush!
 
-Barriere is necessary and you do, for example, NPI receiving this example here is. And so on, and now we come to the. Question. Can we do, let's say, pure MPI with some shared memory, because we have seen that a lot of. MPI problems comes with the. Problem  description, as I said before, MPI would be a good way to do it. Most protesters are done in such a way that NPI works on them quite well. So why we would do. Shared memory or open MP and tred safety and social programming, if we could still live with MPI Pure and nobody really cares unless you do have problems with the.
+Through the following excercise we will see why the barrier is necessary. 
+
+### Example with MPI_recv
+(example from D3P1S9)
+
+
+
+
 
 
 
