@@ -209,8 +209,15 @@ Through the following excercise we will see why the barrier is necessary.
 ### 3.1 Derived data type
 So far we have learnt to send messeages that were a continuous sequence of elements and  mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer of any data in memory in one message. We will learn to communicate strided data i.e a chunk of data with holes between the portions and how to communicate various basic datatypes within one message.
 
-So if we have many different types of datatypes such as int, float etc. with gaps how would (image S4)we do that communication in one way with one command. To do this we would first of all need to startt by describing the memory layout that we would like to transfer. This layout will then a processor that compiled the derived type. Do for you in the loop in a correct way, even this can be done on all kinds of broadcasts.
-So and so, so called Pink Daytop. Into continuous array, to be transferred as a single chunk of memory is not actually needed. So there is no waste of memory bandwidth in such a way, meaning that Darius's types are usually
+So if we have many different types of datatypes such as int, float etc. with gaps how would (image S4)we do that communication in one way with one command. To do this we would first of all need to start by describing the memory layout that we would like to transfer.
+Following this the processor that compiled the derived type layout will then do the transfer for us in the loop in a correct way. This can even be acheived with all kinds of broadcasts.
+
+Since we would not need to copy data into a continuous array, to be transferred as a single chunk of memory, there is no waste of memory bandwidth in such a way. Therefore derived types are usually structures of 
+- vectors
+- subarrays
+- structs etc.
+
+Or they could be simple types that are being combined into one data layout without the need of copying into one piece to be transferred efficiently or in one block of message. It is not uncommon to have a message of sizes over 60 or more kilobytes. So, if you would like to transfer the results of some programs that could be larger files then actually this is the most efficient way to do it. Of course there are other altenatives such as writing the results into file and to open the file. Quite often the codes do not actually return results, but they just write their results into a file, and eventually we'll need to combine the results into one representation. This is quite similar to how we do it in profiler or tracer creating a file for each processor. So you may understand that if you are debarking two thousand course quote, which is not that big, actually, you will get easily two thousand files to be read in reading two thousand files that needs to be interpreted.
 
 
 
