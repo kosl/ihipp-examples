@@ -140,13 +140,35 @@ else if (rank == 1) { ... }
 
 ## 2.3 E: Ping pong
 
-### Goal 
-Write a ping pong program using MPI_Send and MPI_Recv.Two processes ping pong a token back and forth, incrementing it until it reaches a given value.
+In this exercise you will get to practice using MPI_Send and MPI_Recv routines. 
 
-- Process 0 sends a message to process 1 (ping)
-- After receiving this message, process 1 sends a message back to process 0 (pong)
-- Each time a message is send, the token is incremented by one
-- Repeat this ping pong until the value of token reaches 6, i.e. 3 pings and 3 pongs
+This is a continuation of the previous exercise when we send one ping from process 0 to process 1. Now you will send and receive multiple messages. 
+
+### Exercise
+
+Two processes ping pong a token back and forth, incrementing it until it reaches a given value.
+
+1. Process 0 sends a message to process 1 (ping).
+
+2. After receiving this message, process 1 sends a message back to process 0 (pong).
+
+3. Each time a message is sent, the token is incremented by 1.
+
+4. Repeat this ping pong until the value of token reaches 6, i.e. 3 pings and 3 pongs.
+
+### Sequence of the output that reads well
+
+> >      I am 0 before send ping
+> >      I am 1 after recv ping
+> >      I am 1 before send pong
+> >      I am 0 after recv pong
+
+### Sequence of the output that reads badly
+
+> >      I am 0 before send ping 
+> >      I am 0 after recv pong 
+> >      I am 1 after recv ping 
+> >      I am 1 before send pong 
 
 ## 2.4 D: 
 Does the program work for different number of pings and pongs, i.e. 3 pings and 2 pongs?
