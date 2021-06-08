@@ -255,10 +255,11 @@ Here in this example (S5) we can see the real need for derived data types. We ha
 We use a modified pass-around-the-ring exercise:
 
 - It sends a struct with two integers
-▶ They are initialized with my_rank and 10*my_rank
-▶ Therefore we calulate two separate sums.
-▶ Currently, the data is send with the description
-▶ “snd_buf, 2, MPI_INTEGER” ▶ Please substitute this by using a
+- They are initialized with my_rank and 10*my_rank
+- Therefore we calulate two separate sums.
+- Currently, the data is send with the description
+▶ “snd_buf, 2, MPI_INTEGER” 
+- Please substitute this by using a
 ▶ derived datatype
 ▶ with a type map of “two integers”
 ▶ Of course produced with the two routines on the previous slides
