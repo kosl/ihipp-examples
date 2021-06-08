@@ -206,7 +206,7 @@ Through the following excercise we will see why the barrier is necessary.
 
 ## 3. User defined datatypes
 
-### 3.1 Derived data type
+## 3.1 Derived data type
 So far we have learnt to send messeages that were a continuous sequence of elements and  mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer of any data in memory in one message. We will learn to communicate strided data i.e a chunk of data with holes between the portions and how to communicate various basic datatypes within one message.
 
 So if we have many different types of datatypes such as int, float etc. with gaps how would (image S4)we do that communication in one way with one command. To do this we would first of all need to start by describing the memory layout that we would like to transfer.
@@ -217,12 +217,55 @@ Since we would not need to copy data into a continuous array, to be transferred 
 - subarrays
 - structs etc.
 
-Or they could be simple types that are being combined into one data layout without the need of copying into one piece to be transferred efficiently or in one block of message. It is not uncommon to have a message of sizes over 60 or more kilobytes. So, if you would like to transfer the results of some programs that could be larger files then actually this is the most efficient way to do it. Of course there are other altenatives such as writing the results into file and to open the file. Quite often the codes do not actually return results, but they just write their results into a file, and eventually we'll need to combine the results into one representation. This is quite similar to how we do it in profiler or tracer creating a file for each processor. So it is already quite easy to understand that if we are debugging a code with  two thousand cores (which is not that big) we will get easily end up with two thousand files to be read that need to be interpreted that will definitely take some time. We will learn about it more in the following subsections of parallel I/O.
+Or they could be simple types that are being combined into one data layout without the need of copying into one piece to be transferred efficiently or in one block of message. It is not uncommon to have a message of sizes over 60 or more kilobytes. So, if you would like to transfer the results of some programs that could be larger files then actually this is the most efficient way to do it. Of course there are other altenatives such as writing the results into file and to open the file. Quite often the codes do not actually return results, but they just write their results into a file, and eventually we'll need to combine the results into one representation. This is quite similar to how we do it in profiler or tracer creating a file for each processor. So it is already quite easy to understand that if we are debugging a code with  two thousand cores (which is not that big) we will easily end up with two thousand files to be read that need to be interpreted that will definitely take some time. We will learn about it more in the following subsections of parallel I/O.
+
+### Derived Datatypes — Type Maps
+
+A derived datatype is logically a pointer to a list of entries. However, once this data type has been saved somewhere, it is not communicated over the network. When the need comes we just use this type simply as it would be a basic data type. However the only prerequisite is that for each of these data types we need to compute the displacement. (table S6) Quite obviuosly MPI does not communicate these displacements over the network.
+
+(table S7) Here you can see the displacement of the basic datatypes such as int, char etc. For e.g MPI_INT can be displaced for four or eight bytes and MPI_doubles can be displaced for sixteen bytes  and so on. A derived datatype describes the memory layout of, e.g. structures, common blocks, subarrays and some variables in the memory etc.
+
+### Contiguous Data
+The is the simplest derived datatype as it consists of a number of contiguous items of the same datatype
+In C we use the following function to define it
+
+~~~c
+int MPI_Type_contiguous(int count, MPI_Datatype oldtype, MPI_Datatype *newtype)
+~~~
+
+### Committing and Freeing a Datatype
+
+Before a dataytype handle is used in message passing communication, it needs to be committed with MPI_TYPE_COMMIT. This need be done only once by each MPI process. So when we commit, this implies that data type recites a description inside that can be used over as we mentioned earlier simliar to a basic datatype. However, if at some point  this changes or we would like to release some memory, or if the usage is over we may call MPI_TYPE_FREE() to free the datatype and its internal resources.
+The routine used is as follows
+
+~~~c
+int MPI_Type_commit(MPI_Datatype *datatype);
+~~~
+
+
 
 ### Example
 
-Here in this example (S5) we can see the real need for derived data types. We have a structure of fixed size integers values and then there are double values. So this is one single data that we would like to describe as data type so that we could then send this structure in one command i.e send or receive. We do not really care whether it is blocking or blocking at this point. So, in order to achieve this we describe the data type called "buf_datatype". This is actually a name that we commit to this type. So we push the type after we create it and compile it to the MPI subsystem. Afterwards, the subsystem refers to that data type inside the system itself and knows how to convert, the integers and so on with the type that we use inside. Of course, there can also be some kind of gaps that we would not actually see if we are using some other languages such as in Fortran and sometimes we even have memory alignments for it. So there maybe a gap of one integer (image S5) to start. But hits is not an error on out part but it just n adjustment so the next array start at the multible of four.
-So  while describing such an array the MPI knows how to do it most efficiently.
+Here in this example (S5) we can see the real need for derived data types. We have a structure of fixed size integers values and then there are double values. So this is one single data that we would like to describe as data type so that we could then send this structure in one command i.e send or receive. We do not really care whether it is blocking or blocking at this point. So, in order to achieve this we describe the data type called "buf_datatype". This is actually a name that we commit to this type. So we push the type after we create it and compile it to the MPI subsystem. Afterwards, the subsystem refers to that data type inside the system itself and knows how to convert, the integers etc. with the type that we use inside. Of course, there can also be some kind of gaps that we would not actually see if we are using some other languages such as Fortran and sometimes we even have memory alignments for it. So there maybe a gap of one integer (image S5) to start. But this is not an error on our part but it just an adjustment, like some kind of performance adjustment so the next array starts at the multiple of four. So while describing such an array the MPI knows how to do it most efficiently.
+
+## 3.2 E: Derived data type
+
+### Goal
+
+We use a modified pass-around-the-ring exercise:
+
+- It sends a struct with two integers
+▶ They are initialized with my_rank and 10*my_rank
+▶ Therefore we calulate two separate sums.
+▶ Currently, the data is send with the description
+▶ “snd_buf, 2, MPI_INTEGER” ▶ Please substitute this by using a
+▶ derived datatype
+▶ with a type map of “two integers”
+▶ Of course produced with the two routines on the previous slides
+
+ 
+
+
 
 
 
