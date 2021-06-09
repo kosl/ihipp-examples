@@ -268,6 +268,61 @@ We use a modified pass-around-the-ring exercise:
 
 ▶ Of course produced with the two routines on the previous slides
 
+## 3.3 V/A: Layout of struct data types
+
+
+### Vector datatypes
+(image S13)
+
+What we learnt so far in the previous subsection and the exercise were more like continous vectors. Sometimes we would need to communicate vectors with holes that we do not want to be trnasferred. This implies that we would not send each element but just selected elements or sequence of elements. Therefore the blocklength and the offset of each can be used to create a "stride". When we want to communicate just a portion of a contionus chunk of memory the destination and source may not be the same. Usually we have one element to receive the results back from the array of cluster. As we saw in the previous pi example how the integrals were colelcted back so that we could see the complete sums we could such vector datatypes. We suse the following routine for vector datdtypes:
+
+~~~c
+int MPI_Type_vector(int count, int blocklength, int stride, MPI_Datatype oldtype, MPI_Datatype *newtype)
+~~~
+
+The structure of the routine is similiar to most we have learnt previously. So 
+- 'count' suggests how many elements. 
+- 'blocklength' is the number of elements per block.
+- 'stride' is the offset to the next portion of the result. 
+- the datatype of course we could also have only one type and it could be a derived one. Of course we can strided array of slots and integers and subsequently we will get a * newtype created that can be used in send and recieve routines.
+
+
+### Struct datatype
+
+So we you could have old types that are of different sizes and then we could combine two old types into a single vector or block that can be also with holes and these holes will not be communicated. It would be quite often the way how to describe out type instead of doing what we saw earlier. The previous method is not optimal for large numbers of such kinds of array. In such cases we use the struct datatypes so that communication is executed in the correct way. 
+The routine for this datatype looks like  
+
+~~~c
+int MPI_Type_create_struct(int count, int *array_of_blocklengths, MPI_Aint *array_of_displacements,
+MPI_Datatype *array
+~~~
+
+(image S15)
+This is how memory layout of struct data types could look like with gaps inside that we don't actualy want, but are imposed by the compiler itself or the underlying operating system or hardware processor.
+
+Let us assume that we have the following parameters. 
+- count = 2
+- array_of_blocklengths = ( 3, 5 )
+- array_of_displacements = ( 0, addr_1 – addr_0 ) 
+- array_of_types = ( MPI_INT, MPI_DOUBLE )
+In this case the, prototype for fixed memory layout of the struct datatype would be as following
+~~~c
+struct buff
+{ int i_val[3];
+double d_val[5];
+}
+~~~
+
+## 3.4 Computing displacements
+
+We actually need to compute the displacements. So if we would like to see the size of each structure in bytes, that's would need to prescribe as a buffer the displacement needs to be known.
+In MPI before we started with derived types we saw there were some differences with MPI3 and MPI1 similar to kind of problems that fortran had. These issues are now resolved with MPI3.1. Now there is a deprecated way of doing upper and lower bound for the structure. These are the recommended way how to compute the distance from one type to another. The standard procedure for obtaining displacement is 
+
+~~~c
+array_of_displacements[i] := address(block_i) – address(block_0)
+~~~
+
+And here is the example, how you compute the address. So it addressed. Gardiazabal or displacements could be computed by prescribing the start of the first element, so sent I, I your address is actually the correct way of doing, except we see what you would maybe see that you could just write and buffer. But this is how this is correctly written in. See if you are having such an overdose of or let's say alignment's up to four blocks or so that are the options for the computing of sets from one distance from one to another, or how to compute the size or gaps that are needed to be handled. Of course, it also depends what kind of your type you will be using. You quite often ask yourself. Wouldn't it be easier maybe to simplify, to collect a bunch of results in a continuous array locally to collect into the loop instead of describing this as the right type? This is not really easy as such.
  
 
 
