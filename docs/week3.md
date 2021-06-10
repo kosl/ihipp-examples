@@ -41,6 +41,8 @@ Now run the program with 4 processes.
 
 Is it possible for the output of all MPI processes to be in the sequence of the ranks? Or is there no chance to guarantee this?
 
+[Jupyter notebook: Hello world](/MPI/Hello-world.ipynb)
+
 ## 1.3.D: 
 What do you observe when you run the program multiple times?
 
@@ -138,6 +140,8 @@ else if (rank == 1) { ... }
 > >      I am 1 after recv ping
 > >      I am 0 before send ping
 
+[Jupyter notebook: Ping](/MPI/Ping.ipynb)
+
 ## 2.3 E: Ping pong
 
 In this exercise you will get to practice using MPI_Send and MPI_Recv routines. 
@@ -170,18 +174,70 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 > >      I am 1 after recv ping 
 > >      I am 1 before send pong 
 
+[Jupyter notebook: Ping pong](/MPI/Ping-pong.ipynb)
+
 ## 2.4 D: 
 Does the program work for different number of pings and pongs, i.e. 3 pings and 2 pongs?
 
 ## 2.4 E: Rotating information around a ring
 
-### Goal
-- A set of processes are arranged in a ring.
-- Use MPI_Send and MPI_Recv routines to pass an array of numbers around in a ring, starting from rank 0. 
-- Program ends when rank 0 process receives the array back and computes its sum.
+In this exercise you will get to experiment with blocking and non-blocking communication. With use of non-blocking communications we want to avoid idle time, deadlocks and serializations. 
 
-### Note
-Prevent deadlocks, i.e. something is sent and never received or receiver waits forever.
+This is a small example of ring communications, which is a halo communication with cyclic boundary conditions. Each process is sending its data to its right neighbour and receiving the data from its left neighbour (in a ring). If we use blocking routines, there is a risk of deadlocks and serializations. All processes can be stuck at `MPI_Send` because they are waiting for the `MPI_Recv` to be called. 
+
+You are starting with the provided source code which is wrong because it uses `MPI_Send` and `MPI_Recv` in a naive way. If `MPI_Send` is implemented with a synchronous communication protocol then this program will deadlock. But we are expecting this wrong program to work because we are sending only a small 1 integer message instead of huge double percision arrays. The below program sends the rank values around the ring in a loop with #process iterations and sums up all the values that are coming along (sum of all ranks). The calculation of the neighbour ranks is done with the modulo operation. We use 2 different buffers for send and receive, which is normally used when we are doing non-blocking communication. 
+
+~~~c
+#include <mpi.h>
+
+int rank, size;
+int snd_buf, rcv_buf;
+int right, left;
+int sum, i;
+MPI_Status status;
+
+MPI_Init(NULL, NULL);
+MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+right = (rank+1)      % size;
+left  = (rank-1+size) % size;
+
+sum = 0;
+snd_buf = rank; //store rank value in send buffer
+for(i = 0; i < size; i++) 
+{
+    MPI_Send(&snd_buf, 1, MPI_INT, right, 17, MPI_COMM_WORLD); //send data to the right neighbour
+    MPI_Recv(&rcv_buf, 1, MPI_INT, left,  17, MPI_COMM_WORLD, &status); //receive data from the left neighbour
+    snd_buf = rcv_buf; //prepare send buffer for next iteration
+    sum += rcv_buf; //sum of all received values
+}
+printf ("PE%i:\tSum = %i\n", rank, sum);
+
+MPI_Finalize();
+~~~
+
+## Exercise 1
+
+1. Go to the exercise and run with processes 3,4,5 and check for correct sums. 
+
+2. Then substitute `MPI_Send` with `MPI_Ssend` (explicit synchronous send). Run the program. You will see a deadlock and you will need to kill the program (with interrupt button &#9724;). 
+
+3. Resolve the deadlock with a serialization. Use the trick: `if rank == `, then do first receive and then send for example. Run the program with 3,4,5 processes, you have resolved the deadlock. Now run the program with 1 process. It will still deadlock. The program is still wrong due to bad performance and it will still deadlock when running with only 1 process. 
+
+* Why did we use a program with 2 different buffers instead of 1 for the serialization solution?
+
+* Why does the serialized solution still deadlock when running with 1 process?
+
+## Exercise 2
+
+Now let's repeat the exercise but you are now solving the deadlock in an optimal way using non-blocking communication. 
+
+1. Substitute `MPI_Send` with `MPI_Issend` (non-blocking synchronous send) and put the wait statement at the correct place. Keep the normal blocking `MPI_Recv`. Run the program. 
+
+* Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
+
+[Jupyter notebook: Ring](/MPI/Exercise-Ring.ipynb)
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
