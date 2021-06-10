@@ -315,22 +315,77 @@ double d_val[5];
 
 ## 3.4 Computing displacements
 
-We actually need to compute the displacements. So if we would like to see the size of each structure in bytes, that's would need to prescribe as a buffer the displacement needs to be known.
-In MPI before we started with derived types we saw there were some differences with MPI3 and MPI1 similar to kind of problems that fortran had. These issues are now resolved with MPI3.1. Now there is a deprecated way of doing upper and lower bound for the structure. These are the recommended way how to compute the distance from one type to another. The standard procedure for obtaining displacement is 
+We actually need to compute the displacements. So if we would like to see the size of each structure in bytes, that would need to be prescribed as a buffer the displacement needs to be known.
+In MPI1 before we started with derived types we saw there were some differences with MPI3 and MPI1 similar to kind of problems that fortran had. These issues are now resolved with MPI3.1. Now there is a deprecated way of doing upper and lower bound for the structure. These are the recommended way how to compute the distance from one type to another. The standard procedure for obtaining displacement is 
 
 ~~~c
 array_of_displacements[i] := address(block_i) – address(block_0)
 ~~~
 
-And here is the example, how you compute the address. So it addressed. Gardiazabal or displacements could be computed by prescribing the start of the first element, so sent I, I your address is actually the correct way of doing, except we see what you would maybe see that you could just write and buffer. But this is how this is correctly written in. See if you are having such an overdose of or let's say alignment's up to four blocks or so that are the options for the computing of sets from one distance from one to another, or how to compute the size or gaps that are needed to be handled. Of course, it also depends what kind of your type you will be using. You quite often ask yourself. Wouldn't it be easier maybe to simplify, to collect a bunch of results in a continuous array locally to collect into the loop instead of describing this as the right type? This is not really easy as such.
- 
+And in order to get the absolute address we would need the routine
+
+~~~c
+int MPI_Get_address(void* location, MPI_Aint *address)
+~~~
+
+In the MPI3.1 version the relative displacement can be calculated as the diffference between absolute address 1 and absolute address 2  and the new absolute address can be denoted as the sum of the existing absolute address and the relative displacement. So,
+
+- Relative displacement:= absolute address 1 – absolute address 2
+with the routine that looks like
+~~~
+MPI_Aint MPI_Aint_diff(MPI_Aint addr1, MPI_Aint addr2)
+~~~
+
+- New absolute address := existing absolute address + relative displacement \
+with the routine that looks like
+~~~c
+MPI_Aint MPI_Aint_add(MPI_Aint base, MPI_Aint disp)
+~~~
+
+### Example
+
+In example we see how we compute the address. 'Aint' address variable or 'disp' displacements could be computed by prescribing the start of the first element. The 'snd_buf.i[0]' isactually the correct way of defining that address. 
+~~~c
+struct buff
+{ int i[3];
+double d[5];
+} snd_buf;
+MPI_Aint iaddr0, iaddr1, disp;
+MPI_Get_address( &snd_buf.i[0], &iaddr0); // the address value &snd_buf.i[0]
+// is stored into variable iaddr0 MPI_Get_address( &snd_buf.d[0], &iaddr1);
+ New in MPI-3.1
+Fortran
+disp = MPI_Aint_diff(iaddr1, iaddr0);
+~~~
+
+## 3.5 D: Which is the fastest neighbor communication with strided data?
+
+Using derived datatype handles
+
+- Copying the strided data in a contiguous scratch send-buffer, communicating this send-buffer into a contiguous recv-buffer, and copying the rcv-buffer back into the strided application array
+
+- And which of the communication routines should be used?
 
 
+## 4. Parallel File I/O
 
+## 4.1 E: Pass-around-the-ring exercise.
 
+### Goal 
 
+Modify the pass-around-the-ring exercise.
+- Use the following skeletons to reduce software-coding time:
+cd ~/MPI/tasks/C/Ch12/ ; cp -p derived-struct-skel.c derived-struct.c
+cd ~/MPI/tasks/F_30/Ch12/ ; cp -p derived-struct-skel_30.f90 derived-struct_30.f90
 
+- Calculate two separate sums:
+- rank integer sum (as before)
+- rank floating point sum
+- Use a struct datatype for this
+- with same fixed memory layout for send and receive buffer.
+- Substitute all ___ within the skeleton and modify the second part, i.e., steps 1-5 of the ring example.
 
+(image S21)
 
 
 
