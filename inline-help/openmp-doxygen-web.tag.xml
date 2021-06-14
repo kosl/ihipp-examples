@@ -292,147 +292,147 @@
 			<anchorfile>openmpsu71.html#x100-1100002.15.1</anchorfile>
 		</member>
 		<member kind="function">
-			<name>parallelloop</name>
+			<name>parallel-loop</name>
 			<anchorfile>openmpsu74.html#x104-1140002.16.2</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::parallelloop</name>
+			<name>omp::parallel-loop</name>
 			<anchorfile>openmpsu74.html#x104-1140002.16.2</anchorfile>
 		</member>
 		<member kind="function">
-			<name>parallelsections</name>
+			<name>parallel-sections</name>
 			<anchorfile>openmpsu75.html#x105-1150002.16.3</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::parallelsections</name>
+			<name>omp::parallel-sections</name>
 			<anchorfile>openmpsu75.html#x105-1150002.16.3</anchorfile>
 		</member>
 		<member kind="function">
-			<name>parallelworkshare</name>
+			<name>parallel-workshare</name>
 			<anchorfile>openmpsu76.html#x106-1160002.16.4</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::parallelworkshare</name>
+			<name>omp::parallel-workshare</name>
 			<anchorfile>openmpsu76.html#x106-1160002.16.4</anchorfile>
 		</member>
 		<member kind="function">
-			<name>parallelmasked</name>
+			<name>parallel-masked</name>
 			<anchorfile>openmpsu78.html#x108-1180002.16.6</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::parallelmasked</name>
+			<name>omp::parallel-masked</name>
 			<anchorfile>openmpsu78.html#x108-1180002.16.6</anchorfile>
 		</member>
 		<member kind="function">
-			<name>maskedtaskloop</name>
+			<name>masked-taskloop</name>
 			<anchorfile>openmpsu79.html#x109-1190002.16.7</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::maskedtaskloop</name>
+			<name>omp::masked-taskloop</name>
 			<anchorfile>openmpsu79.html#x109-1190002.16.7</anchorfile>
 		</member>
 		<member kind="function">
-			<name>maskedtaskloopsimd</name>
+			<name>masked-taskloop-simd</name>
 			<anchorfile>openmpsu80.html#x110-1200002.16.8</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::maskedtaskloopsimd</name>
+			<name>omp::masked-taskloop-simd</name>
 			<anchorfile>openmpsu80.html#x110-1200002.16.8</anchorfile>
 		</member>
 		<member kind="function">
-			<name>parallelmaskedtaskloop</name>
+			<name>parallel-masked-taskloop</name>
 			<anchorfile>openmpsu81.html#x111-1210002.16.9</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::parallelmaskedtaskloop</name>
+			<name>omp::parallel-masked-taskloop</name>
 			<anchorfile>openmpsu81.html#x111-1210002.16.9</anchorfile>
 		</member>
 		<member kind="function">
-			<name>parallelmaskedtaskloopsimd</name>
+			<name>parallel-masked-taskloop-simd</name>
 			<anchorfile>openmpsu82.html#x112-1220002.16.10</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::parallelmaskedtaskloopsimd</name>
+			<name>omp::parallel-masked-taskloop-simd</name>
 			<anchorfile>openmpsu82.html#x112-1220002.16.10</anchorfile>
 		</member>
 		<member kind="function">
-			<name>teamsdistribute</name>
+			<name>teams-distribute</name>
 			<anchorfile>openmpsu83.html#x113-1230002.16.11</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::teamsdistribute</name>
+			<name>omp::teams-distribute</name>
 			<anchorfile>openmpsu83.html#x113-1230002.16.11</anchorfile>
 		</member>
 		<member kind="function">
-			<name>teamsdistributesimd</name>
+			<name>teams-distribute-simd</name>
 			<anchorfile>openmpsu84.html#x114-1240002.16.12</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::teamsdistributesimd</name>
+			<name>omp::teams-distribute-simd</name>
 			<anchorfile>openmpsu84.html#x114-1240002.16.12</anchorfile>
 		</member>
 		<member kind="function">
-			<name>teamsloop</name>
+			<name>teams-loop</name>
 			<anchorfile>openmpsu87.html#x117-1270002.16.15</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::teamsloop</name>
+			<name>omp::teams-loop</name>
 			<anchorfile>openmpsu87.html#x117-1270002.16.15</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetparallel</name>
+			<name>target-parallel</name>
 			<anchorfile>openmpsu88.html#x118-1280002.16.16</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetparallel</name>
+			<name>omp::target-parallel</name>
 			<anchorfile>openmpsu88.html#x118-1280002.16.16</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetparallelloop</name>
+			<name>target-parallel-loop</name>
 			<anchorfile>openmpsu91.html#x121-1310002.16.19</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetparallelloop</name>
+			<name>omp::target-parallel-loop</name>
 			<anchorfile>openmpsu91.html#x121-1310002.16.19</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetsimd</name>
+			<name>target-simd</name>
 			<anchorfile>openmpsu92.html#x122-1320002.16.20</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetsimd</name>
+			<name>omp::target-simd</name>
 			<anchorfile>openmpsu92.html#x122-1320002.16.20</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetteams</name>
+			<name>target-teams</name>
 			<anchorfile>openmpsu93.html#x123-1330002.16.21</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetteams</name>
+			<name>omp::target-teams</name>
 			<anchorfile>openmpsu93.html#x123-1330002.16.21</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetteamsdistribute</name>
+			<name>target-teams-distribute</name>
 			<anchorfile>openmpsu94.html#x124-1340002.16.22</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetteamsdistribute</name>
+			<name>omp::target-teams-distribute</name>
 			<anchorfile>openmpsu94.html#x124-1340002.16.22</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetteamsdistributesimd</name>
+			<name>target-teams-distribute-simd</name>
 			<anchorfile>openmpsu95.html#x125-1350002.16.23</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetteamsdistributesimd</name>
+			<name>omp::target-teams-distribute-simd</name>
 			<anchorfile>openmpsu95.html#x125-1350002.16.23</anchorfile>
 		</member>
 		<member kind="function">
-			<name>targetteamsloop</name>
+			<name>target-teams-loop</name>
 			<anchorfile>openmpsu96.html#x126-1360002.16.24</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::targetteamsloop</name>
+			<name>omp::target-teams-loop</name>
 			<anchorfile>openmpsu96.html#x126-1360002.16.24</anchorfile>
 		</member>
 		<member kind="function">
@@ -516,11 +516,11 @@
 			<anchorfile>openmpsu111.html#x145-1570002.20.1</anchorfile>
 		</member>
 		<member kind="function">
-			<name>cancellationpoint</name>
+			<name>cancellation-point</name>
 			<anchorfile>openmpsu112.html#x146-1580002.20.2</anchorfile>
 		</member>
 		<member kind="function">
-			<name>omp::cancellationpoint</name>
+			<name>omp::cancellation-point</name>
 			<anchorfile>openmpsu112.html#x146-1580002.20.2</anchorfile>
 		</member>
 		<member kind="function">

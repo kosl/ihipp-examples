@@ -17,7 +17,7 @@ def get_all_website_links(url):
                 continue
             urls.add(href)
             # write to xml file
-            text[0] = text[0].replace(" ", "") # remove spaces
+            text[0] = text[0].replace(" ", "-") # remove spaces, minus between
             f.write('\t\t<member kind="function">\n')
             f.write('\t\t\t<name>' + text[0] + '</name>\n')
             f.write('\t\t\t<anchorfile>' + href + '</anchorfile>\n')
@@ -40,4 +40,8 @@ links = get_all_website_links(webpage)
 
 f.write('\t</compound>\n')
 f.write('</tagfile>')
+f.close()
+
+f = open("omp.json", "w")
+f.write('{\n\t"url": "https://kosl.github.io/openmp.org/spec-html/5.1/",\n\t"tagfile": "openmp-doxygen-web.tag"\n}')
 f.close()

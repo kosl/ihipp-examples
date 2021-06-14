@@ -25,6 +25,10 @@ def get_all_website_links(url):
             f.write('\t\t\t<name>MPI::' + text[0] + '</name>\n')
             f.write('\t\t\t<anchorfile>' + href + '</anchorfile>\n')
             f.write('\t\t</member>\n')
+            f.write('\t\t<member kind="function">\n')
+            f.write('\t\t\t<name>mpi::' + text[0] + '</name>\n')
+            f.write('\t\t\t<anchorfile>' + href + '</anchorfile>\n')
+            f.write('\t\t</member>\n')
     return urls
 
 webpage = "https://open-mpi.org/doc/v4.0/"
@@ -39,4 +43,8 @@ links = get_all_website_links(webpage)
 
 f.write('\t</compound>\n')
 f.write('</tagfile>')
+f.close()
+
+f = open("mpi.json", "w")
+f.write('{\n\t"url": "https://open-mpi.org/doc/v4.0/",\n\t"tagfile": "mpi-doxygen-web.tag"\n}')
 f.close()
