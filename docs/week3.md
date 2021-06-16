@@ -365,15 +365,27 @@ The main difference here is that since only one process, i.e the root gathers al
 
 ## 3.5 E: Scatter and Gather
 
-### Goal
-Write a MPI program that computes the average of an array of elements in parallel using MPI_Scatter and MPI_Gather.
+In this exercise you write an MPI program that computes the average of an array of elements using MPI_Scatter and MPI_Gather. 
 
-### Steps
-- Generate a random array of numbers on the root process (process 0). 
-- Scatter the numbers to all processes, giving each process an equal amount of numbers.
-- Each process computes the sum of their subset of numbers.
-- Gather all the sums to the root process. The root process then computes the average of these numbers to get the final average.
+This quite simple program demonstrates how one can use MPI to divide work across processes, perform computation on subsets of data and then combine the smaller results into the final result. 
 
+The program takes the following steps:
+
+1. The root process (process 0) creates an array of generated random numbers. 
+
+2. Scatter the random numbers from the root process to all other processes, giving each process an equal amount of numbers.
+
+3. Each process computes the average of their subset of numbers.
+
+4. The root process gathers each individual average and it computes the total average on now a much smaller array of numbers. 
+
+### Exercise
+
+First, think about how would you solve this exercise without MPI_Scatter and MPI_Gather routines. 
+
+* Go to the exercise and look at the provided skeleton. Use `MPI_Scatter` and `MPI_Gather` routines and compute missing final average result to solve the exercise. 
+
+[Jupyter notebook: Scatter and gather](/MPI/Scatter-Gather.ipynb)
 
 
 ## 4.Advanced Collective operations
