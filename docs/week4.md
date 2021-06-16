@@ -417,9 +417,12 @@ MPI_Type_create_resized  //with lb=0 and
 new_extent=sizeof(one structure)
 ~~~
 
-## Example: Correcting problem with array of structures
-(External tool example to compile and run. S30
+### Example: Correcting problem with array of structures
+(External tool example to compile and run. (S30)
 
+## 4.3 V:Parallel file I/O
+
+the problem of file systems with high performance computing is quite large. That in the usual way, large crowds do read large data as input and do write large data. Yes. Because the many of the computation are done. Iteratively, meaning that they look so convergence or they progress the solution in step, way, manner, or they simulate the system of particles or solve the fluid equations or do some kind of time evolution simulation and storing large amounts of data is quite common on HPC. So finding better bytes of disks to be full is not uncommon. Seek to see if I may just. Let me see if I have this. Or, for example, many Klosters like these two in Italy, one hundred days free, mindless human output, you may see that. There are discs of. Cilauro! Part of bikes available to users, and usually we do optimize the quality of the storage by. Splitting the story into the different directories, mostly the of.
 
 
 
