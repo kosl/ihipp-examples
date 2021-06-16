@@ -387,6 +387,40 @@ cd ~/MPI/tasks/F_30/Ch12/ ; cp -p derived-struct-skel_30.f90 derived-struct_30.f
 
 (image S21)
 
+## 4.2 A: Brief explanation of size, extent and alignment rules
+
+Before we go further into the Parallel file I/O we need to get some basic knowledge about the terminology of size, extent, true extent etc. and get some background about the alignment rules.  
+- Size is the number of bytes that have to be transferred.
+- Extent represents the spans from first to last byte including all the holes.
+- True extent spans from first to last true byte but in this case excluding holes at beginning and the end.
+For most of the basic datatypes the Size = Extent = number of bytes used by the compiler. This can be seen easily in the image (S25)
+
+Extent, alignment and holes can be problems for some compilers or architecture, especially, these are optimized. However, MPI3 has a lot of these problems fixed by introducing new interfaces that solve certain issues and offer a better usable interface. However, in standard these parameters always hold true:
+- There are automatic holes at the end for necessary alignment purpose
+- There can be additional holes at begin and by lb and ub markers: MPI_TYPE_CREATE_RESIZED
+- And as mentioned already, basic datatypes: Size = Extent = number of bytes used by the compiler. 
+
+### Alignment rule, holes and resizing of structures 
+At times, the compiler might add additional alignment holes either within a structure (for example between a float and a double) or at the end of a structure (i.e after elemets different sizes). However, alignment holes are important at the end when using an array of structures!
+To imply this if an array of structures (in C/C++) or derived types (in Fortran) should be communicated then it is recommended that we create a portable datatype handle and additionally MPI_TYPE_CREATE_RESIZED to this datatype handle. 
+(EXAMPLE)
+Quite often, due to the alignment gaps the holws may cause a signigicant loss of bandwidth. Technically, by definition, MPI is not allowed to transfer the holes. There we need to fill holes with dummy elements.
+(EXAMPLE)
+
+Sometimes certain problems might arise such as the MPI extent of a structure is not the same or equal as the real size of the structure. This could be because the MPI adds n alignment hole at the end a because the MPI library has wrong expectations about compiler rules that is 
+- For a basic datatype within the structure
+- For the allowed size of the whole structure (e.g. multiple of 16)
+
+To rectify this problem we can call the 
+~~~c
+MPI_Type_create_resized  //with lb=0 and
+new_extent=sizeof(one structure)
+~~~
+
+## Example: Correcting problem with array of structures
+(External tool example to compile and run. S30
+
+
 
 
 
