@@ -41,6 +41,12 @@ RUN conda install -c conda-forge xeus-cling=0.12.1 openmpi openmp openssh mpi4py
 # Add nbgitpuller
 #RUN pip install nbgitpuller jupyter-resource-usage
 
+# including inline help
+COPY omp.json /opt/conda/etc/xeus-cling/tags.d
+COPY mpi.json /opt/conda/etc/xeus-cling/tags.d
+COPY openmp-doxygen-web.tag /opt/conda/share/xeus-cling/tagfiles
+COPY mpi-doxygen-web.tag /opt/conda/share/xeus-cling/tagfiles
+
 # Prepare kernels for OpenMP and MPI
 RUN sed -i -e '/display_name/s/",/ with OpenMP and MPI",/' \
    -e '/-std=c++/s/$/, "-fopenmp"/' /opt/conda/share/jupyter/kernels/xcpp*/kernel.json
