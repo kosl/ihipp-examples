@@ -452,7 +452,26 @@ new_extent=sizeof(one structure)
 
 ## 4.3 V:Parallel file I/O
 
-the problem of file systems with high performance computing is quite large. That in the usual way, large crowds do read large data as input and do write large data. Yes. Because the many of the computation are done. Iteratively, meaning that they look so convergence or they progress the solution in step, way, manner, or they simulate the system of particles or solve the fluid equations or do some kind of time evolution simulation and storing large amounts of data is quite common on HPC. So finding better bytes of disks to be full is not uncommon. Seek to see if I may just. Let me see if I have this. Or, for example, many Klosters like these two in Italy, one hundred days free, mindless human output, you may see that. There are discs of. Cilauro! Part of bikes available to users, and usually we do optimize the quality of the storage by. Splitting the story into the different directories, mostly the of.
+
+Many parallel applications need a coordinated parallel access to a file by a group of processes and at times this could be simultaneous. Frequently all the processes may read/write many (small) non-contiguous pieces of the file i.e. the data may be distributed amongst the processes according to a partitioning scheme. Writing of the results can be done by all compute nodes at once or even compute cores, writing their own portion of the result and having a huge amount (not by size but by the number) of files is very inefficient in such a way.
+In this subsection we are addressing classic File I/O. We will when we will be using such kind of IO and for what purpose and are there any other means to do the same. Although there are some object file systems also being used in HPC that do not have a clasiccal file layout and we would need to address, such objects or chunks of data that are saved into the file system differently but we will not adress these issues here.
+
+The are quite a lot of problem of file systems with high performance computing. Usually, large codes read large data as input and  write large data as output. Since many computations are done iteratively, meaning that they are convergent or they progress the solution in a stepwise manner the storage can be occupied quite fast. For example if we are  simulating a system of particles in HPC or solving a fluid equations or doing some kind of time evolution simulation we would need to  store large amounts of data . So finding petabytes of disks to be full is not uncommon. A lot of data being saved to the disk should not impact the computation i.e if we would like to store results into disk, it should not impact communication and the overall progress of the code.
+
+This is where the Parrallel File I/O comes into play so that we could save results by for example a timestep, or by proccessors that are already combined together at progress or computation time. 
+
+So it is quite difficult if we have a running large code that  would  like to store all the resources or at least the state of current simulation. Since quite often it is not just the results that are being saved, but also intermediate results or steps at selected times.
+So for example, if a simulation crashes, it can be restarted at that point. This is problematic owing to the fact that  the usual scheduling on clusters limits the time of how long one code can run and usually that is actually limited to twenty four hours and  for some clusters it could be even smaller number. In an case where we would have code that we would like to run for a month it would be meticulous if it need to stop at some point and we can start from the previous state and continue simulation. This would imply that somehow we need to store the last state into the disk and restart from that so-called check point or saving the current state. 
+This is overcome with  Parallel file I/O that lowers the number of files and performs the  writing in an efficient way. This is acheived  because  the parallel file systems allows us to write to several file servers at the same time through metadata orchestrator. This directs the m etadata server when we open a file, then the  tells you both tell tells the note that it's handling network file system to reach all of the available data file or target's. They need to send over data over networks, so compute notes, let's say, if there are thousands of compute nodes, there are, let's say, hundreds of file servers or at least dozes of file servers handling hundreds of disks to allow foreign files transfers. 
+
+
+▶ all processes may read the same data Efficient collective I/O based on
+
+fast physical I/O by several processors, e.g. striped distributing (small) pieces by fast message passing
+
+
+
+
 
 
 
