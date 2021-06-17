@@ -77,6 +77,8 @@ MPI_Finalize();
 
 * Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
 
+[Jupyter notebook: Ring2](/MPI/Exercise-Ring2.ipynb)
+
 ## 1.3 V: One sided communication
 As we already learnt in the begining that in MPI the parellelisation is based on the distributed memory. This means that if we run a program on different cores each core has its own private memory. Since, the memory is private to each process we send messages to exchange data from one process to another. 
 In two-sided (i.e point to point communication) and collective communication models the problem is that (even with the that non blocking) both sender and receiver have to participate in data exchange (i.e send and receive) operations explicitly, which requires synchronization. 
