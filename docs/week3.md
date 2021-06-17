@@ -181,7 +181,7 @@ Does the program work for different number of pings and pongs, i.e. 3 pings and 
 
 ## 2.4 E: Rotating information around a ring
 
-In this exercise you will get to experiment with blocking and non-blocking communication. With use of non-blocking communications we want to avoid idle time, deadlocks and serializations. 
+In this exercise you will get to experiment with blocking and non-blocking communication. With use of non-blocking communications we want to avoid idle time, deadlocks and serializations. This is the first part of a two part exercise. 
 
 This is a small example of ring communications, which is a halo communication with cyclic boundary conditions. Each process is sending its data to its right neighbour and receiving the data from its left neighbour (in a ring). If we use blocking routines, there is a risk of deadlocks and serializations. All processes can be stuck at `MPI_Send` because they are waiting for the `MPI_Recv` to be called. 
 
@@ -217,7 +217,7 @@ printf ("PE%i:\tSum = %i\n", rank, sum);
 MPI_Finalize();
 ~~~
 
-## Exercise 1
+## Exercise
 
 1. Go to the exercise and run with processes 3,4,5 and check for correct sums. 
 
@@ -229,15 +229,7 @@ MPI_Finalize();
 
 * Why does the serialized solution still deadlock when running with 1 process?
 
-## Exercise 2
-
-Now let's repeat the exercise but you are now solving the deadlock in an optimal way using non-blocking communication. 
-
-1. Substitute `MPI_Send` with `MPI_Issend` (non-blocking synchronous send) and put the wait statement at the correct place. Keep the normal blocking `MPI_Recv`. Run the program. 
-
-* Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
-
-[Jupyter notebook: Ring](/MPI/Exercise-Ring.ipynb)
+[Jupyter notebook: Ring](/MPI/Exercise-Ring1.ipynb)
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
