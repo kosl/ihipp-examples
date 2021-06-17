@@ -17,7 +17,19 @@ def get_all_website_links(url):
                 continue
             urls.add(href)
             # write to xml file
-            text[0] = text[0].replace(" ", "-") # remove spaces, minus between
+            if " " in text[0]:
+                # in case of multiple word directives e.g. parallel sections
+                # add without spaces and with underscore_
+                text[0] = text[0].replace(" ", "_") # with underscore_
+                f.write('\t\t<member kind="function">\n')
+                f.write('\t\t\t<name>' + text[0] + '</name>\n')
+                f.write('\t\t\t<anchorfile>' + href + '</anchorfile>\n')
+                f.write('\t\t</member>\n')
+                f.write('\t\t<member kind="function">\n')
+                f.write('\t\t\t<name>omp::' + text[0] + '</name>\n')
+                f.write('\t\t\t<anchorfile>' + href + '</anchorfile>\n')
+                f.write('\t\t</member>\n')
+                text[0] = text[0].replace("_", "") # without spaces
             f.write('\t\t<member kind="function">\n')
             f.write('\t\t\t<name>' + text[0] + '</name>\n')
             f.write('\t\t\t<anchorfile>' + href + '</anchorfile>\n')
