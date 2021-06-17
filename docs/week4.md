@@ -37,17 +37,45 @@ Let us try to furhter consolidate these ideas by implementing them in the follow
 
 ## 1.2 E: Rotating information around a ring (non-blocking)
 
-### Goal
-- A set of processes are arranged in a ring. Initialize sum to 0. 
+In this exercise you will get to experiment with blocking and non-blocking communication. With use of non-blocking communications we want to avoid idle time, deadlocks and serializations. This is the second part of a two part exercise. 
 
-a)
-1. Each process stores its rank into snd_buf. 
-2. 2. Each process passes this on to its neighbour on the right.
-3. Each process adds snd_buf to sum. 
+This is a continuation of the previous exercise with ring communication and when you used blocking communication to solve it. Now you will repeat the exercise but you are now solving the deadlock in an optimal way using non-blocking communication. 
 
-b)
-1. Repeat 1-2-3 with size (number of process) iterations, i.e. each process computes the sum of all ranks.
-2. Use non-blocking MPI_Isend.
+~~~c
+#include <mpi.h>
+
+int rank, size;
+int snd_buf, rcv_buf;
+int right, left;
+int sum, i;
+MPI_Status status;
+
+MPI_Init(NULL, NULL);
+MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+right = (rank+1)      % size;
+left  = (rank-1+size) % size;
+
+sum = 0;
+snd_buf = rank; //store rank value in send buffer
+for(i = 0; i < size; i++) 
+{
+    MPI_Send(&snd_buf, 1, MPI_INT, right, 17, MPI_COMM_WORLD); //send data to the right neighbour
+    MPI_Recv(&rcv_buf, 1, MPI_INT, left,  17, MPI_COMM_WORLD, &status); //receive data from the left neighbour
+    snd_buf = rcv_buf; //prepare send buffer for next iteration
+    sum += rcv_buf; //sum of all received values
+}
+printf ("PE%i:\tSum = %i\n", rank, sum);
+
+MPI_Finalize();
+~~~
+
+## Exercise
+
+1. Substitute `MPI_Send` with `MPI_Issend` (non-blocking synchronous send) and put the wait statement at the correct place. Keep the normal blocking `MPI_Recv`. Run the program. 
+
+* Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
 
 ## 1.3 V: One sided communication
 As we already learnt in the begining that in MPI the parellelisation is based on the distributed memory. This means that if we run a program on different cores each core has its own private memory. Since, the memory is private to each process we send messages to exchange data from one process to another. 
