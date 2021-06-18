@@ -19,8 +19,5 @@ Example calling help:
 ?MPI_Send
 
 ?omp::sections
-?sections
-
 ?omp::parallel_sections
-?omp::parallelsections
  ~~~
