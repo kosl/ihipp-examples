@@ -318,16 +318,25 @@ So, here suppose the 'red' is contained in array called 'buf'. There are three e
 
 ## 3.2 E: Broadcast
 
-### Goal
-- Write a program that uses MPI_Bcast routine to broadcast an array with 10.000.000 numbers from process with rank 0. 
-- Write your own broadcast function
+In this exercise you will get to use MPI_Bcast and write your own broadcast function. You will compare the time efficiency of the MPI and your function. 
+
+### Exercise
+
+1. Go to the exercise and complete the program that uses `MPI_Bcast` routine to broadcast an array with 10.000.000 numbers from process with rank 0. 
+
+2. Write your own broadcast function using `MPI_Send` and `MPI_Recv` routines. 
+
 ~~~c
-my_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator)
+void my_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator);
 ~~~
-and measure the time of both routines with MPI function
+
+3. Measure the time of both routines using MPI function `MPI_Wtime`. 
+
 ~~~c
 double MPI_Wtime(void);
 ~~~
+
+[Jupyter notebook: Broadcast](/MPI/Exercise-Broadcast.ipynb)
 
 ## 3.3 D: What do you observe? (sequential vs. tree based algorithm)
 Are the times for both of the program i.e our program and the one from the library same?
