@@ -330,7 +330,7 @@ In this exercise you will get to use MPI_Bcast and write your own broadcast func
 void my_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm communicator);
 ~~~
 
-3. Measure the time of both routines using MPI function `MPI_Wtime`. 
+3. Measure the time of both routines using MPI function `MPI_Wtime` when running with 2, 4, 8 processors. What do you make of the differences at different scales?
 
 ~~~c
 double MPI_Wtime(void);
