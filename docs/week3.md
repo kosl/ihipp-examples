@@ -412,13 +412,23 @@ So, the 'send_data' parameter is an array of elements that each process wants to
 
 ## 4.2 E: Computing average with MPI_Reduce
 
-### Goal
-Write a MPI program that computes the average of an array of elements in parallel using MPI_Reduce.
+In this exercise you write an MPI program that computes the average of an array of elements using MPI_Reduce. 
 
-### Steps
-- Generate a random array of numbers on each process. 
-- Each process computes the local sum of their subset of numbers.
-- Reduce the local sums on process with rank 0 and compute the average of these numbers to get the final average.
+In the previous lesson, you computed the average using MPI_Scatter and MPI_Gather. Using MPI_Reduce simplifies the code quite a bit. 
+
+The program takes the following steps:
+
+1. Each process creates an array of generated random numbers. 
+
+2. Each process computes the `local_sum` calculation. 
+
+3. Reduce the `local_sum` to the root process (process 0) using `MPI_SUM`. 
+
+4. The root process calculates final average. 
+
+### Exercise
+
+* Go to the exercise and rewrite progam using `MPI_Reduce` to compute a global average. 
 
 
 ## 4.3 E: Calculate Pi!
