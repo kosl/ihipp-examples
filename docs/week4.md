@@ -464,13 +464,30 @@ So it is quite difficult if we have a running large code that  would  like to st
 So for example, if a simulation crashes, it can be restarted at that point. This is problematic owing to the fact that the usual scheduling on clusters limits the time of how long one code can run and usually that is actually limited to twenty four hours and  for some clusters it could be even smaller number. In an case where we would have code that we would like to run for a month it would be meticulous if it need to stop at some point and we can start from the previous state and continue simulation. This would imply that somehow we need to store the last state into the disk and restart from that so-called check point or saving the current state. 
 This is overcome with  Parallel file I/O that lowers the number of files and performs the  writing in an efficient way. This is acheived  because  the parallel file systems allows us to write to several file servers at the same time through metadata orchestrator. When we open a file the metadata server informs the node (that it's handling network file system) to which of the available data file or targets do they need to send the data. If there are thousands of compute nodes, then there are let's say, at least dozens of file servers that handle hundreds of disks to allow parallel file transfers. 
 
-Thus, at any given time, many of compute nodes are sending network files over through the file server. Therefore in Parallel File I/O we could actually write a chunks of the single file for several of those compute nodes. Reading and writing files are analological to sending and receiving messages respectively that we have learnt earlier. The only exception in that this is a persistent memory, meaning that such kind of writing is done correctly. Additionaly for codes that do computation in parts meaning, that if we have a code  that does domain composition before we start,  then some of the compute nodes or compute cores, already know which portion of the file needs to be read in order to start processing. In this case having a single file for saving timestep is something that it is very useful for large clusters that would like to handle millions of files, with the minimum number of ????. 
+Thus, at any given time, many of compute nodes are sending network files over through the file server. Therefore in Parallel File I/O we could actually write a chunks of the single file for several of those compute nodes. Reading and writing files are analological to sending and receiving messages respectively that we have learnt earlier. The only exception in that this is a persistent memory, meaning that such kind of writing is done correctly. Additionaly for codes that do computation in parts meaning, that if we have a code  that does domain composition before we start,  then some of the compute nodes or compute cores, already know which portion of the file needs to be read in order to start processing. In this case having a single file for saving timestep is something that it is very useful for large clusters that would like to handle millions of files, with the minimum number of (feets)????. 
 
+This allows us to use parallel I/O functions that do not block computation allowing us to to put overlapped computation and reading/writing through it. This is possible through some standard formats that look like a readable file at the end; not just by the code that has written it, but also for general purpose file readers. For example, a prominent format for the file that is Parallel is HDF, i.e hierarchical data format. It is used  quite often by many codes and it provides MPI Parallel I/O. Consequently, instead of learning of what we can do with the Parallel I/O, it would be more efficient if we learn how to do MPI I/O with HDF format in parallel way. The MPI I/O features provided by MPI standards are actually part of hierarchical data formats and other net CDF and similar formats. To summarise the MPI-I/O features are to provide a high-level interface to support:
+-  data file partitioning among processes
+-  transfer global data between memory and files (collective I/O)
+-  asynchronous transfers
+-  strided access
 
-▶ all processes may read the same data Efficient collective I/O based on
+Some basic principles of MPI-I/O are that
+- MPI file contains elements of a single MPI datatype (etype)
+- partitioning the file among processes with an access template (filetype)
+- all file accesses transfer to/from a contiguous or non-contiguous user buffer (MPI datatype)
+- nonblocking / blocking and collective / individual read / write routines
+- individual and shared file pointers, explicit offsets
+- binary I/O
+- automatic data conversion in heterog. systems
+- file interoperability with external representation
 
-fast physical I/O by several processors, e.g. striped distributing (small) pieces by fast message passing
+(image S9)
 
+So we will learn these principles of MPI I/O to see that we could create a file that perhaps looks like a single file. However in reality there are many of the processes that started work on different nodes actually open the same file and writes the results into one physical file, while a logical way there may be gaps that are not allowed to be used or to be written. This is because the striking from a logical way to physical way is done in such a way that we already know what place we can save our portion of the file. 
+
+(image S10)
+Simply put, we need to know the size of one chunk and the file system just needs to move the fire point there where it writes to the correct plan. So even Syria file, I'll allows you to move backwards and forwards in the fire if this is so so-called binary way so that, you know, with what offset you can expect something, then you could have a single file. That can create many. Let's say, of course, we arrive at the same time to this different servers and AT&T looks like a single file for you. And the only question here isn't what the problems are are actually resolved by the system itself, so it's not an easy way to do it for the system, actually, because there are some file locking and. Metadata, orchestration, and let's say location and control that which is hidden to a user. And we actually don't care and MPI Tree actually provides this interface to all codes. So it can't just you to use an API file for file writing and reading in such a way that.We will learn the MPI-I/O principles through a simple example. 
 
 
 
