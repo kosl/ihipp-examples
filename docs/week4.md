@@ -487,7 +487,63 @@ Some basic principles of MPI-I/O are that
 So we will learn these principles of MPI I/O to see that we could create a file that perhaps looks like a single file. However in reality there are many of the processes that started work on different nodes actually open the same file and writes the results into one physical file, while a logical way there may be gaps that are not allowed to be used or to be written. This is because the striking from a logical way to physical way is done in such a way that we already know what place we can save our portion of the file. 
 
 (image S10)
-Simply put, we need to know the size of one chunk and the file system just needs to move the fire point there where it writes to the correct plan. So even Syria file, I'll allows you to move backwards and forwards in the fire if this is so so-called binary way so that, you know, with what offset you can expect something, then you could have a single file. That can create many. Let's say, of course, we arrive at the same time to this different servers and AT&T looks like a single file for you. And the only question here isn't what the problems are are actually resolved by the system itself, so it's not an easy way to do it for the system, actually, because there are some file locking and. Metadata, orchestration, and let's say location and control that which is hidden to a user. And we actually don't care and MPI Tree actually provides this interface to all codes. So it can't just you to use an API file for file writing and reading in such a way that.We will learn the MPI-I/O principles through a simple example. 
+Simply put, we need to know the size of one chunk and the file system just needs to move the file pointer to the correct place where it writes . This is quite simple because even the  serial file I/O allows us to move backwards and forwards in the file if it is in a binary way so that we know, with what offset we can expect something. In this case we could have a single file that can create many cores writing at the same time to the different servers and in the end it looks like a single file for you. To ease out these terms 
+- A file is an an ordered collection of typed data items
+- etypes refer to the the unit of data access and positioning / offsets that can be any basic or derived datatype. It is usually with non-negative, monotonically non-decreasing, non-absolute displacement and is generally contiguous but it does not need to be typically same at all processes.
+- filetypes are the basis for partitioning a file among processes. They define a template for accessing the file. They are usualy different at each process.
+- Each process has its own "view" that is defined by a displacement, an etype, and a filetype. The file type is repeated,starting at displacement.
+- An "offset is the position relative to current view, in units of etype.
+
+To open and MPI file we use the routine 
+
+~~~c
+MPI_FILE_OPEN(comm, filename, amode, info, fh)
+~~~
+
+and the parameters in this routine are
+
+- MPI_FILE_OPEN is collective over comm
+- filename’s namespace is implementation-dependent
+- filename must reference the same file on all processes
+- process-local files can be opened by passing MPI_COMM_SELF as comm
+- returns a file handle fh
+
+However, the default is:
+- displacement = 0
+- etype = MPI_BYTE
+- filetype = MPI_BYTE
+
+We prescribe the way of discplacements that is needed. You can check the PDF in the attachment for the list of all the Access Modes. 
+
+Sometimes we might need to close or delete a file. We use the follwing routines for
+- Close: collective
+~~~c
+MPI_FILE_CLOSE(fh)
+~~~
+
+- Delete 
+~~~c
+MPI_FILE_DELETE(filename, info)
+~~~
+However, if access mode "amode=MPI_DELETE_ON_CLOSE" was specified in MPI_FILE_OPEN then the file is obvioudly automatically deleted on close. 
+
+We will learn further about the MPI-I/O principles through a simple example. 
+
+## 4.4 E: Four processes write a file in parallel
+
+### Goal
+- each process should write its rank (as one character) ten times to the offsets = my_rank + i * size_of_MPI_COMM_WORLD, i=0..9
+- Result: “0123012301230123012301230123012301230123“
+- Each process uses the default view
+
+ ### Tip                                            
+ 
+ - Please, use skeleton:
+cp ~/MPI/tasks/C/Ch13/mpi_io_exa1_skel.c my_exa1.c
+cp ~/MPI/tasks/F_30/Ch13/mpi_io_exa1_skel_30.f90 my_exa1_30.f90
+
+
+
 
 
 
