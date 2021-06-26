@@ -430,16 +430,30 @@ The program takes the following steps:
 
 * Go to the exercise and rewrite progam using `MPI_Reduce` to compute a global average. 
 
+[Jupyter notebook: Reduce](/MPI/Reduce.ipynb)
+
 
 ## 4.3 E: Calculate Pi!
 
-### Goal
-To calculate the value of pi derived from integral in calculus by approximation using Riemann sum.
+In this exercise you will get to practice using both broadcast and reduce MPI routines. 
 
-### Steps
-- The rank 0 process asks the user for the number of interval and broadcast the value to other processes.
-- Locally add up areas of a subset of rectangles in each process. 
-- Finally, the sums computed are added together using reduction.
+This exercise is a simple program to calculate the value of pi derived from integral by approximation using Riemann sum. Here is a reminder that we are evaluating this integral
+
+$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx$$
+
+and can be approximated numerically using Riemann sum:
+
+$$Pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+
+### Exercise
+
+1. Root process (process 0) asks the user for the number of integral intervals (for interactive notebooks we have hardcoded this number) and then broadcasts this number to all of the other processes. 
+
+2. Each process then locally adds up every n'th interval. 
+
+3. Finally, the sums computed are added together using reduction.
+
+[Jupyter notebook: Compute PI!](/MPI/Compute-Pi-MPI.ipynb)
 
 ## 4.4 V/A: MPI_Allreduce
 
