@@ -336,7 +336,7 @@ void my_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm c
 double MPI_Wtime(void);
 ~~~
 
-[Jupyter notebook: Broadcast](/MPI/Exercise-Broadcast.ipynb)
+[Jupyter notebook: Broadcast](/MPI/Broadcast.ipynb)
 
 ## 3.3 D: What do you observe? (sequential vs. tree based algorithm)
 Are the times for both of the program i.e our program and the one from the library same?
