@@ -469,24 +469,32 @@ Since we are already familiar with the reduce function it would be easier for us
 
 ## 4.5 E: Computing standard deviation
 
-### Goal
-Write a MPI program that computes the standard deviation of an array of numbers in parallel using MPI_Reduce and MPI_Allreduce.
+In this exercise you will write a MPI program that computes the standard deviation of an array of numbers in parallel using MPI_Reduce and MPI_Allreduce. 
+
+Standard deviation is a measure of the dispersion of numbers from their mean. A lower standard deviation indicates that the values are closer together (close to the mean), while a high standard deviation indicates that the values are spread out over a wider range. 
+
+$$\sigma = \sqrt{ \frac{\sum |x-\bar{x}|^2}{n}  }$$
+
+Standard deviation is one of the problems that requires doing multiple reductions. First you must compute the average of all numbers. After the average, the sums of the squared difference from the mean are computed. The square root of the average of the sums is the final result. After this description, we know there will be at least two sums of all numbers, which means two reductions. 
+
+The program takes the following steps:
+
+1. Each process creates an array of generated random numbers.
+
+2. Each process computes the `local_sum` and sums them using `MPI_Allreduce`. 
+
+3. After the `global_sum` is available on all processes, each process computes the `mean` so that `local_sq_diff` can be computed. 
+
+4. Reduce the `local_sq_diff` to the root process (process 0). 
+
+5. The root process calculates the standard deviation by taking the square root of the mean of the global squared differences. 
+
+### Exercise
+
+Go to the exercise and rewrite progam using MPI_Reduce and MPI_Allreduce to compute the standard deviation. 
 
 ### Note
-We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). 
-Hence we know that mean = (a+b)/2 = 1/2 
-and 
-stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887
+We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). Hence we know that `mean = (a+b)/2 = 1/2` and `stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887`. 
 
-
-
-
- 
-
-
-
-
- 
-
-
+[Jupyter notebook: Standard deviation](/MPI/Standard-deviation.ipynb)
 
