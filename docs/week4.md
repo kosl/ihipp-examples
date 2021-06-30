@@ -132,12 +132,27 @@ This function actually helps us to synchronise the data in a way that if multipl
 
 ## 1.4 E: One sided communication in a ring
 
-### Goal
+You are already familiar with communication in a ring. In this exercise the goals is to substitute nonblocking communication with one sided communication. 
 
-- Write a MPI program that uses MPI_Get and MPI_Put to pass data around in a ring.
-- Each process creates a window containing an array with numbers [10*rank, 10*rank + 1, ..., 10*rank + 9].
-- Each process gets the data from the preceding process and sets this data into the window of the next process.
-- Each process prints its final data.
+We want to substitute calls to send and receive routines by using MPI_Put or MPI_Get. So we have 2 options:
+
+1. The process that previously called send, now calls **MPI_Put**: The send buffer is a local buffer and the receive buffer must be a window. 
+
+2. The process that previously called receive, now calls **MPI_Get**: The send buffer is a window and the receive buffer is a local buffer. 
+
+For this exercise, you will use the **1.** option. So what you need to do is create a window for the receive buffer and substitute the sending and receiving by calling MPI_Put on the process that previously called MPI_Send. Also don't forget to do synchronization with MPI_Win_fence. 
+
+### Exercise
+
+1. Go to the exercise and fill out the skeleton to create all `rcv_buf` as windows in their processes. 
+
+2. Substitute the Issend/Recv/Wait with Win_fence/Put/Win_fence sequence. 
+
+### Discussion
+
+There are two solutions to substituting nonblocking communication with one-sided communication. Do you have any idea, why would we preffer using MPI_Put instead of MPI_Get? What is your preferred way, and why?
+
+[Jupyter notebook: One sided communication](/MPI/One-sided-ring.ipynb)
 
 ## 2. MPI + OpenMP
 
