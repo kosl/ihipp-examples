@@ -132,7 +132,7 @@ This function actually helps us to synchronise the data in a way that if multipl
 
 ## 1.4 E: One sided communication in a ring
 
-You are already familiar with communication in a ring. In this exercise the goals is to substitute nonblocking communication with one sided communication. 
+You are already familiar with communication in a ring. In this exercise the goal is to substitute nonblocking communication with one sided communication. 
 
 We want to substitute calls to send and receive routines by using MPI_Put or MPI_Get. So we have 2 options:
 
