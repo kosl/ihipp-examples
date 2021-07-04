@@ -295,23 +295,17 @@ Here in this example (S5) we can see the real need for derived data types. We ha
 
 ## 3.2 E: Derived data type
 
-### Goal
+In this exercise you will pass data around a ring with a derived datatype instead of an integer or an array like we did so far. You send and receive buffer will be a struct with two integers. 
 
-We use a modified pass-around-the-ring exercise:
+### Exercise
 
-- It sends a struct with two integers
-- They are initialized with my_rank and 10*my_rank
-- Therefore we calulate two separate sums.
-- Currently, the data is send with the description
+You will use a modified pass-around-the-ring program which already includes a struct with two integers. In the exercise you will:
 
-▶ “snd_buf, 2, MPI_INTEGER” 
-- Please substitute this by using a
+1. Produce a new datatype that can be used as a buffer with the routines that you have learned in the previous step. 
 
-▶ derived datatype
+2. Initialize the struct intigers with `rank` and `10*rank`. Therefore we will pass around two values and calculate two separate sums. 
 
-▶ with a type map of “two integers”
-
-▶ Of course produced with the two routines on the previous slides
+3. Use the new datatype in the send and receive routine calls. Currently, the data is send with the description `snd_buf, 2, MPI_INTEGER` which you must modify by using a derived datatype and with a type map of “two integers”. 
 
 ## 3.3 V/A: Layout of struct data types
 
