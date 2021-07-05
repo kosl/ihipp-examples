@@ -408,23 +408,19 @@ Using derived datatype handles
 
 ## 4. Parallel File I/O
 
-## 4.1 E: Pass-around-the-ring exercise.
+## 4.1 E: Pass-around-the-ring exercise
 
-### Goal 
+In this exercise you will pass data around a ring with a derived datatype instead of an integer or an array like we did so far. Your send and receive buffer will be a struct with one integer and one floating point. 
 
-Modify the pass-around-the-ring exercise.
-- Use the following skeletons to reduce software-coding time:
-cd ~/MPI/tasks/C/Ch12/ ; cp -p derived-struct-skel.c derived-struct.c
-cd ~/MPI/tasks/F_30/Ch12/ ; cp -p derived-struct-skel_30.f90 derived-struct_30.f90
+### Exercise
 
-- Calculate two separate sums:
-- rank integer sum (as before)
-- rank floating point sum
-- Use a struct datatype for this
-- with same fixed memory layout for send and receive buffer.
-- Substitute all ___ within the skeleton and modify the second part, i.e., steps 1-5 of the ring example.
+You will use a modified pass-around-the-ring program which already includes a struct with one integer and one floting point. In the exercise you will fill out the blank spaces and modify the call routines to use the new datatype. 
 
-(image S21)
+1. Set MPI datatypes for sending and receiving partial sums with the routines that you have learned in the previous step. You should use `MPI_Type_create_struct`. You are using the same fixed memory layout for send and receive buffer. 
+
+2. Initialize the struct intigers with `rank` and `10*rank`. Therefore we will pass around two values and calculate two separate sums: rank integer sum and rank floating point sum. 
+
+3. Use the new datatype in the send and receive routine calls. 
 
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
