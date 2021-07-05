@@ -385,16 +385,21 @@ MPI_Aint MPI_Aint_add(MPI_Aint base, MPI_Aint disp)
 
 In example we see how we compute the address. 'Aint' address variable or 'disp' displacements could be computed by prescribing the start of the first element. The 'snd_buf.i[0]' isactually the correct way of defining that address. 
 ~~~c
-struct buff
-{ int i[3];
-double d[5];
+struct buff {
+    int i[3];
+    double d[5];
 } snd_buf;
+
 MPI_Aint iaddr0, iaddr1, disp;
-MPI_Get_address( &snd_buf.i[0], &iaddr0); // the address value &snd_buf.i[0]
-// is stored into variable iaddr0 MPI_Get_address( &snd_buf.d[0], &iaddr1);
- New in MPI-3.1
-Fortran
+
+MPI_Init(NULL, NULL);
+
+// the address value &snd_buf.i[0] is stored into variavle iaddr0
+MPI_Get_address(&snd_buf.i[0], &iaddr0);
+MPI_Get_address(&snd_buf.d[0], &iaddr1);
 disp = MPI_Aint_diff(iaddr1, iaddr0);
+
+MPI_Finalize();
 ~~~
 
 ## 3.5 D: Which is the fastest neighbor communication with strided data?
