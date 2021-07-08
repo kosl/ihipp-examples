@@ -195,6 +195,8 @@ MPI_THREAD_MULTIPLE
 ~~~
 - Here multiple threads may call MPI, without any restrictions.
 
+[Jupyter notebook: Threading methods](/MPI/Threading-methods.ipynb)
+
 ## 2.2 E: Calculate pi! Using MPI_THREAD_FUNNLED
 
 ### Learning outcomes for the excercise 
@@ -306,6 +308,8 @@ You will use a modified pass-around-the-ring program which already includes a st
 2. Initialize the struct intigers with `rank` and `10*rank`. Therefore we will pass around two values and calculate two separate sums. 
 
 3. Use the new datatype in the send and receive routine calls. Currently, the data is send with the description `snd_buf, 2, MPI_INTEGER` which you must modify by using a derived datatype and with a type map of “two integers”. 
+
+[Jupyter notebook: Derived datatypes](/MPI/Derived-datatypes.ipynb)
 
 ## 3.3 V/A: Layout of struct data types
 
@@ -427,6 +431,8 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 3. Use the new datatype in the send and receive routine calls. 
 
+[Jupyter notebook: Derived datatypes 2](/MPI/Derived-datatypes-2.ipynb)
+
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
 Before we go further into the Parallel file I/O we need to get some basic knowledge about the terminology of size, extent, true extent etc. and get some background about the alignment rules.  
@@ -453,12 +459,24 @@ Sometimes certain problems might arise such as the MPI extent of a structure is 
 
 To rectify this problem we can call the 
 ~~~c
-MPI_Type_create_resized  //with lb=0 and
-new_extent=sizeof(one structure)
+MPI_Type_create_resized(...);  //with lb=0 and
+new_extent = sizeof(one structure);
+~~~
+
+~~~Fortran
+integer(kind=MPI_ADDRESS_KIND) :: address1, address2, lb, new_extent
+call MPI_Get_address(my_struct(1), address1, ierror)
+call MPI_Get_address(my_struct(2), address2, ierror)
+new_extent = MPI_Aint_diff(address2, address1)
+lb = 0
+call MPI_Type_create_resized(&old_struct_type, lb, new_extent, correct_struct_type, ierror)
 ~~~
 
 ### Example: Correcting problem with array of structures
-(External tool example to compile and run. (S30)
+
+This is a example program where we have an array of structures containing a double and an integer. A new datatype handle is implemented by resizing the old one. 
+
+[Jupyter notebook: Correcting problem with array of structures](/MPI/Correcting-array-of-structures.ipynb)
 
 ## 4.3 V:Parallel file I/O
 
