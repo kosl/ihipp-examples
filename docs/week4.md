@@ -474,7 +474,30 @@ call MPI_Type_create_resized(&old_struct_type, lb, new_extent, correct_struct_ty
 
 ### Example: Correcting problem with array of structures
 
-This is a example program where we have an array of structures containing a double and an integer. A new datatype handle is implemented by resizing the old one. 
+This is a example program where we have an array of structures containing a double and an integer. A new datatype handle is implemented by resizing the old one and doing the commit. We use the new resized datatype handle in the send and receive call routines. 
+
+These are the important new additions to the code:
+
+~~~c
+MPI_Datatype send_recv_type, send_recv_resized;
+...
+MPI_Type_create_struct(2, ..., &send_recv_type);
+MPI_Type_create_resized(send_recv_type, (MPI_Aint) 0, (MPI_Aint) sizeof(snd_buf[0]), &send_recv_resized);
+MPI_Type_commit(&send_recv_resized);
+~~~
+
+~~~Fortran
+integer(kind=MPI_ADDRESS_KIND) :: first_var_address, second_var_address, lb, extent
+integer :: send_recv_type, send_recv_resized
+...
+call MPI_Type_create_struct(2, ..., send_recv_type, error)
+call MPI_Get_address(snd_buf(1), first_var_address, error)
+call MPI_Get_address(snd_buf(2), second_var_address, error)
+lb = 0
+extent = MPI_Aint_diff(second_var_address, first_var_address)
+call MPI_Type_create_resized(send_recv_type, lb, extent, send_recv_resized, error)
+call MPI_Type_commit(send_recv_resized, error)
+~~~
 
 [Jupyter notebook: Correcting problem with array of structures](/MPI/Correcting-array-of-structures.ipynb)
 
