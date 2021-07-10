@@ -233,7 +233,7 @@ MPI_Finalize();
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
-In the previous excercise when we have implemented the program where we were sending this array along the ring, it was an example of an application in which we already knew that we would be using an array with 100 values. We were already aware of how long it is going to be or in another words how big that message is going to be? How many elements are actually sent? and so on. 
+In the previous exercise when we have implemented the program where we were sending this array along the ring, it was an example of an application in which we already knew that we would be using an array with 100 values. We were already aware of how long it is going to be or in another words how big that message is going to be? How many elements are actually sent? and so on. 
 This was important because if we look back into the send and receive routines, we need to specify this 'count'. So, not knowing these numbers already accounts as a problem. In this subsection we will learn that there are two ways to handle this situation, i.e if the size is not known:
 - The first way is to send the size of the data as a separate send/recv operation. Therfore, we would send a seperate messages with MPI_send where we can send for e.g the number of elements in an array that we're going to send out later. This works, but sometimes it's not very efficient. 
 - The second and a more efficient way is what we eill learn in this subsection with the help of two functions i.e by using MPI_Probe and MPI_Status to obtain the size of sent data.
@@ -259,15 +259,19 @@ allowing us to receive a message having any tag.
 MPI_Status is a struct that contains important information such as the following
 
 - The rank of the sender as 
+
 ~~~c
 status.MPI_SOURCE
 ~~~
- - The tag of the message as
- ~~~c
- status.MPI_TAG
- ~~~
+
+- The tag of the message as
+
+~~~c
+status.MPI_TAG
+~~~
  
 - The length of the message with
+
 ~~~c
 MPI_Get_count(MPI_Status *status, MPI_Datatype datatype, int *count)
 ~~~
@@ -281,6 +285,8 @@ MPI_Probe(int source, int tag, MPI_Comm comm, MPI_Status* status);
 
 It can be thought of as an MPI_Recv that does everything but receive the message but youwe can get a lot of information out of it. Once we have that information, we can actually use MPI_Recv to receive the actual message. 
 We can understand these functions better by the following excercise. 
+
+[Jupyter notebook: Dynamic receiving](/MPI/Dynamic-receiving.ipynb)
 
 ## 2.6 E: (perhaps optional) Dynamic receiving
 
