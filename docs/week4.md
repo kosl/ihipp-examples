@@ -582,29 +582,23 @@ We will learn further about the MPI-I/O principles through a simple example.
 
 ## 4.4 E: Four processes write a file in parallel
 
-### Goal
-- each process should write its rank (as one character) ten times to the offsets = my_rank + i * size_of_MPI_COMM_WORLD, i=0..9
-- Result: “0123012301230123012301230123012301230123“
-- Each process uses the default view
+In this exercise your program should write a file in parallel using four processes. 
 
- ### Tip                                            
- 
- - Please, use skeleton:
-cp ~/MPI/tasks/C/Ch13/mpi_io_exa1_skel.c my_exa1.c
-cp ~/MPI/tasks/F_30/Ch13/mpi_io_exa1_skel_30.f90 my_exa1_30.f90
+### Exercise
 
+1. Each process should write its rank (as one character) ten times to the offsets = `rank + i * size`, where `i=0..9`. 
 
+2. Each process uses the default view. 
 
+### Tip
 
+When checking if your file is correctly written, you should:
 
+- use `ls -l` to look at the number of bytes and it should be 40 bytes
 
+- use `cat my_file` to look at the content of your file and the expected result is `0123012301230123012301230123012301230123`
 
+- use `rm my_file` to remove the file before running the program again because it will rewrite the file
 
-
-
-
-
-
-
-
+[Jupyter notebook: Write a file in parallel](/MPI/IO/Write-file-parallel.ipynb)
 
