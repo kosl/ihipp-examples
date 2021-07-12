@@ -1,0 +1,381 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "f166b008",
+   "metadata": {},
+   "source": [
+    "## Four processes write a file in parallel"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1b46418c",
+   "metadata": {},
+   "source": [
+    "In the exercise you will fill out the blank spaces. \n",
+    "\n",
+    "1. Each process should write its rank (as one character) ten times to the offsets = `rank + i * size`, where `i=0..9`. \n",
+    "\n",
+    "2. Each process uses the default view. \n",
+    "\n",
+    "### Tip\n",
+    "\n",
+    "When checking if your file is correctly written, you should:\n",
+    "\n",
+    "- use `ls -l` to look at the number of bytes and it should be 40 bytes\n",
+    "\n",
+    "- use `cat my_file` to look at the content of your file and the expected result is `0123012301230123012301230123012301230123`\n",
+    "\n",
+    "- use `rm my_file` to remove the file before running the program again because it will rewrite the file"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "dfc7bb6e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "?MPI::MPI_File_open"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "307f532e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "?MPI::MPI_File_write_at"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1c6c1a31",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "?MPI::MPI_File_close"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9e188432",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "#### C skeleton"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6831782a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#include <mpi.h>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "16b54b3c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%executable  a.x -- -lmpi\n",
+    "\n",
+    "int rank, size, i;\n",
+    "\n",
+    "MPI_File fh;\n",
+    "MPI_Status status;\n",
+    "__________ offset;\n",
+    "\n",
+    "char buf; \n",
+    "\n",
+    "MPI_Init(NULL, NULL);\n",
+    "MPI_Comm_rank(MPI_COMM_WORLD, &rank);\n",
+    "MPI_Comm_size(MPI_COMM_WORLD, &size);\n",
+    "\n",
+    "MPI_File_open(MPI_COMM_WORLD, \"my_file\", \n",
+    "              MPI_MODE_____ | MPI_MODE_____,\n",
+    "              MPI_INFO_NULL, &fh);\n",
+    "\n",
+    "for (i = 0; i < 10; i++) {\n",
+    "    buf = '0' + (char)rank;\n",
+    "    offset = _________;\n",
+    "    MPI_File_write_at(fh, offset, &buf, ___, ________, &status);\n",
+    "}\n",
+    "\n",
+    "MPI_File_close(&fh);\n",
+    "\n",
+    "printf (\"PE%d\\n\", rank);\n",
+    "\n",
+    "MPI_Finalize();"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "57d93449",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!mpirun -np 4 a.x"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f4afe888",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!ls -l"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "aba176d4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!cat my_file"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a40b010a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!rm my_file"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "11c038bc",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "#### Python skeleton"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "91ae995e",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c26042d8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!mpirun -np 4 python writefile.py"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "33ea494e",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "#### Fortran skeleton"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1e1cd7d8",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "20f304ce",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!mpif90 writefile.f90 && mpirun -np 4 a.out"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "69b35095",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "### You can compare with our solution:"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "45d3fdb7",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "#### C solution"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9add07dd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%executable  a.x -- -lmpi\n",
+    "\n",
+    "int rank, size, i;\n",
+    "\n",
+    "MPI_File fh;\n",
+    "MPI_Status status;\n",
+    "MPI_Offset offset;\n",
+    "\n",
+    "char buf; \n",
+    "\n",
+    "MPI_Init(NULL, NULL);\n",
+    "MPI_Comm_rank(MPI_COMM_WORLD, &rank);\n",
+    "MPI_Comm_size(MPI_COMM_WORLD, &size);\n",
+    "\n",
+    "MPI_File_open(MPI_COMM_WORLD, \"my_file\", \n",
+    "              MPI_MODE_RDWR | MPI_MODE_CREATE,\n",
+    "              MPI_INFO_NULL, &fh);\n",
+    "\n",
+    "for (i = 0; i < 10; i++) {\n",
+    "    buf = '0' + (char)rank;\n",
+    "    offset = rank + size*i;\n",
+    "    MPI_File_write_at(fh, offset, &buf, 1, MPI_CHAR, &status);\n",
+    "}\n",
+    "\n",
+    "MPI_File_close(&fh);\n",
+    "\n",
+    "printf (\"PE%d\\n\", rank);\n",
+    "\n",
+    "MPI_Finalize();"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6fc5bc10",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!mpirun -np 4 a.x"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "73c4360f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!ls -l"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "65759e71",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!cat my_file"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c7f81b98",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!rm my_file"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9de5582c",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "#### Python solution"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fdcc56c5",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "93349476",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!mpirun -np 4 python writefile.py"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6976409a",
+   "metadata": {},
+   "source": [
+    "***\n",
+    "#### Fortran solution"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "86652edb",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "43d4acdd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!mpif90 writefile.f90 && mpirun -np 4 a.out"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "C++14 with OpenMP and MPI",
+   "language": "C++14",
+   "name": "xcpp14"
+  },
+  "language_info": {
+   "codemirror_mode": "text/x-c++src",
+   "file_extension": ".cpp",
+   "mimetype": "text/x-c++src",
+   "name": "c++",
+   "version": "14"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
