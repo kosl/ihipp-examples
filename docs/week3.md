@@ -293,6 +293,102 @@ We can understand these functions better by the following excercise.
 ### Goal
 Write a program that sends a random amount of numbers from a random sender to process 0. The receiver then uses MPI_Probe and MPI_Status to find out how many numbers were sent and who was the sender.
 
+## 2.7 Q: Do you understand point-to-point communication?
+
+This quiz covers various aspects of point-to-point communication that have been discussed so far this week.
+
+### Question 1
+Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
+Options: 
+* MPI_COMM_SELF
+* MPI_COMM_WORLD
+* MPI_COMM_NULL
+
+Solution: MPI_COMM_WORLD
+
+### Question 2
+If you call MPI_Recv and there is no incoming message, what happens?
+Options: 
+* the Recv fails with an error
+* the Recv reports that there is no incoming message
+* the Recv waits until a message arrives (potentially waiting forever)
+* the Recv times out after some system-specified delay
+
+Solution: the Recv waits until a message arrives (potentially waiting forever)
+
+### Question 3
+The MPI receive routine has a parameter 'count' – what does this mean?
+Options:
+* The size of the incoming message (in bytes)
+* The size of the incoming message (in items, e.g. integers)
+* The size you have reserved dor storing the message (in bytes)
+* The size you have reserved for storing the message (in items, e.g. integers)
+
+Solution: The size you have reserved for storing the message (in items, e.g. integers)
+
+Feedback: MPI tries to avoid talking about bytes – counting is almost always done in number of items. For the receive, count is the size of the local receive buffer, not of the incoming send buffer, although of course in some programs they may be the same. 
+
+### Question 4
+What happens if the incoming message is larger than 'count'?
+Options:
+* The receive fails with an error
+* The receive reports zero data received
+* The message writes beyond the end of the available storage
+* Only the first 'count' items are received
+
+Solution: The receive fails with an error
+
+Feedback:  MPI checks that the incoming message will fit into the supplied storage before receiving it. The standard behaviour on error is for the whole MPI program to exit immediately with a fatal error. 
+
+### Question 5
+What happens if the incoming message (of size 'n') is smaller than 'count'?
+Options:
+* The receive fails with an error
+* The receive reports zero data received
+* Only the first 'count' items are received
+
+Solution: Only the first 'count' items are received
+
+Feedback: In some situations you may not know how many items are being sent so you must ensure that you have enough storage locally and you may have more than enough.
+
+### Question 6
+You want to send a buffer that is an array buf with 5 double precision values. How do you describe your message in the call to MPI_Send in C and Fortran?
+in C: buf, __, MPI_ __
+in Fortran: buf, __, MPI_ __
+
+Solution: 5, DOUBLE, 5, DOUBLE_PRECISION
+
+### Question 7
+You want to receive a buffer that is an array buf with 5 double precision values. When calling MPI_Recv to receive this message which count values would be correct?
+Options: 
+* 1
+* 2
+* 5
+* 6
+
+Solution: 5, 6
+
+### Question 8
+When using one of the MPI send routines, how many messages do you send?
+Options:
+* 1
+* 2
+* 4
+
+Solution: 2
+
+### Question 9
+How is the actual size of the incoming message reported?
+Options:
+* The value of 'count' in the receive is updated
+* MPI cannot tell you
+* It is stored in the Status parameter
+* With the associated tag
+
+Solution: It is stored in the Status parameter
+
+Feedback: Various pieces of metadata about the received message are stored in the Status such as the origin, tag and its size. 
+
 ## 3. Collective communications
 
 ## 3.1 V: Basic collective communications
