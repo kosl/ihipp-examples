@@ -32,3 +32,86 @@ On the figure below you can observe schematics of both CPU and GPU hardware arch
 [Figure: CPU vs GPU architecture]
 
 It has to be noted that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores".
+
+## 5.3 E: Consumer grade vs. high-end GPUs
+
+Nowadays, even a desktop PC or a laptop is equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
+
+First, let's have a look to the GPUs (NVIDIA Tesla V100-SXM2-16GB) that are installed on the Marconi-100 cluster (currently #14 on the Top500 list of supercomputers in the world). By invoking the utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
+
+Output (excerpt) from ```deviceQuery```:
+
+```
+Total amount of global memory:
+16128 MBytes (16911433728 bytes)
+(80) Multiprocessors, (64) CUDA Cores/MP:
+5120 CUDA Cores
+GPU Max Clock rate: 1530 MHz (1.53 GHz)
+Memory Bus Width: 4096-bit
+L2 Cache Size: 6291456 bytes
+```
+Output (excerpt) from ```bandwidthTest```:
+
+```
+Device to Device Bandwidth, 1 Device(s)
+Transfer Size (Bytes) Bandwidth(GB/s)
+32000000              713.5
+```
+
+If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g:
+
+Output (excerpt) from ```deviceQuery```:
+
+```
+Total amount of global memory:
+2004 MBytes (2101870592 bytes)
+(3) Multiprocessors, (128) CUDA Cores/MP:
+384 CUDA Cores
+GPU Max Clock rate: 1020 MHz (1.02 GHz)
+Memory Bus Width: 64-bit
+L2 Cache Size: 1048576 bytes
+```
+
+Output (excerpt) from ```bandwidthTest```:
+
+```
+Device to Device Bandwidth, 1 Device(s)
+Transfer Size (Bytes) Bandwidth(MB/s)
+33554432              13193.8
+```
+
+We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the consumer grade card GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. (To be completetly frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why thet are not used in HPC systems or data centers.)
+
+## 5.4 Exer.: Information and compute capabilities of a GPU
+
+Login to Colab and complete the following tasks:
+
+- find general info on the GPU available in the current sesion by:
+
+```
+!nvidia-smi
+```
+
+- find the diagnostic programs ```deviceQuery``` and ```bandwidthTest``` by:
+
+```
+!ls -l /usr/local/cuda-11.0/extras/demo_suite
+
+```
+
+- execute the diagnostic programs to determine the main characteristics of the GPU (No. of SMs,
+No. of CUDA cores, global memory available, memory bandwidth) by:
+
+```
+!/usr/local/cuda-11.0/extras/demo_suite/deviceQuery
+```
+
+and
+
+```
+!/usr/local/cuda-11.0/extras/demo_suite/bandwidthTest
+```
+
+How the characteristics of the GPU in your login session compare to those of the GPUs in the previous step? Leave a comment with your findings.
+
+## 5.5 Quiz: GPU basics and architecture
