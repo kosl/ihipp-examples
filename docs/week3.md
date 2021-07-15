@@ -569,6 +569,8 @@ MPI_Comm communicator);
 However, a major difference would be that here is no 'root' in the argument because all the processes will get the data. Everything else is pretty much the same. We have two pointers of the send and receive data. We have the number of elements sent by each processor followed by the data type. Then similiar to the reduce function we have the MPI operation that we want to use to reduce the data and of course finally the communicator. 
 Since we are already familiar with the reduce function it would be easier for us to 'learn about the 'Allreduce' through the following excercise.
 
+[Jupyter notebook: Allreduce](/MPI/Allreduce.ipynb)
+
 ## 4.5 E: Computing standard deviation
 
 In this exercise you will write a MPI program that computes the standard deviation of an array of numbers in parallel using MPI_Reduce and MPI_Allreduce. 
@@ -600,3 +602,79 @@ We are using rand() to generate random numbers which are uniformly distributed o
 
 [Jupyter notebook: Standard deviation](/MPI/Standard-deviation.ipynb)
 
+## 4.6 Q: Do you understand collective communication?
+
+This quiz covers various aspects of collective communication that have been discussed this week.
+
+### Question
+Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
+
+Choose the one true statement.
+
+Options:
+* Only the sending process must call this routine.
+* The destination provess of a communicator must call this routine.
+* All processes of a communicator must call this routine.
+
+Solution: All processes of a communicator must call this routine.
+
+### Question
+Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
+
+Choose the one true statement.
+
+* The message size argument on the receive side must be larger than the message size argument on the sender side.
+* The message size argument on the receive side must match the message size argument on the sender side. 
+* The message size argument on the receive side must be smaller than the message size argument on the sender side.
+
+Solution: The message size argument on the receive side must match the message size argument on the sender side.
+
+### Question
+Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
+
+Choose the one true statement.
+
+* Nonblocking collectives match with blocking collectives.
+* Nonblocking collectives do not match with blocking collectives.
+
+Solution: Nonblocking collectives do not match with blocking collectives.
+
+### Question:
+Some MPI collective calls specify both a send type and a receive type, e.g. MPI_Scatter(sendbuf, sendcount, sendtype, recvbuf, recvcount,  recvtype, …). 
+
+However, most times when you see this call used in practice we have sendtype = recvtype. 
+
+Why does MPI make you specify both types?
+
+Options:
+* So it can check at runtime that you haven't made a silly mistake
+* So it can do type conversion if required
+* The types and counts can be different provided that at least one of them is an MPI derived type
+* The types and counts can be different provided that the two buffers are the same length in bytes
+
+Solution: The types and counts can be different provided that at least one of them is an MPI derived type
+
+Feedback: The MPI datatypes do not have to be the same, they just have to be compatible. For example, if you create a datatype containing three integers then a send with this type will match a receive of 3 x MPI_INTEGER.
+
+### Question
+What is the output of this MPI code on 8 processes, i.e. on running ranks 0, 1, 2, 3, 4, 5, 6 and 7?
+
+~~~c
+if (rank % 2 == 0) { //even processes
+	MPI_Allreduce(&rank, &evensum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+	if (rank == 0) printf('evensum = %d\n', evensum);
+} else { //odd processes
+	MPI_Allreduce(&rank, &oddsum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+	if (rank == 1) printf('oddsum = %d\n', oddsum);
+}
+~~~
+
+Options:
+* evensum = 16, oddsum = 12
+* evensum = 28, oddsum = 28
+* evensum = 12, oddsum = 16
+* evensum = 8, oddsum = 7
+
+Solution: evensum = 28, oddsum = 28
+
+Feedback: It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a proces stook before calling any MPI function. Here, since they are all operating in COMM_WORLD, all processes participate in the same global collective. 
