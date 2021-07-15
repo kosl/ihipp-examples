@@ -106,9 +106,9 @@ The next thing that we have to take a look at are environment variables. Contrar
 
 To specify the number of threads to use
 
-~~~c
+~~~sh
 
-OMP_UM_THREADS 
+export OMP_NUM_THREADS=4
 
 ~~~
 
@@ -149,7 +149,7 @@ In 'C' this implicit barrier is specified with:
 #pragma omp parallel
 {
 ...
- }
+}
 
 ~~~
 
