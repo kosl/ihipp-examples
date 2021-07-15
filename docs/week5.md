@@ -58,7 +58,7 @@ Transfer Size (Bytes) Bandwidth(GB/s)
 32000000              713.5
 ```
 
-If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g:
+If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g.:
 
 Output (excerpt) from ```deviceQuery```:
 
@@ -80,7 +80,7 @@ Transfer Size (Bytes) Bandwidth(MB/s)
 33554432              13193.8
 ```
 
-We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the consumer grade card GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. (To be completetly frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why thet are not used in HPC systems or data centers.)
+We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card (in the example above: NVIDIA GeForce 930MX). The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the consumer grade card GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. (To be completetly frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why thet are not used in HPC systems or data centers.)
 
 ## 5.4 Exer.: Information and compute capabilities of a GPU
 
