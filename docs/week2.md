@@ -9,7 +9,7 @@ The purpose of runtime functions is the management or modification of the parall
 For C++ and C, you can add the 
 
 ~~~c
-#include<omp.h>  
+#include <omp.h>  
 ~~~ 
 
 header file to your code in the beginning of the file and then this library includes all the standard runtime functions that you need and you want to use. The functions that we would be using in our tutorial today can be accessed from the link in the transcript or in the resources. So for example, 
@@ -20,7 +20,7 @@ header file to your code in the beginning of the file and then this library incl
 
  omp_set_num_threads(n)
 
-  ~~~
+ ~~~
 
 For example, if you want to 'parallelise'  your program with, let's say, 12 threads, you specify number of threads to the program using the function
 
@@ -50,7 +50,7 @@ omp_get_thread_num()
 
 ~~~
 
-So calling this function, when you are in a specific thread would return an integer that is unique for every thread that is used in the code to 'parallelise'  your task. 
+So, calling this function, when you are in a specific thread would return an integer that is unique for every thread that is used in the code to 'parallelise'  your task. 
 
 – To return 'true' if inside parallel region
 
@@ -95,7 +95,7 @@ Take a moment and try to understand what is happening in the code above.
 Now go to the exercise, try it out and check if your answers were correct. 
 
 
-[Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
+[Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
 
 
 ### 1.2. Variables and constructs
