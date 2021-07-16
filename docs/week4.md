@@ -77,7 +77,7 @@ MPI_Finalize();
 
 * Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
 
-[Jupyter notebook: Ring2](/MPI/Exercise-Ring2.ipynb)
+[Jupyter notebook: Ring2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
 
 ## 1.3 V: One sided communication
 As we already learnt in the begining that in MPI the parellelisation is based on the distributed memory. This means that if we run a program on different cores each core has its own private memory. Since, the memory is private to each process we send messages to exchange data from one process to another. 
@@ -152,7 +152,7 @@ For this exercise, you will use the **1.** option. So what you need to do is cre
 
 There are two solutions to substituting nonblocking communication with one-sided communication. Do you have any idea, why would we preffer using MPI_Put instead of MPI_Get? What is your preferred way, and why?
 
-[Jupyter notebook: One sided communication](/MPI/One-sided-ring.ipynb)
+[Jupyter notebook: One sided communication](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
 
 ## 2. MPI + OpenMP
 
@@ -195,7 +195,7 @@ MPI_THREAD_MULTIPLE
 ~~~
 - Here multiple threads may call MPI, without any restrictions.
 
-[Jupyter notebook: Threading methods](/MPI/Threading-methods.ipynb)
+[Jupyter notebook: Threading methods](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
 
 ## 2.2 E: Calculate pi! Using MPI_THREAD_FUNNLED
 
@@ -309,7 +309,7 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 3. Use the new datatype in the send and receive routine calls. Currently, the data is send with the description `snd_buf, 2, MPI_INTEGER` which you must modify by using a derived datatype and with a type map of “two integers”. 
 
-[Jupyter notebook: Derived datatypes](/MPI/Derived-datatypes.ipynb)
+[Jupyter notebook: Derived datatypes](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
 
 ## 3.3 V/A: Layout of struct data types
 
@@ -431,7 +431,7 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 3. Use the new datatype in the send and receive routine calls. 
 
-[Jupyter notebook: Derived datatypes 2](/MPI/Derived-datatypes-2.ipynb)
+[Jupyter notebook: Derived datatypes 2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
 
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
@@ -499,7 +499,7 @@ call MPI_Type_create_resized(send_recv_type, lb, extent, send_recv_resized, erro
 call MPI_Type_commit(send_recv_resized, error)
 ~~~
 
-[Jupyter notebook: Correcting problem with array of structures](/MPI/Correcting-array-of-structures.ipynb)
+[Jupyter notebook: Correcting problem with array of structures](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
 
 ## 4.3 V:Parallel file I/O
 
@@ -600,5 +600,5 @@ When checking if your file is correctly written, you should:
 
 - use `rm my_file` to remove the file before running the program again because it will rewrite the file
 
-[Jupyter notebook: Write a file in parallel](/MPI/IO/Write-file-parallel.ipynb)
+[Jupyter notebook: Write a file in parallel](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
 
