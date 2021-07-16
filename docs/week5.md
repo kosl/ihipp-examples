@@ -37,50 +37,144 @@ It has to be noted that the term "GPU core" is more or less a marketing term. Th
 
 Nowadays, desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look at the GPUs (NVIDIA Tesla V100-SXM2-16GB) that are installed on the Marconi-100 cluster (currently #14 on the Top500 list of supercomputers in the world). By invoking the utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
+First, let's have a look at the GPUs that are installed on the Marconi-100 cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
 
 Output (excerpt) from ```deviceQuery```:
 
 ```
-Total amount of global memory:
-16128 MBytes (16911433728 bytes)
-(80) Multiprocessors, (64) CUDA Cores/MP:
-5120 CUDA Cores
-GPU Max Clock rate: 1530 MHz (1.53 GHz)
-Memory Bus Width: 4096-bit
-L2 Cache Size: 6291456 bytes
+Detected 4 CUDA Capable device(s)
+
+Device 0: "Tesla V100-SXM2-16GB"
+  CUDA Driver Version / Runtime Version          11.0 / 10.2
+  CUDA Capability Major/Minor version number:    7.0
+  Total amount of global memory:                 16128 MBytes (16911433728 bytes)
+  (80) Multiprocessors, ( 64) CUDA Cores/MP:     5120 CUDA Cores
+  GPU Max Clock rate:                            1530 MHz (1.53 GHz)
+  Memory Clock rate:                             877 Mhz
+  Memory Bus Width:                              4096-bit
+  L2 Cache Size:                                 6291456 bytes
+  Maximum Texture Dimension Size (x,y,z)         1D=(131072), 2D=(131072, 65536), 3D=(16384, 16384, 16384)
+  Maximum Layered 1D Texture Size, (num) layers  1D=(32768), 2048 layers
+  Maximum Layered 2D Texture Size, (num) layers  2D=(32768, 32768), 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 65536
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  2048
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)
+  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 4 copy engine(s)
+  Run time limit on kernels:                     No
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support:                        Enabled
+  Device supports Unified Addressing (UVA):      Yes
+  Device supports Compute Preemption:            Yes
+  Supports Cooperative Kernel Launch:            Yes
+  Supports MultiDevice Co-op Kernel Launch:      Yes
+  Device PCI Domain ID / Bus ID / location ID:   4 / 4 / 0
 ```
 Output (excerpt) from ```bandwidthTest```:
 
 ```
-Device to Device Bandwidth, 1 Device(s)
-Transfer Size (Bytes) Bandwidth(GB/s)
-32000000              713.5
+ Device 0: Tesla V100-SXM2-16GB
+ Quick Mode
+
+ Host to Device Bandwidth, 1 Device(s)
+ PINNED Memory Transfers
+   Transfer Size (Bytes)        Bandwidth(GB/s)
+   32000000                     67.1
+
+ Device to Host Bandwidth, 1 Device(s)
+ PINNED Memory Transfers
+   Transfer Size (Bytes)        Bandwidth(GB/s)
+   32000000                     65.8
+
+ Device to Device Bandwidth, 1 Device(s)
+ PINNED Memory Transfers
+   Transfer Size (Bytes)        Bandwidth(GB/s)
+   32000000                     712.9
+
+Result = PASS
 ```
+
+There were 4 NVIDIA Tesla V100-SXM2-16GB GPUs detected on the login node of the cluster. Every compute node of the cluster is also equipped with 4 GPUs of the same type, on 980 compute nodes + 8 login nodes there are 3952 GPU accelerators in total. Combined the GPUs account for 97.5% of the total theoretical peak performance of the Marconi-100 supercomputer: 30.83 out of 31.6 PFlops. Really a huge compute power!
 
 If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g.:
 
 Output (excerpt) from ```deviceQuery```:
 
 ```
-Total amount of global memory:
-2004 MBytes (2101870592 bytes)
-(3) Multiprocessors, (128) CUDA Cores/MP:
-384 CUDA Cores
-GPU Max Clock rate: 1020 MHz (1.02 GHz)
-Memory Bus Width: 64-bit
-L2 Cache Size: 1048576 bytes
+Detected 1 CUDA Capable device(s)
+
+Device 0: "GeForce 930MX"
+  CUDA Driver Version / Runtime Version          11.2 / 10.1
+  CUDA Capability Major/Minor version number:    5.0
+  Total amount of global memory:                 2004 MBytes (2101870592 bytes)
+  ( 3) Multiprocessors, (128) CUDA Cores/MP:     384 CUDA Cores
+  GPU Max Clock rate:                            1020 MHz (1.02 GHz)
+  Memory Clock rate:                             1001 Mhz
+  Memory Bus Width:                              64-bit
+  L2 Cache Size:                                 1048576 bytes
+  Maximum Texture Dimension Size (x,y,z)         1D=(65536), 2D=(65536, 65536), 3D=(4096, 4096, 4096)
+  Maximum Layered 1D Texture Size, (num) layers  1D=(16384), 2048 layers
+  Maximum Layered 2D Texture Size, (num) layers  2D=(16384, 16384), 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 65536
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  2048
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)
+  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 1 copy engine(s)
+  Run time limit on kernels:                     Yes
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support:                        Disabled
+  Device supports Unified Addressing (UVA):      Yes
+  Device supports Compute Preemption:            No
+  Supports Cooperative Kernel Launch:            No
+  Supports MultiDevice Co-op Kernel Launch:      No
+  Device PCI Domain ID / Bus ID / location ID:   0 / 1 / 0
 ```
 
 Output (excerpt) from ```bandwidthTest```:
 
 ```
-Device to Device Bandwidth, 1 Device(s)
-Transfer Size (Bytes) Bandwidth(MB/s)
-33554432              13193.8
+ Device 0: GeForce 930MX
+ Quick Mode
+
+ Host to Device Bandwidth, 1 Device(s)
+ PINNED Memory Transfers
+   Transfer Size (Bytes)	Bandwidth(MB/s)
+   33554432			2934.4
+
+ Device to Host Bandwidth, 1 Device(s)
+ PINNED Memory Transfers
+   Transfer Size (Bytes)	Bandwidth(MB/s)
+   33554432			2973.9
+
+ Device to Device Bandwidth, 1 Device(s)
+ PINNED Memory Transfers
+   Transfer Size (Bytes)	Bandwidth(MB/s)
+   33554432			13520.2
+
+Result = PASS
 ```
 
-We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card (in the example above: NVIDIA GeForce 930MX). The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.
+There was 1 NVIDIA GeForce 930MX GPU detected on the laptop.
+
+The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32).
+
+In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.
 
 Here we have compared only GPUs of one manufacturer (NVIDIA). Similar characteristics apply also for consumer grade and professional cards of other manufacturers, e.g., AMD.
 
