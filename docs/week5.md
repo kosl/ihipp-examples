@@ -80,13 +80,23 @@ Transfer Size (Bytes) Bandwidth(MB/s)
 33554432              13193.8
 ```
 
-We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card (in the example above: NVIDIA GeForce 930MX). The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the consumer grade card GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. (To be completetly frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why thet are not used in HPC systems or data centers.)
+We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card (in the example above: NVIDIA GeForce 930MX). The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the consumer grade card GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. (To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.)
 
 ## 5.4 Exer.: Information and compute capabilities of a GPU
 
-Login to Colab and complete the following tasks:
+In this exercise you will check the information and compute capabilities of the GPU available for you in the current sesion of Colab.
 
-- find general info on the GPU available in the current sesion by:
+Login to Colab and first check if your runtime type is set to ```GPU``` by:
+
+```
+Runtime -> Change runtime type
+```
+
+If not change it to ```GPU``` in the ```Hardware accelerator``` dropdown menu.
+
+Now you can complete the following tasks:
+
+- find general info on the GPU by:
 
 ```
 !nvidia-smi
