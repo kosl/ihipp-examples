@@ -41,7 +41,7 @@ Now run the program with 4 processes.
 
 Is it possible for the output of all MPI processes to be in the sequence of the ranks? Or is there no chance to guarantee this?
 
-[Jupyter notebook: Hello world](/MPI/Hello-world.ipynb)
+[Jupyter notebook: Hello world](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
 
 ## 1.3.D: 
 What do you observe when you run the program multiple times?
@@ -140,7 +140,7 @@ else if (rank == 1) { ... }
 > >      I am 1 after recv ping
 > >      I am 0 before send ping
 
-[Jupyter notebook: Ping](/MPI/Ping.ipynb)
+[Jupyter notebook: Ping](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
 
 ## 2.3 E: Ping pong
 
@@ -174,7 +174,7 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 > >      I am 1 after recv ping 
 > >      I am 1 before send pong 
 
-[Jupyter notebook: Ping pong](/MPI/Ping-pong.ipynb)
+[Jupyter notebook: Ping pong](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
 
 ## 2.4 D: 
 Does the program work for different number of pings and pongs, i.e. 3 pings and 2 pongs?
@@ -229,7 +229,7 @@ MPI_Finalize();
 
 * Why does the serialized solution still deadlock when running with 1 process?
 
-[Jupyter notebook: Ring](/MPI/Exercise-Ring1.ipynb)
+[Jupyter notebook: Ring](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
@@ -286,7 +286,7 @@ MPI_Probe(int source, int tag, MPI_Comm comm, MPI_Status* status);
 It can be thought of as an MPI_Recv that does everything but receive the message but youwe can get a lot of information out of it. Once we have that information, we can actually use MPI_Recv to receive the actual message. 
 We can understand these functions better by the following excercise. 
 
-[Jupyter notebook: Dynamic receiving](/MPI/Dynamic-receiving.ipynb)
+[Jupyter notebook: Dynamic receiving](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
 
 ## 2.6 E: (perhaps optional) Dynamic receiving
 
@@ -299,95 +299,79 @@ This quiz covers various aspects of point-to-point communication that have been 
 
 ### Question 1
 Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
-Options: 
+ 
 * MPI_COMM_SELF
 * MPI_COMM_WORLD
 * MPI_COMM_NULL
 
-Solution: MPI_COMM_WORLD
-
 ### Question 2
 If you call MPI_Recv and there is no incoming message, what happens?
-Options: 
+
 * the Recv fails with an error
 * the Recv reports that there is no incoming message
 * the Recv waits until a message arrives (potentially waiting forever)
 * the Recv times out after some system-specified delay
 
-Solution: the Recv waits until a message arrives (potentially waiting forever)
-
 ### Question 3
 The MPI receive routine has a parameter 'count' – what does this mean?
-Options:
+
 * The size of the incoming message (in bytes)
 * The size of the incoming message (in items, e.g. integers)
 * The size you have reserved dor storing the message (in bytes)
 * The size you have reserved for storing the message (in items, e.g. integers)
 
-Solution: The size you have reserved for storing the message (in items, e.g. integers)
-
-Feedback: MPI tries to avoid talking about bytes – counting is almost always done in number of items. For the receive, count is the size of the local receive buffer, not of the incoming send buffer, although of course in some programs they may be the same. 
+MPI tries to avoid talking about bytes – counting is almost always done in number of items. For the receive, count is the size of the local receive buffer, not of the incoming send buffer, although of course in some programs they may be the same. 
 
 ### Question 4
 What happens if the incoming message is larger than 'count'?
-Options:
+
 * The receive fails with an error
 * The receive reports zero data received
 * The message writes beyond the end of the available storage
 * Only the first 'count' items are received
 
-Solution: The receive fails with an error
-
-Feedback:  MPI checks that the incoming message will fit into the supplied storage before receiving it. The standard behaviour on error is for the whole MPI program to exit immediately with a fatal error. 
+MPI checks that the incoming message will fit into the supplied storage before receiving it. The standard behaviour on error is for the whole MPI program to exit immediately with a fatal error. 
 
 ### Question 5
 What happens if the incoming message (of size 'n') is smaller than 'count'?
-Options:
+
 * The receive fails with an error
 * The receive reports zero data received
 * Only the first 'count' items are received
 
-Solution: Only the first 'count' items are received
-
-Feedback: In some situations you may not know how many items are being sent so you must ensure that you have enough storage locally and you may have more than enough.
+In some situations you may not know how many items are being sent so you must ensure that you have enough storage locally and you may have more than enough.
 
 ### Question 6
 You want to send a buffer that is an array buf with 5 double precision values. How do you describe your message in the call to MPI_Send in C and Fortran?
-in C: buf, __, MPI_ __
-in Fortran: buf, __, MPI_ __
 
-Solution: 5, DOUBLE, 5, DOUBLE_PRECISION
+in C: buf, __, MPI_ __
+
+in Fortran: buf, __, MPI_ __
 
 ### Question 7
 You want to receive a buffer that is an array buf with 5 double precision values. When calling MPI_Recv to receive this message which count values would be correct?
-Options: 
+
 * 1
 * 2
 * 5
 * 6
 
-Solution: 5, 6
-
 ### Question 8
 When using one of the MPI send routines, how many messages do you send?
-Options:
+
 * 1
 * 2
 * 4
 
-Solution: 2
-
 ### Question 9
 How is the actual size of the incoming message reported?
-Options:
+
 * The value of 'count' in the receive is updated
 * MPI cannot tell you
 * It is stored in the Status parameter
 * With the associated tag
 
-Solution: It is stored in the Status parameter
-
-Feedback: Various pieces of metadata about the received message are stored in the Status such as the origin, tag and its size. 
+Various pieces of metadata about the received message are stored in the Status such as the origin, tag and its size. 
 
 ## 3. Collective communications
 
@@ -438,7 +422,7 @@ void my_Bcast(void* data, int count, MPI_Datatype datatype, int root, MPI_Comm c
 double MPI_Wtime(void);
 ~~~
 
-[Jupyter notebook: Broadcast](/MPI/Broadcast.ipynb)
+[Jupyter notebook: Broadcast](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
 
 ## 3.3 D: What do you observe? (sequential vs. tree based algorithm)
 Are the times for both of the program i.e our program and the one from the library same?
@@ -488,7 +472,7 @@ First, think about how would you solve this exercise without MPI_Scatter and MPI
 
 * Go to the exercise and look at the provided skeleton. Use `MPI_Scatter` and `MPI_Gather` routines and compute missing final average result to solve the exercise. 
 
-[Jupyter notebook: Scatter and gather](/MPI/Scatter-Gather.ipynb)
+[Jupyter notebook: Scatter and gather](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
 
 
 ## 4.Advanced Collective operations
@@ -532,7 +516,7 @@ The program takes the following steps:
 
 * Go to the exercise and rewrite progam using `MPI_Reduce` to compute a global average. 
 
-[Jupyter notebook: Reduce](/MPI/Reduce.ipynb)
+[Jupyter notebook: Reduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
 
 
 ## 4.3 E: Calculate Pi!
@@ -555,7 +539,7 @@ $$Pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 3. Finally, the sums computed are added together using reduction.
 
-[Jupyter notebook: Compute PI!](/MPI/Compute-Pi-MPI.ipynb)
+[Jupyter notebook: Compute PI!](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
 
 ## 4.4 V/A: MPI_Allreduce
 
@@ -569,7 +553,7 @@ MPI_Comm communicator);
 However, a major difference would be that here is no 'root' in the argument because all the processes will get the data. Everything else is pretty much the same. We have two pointers of the send and receive data. We have the number of elements sent by each processor followed by the data type. Then similiar to the reduce function we have the MPI operation that we want to use to reduce the data and of course finally the communicator. 
 Since we are already familiar with the reduce function it would be easier for us to 'learn about the 'Allreduce' through the following excercise.
 
-[Jupyter notebook: Allreduce](/MPI/Allreduce.ipynb)
+[Jupyter notebook: Allreduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
 ## 4.5 E: Computing standard deviation
 
@@ -600,7 +584,7 @@ Go to the exercise and rewrite progam using MPI_Reduce and MPI_Allreduce to comp
 ### Note
 We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). Hence we know that `mean = (a+b)/2 = 1/2` and `stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887`. 
 
-[Jupyter notebook: Standard deviation](/MPI/Standard-deviation.ipynb)
+[Jupyter notebook: Standard deviation](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
 
 ## 4.6 Q: Do you understand collective communication?
 
@@ -611,12 +595,9 @@ Which are the major rules when using collective communication routines and do no
 
 Choose the one true statement.
 
-Options:
 * Only the sending process must call this routine.
 * The destination provess of a communicator must call this routine.
 * All processes of a communicator must call this routine.
-
-Solution: All processes of a communicator must call this routine.
 
 ### Question
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
@@ -627,8 +608,6 @@ Choose the one true statement.
 * The message size argument on the receive side must match the message size argument on the sender side. 
 * The message size argument on the receive side must be smaller than the message size argument on the sender side.
 
-Solution: The message size argument on the receive side must match the message size argument on the sender side.
-
 ### Question
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
@@ -637,8 +616,6 @@ Choose the one true statement.
 * Nonblocking collectives match with blocking collectives.
 * Nonblocking collectives do not match with blocking collectives.
 
-Solution: Nonblocking collectives do not match with blocking collectives.
-
 ### Question:
 Some MPI collective calls specify both a send type and a receive type, e.g. MPI_Scatter(sendbuf, sendcount, sendtype, recvbuf, recvcount,  recvtype, …). 
 
@@ -646,15 +623,12 @@ However, most times when you see this call used in practice we have sendtype = r
 
 Why does MPI make you specify both types?
 
-Options:
 * So it can check at runtime that you haven't made a silly mistake
 * So it can do type conversion if required
 * The types and counts can be different provided that at least one of them is an MPI derived type
 * The types and counts can be different provided that the two buffers are the same length in bytes
 
-Solution: The types and counts can be different provided that at least one of them is an MPI derived type
-
-Feedback: The MPI datatypes do not have to be the same, they just have to be compatible. For example, if you create a datatype containing three integers then a send with this type will match a receive of 3 x MPI_INTEGER.
+The MPI datatypes do not have to be the same, they just have to be compatible. For example, if you create a datatype containing three integers then a send with this type will match a receive of 3 x MPI_INTEGER.
 
 ### Question
 What is the output of this MPI code on 8 processes, i.e. on running ranks 0, 1, 2, 3, 4, 5, 6 and 7?
@@ -675,6 +649,4 @@ Options:
 * evensum = 12, oddsum = 16
 * evensum = 8, oddsum = 7
 
-Solution: evensum = 28, oddsum = 28
-
-Feedback: It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a proces stook before calling any MPI function. Here, since they are all operating in COMM_WORLD, all processes participate in the same global collective. 
+It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a proces stook before calling any MPI function. Here, since they are all operating in COMM_WORLD, all processes participate in the same global collective. 
