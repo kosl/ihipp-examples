@@ -20,13 +20,13 @@ In this week we shall briefly present OpenMP as a means for "off-loading" parall
 
 In order to understand better the capabilities of GPUs in terms of computing acceleration we will have a look at a typical architecture of a modern GPU.
 
-As we already pointed out, GPUs were originally designed to accelerate graphics. They excel at texturing, shading and rendering graphical primitives which comprise a 3D graphical object. The main characteristic of these primitives is that they are independent or, in other words, they can be processed independently in a parallel fashion. Thus, GPU acceleration of graphics was designed as an execution of inherently parallel tasks. On the other hand, CPUs are designed to execute the logical flow of any general-purpose program, where many parallel tasks may not be involved. These different design principles reflect the fact that GPUs have many more processing units and higher memory bandwidth, while CPUs are characterized by more specialized processing of instructions and faster clock speed rates.
+As we already pointed out, GPUs were originally designed to accelerate graphics. They excel at operations (such as shading and rendering) on graphical primitives which constitute a 3D graphical object. The main characteristic of these primitives is that they are independent or, in other words, they can be processed independently in a parallel fashion. Thus, GPU acceleration of graphics was designed for the execution of inherently parallel tasks. On the other hand, CPUs are designed to execute the workflow of any general-purpose program, where many parallel tasks may not be involved. These different design principles reflect the fact that GPUs have many more processing units and higher memory bandwidth, while CPUs are characterized by more specialized processing of instructions and faster clock speed rates.
 
 On the figure below you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
 
-- a GPU has many more arithmetic logic units or ALUs (green boxes) than a CPU;
-- a GPU can control simple, highly parallel workloads well (a yellow box for every row of green compute boxes), contrary to a CPU which can control more complex workloads;
-- a core in a CPU is different than a "core" or ALU in a GPU: the former is comprised by ALUs and FPUs which are more specialized than ALUs in a GPU;
+- a GPU has many more arithmetic logic units or ALUs (green rectangles) than a CPU;
+- a GPU can control simple, highly parallel workloads well (there's a yellow rectangle for every row of green rectangles), contrary to a CPU which can control more complex workloads;
+- a core (green rectangle) in a CPU is different than a "core" or ALU (green rectangle) in a GPU: the former is comprised by ALUs and FPUs which are more specialized than ALUs in a GPU;
 - a CPU has more cache memory than a GPU.
 
 [Figure: CPU vs GPU architecture]
@@ -35,9 +35,9 @@ It has to be noted that the term "GPU core" is more or less a marketing term. Th
 
 ## 5.3 E: Consumer grade vs. high-end GPUs
 
-Nowadays, even a desktop PC or a laptop is equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
+Nowadays, desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look to the GPUs (NVIDIA Tesla V100-SXM2-16GB) that are installed on the Marconi-100 cluster (currently #14 on the Top500 list of supercomputers in the world). By invoking the utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
+First, let's have a look at the GPUs (NVIDIA Tesla V100-SXM2-16GB) that are installed on the Marconi-100 cluster (currently #14 on the Top500 list of supercomputers in the world). By invoking the utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
 
 Output (excerpt) from ```deviceQuery```:
 
@@ -80,7 +80,9 @@ Transfer Size (Bytes) Bandwidth(MB/s)
 33554432              13193.8
 ```
 
-We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card (in the example above: NVIDIA GeForce 930MX). The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the consumer grade card GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. (To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.)
+We can see that a professional high-end card has much more global memory, Streaming Multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card (in the example above: NVIDIA GeForce 930MX). The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32). In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.
+
+Here we have compared only GPUs of one manufacturer (NVIDIA). Similar characteristics apply also for consumer grade and professional cards of other manufacturers, e.g., AMD.
 
 ## 5.4 Exer.: Information and compute capabilities of a GPU
 
