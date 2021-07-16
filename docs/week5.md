@@ -37,7 +37,7 @@ It has to be noted that the term "GPU core" is more or less a marketing term. Th
 
 Nowadays, desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look at the GPUs that are installed on the Marconi-100 cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
+First, let's have a look at the GPUs that are installed on the Marconi-100 cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
 
 Output (excerpt) from ```deviceQuery```:
 
@@ -172,7 +172,7 @@ Result = PASS
 
 There was 1 NVIDIA GeForce 930MX GPU detected on the laptop.
 
-The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available and also much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32).
+The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available and a also much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32).
 
 In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.
 
@@ -205,7 +205,7 @@ Now you can complete the following tasks:
 
 ```
 
-- execute the diagnostic programs to determine the main characteristics of the GPU (No. of SMs,
+- execute the diagnostic utilities to determine the main characteristics of the GPU (No. of SMs,
 No. of CUDA cores, global memory available, memory bandwidth) by:
 
 ```
