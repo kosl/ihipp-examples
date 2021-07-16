@@ -181,7 +181,7 @@ Take a moment and try to understand what is happening in the code
 above. Note the usage of the construct and runtime functions defined earlier in the article.
 
 
-[Jupyter notebook: Runtime functions](/OpenMP/Runtime-functions.ipynb)
+[Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
 
 
 
@@ -249,7 +249,7 @@ int main ()
 > >      I am thread 0 of 4 threads
 
 
-[Jupyter notebook: Conditionals](/OpenMP/Conditionals.ipynb)
+[Jupyter notebook: Conditionals](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Conditionals.ipynb)
 
 ## Clauses
 
@@ -318,7 +318,7 @@ threads. Does the value of shared variable increase when being
 modified by multiple threads? Why? 
 
 
-[Jupyter notebook: Clauses](/OpenMP/Clauses.ipynb)
+[Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
 
 ## 1.4. D: Clauses
 
@@ -356,9 +356,7 @@ Take a moment and try to understand what is happening in the code above.
 
 Now go to the exercise, try it out and check if your answers were correct. 
 
-[Jupyter notebook: Runtime functions](/OpenMP/Clauses.ipynb)
-
-https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Clauses.ipynb?token=7aa0bf315e16ea755b022570663581876e1b14f64f90f0fa
+[Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
 
 
 ## 1.5. Exercise: Parallel region
@@ -409,7 +407,7 @@ Don't worry if you always get a correct output, because a compiler may use a pri
 ## Expected output:
 * If compiled with OpenMP, the program should output »hello world« and the ID of each thread. 
 
-[Jupyter notebook: Exercise: Parallel region](/OpenMP/Exercise-Parallel-region.ipynb)
+[Jupyter notebook: Exercise: Parallel region](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Parallel-region.ipynb)
 
 
 ## 2.1. Which thread executes which statement or operation?
@@ -488,9 +486,7 @@ Here we can see that if we are working on two threads, with 10 iterations then t
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
 
-https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Worksharing-Constructs.ipynb?token=7aa0bf315e16ea755b022570663581876e1b14f64f90f0fa
-
-[Jupyter notebook: Worksharing constructs](/OpenMP/Worksharing-Constructs.ipynb)
+[Jupyter notebook: Worksharing constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Worksharing-Constructs.ipynb)
 
 
 ## 2.3 Synchronization
@@ -536,9 +532,7 @@ Owing to the critical clause we specified only one thread is executed  at a time
 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
 
-https://849.ablak.arnes.si/notebooks/ihipp-examples/OpenMP/Synchronization-Constructs.ipynb?token=7aa0bf315e16ea755b022570663581876e1b14f64f90f0fa
-
-[Jupyter notebook: Synchronization constructs](/OpenMP/Synchronization-Constructs.ipynb)
+[Jupyter notebook: Synchronization constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Synchronization-Constructs.ipynb)
 
 
 ## 2.4 Nesting and binding
@@ -698,7 +692,7 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 
 * Faster execution of the parallel program that calculates the correct value of pi. 
 
-[Jupyter notebook: Exercise: Compute pi](/OpenMP/Exercise-Compute-Pi.ipynb)
+[Jupyter notebook: Exercise: Compute pi](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi.ipynb)
 
 ## 2.6 Private and shared variables
 
@@ -765,7 +759,7 @@ Take a moment and try to guess the values of variables after the parallel region
 
 `var_lastprivate` is updated in the last iteration of the foor loop to use after the parallel region. 
 
-[Jupyter notebook: Data scope](/OpenMP/Data-scope.ipynb)
+[Jupyter notebook: Data scope](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Data-scope.ipynb)
 
 ## 3.1 Reduction clause
 
@@ -811,7 +805,7 @@ printf("sum: %d", sum);
 
 The reduction variable is `sum` and the reduction operation is `+`.  The reduction does the operation automatically. It produces a private variable `sum` inside the loop and in the end it sums up the private partial sum to the global variable. 
 
-[Jupyter notebook: Combined Constructs](/OpenMP/Combined-Constructs.ipynb)
+[Jupyter notebook: Combined Constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Combined-Constructs.ipynb)
 
 ## 3.2 Exercise: Sum and substract
 
@@ -855,7 +849,7 @@ printf("apples = %d", apples);
 Then answer this:
 * What happens when we try to make people "shared"? Why can't you?
 
-[Jupyter notebook: Reduction](/OpenMP/Reduction.ipynb)
+[Jupyter notebook: Reduction](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Reduction.ipynb)
 
 ## 3.3 Combined parallel worksharing directives
 
@@ -895,7 +889,7 @@ Go to the exercise and remove the critical directive and the additional partial 
 
 Now change the parallel region so you use the combined construct parallel for and compile.
 
-[Jupyter notebook: Exercise: Compute pi again](/OpenMP/Exercise-Compute-Pi-again.ipynb)
+[Jupyter notebook: Exercise: Compute pi again](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi-again.ipynb)
 
 ## 3.5. Exercise: Heat transfer
 
@@ -1055,7 +1049,7 @@ Run the code again with 1, 2, 3, 4 threads and look at the execution time.
 Now the parallel version should be a little bit faster. The reason for only a slight improvement might be that the problem is too small and the parallelization overhead is too large. 
 
 
-[Jupyter notebook: Exercise: Heat](/OpenMP/Exercise-Heat.ipynb)
+[Jupyter notebook: Exercise: Heat](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Heat.ipynb)
 
 ## 4.1. Tasking model
 
@@ -1182,7 +1176,7 @@ recursive computation.
 
 Go to the example to see it being done step by step and try it out for yourself. 
 
-[Jupyter notebook: Example: Fibonacci](/OpenMP/Fibonacci.ipynb)
+[Jupyter notebook: Example: Fibonacci](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Fibonacci.ipynb)
 
 ## 4.4. Exercise: Traversing of a tree
 
@@ -1202,7 +1196,7 @@ Parallelize the provided program using parallel region, tasks and other directiv
 
 Did the parallelization give faster results?
 
-[Jupyter notebook: Exercise: Traversing of a tree](/OpenMP/Traversing-tree.ipynb)
+[Jupyter notebook: Exercise: Traversing of a tree](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Traversing-tree.ipynb)
 
 ### Differences in subsection for & synchronisation in GH and FL
 ## Worksharing constructs
