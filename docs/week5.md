@@ -29,7 +29,7 @@ On the figure below you can observe schematics of both CPU and GPU hardware arch
 - a core (green rectangle) in a CPU is different than a "core" or ALU (green rectangle) in a GPU: the former is comprised by ALUs and FPUs which are more specialized than ALUs in a GPU;
 - a CPU has more cache memory than a GPU.
 
-![CPU_vs_GPU](images/CPU_vs_GPU architecture.png)
+![CPU_vs_GPU](https://github.com/kosl/ihipp-examples/tree/master/docs/images/CPU_vs_GPU architecture.png)
 
 It has to be noted that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores".
 
