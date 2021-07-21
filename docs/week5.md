@@ -221,3 +221,84 @@ and
 How the characteristics of the GPU in your login session compare to those of the GPUs in the previous step? Leave a comment with your findings.
 
 ## 5.5 Quiz: GPU basics and architecture
+
+## 5.6 GPU Programming solutions
+
+As already mentioned, GPUs serve as accelerators to CPUs, i.e., computationally intensive tasks are off-loaded from CPUs to GPUs. Standard programming languages such as Fortran and C/C++ do not permit such off-loading because of their lack of addressing distinct memory spaces and of knowing the GPU architecture. For that purpose special language extensions are needed which basically allow GPU programming.
+
+Many solutions exist for programming GPUs, we will talk about the two mostly used, i.e., CUDA and OpenCL. CUDA (Compute Unified Device Architecture) is a set of extensions to higher level programming languages (C, C++ and Fortran) developed by NVIDIA for its GPUs. CUDA comes with a developer toolkit for compiling, debugging and profiling programs. It's the first solution for GPU programming (the current version is 11.x) but unfortunately it's only supported by GPUs manufactured by NVIDIA.
+
+Another solution is OpenCL (Open Computing Language), which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA), now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming model is similar to CUDA, it's more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and is de facto oriented to heterogeneous computing. In principle that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's standard is currently at 2.x. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is offered only for OpenCL 1.2.
+
+## 5.7 E: Hello world on GPU
+
+Before explaining CUDA and OpenCL programming models in detail we will introduce GPU programming with a Hello World example.
+
+Let's first have a look at the following C code:
+
+```
+#define N 4
+for(int i = 0; i < N; ++i){
+    printf("Hello world! I'm Iteration %d\n", i);
+}
+```
+
+What do you think this code will do if executed as a program? If you are familiar with the concept of a ```for``` loop then you know that in it every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 4. Try to execute it in the notebook to see the expected results.
+
+By now we already know that GPUs are really good at executing independent parallel tasks, hence the above ```for``` loop is a good candidate for that. How can we do it in CUDA? Let's give the solution:
+
+```
+#define NUM_BLOCKS 4
+#define BLOCK_SIZE 1
+
+__global__ void hello(){
+    int idx = blockIdx.x;
+    printf("Hello world! I'm a thread in block %d\n", idx);
+}
+
+hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
+```
+
+A ```for``` loop that is executed sequentially on a CPU is replaced by a kernel on a GPU which is run in parallel by independent threads organized into blocks. In CUDA a kernel is defined by the ```__global__``` prefix and it's called by the CPU as a regular function by the triple chevron syntax ```<<<...>>>```. In the above code there's a kernel ```hello``` which doesn't take any input parameters. Still, it's called with:
+
+```
+hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
+```
+
+The triple chevron launch syntax ```<<< >>>``` contains the ''kernel launch parameters'':
+
+- ```NUM_BLOCKS```: defines the number of blocks to use (in the above example 4);
+- ```BLOCK_WIDTH```: defines the number of threads per block (in the above example 1);
+
+What is crucial about the kernel execution on a GPU is that the blocks with threads are executed *in parallel*. So, what does the above kernel do in parallel? For every block index ```idx``` it tries to print the ''Hello world'' message in parallel, where the block index is taken from the built-in variable ```blockIdx.x```. Of course, the messages can't be printed in parallel but the blocks still run in parallel and which ever is faster it's printed before the slower ones. Try to execute the CUDA Hello world in the notebook for a couple of times to see which block indices are printed first. Is the order of block indices always the same or does it change with any new execution of the code?
+
+We can also run the ''Hello world'' example on a GPU in OpenCL. Let's give the solution straight again:
+
+```
+#define GLOBAl_SIZE 4
+#define LOCAL_SIZE 1
+
+__kernel void hello() {
+    int gid = get_global_id(0);
+    printf("Hello world! I'm a thread in block %d\n", gid);
+}
+
+size_t globalItemSize = GLOBAl_SIZE;
+size_t localItemSize = LOCAL_SIZE;
+cl_kernel kernel = clCreateKernel(program, "hello", &ret);
+ret = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
+```
+
+In the case of OpenCL a ```for``` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a  work–item.  In OpenCL a kernel is defined by the ```__kernel ``` prefix and it's called by the CPU called with the ```clEnqueueNDRangeKernel()``` function of the OpenCL API. In the above code there's also a kernel ```hello``` which doesn't take any input parameters, but it's still called with:
+
+```
+clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
+```
+
+This function of the OpenCL API contains the ''kernel launch parameter'':
+
+- ```&globalItemSize```: defines the number of work–items times work–groups (in the above example 1 x 4 = 4);
+- ```&localItemSize```: defines the number of work–items (in the above example 1);
+
+So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the ```globalItemSize``` must be divisible with the ```localItemSize```, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-gropus with work-items are executed *in parallel*. Try to figure out, what does the kernel in OpenCL
+ do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. Try to execute the OpenCL Hello world in the notebook for a couple of a times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
