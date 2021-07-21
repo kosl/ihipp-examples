@@ -230,6 +230,8 @@ Many solutions exist for programming GPUs, we will talk about the two mostly use
 
 Another solution is OpenCL (Open Computing Language), which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA), now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming model is similar to CUDA, it's more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and is de facto oriented to heterogeneous computing. In principle that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's standard is currently at 2.x. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is offered only for OpenCL 1.2.
 
+![](images/CUDA_OpenCL.png?raw=true)
+
 ## 5.7 E: Hello world on GPU
 
 Before explaining CUDA and OpenCL programming models in detail we will introduce GPU programming with a Hello World example.
