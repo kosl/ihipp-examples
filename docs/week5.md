@@ -22,7 +22,7 @@ In order to understand better the capabilities of GPUs in terms of computing acc
 
 As we already pointed out, GPUs were originally designed to accelerate graphics. They excel at operations (such as shading and rendering) on graphical primitives which constitute a 3D graphical object. The main characteristic of these primitives is that they are independent or, in other words, they can be processed independently in a parallel fashion. Thus, GPU acceleration of graphics was designed for the execution of inherently parallel tasks. On the other hand, CPUs are designed to execute the workflow of any general-purpose program, where many parallel tasks may not be involved. These different design principles reflect the fact that GPUs have many more processing units and higher memory bandwidth, while CPUs are characterized by more specialized processing of instructions and faster clock speed rates.
 
-On the figure below you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
+On the figure (source: nvidia.com) below you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
 
 - a GPU has many more arithmetic logic units or ALUs (green rectangles) than a CPU;
 - a GPU can control simple, highly parallel workloads well (there's a yellow rectangle for every row of green rectangles), contrary to a CPU which can control more complex workloads;
