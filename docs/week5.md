@@ -265,10 +265,16 @@ A ```for``` loop that is executed sequentially on a CPU is replaced by a kernel 
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 ```
 
-The triple chevron launch syntax ```<<< >>>``` contains the ''kernel launch parameters'':
+The triple chevron launch syntax ```<<<NUM_BLOCKS, BLOCK_SIZE>>>``` contains the ''kernel launch parameters'':
 
 - ```NUM_BLOCKS```: defines the number of blocks to use (in the above example 4);
 - ```BLOCK_WIDTH```: defines the number of threads per block (in the above example 1);
+
+Of course, the same parameters can be called in the following way:
+
+```
+hello<<<4, 1>>>();
+```
 
 What is crucial about the kernel execution on a GPU is that the blocks with threads are executed *in parallel*. So, what does the above kernel do in parallel? For every block index ```idx``` it tries to print the ''Hello world'' message in parallel, where the block index is taken from the built-in variable ```blockIdx.x```. Of course, the messages can't be printed in parallel but the blocks still run in parallel and which ever is faster it's printed before the slower ones. Try to execute the CUDA Hello world in the notebook for a couple of times to see which block indices are printed first. Is the order of block indices always the same or does it change with any new execution of the code?
 
@@ -289,16 +295,16 @@ cl_kernel kernel = clCreateKernel(program, "hello", &ret);
 ret = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
 ```
 
-In the case of OpenCL a ```for``` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a  work–item.  In OpenCL a kernel is defined by the ```__kernel ``` prefix and it's called by the CPU called with the ```clEnqueueNDRangeKernel()``` function of the OpenCL API. In the above code there's also a kernel ```hello``` which doesn't take any input parameters, but it's still called with:
+In the case of OpenCL a ```for``` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a  work–item.  In OpenCL a kernel is defined by the ```__kernel ``` prefix and it's called by the CPU with the ```clEnqueueNDRangeKernel()``` function of the OpenCL API. In the above code there's also a kernel ```hello``` which doesn't take any input parameters, but it's still called with:
 
 ```
 clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
 ```
 
-This function of the OpenCL API contains the ''kernel launch parameter'':
+This function of the OpenCL API contains the ''kernel launch parameters'':
 
 - ```&globalItemSize```: defines the number of work–items times work–groups (in the above example 1 x 4 = 4);
 - ```&localItemSize```: defines the number of work–items (in the above example 1);
 
-So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the ```globalItemSize``` must be divisible with the ```localItemSize```, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-gropus with work-items are executed *in parallel*. Try to figure out, what does the kernel in OpenCL
- do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. Try to execute the OpenCL Hello world in the notebook for a couple of a times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
+So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the ```globalItemSize``` must be divisible with the ```localItemSize```, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-groups with work-items are executed *in parallel*. Try to figure out, what does the kernel in OpenCL
+ do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. Try to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
