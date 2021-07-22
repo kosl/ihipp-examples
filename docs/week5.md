@@ -247,7 +247,7 @@ for(int i = 0; i < N; ++i){
 
 What do you think this code will do if executed as a program? If you are familiar with the concept of a ```for``` loop then you know that in it every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 3. Try to execute it in the notebook to see the expected results:
 
-![](../GPU/Hello_World_C.ipynb?raw=true)
+![](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_C.ipynb?raw=true)
 
 By now we already know that GPUs are really good at executing independent parallel tasks, hence the above ```for``` loop is a good candidate for that. How can we do it in CUDA? Let's give the solution:
 
