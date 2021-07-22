@@ -222,7 +222,7 @@ How the characteristics of the GPU in your login session compare to those of the
 
 ## 5.5 Quiz: GPU basics and architecture
 
-## 5.6 GPU Programming solutions
+## 5.6 GPU programming solutions
 
 As already mentioned, GPUs serve as accelerators to CPUs, i.e., computationally intensive tasks are off-loaded from CPUs to GPUs. Standard programming languages such as Fortran and C/C++ do not permit such off-loading because of their lack of addressing distinct memory spaces and of knowing the GPU architecture. For that purpose special language extensions are needed which basically allow GPU programming.
 
