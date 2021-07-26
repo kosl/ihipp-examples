@@ -316,3 +316,19 @@ So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA
  do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. Try to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
 
 ![Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
+
+## 5.8 Exer: Hello world extended on GPU
+
+Modify the Hello world CUDA example from the previous step to complete the following tasks:
+
+- define 2 blocks with 4 threads each;
+- print the "Hello World" message to reflect also information on the thread number from each block (hint: use the built-in variable ```threadIdx.x```).
+
+![Hello_World_CUDA_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA_extended.ipynb)
+
+Similarly, modify the Hello world OpenCL example from the previous step to complete the following tasks:
+
+- define 2 blocks (work-groups) with 4 threads (work-items) each;
+- print the "Hello World" message to reflect also information on the thread (work-item) number from each block (work-group) (hint: use the built-in variables ```get_group_id(0)``` for work-groups and ```get_local_id(0)``` for work-items).
+
+![Hello_World_OpenCL_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL_extended.ipynb)
