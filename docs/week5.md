@@ -31,9 +31,9 @@ On the figure (source: nvidia.com) below you can observe schematics of both CPU 
 
 ![](images/CPU_vs_GPU_architecture.png?raw=true)
 
-It has to be noted that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores".
+It has to be noted that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores" (typically more than 100). Each SM has a lot of (L1 cache) registers (32-64 KB), instruction scheduler dispatchers and a very fast shared memory. In the next step we will put everything explained so far into perspective by showing some numbers.
 
-## 5.3 E: Consumer grade vs. high-end GPUs
+## 5.3 E: GPUs by numbers
 
 Nowadays, desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
@@ -319,6 +319,7 @@ So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA
 
 ## 5.8 Exer: Hello world extended on GPU
 
+
 Modify the Hello world CUDA example from the previous step to complete the following tasks:
 
 - define 2 blocks with 4 threads each;
@@ -332,3 +333,13 @@ Similarly, modify the Hello world OpenCL example from the previous step to compl
 - print the "Hello World" message to reflect also information on the thread (work-item) number from each block (work-group) (hint: use the built-in variables ```get_group_id(0)``` for work-groups and ```get_local_id(0)``` for work-items).
 
 ![Hello_World_OpenCL_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL_extended.ipynb)
+
+## 5.9 CUDA and OpenCL execution model
+
+After exploring the GPU architecture and getting to know the principles of GPU programming we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL, we will give the equivalent OpenCL terms in the end. The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture (source: NVIDIA) below.
+
+![](images/Execution_Model.png?raw=true)
+
+The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. A scalar processor is often referred to a GPU "core".
+
+So, when a GPU  kernel  is executed each thread block is assigned  to a SM. A maximum number of thread blocks can be assigned to a SM, depending  on GPU hardware resources. The  runtime  system  maintains  a  list  of  active blocks and  assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to a SM the resources on it are reserved until all threads in the block complete. Each thread block execution is independent from another (no  synchronization can be done among blocks). Threads in each block are partitioned into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from one of the residing blocks in a SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
