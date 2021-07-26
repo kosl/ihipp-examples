@@ -317,6 +317,8 @@ So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA
 
 ![Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
 
+Don't worry if you don't understand completely the codes above. We will explain everything in detail (including compiling of the codes) in the following steps.
+
 ## 5.8 Exer: Hello world extended on GPU
 
 
