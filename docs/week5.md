@@ -338,7 +338,7 @@ Similarly, modify the Hello world OpenCL example from the previous step to compl
 
 ## 5.9 CUDA and OpenCL execution model
 
-After exploring the GPU architecture and getting to know the principles of GPU programming we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL. We will presents the equivalent OpenCL terminology at the end.
+After exploring the GPU architecture and getting to know the principles of GPU programming we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL. We will present the equivalent OpenCL terminology at the end.
 
 The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture (source: NVIDIA) below.
 
