@@ -359,6 +359,8 @@ Let's recap everything about the GPU CUDA threads hierarchy with some details:
 
 The picture below (source: nvidia.com) shows an example of a CUDA threads hierarchy with 2D blocks.
 
+![](images/grid-of-thread-blocks.png?raw=true)
+
 Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index ```idx``` in the following way:
 
 ```
@@ -371,7 +373,7 @@ int i = blockDim.x * blockIdx.x + threadIdx.x;
 int j = blockDim.y * blockIdx.y + threadIdx.y;
 ```
 
-These indices are defined in a kernel as internal variables and can be used for thread related computing. We have already seen such an index in the Hello World example where the index was defined to just identify blocks:
+These indices are defined in a kernel as internal variables and can be used for thread related computing. We have already seen such an index in the Hello World CUDA example where the index was defined to just identify blocks:
 
 ```
 int idx = blockIdx.x;
@@ -430,6 +432,10 @@ The GPU OpenCL work-items hierarchy is equivalent to the CUDA threads hierarchy 
     - ```get_group_id``` equivalent to ```blockIdx```
     - ```get_local_size``` equivalent to ```blockDim```
     - ```get_global_id``` equivalent to ```blockIdx * blockDim + threadIdx```
+
+The picture below (source: khronos.org) shows an example of an OpenCL work-items hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
+
+![](images/ndrange-work-items.png?raw=true)
 
 As in CUDA we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index ```idx``` in the following way:
 
