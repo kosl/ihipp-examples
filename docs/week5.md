@@ -345,3 +345,116 @@ After exploring the GPU architecture and getting to know the principles of GPU p
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. A scalar processor is often referred to a GPU "core".
 
 So, when a GPU  kernel  is executed each thread block is assigned  to a SM. A maximum number of thread blocks can be assigned to a SM, depending  on GPU hardware resources. The  runtime  system  maintains  a  list  of  active blocks and  assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to a SM the resources on it are reserved until the execution of all threads in the block is not finished. Each thread block execution is independent from another (no synchronization can be done among blocks). Threads in each block are divided into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from the residing blocks in a SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
+
+Let's recap everything about the GPU CUDA threads hierarchy with some details:
+
+- threads are organized into blocks: blocks can be 1D, 2D, 3D
+- blocks are organized into a grid: grids can also be 1D, 2D, 3D
+- each block or thread has a unique ID: ```.x```, ```.y```, ```.z``` are components in every dimension
+- built-in variables for the CUDA threads hierarchy:
+    - ```threadIdx```: thread coordinate inside the block
+    - ```blockIdx```: block coordinate inside the grid
+    - ```blockDim```: block dimension in thread units
+    - ```gridDim```: grid dimension in block units
+
+The picture below (source: nvidia.com) shows an example of a CUDA threads hierarchy with 2D blocks.
+
+Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index ```idx``` in the following way:
+
+```
+int idx = blockIdx.x * blockDim.x + threadIdx.x;
+```
+Similarly, we can define global thread indices ```i``` and  ```j``` for a 2D kernel:
+
+```
+int i = blockDim.x * blockIdx.x + threadIdx.x;
+int j = blockDim.y * blockIdx.y + threadIdx.y;
+```
+
+These indices are defined in a kernel as internal variables and can be used for thread related computing. We have already seen such an index in the Hello World example where the index was defined to just identify blocks:
+
+```
+int idx = blockIdx.x;
+```
+
+and later used to print the block ID number:
+
+```
+printf("Hello world! I'm a thread in block %d\n", idx);
+```
+
+You could instead define a global thread index ```gid```:
+
+```
+int gid = blockIdx.x * blockDim.x + threadIdx.x;
+```
+
+and print it with:
+
+```
+printf("Hello world! I'm a global thread index %d in hierarchy\n", gid);
+```
+
+Of course, the global thread index would run from 0 to ```NUM_BLOCKS * BLOCK_SIZE - 1``` if the ```hello``` kernel is invoked with:
+
+```
+hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
+```
+
+One should remember that the kernel on the GPU is run with all the threads defined by the launch parameters in the triple chevron synthax ```<<<...>>>``` but the calculation could be limited, e.g., with an ```if``` clause:
+
+```
+__global__ void hello(){
+    int gid = blockIdx.x * blockDim.x + threadIdx.x;
+    if(gid < N)
+        printf("Hello world! I'm a global thread index %d in hierarchy\n", gid);
+}
+```
+
+For example, if one sets ```N = 7``` the kernel invoked by:
+
+
+```
+hello<<<4, 2>>>();
+```
+would print global thread indices from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and ```N```.
+
+The GPU OpenCL work-items hierarchy is equivalent to the CUDA threads hierarchy except for terminology and some minor details:
+
+- work-items are organized into work-groups
+- the number of work-items can be specified in a work-group – this is called the local (work-group) size
+- both work-items and work-groups can be 1D, 2D, 3D
+- each work-item and work-group has a unique ID: ```(0)```, ```(1)```, ```(2)``` are components in every dimension
+- built-in variables for the OpenCL work-items hierarchy:
+    - ```get_local_id``` equivalent to ```threadIdx```
+    - ```get_group_id``` equivalent to ```blockIdx```
+    - ```get_local_size``` equivalent to ```blockDim```
+    - ```get_global_id``` equivalent to ```blockIdx * blockDim + threadIdx```
+
+As in CUDA we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index ```idx``` in the following way:
+
+```
+int idx = get_group_id(0) * get_local_size(0) + get_local_id(0)
+```
+
+This is of course unnecessary since OpenCL offers the ```get_global_id``` variable which returns a global work-item index:
+
+```
+int idx = get_global_id(0);
+```
+
+As in CUDA, we can define global work-item indices ```i``` and  ```j``` for a 2D kernel in OpenCL with:
+
+```
+int i = get_group_id(0) * get_local_size(0) + get_local_id(0)
+int j = get_group_id(1) * get_local_size(1) + get_local_id(1)
+```
+
+or equivalently with:
+
+```
+int i = get_global_id(0);
+int j = get_global_id(1);
+```
+
+As in CUDA, these indices are defined in a kernel as internal variables and can be used for work-items related computing in OpenCL. You can modify the Hello World OpenCL example to print the global work-item index and experiment with launch parameters along with an ```if``` clause in the kernel to limit the print out of indices.
