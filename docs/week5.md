@@ -495,7 +495,7 @@ __global__ void vector_add(double *out, double *a, double *b, int n)
 }
 ```
 
-You can see that the input parameters for the kernel ```vector_add``` are defined in a function like manner and that the index ```i``` defined inside thge kernel represents the global thread index. In that way the kernel sums the vector components in parallel (keep in mind that this is true if enough resources on the GPU are available): for every component addition there's a thread which takes care of the computing task, while the ```if``` clause makes sure that the calculations are done only within the vector size. We will see in the next step how the kernel is called and the parameters or variables must be defined.
+You can see that the input parameters for the kernel ```vector_add``` are defined in a function like manner and that the index ```i``` defined inside the kernel represents the global thread index. In that way the kernel sums the vector components in parallel (keep in mind that this is true if enough resources on the GPU are available): for every component addition there's a thread which takes care of the computing task, while the ```if``` clause makes sure that the calculations are done only within the vector size. We will see in the next step how the kernel is called and the parameters or variables must be defined.
 
 For the same task we can use an OpenCL kernel instead:
 
@@ -507,7 +507,7 @@ __kernel void vector_add(__global double *a, __global double *b, __global double
 }
 ```
 
-You can see that the kernel looks basically the same, except for variable type prefixes. In the next steps we will also see how the kernel in OpenCL is called and how the parameters or variables must be defined.
+You can see that the kernel looks basically the same, except for variable type prefixes and built-in variables. In the next steps we will also see how the kernel in OpenCL is called and how the parameters or variables must be defined.
 
 If you are curious how the codes for vector addition on GPU look like, you can have look, for the CUDA version:
 
@@ -516,3 +516,5 @@ If you are curious how the codes for vector addition on GPU look like, you can h
 and the OpenCL version:
 
 ![Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
+
+Don't be afraid if you find them difficult to grasp, we will explore and explain them in a step-by-step fashion in the next steps.
