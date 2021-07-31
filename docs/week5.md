@@ -408,18 +408,19 @@ hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 One should remember that the kernel on the GPU is run with all the threads defined by the launch parameters in the triple chevron synthax ```<<<...>>>``` but the calculation could be limited, e.g., with an ```if``` clause:
 
 ```
-__global__ void hello(){
+__global__ void hello(int N){
     int gid = blockIdx.x * blockDim.x + threadIdx.x;
     if(gid < N)
         printf("Hello world! I'm a global thread index %d in hierarchy\n", gid);
 }
 ```
 
-For example, if one sets ```N = 7``` the kernel invoked by:
+For example, if one sets ```N = 7``` (note that ```N``` is an integer variable defined outside the kernel, hence it must be called as an input parameter in a function like manner) the kernel invoked by:
 
 
 ```
-hello<<<4, 2>>>();
+int N = 7;
+hello<<<4, 2>>>(N);
 ```
 would print global thread indices from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and ```N```.
 
@@ -466,3 +467,52 @@ int j = get_global_id(1);
 ```
 
 As in CUDA, these indices are defined in a kernel as internal variables and can be used for work-items related computing in OpenCL. You can modify the Hello World OpenCL example to print the global work-item index and experiment with launch parameters along with an ```if``` clause in the kernel to limit the print out of indices.
+
+## 5.10 E: Vector addition on GPU
+
+A standard introductory example for GPU computing is vector addition. We will first show how it is done on a CPU and then on a GPU. In the next two steps we will use this example to present a step-by-step approach to GPU programming, both in CUDA and OpenCL.
+
+Vector addition on a CPU can be done with a ```for``` loop. Each iteration computes the sum of one component of vectors ```a``` and  ```b```. The vector sum is stored in ```out```.
+
+```
+for(int i = 0; i < N; i++){
+    out[i] = a[i] + b[i];
+}
+```
+
+You can have a look at the program for vector addition in C and execute it:
+
+![Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_C.ipynb)
+
+By now we should know how to transform this ```for``` loop into a GPU kernel. The only difference is that the kernel in this case will take some extra parameters, i.e., the vectors ```a```, ```b```, ```out``` and the vector size ```n```. Let's write down the CUDA kernel first:
+
+```
+__global__ void vector_add(double *out, double *a, double *b, int n)
+{
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if(i < n)
+        out[i] = a[i] + b[i];
+}
+```
+
+You can see that the input parameters for the kernel ```vector_add``` are defined in a function like manner and that the index ```i``` defined inside thge kernel represents the global thread index. In that way the kernel sums the vector components in parallel (keep in mind that this is true if enough resources on the GPU are available): for every component addition there's a thread which takes care of the computing task, while the ```if``` clause makes sure that the calculations are done only within the vector size. We will see in the next step how the kernel is called and the parameters or variables must be defined.
+
+For the same task we can use an OpenCL kernel instead:
+
+```
+__kernel void vector_add(__global double *a, __global double *b, __global double *out, int n) {
+    int i = get_global_id(0);
+    if(i < n)
+        out[i] = a[i] + b[i];
+}
+```
+
+You can see that the kernel looks basically the same, except for variable type prefixes. In the next steps we will also see how the kernel in OpenCL is called and how the parameters or variables must be defined.
+
+If you are curious how the codes for vector addition on GPU look like, you can have look, for the CUDA version:
+
+![Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
+
+and the OpenCL version:
+
+![Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
