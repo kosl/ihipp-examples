@@ -551,9 +551,11 @@ Such initialization is important in multi GPU systems where there's a need for s
 CudaSetDevice(1);
 ```
 
-It's a good approach to initialoze CUDA through the ```CUDA_ERROR()``` API call:
+It's a good approach to initialize CUDA through the ```CUDA_ERROR()``` API call:
 
+```
 CUDA_ERROR(cudaSetDevice(0));
+```
 
 In this way a CUDA program will continue with execution only if a CUDA capable device is available. Sometimes it's useful to get the device properties through ```cudaGetDeviceProperties()``` by:
 
@@ -580,9 +582,11 @@ what is now redundant. Still, you can put this lines at the beginning of CUDA co
 
 Memory allocation on the device is done with ```cudaMalloc()```:
 
+```
 cudaMalloc((void**)&d_a, sizeof(double) * N);
 cudaMalloc((void**)&d_b, sizeof(double) * N);
 cudaMalloc((void**)&d_out, sizeof(double) * N);
+```
 
 For every variable on the host (CPU) from which or to which GPU memory transfers will be done we must allocate memory on the GPU of the same size and type.
 
@@ -632,11 +636,11 @@ Now we can launch the kernel with these parameters:
 vector_add<<<blocksPerGrid, threadsPerBlock>>>(d_out, d_a, d_b, N);
 ```
 
-Note that we launched the kernel with the allocated device variables ```d_out```, ```d_a``` and ```d_b``` as is usual done with function calls. Note also that integers and constant type variables can be passed to the kernel without device memory allocation, in this case we passed the vector size ```N``` in this way.
+Note that we launched the kernel with the allocated device variables ```d_out```, ```d_a``` and ```d_b``` as is usuallly done with function calls. Note also that integers and constant type variables can be passed to the kernel without device memory allocation. In this case we passed the vector size ```N``` in this way.
 
 5. Transfer data back from device to host
 
-The kernel ```vector_add``` calculated the vector sum of ```d_a``` and ```d_b``` and put it into the variable ```d_out```. This variable with the vector sum resides in GPU global memory and cannot be acessed by the GPU directly, hence it has to be transferred back to host memory to the variable ```out```. This is done again with ```cudaMemcpy()``` except that now the option used is ```cudaMemcpyDeviceToHost```:
+The kernel ```vector_add``` calculated the vector sum of ```d_a``` and ```d_b``` and put it into the variable ```d_out```. This variable with the vector sum resides in GPU global memory and cannot be accessed by the GPU directly, hence it has to be transferred back to host memory to the variable ```out```. This is done again with ```cudaMemcpy()``` except that now the option used is ```cudaMemcpyDeviceToHost```:
 
 ```
 cudaMemcpy(out, d_out, sizeof(double) * N, cudaMemcpyDeviceToHost);
@@ -648,13 +652,15 @@ Again, the counterpart host variable ```out``` must be of the same size and type
 
 In the end (after the device variables are not needed any more) the allocated device memory can be freed:
 
+```
 cudaFree(d_a);
 cudaFree(d_b);
 cudaFree(d_out);
+```
 
 7. Compiling the code
 
-CUDA codes reside in *.cu files and the NVIDIA CUDA compiler (nvcc) compiler can be used to compile them, e.g., in the case of the vector addition CUDA code:
+CUDA codes reside in ```*.cu``` files and the NVIDIA CUDA (nvcc) compiler can be used to compile them, e.g., in the case of the vector addition CUDA code:
 
 ```
 !nvcc -o vector_add_cuda vector_add_cuda.cu
@@ -669,7 +675,7 @@ The executable can be run with:
 Hardware design, number of cores, cache size, and supported arithmetic instructions are different for different GPU models. Every NVIDIA GPU supports a compute capability according to its microarchitecture, e.g., the Tesla V100 (Volta microarchitecture) supports CUDA compute capabilities up to 7.0 (see the output in Step 5.3). The above code can be compiled specifically for the V100 in the following way:
 
 ```
-nvcc -arch=sm_70 -gencode=arch=compute_70,code=sm_70 -o vector_add_cuda vector_add_cuda.cu
+!nvcc -arch=sm_70 -gencode=arch=compute_70,code=sm_70 -o vector_add_cuda vector_add_cuda.cu
 ```
 
 You can compile and run the CUDA vector addition code in the notebook. Check the output to see if the GPU calculates the vector sum correctly.
