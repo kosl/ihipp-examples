@@ -518,3 +518,160 @@ and the OpenCL version:
 ![Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
 
 Don't be afraid if you find them difficult to grasp, we will explore and explain them in a step-by-step fashion in the next steps.
+
+## 5.11 CUDA step-by-step
+
+In this step we will explain in detail the vector addition in CUDA, which is a typical CUDA program. A typical CUDA program consists of the following steps:
+
+- Allocate GPU memory
+- Populate GPU memory with inputs from the host (CPU)
+- Execute a GPU kernel on those inputs
+- Transfer outputs from the GPU back to the host (CPU)
+- Free GPU memory
+
+It has to be mentioned that recent NVIDIA GPUs (Pascal microarchitecture or newer) support unified memory (invoked with ```cudaMallocManaged()```) in a single-pointer-to-data model meaning CPUs and GPUs can use the same memory address space. Consequently, transfers from/to GPU memory are no longer needed or at least less important in a GPU accelerated code.
+
+Let's analyze the CUDA vector addition code:
+
+![Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
+
+step-by step and explain how to compile it into an executable program.
+
+1. Initialize device
+
+The first available CUDA device (GPU) is automatically initialized to ```0```, but you could still set it yourself by:
+
+```
+CudaSetDevice(0);
+```
+
+Such initialization is important in multi GPU systems where there's a need for switching from one device to another, e.g., switching to device ```1``` can be done with:
+
+```
+CudaSetDevice(1);
+```
+
+It's a good approach to initialoze CUDA through the ```CUDA_ERROR()``` API call:
+
+CUDA_ERROR(cudaSetDevice(0));
+
+In this way a CUDA program will continue with execution only if a CUDA capable device is available. Sometimes it's useful to get the device properties through ```cudaGetDeviceProperties()``` by:
+
+```
+cudaDeviceProp prop;
+CUDA_ERROR(cudaGetDeviceProperties(&prop,0));
+printf("Found GPU '%s' with %g GB of global memory, max %d threads per
+       block, and %d multiprocessors\n", prop.name,
+       prop.totalGlobalMem/(1024.0*1024.0*1024.0),
+       prop.maxThreadsPerBlock,prop.multiProcessorCount);
+```
+
+All the above calls are optional but it's a good approach to control CUDA initialization to avoid running GPU accelerated codes on unresponsive GPUs. Older CUDA versions also needed the inclusion of CUDA specific headers, e.g.:
+
+```
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+```
+
+what is now redundant. Still, you can put this lines at the beginning of CUDA codes to no harm.
+
+2. Allocate GPU memory
+
+Memory allocation on the device is done with ```cudaMalloc()```:
+
+cudaMalloc((void**)&d_a, sizeof(double) * N);
+cudaMalloc((void**)&d_b, sizeof(double) * N);
+cudaMalloc((void**)&d_out, sizeof(double) * N);
+
+For every variable on the host (CPU) from which or to which GPU memory transfers will be done we must allocate memory on the GPU of the same size and type.
+
+It's also a good approach to use "d" for the variables in GPU memory as a indication for device, e.g., ```d_a``` or ```a_d```. This naming convention is optional but quite useful in terms of code readability.
+
+3. Transfer data from host to device memory
+
+Data transfer from host (CPU) to device (GPU) is done with ```cudaMemcpy()``` and the option ```cudaMemcpyHostToDevice```. In the example of vector addition we have to transfer data from host variables ```a``` and ```b``` to device variables ```d_a``` and ```d_b```:
+
+```
+cudaMemcpy(d_a, a, sizeof(double) * N, cudaMemcpyHostToDevice);
+cudaMemcpy(d_b, b, sizeof(double) * N, cudaMemcpyHostToDevice);
+```
+
+Basically, we transfer the values of the components of vectors ```a``` and ```b``` from host do device memory. Note, that host and device variables must be of same size and type.
+
+4. Execute kernel on device variables as inputs
+
+After transfering the components of vectors ```a``` and ```b``` from host do device memory we can sum the vector components in parallel on the GPU. In the previous step we have already shown how to do that, i.e., with the kernel ```vector_add```:
+
+```
+__global__ void vector_add(double *out, double *a, double *b, int n)
+{
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if(i < n)
+        out[i] = a[i] + b[i];
+}
+```
+
+Before executing the kernel we have to define launch parameters, i.e., the number of threads per block and the number of blocks. We need at least 2020 threads in total. Choosing the 1024 as the number of threads per block we need 2020/1024 = 1.97 blocks or 2 blocks rounded. We can do this calculation with:
+
+```
+int threadsPerBlock = 1024;
+int blocksPerGrid = N/threadsPerBlock + (N % threadsPerBlock == 0 ? 0:1);
+```
+
+or alternatively with:
+
+```
+int threadsPerBlock = 1024;
+int blocksPerGrid =(N + threadsPerBlock - 1) / threadsPerBlock;
+```
+
+Now we can launch the kernel with these parameters:
+
+```
+vector_add<<<blocksPerGrid, threadsPerBlock>>>(d_out, d_a, d_b, N);
+```
+
+Note that we launched the kernel with the allocated device variables ```d_out```, ```d_a``` and ```d_b``` as is usual done with function calls. Note also that integers and constant type variables can be passed to the kernel without device memory allocation, in this case we passed the vector size ```N``` in this way.
+
+5. Transfer data back from device to host
+
+The kernel ```vector_add``` calculated the vector sum of ```d_a``` and ```d_b``` and put it into the variable ```d_out```. This variable with the vector sum resides in GPU global memory and cannot be acessed by the GPU directly, hence it has to be transferred back to host memory to the variable ```out```. This is done again with ```cudaMemcpy()``` except that now the option used is ```cudaMemcpyDeviceToHost```:
+
+```
+cudaMemcpy(out, d_out, sizeof(double) * N, cudaMemcpyDeviceToHost);
+```
+
+Again, the counterpart host variable ```out``` must be of the same size and type as the device variable ```d_out```.
+
+6. Deallocate (free) device memory
+
+In the end (after the device variables are not needed any more) the allocated device memory can be freed:
+
+cudaFree(d_a);
+cudaFree(d_b);
+cudaFree(d_out);
+
+7. Compiling the code
+
+CUDA codes reside in *.cu files and the NVIDIA CUDA compiler (nvcc) compiler can be used to compile them, e.g., in the case of the vector addition CUDA code:
+
+```
+!nvcc -o vector_add_cuda vector_add_cuda.cu
+```
+
+The executable can be run with:
+
+```
+!./vector_add_cuda
+```
+
+Hardware design, number of cores, cache size, and supported arithmetic instructions are different for different GPU models. Every NVIDIA GPU supports a compute capability according to its microarchitecture, e.g., the Tesla V100 (Volta microarchitecture) supports CUDA compute capabilities up to 7.0 (see the output in Step 5.3). The above code can be compiled specifically for the V100 in the following way:
+
+```
+nvcc -arch=sm_70 -gencode=arch=compute_70,code=sm_70 -o vector_add_cuda vector_add_cuda.cu
+```
+
+You can compile and run the CUDA vector addition code in the notebook. Check the output to see if the GPU calculates the vector sum correctly.
+
+## 5.12 OpenCL step-by-step
