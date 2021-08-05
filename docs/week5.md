@@ -768,7 +768,7 @@ __kernel void vector_add(__global double *a, __global double *b, __global double
 }
 ```
 
-as a string from the file ```vector_add.cl```. It's common practice in OpenCL programming to have kernels in ```*.cl``` files but one could also define in the main code as plain strings.
+as a string from the file ```vector_add.cl```. It's common practice in OpenCL programming to have kernels in ```*.cl``` files but one could also define them in the main code as plain strings.
 
 With kernel source loaded we can create a program from it:
 
@@ -834,8 +834,28 @@ The kernel ```vector_add``` calculates the vector sum of ```a_mem_obj``` and ```
 ```
 ret = clEnqueueReadBuffer(command_queue, out_mem_obj, CL_TRUE, 0, N * sizeof(double), out, 0, NULL, NULL);
 ```
+6. Free buffers and resources
 
-6. Compiling the code
+In the end the memory buffers can be freed:
+
+```
+ret = clReleaseMemObject(a_mem_obj);
+ret = clReleaseMemObject(b_mem_obj);
+ret = clReleaseMemObject(out_mem_obj);
+```
+
+as well as other resources (this is again more or less boiler-plate code):
+
+```
+ret = clFlush(command_queue);
+ret = clFinish(command_queue);
+ret = clReleaseKernel(kernel);
+ret = clReleaseProgram(program);
+ret = clReleaseCommandQueue(command_queue);
+ret = clReleaseContext(context);
+```
+
+7. Compiling the code
 
 OpenCL codes reside in *.c files (main code) and *.cl files (kernels). Compilers that can link to the OpenCL library (generally with the flag ```-lOpenCL```) can be used, e.g., gcc or nvcc. One should be aware that for running OpenCL codes on a GPU a Software Developer Kit (SDK) for it must be installed. For NVIDIA GPUs the installation of the CUDA SDK is generally enough and compiling can be done with:
 
