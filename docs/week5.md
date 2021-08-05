@@ -774,6 +774,7 @@ With kernel source loaded we can create a program from it:
 
 ```
 cl_program program = clCreateProgramWithSource(context, 1, (const char **)&source_str, (const size_t *)&source_size, &ret);
+```
 
 build the program:
 
