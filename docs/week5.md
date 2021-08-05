@@ -868,3 +868,39 @@ To sum up we will give a side by side comparison of both the GPU programming mod
 | constant memory | constant memory |
 | shared memory | local memory |
 | local memory | private memory |
+
+### Function, variable and built-in variable types
+
+| CUDA | OpenCL |
+| :-----------------------------: | :---------------: |
+| `__global__ function` | `__kernel function` |
+| `__device__ function`   | `function` |
+| `__constant__ variable` | `__constant variable` |
+| `__device__ variable` | `__global variable` |
+| `__shared__ variable` | `__local variable` |
+| `gridDim` | `get_num_groups()` |
+| `blockDim` | `get_local_size()` |
+| `blockIdx` | `get_group_id()` |
+| `threadIdx` | `get_local_id()` |
+| `blockIdx * blockDim + threadIdx` | `get_global_id()` |
+| `gridDim * blockDim` | `get_global_size()` |
+
+### Kernel synchronization
+
+| CUDA | OpenCL |
+| :------------------: | :---------------: |
+| `__syncthreads()` | `barrier()` |
+| `__threadfence()` | / |
+| `__threadfence_block()` | `mem_fence()` |
+| / | `read_mem_fence()` |
+| / | `write_mem_fence()` |
+
+### API calls
+
+| CUDA | OpenCL |
+| :-----------------------: | :---------------: |
+| vcudaGetDeviceProperties()` | `clGetDeviceInfo()` |
+| `cudaMalloc()` | `clCreateBuffer() |
+| `cudaMemcpy()` | `clEnqueueReadBuffer()`, `clEnqueueWriteBuffer()` |
+| `cudaFree()` | `clReleaseMemObj()` |
+| `kernel<<<...>>>()` | `clEnqueueNDRangeKernel()` |
