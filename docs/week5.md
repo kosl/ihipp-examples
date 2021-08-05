@@ -859,8 +859,8 @@ To sum up we will give a side by side comparison of both the GPU programming mod
 
 ### Execution model terminology
 
-| CUDA | OpenC |
-| ------------------------------| ------------------|
+| CUDA | OpenCL |
+| :---------------------------: | :---------------: |
 | SM (Streaming Multiprocessor) | CU (Compute Unit) |
 | thread | work-item |
 | block | work-group |
