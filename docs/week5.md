@@ -521,7 +521,7 @@ Don't be afraid if you find them difficult to grasp, we will explore and explain
 
 ## 5.11 CUDA step-by-step
 
-In this step we will explain in detail the vector addition in CUDA, which is a typical CUDA program. A typical CUDA program consists of the following steps:
+In this step we will explain in detail the vector addition in CUDA, which is a typical GPU program in CUDA. A typical CUDA program flow consists of the following steps:
 
 - Allocate GPU memory
 - Populate GPU memory with inputs from the host (CPU)
@@ -640,7 +640,7 @@ Note that we launched the kernel with the allocated device variables ```d_out```
 
 5. Transfer data back from device to host
 
-The kernel ```vector_add``` calculated the vector sum of ```d_a``` and ```d_b``` and put it into the variable ```d_out```. This variable with the vector sum resides in GPU global memory and cannot be accessed by the GPU directly, hence it has to be transferred back to host memory to the variable ```out```. This is done again with ```cudaMemcpy()``` except that now the option used is ```cudaMemcpyDeviceToHost```:
+The kernel ```vector_add``` calculates the vector sum of ```d_a``` and ```d_b``` and puts it into the variable ```d_out```. This variable with the vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable ```out```. This is done again with ```cudaMemcpy()``` except that now the option used is ```cudaMemcpyDeviceToHost```:
 
 ```
 cudaMemcpy(out, d_out, sizeof(double) * N, cudaMemcpyDeviceToHost);
@@ -681,3 +681,189 @@ Hardware design, number of cores, cache size, and supported arithmetic instructi
 You can compile and run the CUDA vector addition code in the notebook. Check the output to see if the GPU calculates the vector sum correctly.
 
 ## 5.12 OpenCL step-by-step
+
+In this step we will explain in detail the vector addition also in OpenCL. A typical OpenCL program flow basically consists of the same steps as a CUDA program flow, but you will notice that OpenCL is a more low level programming extension with many calls to the OpenCL API. OpenCL, like CUDA, can also offer shared memory (Shared Virtual Memory) for host and device kernels, thus eliminating costly data transfers between host and device, but this feature is supported only in OpenCL 2.0 and above. Unfortunately, as already mentioned, the NVIDIA GPUs support only OpenCL 1.2 and such features are not available. Also for that reason we will follow this standard to explain GPU accelerated programming in OpenCL.
+
+Let's also analyze the OpenCL vector addition code:
+
+![Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
+
+step-by step and explain how to compile it into an executable program.
+
+1. Initialize device
+
+As opposed to CUDA a specific OpenCL header must be included at the beginning of the code, depending on the operating system:
+
+```
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#else
+#include <CL/cl.h>
+#endif
+```
+
+Before initializing the device it's necessary to get platform and device information; this is more or less boiler-plate code that you can copy/paste it to every OpenCL code. Device initialization consists of the following steps:
+
+- declare context:
+
+cl_context context = clCreateContext(NULL, 1, &device_id, NULL, NULL, &ret);
+
+- choose a device from context:
+
+ret = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 1, &device_id, &ret_num_devices);
+
+- create a command queue with device and context:
+
+cl_command_queue command_queue = clCreateCommandQueue(context, device_id, 0, &ret);
+
+This is still more or less boiler-plate code which is basically the same for every OpenCL program.
+
+2. Create buffers and memory transfer device
+
+Next we create buffers which is essentialy memory allocation on the GPU:
+
+```
+cl_mem a_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, N * sizeof(double), NULL, &ret);
+cl_mem b_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, N * sizeof(double), NULL, &ret);
+cl_mem out_mem_obj = clCreateBuffer(context, CL_MEM_WRITE_ONLY, N * sizeof(double), NULL, &ret);
+```
+
+Notice, that we used the flag ```CL_MEM_READ_ONLY``` to create buffers for vectors ```a``` and ```b``` since the GPU kernel will only read these data. The vector sum will be stored in the buffer ```out_mem_obj``` and the GPU kernel will only write to it, hence the use of the ```CL_MEM_WRITE_ONLY``` flag. If there's the need of both reading from and writing to memory buffers one could use the flag ```CL_MEM_READ_WRITE```.
+
+After buffer creation we can transfer host data to the device. Transfering the host variables ```a``` and ```b``` to GPU memory buffers ```a_mem_obj``` and ```b_mem_obj``` is done with the following calls:
+
+```
+ret = clEnqueueWriteBuffer(command_queue, a_mem_obj, CL_TRUE, 0, N * sizeof(double), a, 0, NULL, NULL);
+ret = clEnqueueWriteBuffer(command_queue, b_mem_obj, CL_TRUE, 0, N * sizeof(double), b, 0, NULL, NULL);
+```
+
+As in CUDA the size and the type of the memory buffers of the device variables must be the same as for the host counterparts, in this case: ```N * sizeof(double)```.
+
+3. Build program and select kernel
+
+You have probably noticed that the kernel source was loaded in the beginning with:
+
+```
+FILE *fp;
+char *source_str;
+size_t source_size;
+
+fp = fopen("vector_add.cl", "r");
+if (!fp) {
+    fprintf(stderr, "Failed to load kernel.\n");
+    exit(1);
+}
+source_str = (char*)malloc(MAX_SOURCE_SIZE);
+source_size = fread( source_str, 1, MAX_SOURCE_SIZE, fp);
+fclose( fp );
+```
+
+These lines basically load the OpenCL kernel ```vector_add``` for vector addition (shown in Step 5.10):
+
+```
+__kernel void vector_add(__global double *a, __global double *b, __global double *out, int n) {
+    int i = get_global_id(0);
+    if(i < n)
+        out[i] = a[i] + b[i];
+}
+```
+
+as a string from the file ```vector_add.cl```. It's common preactice in OpenCL programming to have kernels in ```*.cl``` files but one could also define in the main code as plain strings.
+
+With kernel source loaded we can create a program from it:
+
+```
+cl_program program = clCreateProgramWithSource(context, 1, (const char **)&source_str, (const size_t *)&source_size, &ret);
+
+build the program:
+
+```
+ret = clBuildProgram(program, 1, &device_id, NULL, NULL, NULL);
+```
+
+and create the OpenCL kernel:
+
+```
+cl_kernel kernel = clCreateKernel(program, "vector_add", &ret);
+```
+
+Notice the constant use of the variable ```ret``` of the ```cl_int``` type defined at beginning. This variable accepts return values for the OpenCL API. As said before you can use many of the OpenCL API calls as boiler-plate code as long as you are consistent with the variables definitions in these calls.
+
+4. Set arguments and enqueue kernel
+
+After the creation of the OpenCL kernel we have first to set arguments for it, in the example of vector addition with:
+
+```
+ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
+ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&b_mem_obj);
+ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *)&out_mem_obj);
+ret = clSetKernelArg(kernel, 3, sizeof(cl_int), (void *)&n);
+```
+
+It's important that these arguments follow the same order (indices from 0 to 3) as in the kernel definition:
+
+```
+vector_add(__global double *a, __global double *b, __global double *out, int n)
+```
+
+Notice, that integer variable, e.g. ```n``` in this case, do not need the creation of a memory buffer but still need to be set as a kernel argument.
+
+Next, we must set local and global work-group sizes:
+
+```
+size_t local_item_size = 1024;
+int n_blocks = n/local_item_size + (n % local_item_size == 0 ? 0:1);
+size_t global_item_size = n_blocks * local_item_size;
+```
+
+This is equivalent to setting the number of threads per block and the number of blocks per grid in CUDA.
+
+Finally, we execute the kernel with:
+
+```
+ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, &local_item_size, 0, NULL, NULL);
+```
+
+You will notice that the execution of a kernel in OpenCL is different than in CUDA. The main difference is that the kernel in OpenCL is not called in a function-like manner, i.e., with passing arguments to it. In OpenCL the arguments of a kernel are set with the ```clSetKernelArg()``` API function before the kernel is executed. On the other hand, launch parameters for the kernel, i.e., ```global_item_size``` and ```local_item_size``` are set at kernel execution, as in CUDA.
+
+5. Transfer back results
+
+The kernel ```vector_add``` calculates the vector sum of ```a_mem_obj``` and ```b_mem_obj``` and puts it into the memory buffer ```out_mem_obj```. As in CUDA, this vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable ```out```. The transfer is done with:
+
+```
+ret = clEnqueueReadBuffer(command_queue, out_mem_obj, CL_TRUE, 0, N * sizeof(double), out, 0, NULL, NULL);
+```
+
+6. Compiling the code
+
+OpenCL codes reside in *.c files (main code) and *.cl files (kernels). Compilers that can link to the OpenCL library (generally with the flag ```-lOpenCL```) can be used, e.g., gcc or nvcc. One should be aware that for running OpenCL codes on a GPU a Software Developer Kit (SDK) for it must be installed. For NVIDIA GPUs the installation of the CUDA SDK is generally enough and compiling can be done with:
+
+```
+!nvcc -o vector_add_opencl vector_add_opencl.c -lOpenCL
+```
+
+For non-NVIDIA GPUs or CPUs one could compile the code with, e.g.:
+
+```
+!gcc -o vector_add_opencl vector_add_opencl.c -lOpenCL
+```
+
+Of course, OpenCL drivers for the hardware must be installed, generally as implementations for OpenCL called Installable Client Drivers (ICDs).
+
+As before you can compile and run the OpenCL vector addition code in the notebook. Check again the output to see if the GPU calculates the vector sum correctly.
+
+## 5.13 CUDA and OpenCL comparison
+
+To sum up we will give a side by side comparison of both the GPU programming models discussed so far. We haven't presented everything of what you will find in the comparison tables, some things we will discuss in the final example in the following steps of this week, for other undiscussed things you can have a look at documentations for CUDA and OpenCL.
+
+### Execution model terminology
+
+| CUDA | OpenC |
+| ------------------------------| ------------------|
+| SM (Streaming Multiprocessor) | CU (Compute Unit) |
+| thread | work-item |
+| block | work-group |
+| global memory | global memory |
+| constant memory | constant memory |
+| shared memory | local memory |
+| local memory | private memory |
