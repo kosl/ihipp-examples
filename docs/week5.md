@@ -899,7 +899,7 @@ To sum up we will give a side by side comparison of both the GPU programming mod
 
 | CUDA | OpenCL |
 | :-----------------------: | :---------------: |
-| vcudaGetDeviceProperties()` | `clGetDeviceInfo()` |
+| `cudaGetDeviceProperties()` | `clGetDeviceInfo()` |
 | `cudaMalloc()` | `clCreateBuffer()` |
 | `cudaMemcpy()` | `clEnqueueReadBuffer()`, `clEnqueueWriteBuffer()` |
 | `cudaFree()` | `clReleaseMemObj()` |
