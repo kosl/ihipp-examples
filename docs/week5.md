@@ -768,7 +768,7 @@ __kernel void vector_add(__global double *a, __global double *b, __global double
 }
 ```
 
-as a string from the file ```vector_add.cl```. It's common preactice in OpenCL programming to have kernels in ```*.cl``` files but one could also define in the main code as plain strings.
+as a string from the file ```vector_add.cl```. It's common practice in OpenCL programming to have kernels in ```*.cl``` files but one could also define in the main code as plain strings.
 
 With kernel source loaded we can create a program from it:
 
