@@ -72,6 +72,55 @@ MPI_INT
 and similarly with double, long, character and so on. 
 However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we  can define that struct as a new MPI data type. This proves to be very useful  because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming weeks. For today's section we're only using simple data types and that would mostly mean either an int or a double or maybe even a character. 
 
+## 1.5 Q: Quiz on MPI basics
+
+We just covered the basics of MPI, communicators and messages. This quiz tests your knowledge of MPI basics and terminology. 
+
+### Question 1
+Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
+ 
+* MPI_COMM_SELF
+* MPI_COMM_WORLD
+* MPI_COMM_NULL
+
+### Question 2
+What does MPI_COMM_RANK return?
+
+* Number of processes in an MPI program
+* Priority of the current process
+* Numerical identifier of the current process within the MPI communicator
+* Linux process ID
+
+### Question 3
+What purpose does a communicator serve?
+
+* It prevents your main program’s MPI calls from being confused with a library’s MPI calls
+* It can be used to identify a subgroup of processes that will participate in message passing
+* If equal to MPI_COMM_WORLD, it shows that the communication involves all processes
+* All of the above
+
+### Question 4
+A rank number from 0 to N-1 is assigned to each process in an MPI process group, and the higher rank processes are given higher resource priority.
+
+* True
+* False
+
+### Question 5
+Which of the following is not required for a message passing call:
+
+* The starting memory address of your message
+* Message type
+* Size of the message in number of bytes
+* Number of elements of data in the message
+
+### Question 6
+What does the parameter tag mean in a message passing call:
+
+* The message type of the incoming message
+* Type of communication method
+* A user-assigned number that must match on both sender and receiver
+* The type of the process group
+
 ## 2.1 Types of communication in MPI
 There are two criterias by which we divide the types of communications in MPI.
 First way to define types of communication is to divide it according to the number of processes that are involved. So, if there are only two processes involved in the communication, meaning only one sender and one receiver then it is reffered to as point to point communication. This is the simplest form of message passing where one process sends a message to another. 
