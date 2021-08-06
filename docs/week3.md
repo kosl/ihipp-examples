@@ -648,7 +648,7 @@ We are using rand() to generate random numbers which are uniformly distributed o
 
 This quiz covers various aspects of collective communication that have been discussed this week.
 
-### Question
+### Question 1
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
 Choose the one true statement.
@@ -657,7 +657,7 @@ Choose the one true statement.
 * The destination provess of a communicator must call this routine.
 * All processes of a communicator must call this routine.
 
-### Question
+### Question 2
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
 Choose the one true statement.
@@ -666,7 +666,7 @@ Choose the one true statement.
 * The message size argument on the receive side must match the message size argument on the sender side. 
 * The message size argument on the receive side must be smaller than the message size argument on the sender side.
 
-### Question
+### Question 3
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
 Choose the one true statement.
@@ -674,7 +674,15 @@ Choose the one true statement.
 * Nonblocking collectives match with blocking collectives.
 * Nonblocking collectives do not match with blocking collectives.
 
-### Question:
+### Question 4
+Which operation may be though of as the ‘inverse’ of the MPI_SCATTER function?
+
+* MPI_GATHER
+* MPI_RECV
+* MPI_BROADCAST
+* MPI_REDUCE
+
+### Question 5
 Some MPI collective calls specify both a send type and a receive type, e.g. MPI_Scatter(sendbuf, sendcount, sendtype, recvbuf, recvcount,  recvtype, …). 
 
 However, most times when you see this call used in practice we have sendtype = recvtype. 
@@ -688,7 +696,20 @@ Why does MPI make you specify both types?
 
 The MPI datatypes do not have to be the same, they just have to be compatible. For example, if you create a datatype containing three integers then a send with this type will match a receive of 3 x MPI_INTEGER.
 
-### Question
+### Question 6
+In a scatter operation, what is the best way to use the sending and receiving buffers:
+
+* It is generally OK for the sendbuf and recvbuf to be the same buffer
+* Allocate the senbuf only on the root process and recvbuf on all other processes
+
+### Question 7
+Which collective communication call should be used when simple synchronization across a communicator is required?
+
+* MPI_REDUCE
+* MPI_BARRIER
+* MPI_BROADCAST
+
+### Question 8
 What is the output of this MPI code on 8 processes, i.e. on running ranks 0, 1, 2, 3, 4, 5, 6 and 7?
 
 ~~~c
