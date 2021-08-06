@@ -347,13 +347,22 @@ Write a program that sends a random amount of numbers from a random sender to pr
 This quiz covers various aspects of point-to-point communication that have been discussed so far this week.
 
 ### Question 1
-Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
+You must specify the rank for both source and destination processes, when sending a message using MPI_Send:
  
-* MPI_COMM_SELF
-* MPI_COMM_WORLD
-* MPI_COMM_NULL
+* True
+* False
 
 ### Question 2
+In the following function call, a message is sent to which process?
+
+~~~c
+MPI_Send(message, 4, MPI_CHAR, 5, tag, MPI_COMM_WORLD)
+~~~
+ 
+* Process 4
+* Process 5
+
+### Question 3
 If you call MPI_Recv and there is no incoming message, what happens?
 
 * the Recv fails with an error
@@ -361,7 +370,7 @@ If you call MPI_Recv and there is no incoming message, what happens?
 * the Recv waits until a message arrives (potentially waiting forever)
 * the Recv times out after some system-specified delay
 
-### Question 3
+### Question 4
 The MPI receive routine has a parameter 'count' – what does this mean?
 
 * The size of the incoming message (in bytes)
@@ -371,7 +380,7 @@ The MPI receive routine has a parameter 'count' – what does this mean?
 
 MPI tries to avoid talking about bytes – counting is almost always done in number of items. For the receive, count is the size of the local receive buffer, not of the incoming send buffer, although of course in some programs they may be the same. 
 
-### Question 4
+### Question 5
 What happens if the incoming message is larger than 'count'?
 
 * The receive fails with an error
@@ -381,7 +390,7 @@ What happens if the incoming message is larger than 'count'?
 
 MPI checks that the incoming message will fit into the supplied storage before receiving it. The standard behaviour on error is for the whole MPI program to exit immediately with a fatal error. 
 
-### Question 5
+### Question 6
 What happens if the incoming message (of size 'n') is smaller than 'count'?
 
 * The receive fails with an error
@@ -390,14 +399,14 @@ What happens if the incoming message (of size 'n') is smaller than 'count'?
 
 In some situations you may not know how many items are being sent so you must ensure that you have enough storage locally and you may have more than enough.
 
-### Question 6
+### Question 7
 You want to send a buffer that is an array buf with 5 double precision values. How do you describe your message in the call to MPI_Send in C and Fortran?
 
 in C: buf, __, MPI_ __
 
 in Fortran: buf, __, MPI_ __
 
-### Question 7
+### Question 8
 You want to receive a buffer that is an array buf with 5 double precision values. When calling MPI_Recv to receive this message which count values would be correct?
 
 * 1
@@ -405,14 +414,14 @@ You want to receive a buffer that is an array buf with 5 double precision values
 * 5
 * 6
 
-### Question 8
+### Question 9
 When using one of the MPI send routines, how many messages do you send?
 
 * 1
 * 2
 * 4
 
-### Question 9
+### Question 10
 How is the actual size of the incoming message reported?
 
 * The value of 'count' in the receive is updated
