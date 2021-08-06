@@ -154,6 +154,64 @@ There are two solutions to substituting nonblocking communication with one-sided
 
 [Jupyter notebook: One sided communication](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
 
+## 1.5 Q: Do you understand advanced communication in MPI?
+
+This quiz will test your knowledge on MPI’s advanced communication. 
+
+### Question 1
+Which of the following MPI communication types suspends execution of the calling program until the current communication is completed?
+ 
+* Blocking
+* Nonblocking
+* Asynchronous
+* None of the above
+
+### Question 2
+A message from a non-blocking send MPI_Isend is safe to be accessed immediately after the MPI_Irecv command.
+ 
+* True
+* False
+
+### Question 3
+What is a valid reason for wanting to use one-sided communication in MPI?
+ 
+* Less synchronization overhead
+* Lower hardware latency
+* Easier programming of irregular communication events
+* All of the above
+
+### Question 4
+Which of the following steps comes first in setting up MPI one-sided communication?
+ 
+* Starting a communication interval using MPI_Win_fence
+* Defining a transfer with put or get
+* Initializing a window
+* The order doesn’t matter
+
+### Question 5
+If you execute an MPI_Put, where is the send and where is the receive buffer?
+ 
+* The sendbuf is a local buffer and the rcvbuf must be a window.
+* The sendbuf is a window and the rcvbuf is a local buffer.
+
+### Question 6
+What units are used to define the size of a window in a call to MPI_Win_create?
+ 
+* Bytes
+* The units specified by the MPI_Datatype argument
+* Words
+
+### Question 7
+Immediately after returning from a MPI_Put call, it is safe to overwrite the buffer containing the data that was sent.
+ 
+* True
+* False
+
+### Question 8
+What is the simplest way to end a one-sided communication interval and re-synchronize, in just one step?
+
+MPI_Win_ __ ?
+
 ## 2. MPI + OpenMP
 
 ## 2.1 MPI + threading methods
@@ -414,6 +472,36 @@ Using derived datatype handles
 
 - And which of the communication routines should be used?
 
+## 3.6 Q: Quiz on derived datatypes
+
+This quiz tests your knowledge of user derived datatypes.
+
+### Question 1
+Which of the following general datatypes assumes that the stride is equal to 1?
+ 
+* Contiguous
+* Vector
+* Struct
+
+### Question 2
+Which of the following general datatypes may constist of more than one basic datatype?
+ 
+* Contiguous
+* Vector
+* Struct
+
+### Question 3
+If you have an array of a structure in your memory, how would you describe this?
+ 
+Using function MPI_ __ for the structure and the  __  argument in the MPI communication procedure for the size of the array.
+
+### Question 4
+Which additional MPI procedure call is required, before a newly generated datatype handle can be used in message passing communication?
+
+* MPI_Type_contiguous
+* MPI_Type_create_resized
+* MPI_Type_commit
+* MPI_Type_free
 
 ## 4. Parallel File I/O
 
