@@ -1003,7 +1003,6 @@ Some important OpenMP 4.x device constructs are listed in the following table:
 | ------------------------- | -------------------------------------------------------------------------------- |
 | `#pragma omp target` | Map variables to a device data environment and execute the construct on the device. |
 | `#pragma omp target data` | Creates a data environment for the extent of the region. |
-| `#pragma omp target` | Map variables to a device data environment and execute the construct on the device. |
 | `#pragma omp declare target` |  A declarative directive that specifies that variables and functions are mapped to a device. |
 | `#pragma omp teams` | Creates a league of thread teams where the master thread of each team executes the region. |
 | `#pragma omp distribute` | Specifies loops which are executed by the thread teams. |
