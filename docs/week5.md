@@ -1053,3 +1053,9 @@ double riemann(int n)
 Here `map` is used to copy data from the host to the device and vice versa, e.g., `map(tofrom: sum)` copies the variable `sum` to the device (GPU) and after computation back to the host (CPU), while `map(to: n)` just copies the variable `n` to the device.
 
 Such OpenMP off-loading to the GPU results in speed up greater than in typical many threads OpenMP execution on the host and is quite close to classical GPU acceleration with CUDA or OpenCL, provided the device (GPU) is supported and compilers can build programs with OpenMP off-load.
+
+You can have a look at the whole code in this notebook:
+
+![Riemann_sum_OpenMP_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP_GPU.ipynb)
+
+You can observe that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflows checks. The latter flag has to be added on Ubuntun systems, while the former is needed with the GCC compiler. On other systems and with other compilers, e.g., with CLANG/LLVM other flags are used when compiling OpenMP off-loading to GPU codes. One should keep in mind that GPU SDKs, e.g., CUDA SDK for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP and OpenACC.
