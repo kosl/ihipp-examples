@@ -970,9 +970,15 @@ But can we do better, e.g., with some parallelization approach like OpenMP? We s
 
 ## 5.16 Exer: Riemann sum with OpenMP
 
-In Week 2 you have learned how to use OpenMP to parallelize parts of the code to gain speed up of execution. In this exercise you will use this knowledge for trying to speed up the calculation of the Riemann sum of the C code from the previous example.
+In Week 2 you have learned how to use OpenMP to parallelize parts of the code to gain speed up of execution. In this exercise you will use this knowledge and try to speed up the calculation of the Riemann sum C code from the previous step.
+
+Complete the following tasks:
+
+- use OpenMP to parallelize the `for` loop in the Riemann sum C code from the previous step
+- execute the code for the maximum threads available on the CPU (hint: use `!lscpu` to get information on the CPU)
 
 Did you succeed to gain any speed up with the use of OpenMP? Leave a comment with your findings.
 
-If you have any troubles you can have a look at the solution given in the notebook below:
+If you have any troubles to modify the code or compile it you can have a look at the solution given in the notebook below:
 
+![Riemann_sum_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP.ipynb)
