@@ -924,3 +924,55 @@ To sum up we will give a side by side comparison of both the GPU programming mod
 | `cudaMemcpy()` | `clEnqueueReadBuffer()`, `clEnqueueWriteBuffer()` |
 | `cudaFree()` | `clReleaseMemObj()` |
 | `kernel<<<...>>>()` | `clEnqueueNDRangeKernel()` |
+
+## 5.14 Quiz: CUDA and OpenCL programming and execution models
+
+## 5.15 Numerical integration: Riemann sum with trapeziums
+
+We are ready for a somewhat more complex, yet still a fairly school example in numerical computation, to show some extra features of GPU computing: Riemann sum for numerical integration. But first we will show how it's done on a CPU and after that think of how can we parallelize it on the GPU with CUDA and OpenCL. As an excursus in between we will also parallelize the CPU version with OpenMP and show how to off-load the computation on GPU with OpenMP, as well.
+
+Approximation of a definite integral of a function can be done using the trapezium rule. The area under the function on the interval from a to b, which represents the definite integral, is divided into N trapeziums. The area of each trapezium is equal to the median of the trapezium `(f(x+h)+f(x))/2` multiplied with the sub-interval width `(b-a)/N`. The sum of all trapezium areas is an approximation of the definite integral of the function from a to b. For simplicity we choose `a = 0` and `b = 1` to calculate the normal distribution function from 0 to 1 which is equal to 0.341345.
+
+How can we do this example on the CPU? The simplest approach is, of course, using a `for` loop to calculate trapezium medians and trapezium sums:
+
+```
+double riemann(int n)
+{
+    double sum = 0;
+    for(int i = 0; i < n; ++i)
+    {
+        double x = (double) i / (double) n;
+
+        double fx = (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
+        sum += fx;
+    }
+
+    sum *= (1.0 / sqrt(2.0 * M_PI)) / (double) n;
+    return sum;
+}
+```
+
+Notice, that in the code above we calculate trapezium medians for every sub-interval and add them to the `sum` variable at every iteration. In the end we multiply this sum of trapezium medians with `(1.0 / sqrt(2.0 * M_PI)) / (double) n` to obtain the Riemann sum. The term `1.0 / (double) n` is in fact the height of the trapezium `(b-a)/n` and is the same for every trapezium since the sub-interval width is the same and we have chosen `a = 0` and `b = 1`.
+
+The whole Riemann sum CPU code can be found in this notebook:
+
+![Riemann_sum_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_C.ipynb)
+
+If you compile the code for `N` equal to 1 billion, i.e.:
+
+```
+#define N 1000000000
+```
+
+without optimization the calculation of the Riemann sum will take about 90 s. With the `-O3` optimization level flag the calculation with the compiled code will take less than half of the time, about 40 s.
+
+But can we do better, e.g., with some parallelization approach like OpenMP? We shall see the answer in the next step.
+
+## 5.16 Exer: Riemann sum with OpenMP
+
+In Week 2 you have learned how to use OpenMP to parallelize parts of the code to gain speed up of execution. In this exercise you will use this knowledge for trying to speed up the calculation of the Riemann sum of the C code from the previous example.
+
+Did you succeed to gain any speed up with the use of OpenMP? Leave a comment with your findings.
+
+If you have any troubles you can have a look at the solution given in the notebook below:
+
