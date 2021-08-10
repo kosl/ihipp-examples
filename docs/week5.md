@@ -982,3 +982,74 @@ Did you succeed to gain any speed up with the use of OpenMP? Leave a comment wit
 If you have any troubles to modify the code or compile it you can have a look at the solution given in the notebook below:
 
 ![Riemann_sum_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP.ipynb)
+
+## 5.17 OpenMP off-loading to GPU for Riemann sum
+
+OpenMP is an example of a directive based method which can be used to off-load computation intensive tasks to GPUs. From OpenMP 4.0 on new device constructs have been added to support this. As in CUDA or OpenCL the execution model relies on the host on which the OpenMP program begins execution and then off-loads tasks or data to a target
+device, e.g., GPU.
+
+The main OpenMP device constructs are:
+
+- the target and
+- the teams construct.
+
+By defining a target construct a new target task is generated. When the latter starts the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not all target regions associated with the device are executed on the host. The teams construct generates a league of thread teams where the master thread of each team executes the region sequentially as shown on the picture below (source: OpenMP Accelerator Model, IWOMP 2016).
+
+![](images/OpenMP_execution_model.png?raw=true)
+
+Some important OpenMP 4.x device constructs are listed in the following table:
+
+| Device construct | Description |
+| ------------------------- | -------------------------------------------------------------------------------- |
+| `#pragma omp target` | Map variables to a device data environment and execute the construct on the device. |
+| `#pragma omp target data` | Creates a data environment for the extent of the region. |
+| `#pragma omp target` | Map variables to a device data environment and execute the construct on the device. |
+| #pragma omp declare target |  A declarative directive that specifies that variables and functions are mapped to a device. |
+| #pragma omp teams | Creates a league of thread teams where the master thread of each team executes the region. |
+| #pragma omp distribute | Specifies loops which are executed by the thread teams. |
+| #pragma omp ... simd | Specifies code that is executed concurrently using SIMD instructions. |
+| #pragma omp distribute parallel for | Specifies a loop that can be executed in parallel by multiple threads that are members of multiple teams. |
+
+So, how can we off-load the computation of the Riemann sum to the GPU using OpenMP? We start from the OpenMP directive in the previous exercise. If you have completed it successfully then you should have come to a solution something like:
+
+```
+double riemann(int n)
+{
+  double sum = 0;
+  
+  #pragma omp parallel for reduction(+:sum)
+  for(int i = 0; i < n; ++i)
+  {
+    double x = (double) i / (double) n;
+    sum += (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
+  }
+
+  sum *= (1.0 / sqrt(2.0 * M_PI)) / (double) n;
+
+  return sum;
+}
+```
+
+We just have to add appropriate device constructs to enable off-loading to a GPU:
+
+```
+double riemann(int n)
+{
+  double sum = 0;
+  
+  #pragma omp target teams distribute parallel for simd map(tofrom: sum) map(to: n) reduction(+:sum)
+  for(int i = 0; i < n; ++i)
+  {
+    double x = (double) i / (double) n;
+    sum += (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
+  }
+ 
+  sum *= (1.0 / sqrt(2.0 * M_PI)) / (double) n;
+ 
+  return sum;
+}
+```
+
+Here `map` is used to copy data from the host to the device and vice versa, e.g., `map(tofrom: sum)` copies the variable `sum` to the device (GPU) and after computation back to the host (CPU), while `map(to: n)` just copies the variable `n` to the device.
+
+Such OpenMP off-loading to the GPU results in speed up greater than in typical many threads OpenMP execution on the host and is quite close to classical GPU acceleration with CUDA or OpenCL, provided the device (GPU) is supported and compilers can build programs with OpenMP off-load.
