@@ -4,7 +4,7 @@
 
 In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general purpose computing in many fields.
 
-GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors. For example, *HiPerGator AI* is currently 22nd on the TOP500 list of supercomputers in the world (based on the performance metric in FLOPS) but is also 2nd on the Green500 list (based on the power efficiency metric in FLOPS/watt).
+GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors. For example, *HiPerGator AI* is currently #22 on the TOP500 list of supercomputers in the world (based on the performance metric in Flops, i.e., floating point operations per second) but is also #2 on the Green500 list (based on the power efficiency metric in Flops/watt, i.e., floating point operations per second per watt).
 
 In the context of general purpose computing GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Computing acceleration can be achieved with existing GPU applications, GPU libraries, directive based methods like OpenMP and OpenACC and special programming languages or extensions like CUDA and OpenCL.
 
@@ -31,7 +31,7 @@ It has to be noted that the term "GPU core" is more or less a marketing term. Th
 
 Nowadays, desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look at the GPUs that are installed on the Marconi-100 cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
+First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
 
 Output (excerpt) from ```deviceQuery```:
 
@@ -96,7 +96,7 @@ Output (excerpt) from ```bandwidthTest```:
 Result = PASS
 ```
 
-There are 4 NVIDIA Tesla V100-SXM2-16GB GPUs detected on the login node of the cluster. Every compute node of the cluster is also equipped with 4 GPUs of the same type: on 980 compute nodes + 8 login nodes there are 3952 GPU accelerators in total. Combined the GPUs account for 97.5% of the total theoretical peak performance of the Marconi-100 supercomputer: 30.83 out of 31.6 PFlops. Really a huge computing power!
+There are 4 *NVIDIA Tesla V100-SXM2-16GB* GPUs detected on the login node of the cluster. Every compute node of the cluster is also equipped with 4 GPUs of the same type: on 980 compute nodes + 8 login nodes there are 3952 GPU accelerators in total. Combined the GPUs account for 97.5% of the total theoretical peak performance of the *Marconi-100* supercomputer: 30.83 out of 31.6 PFlops. Really a huge computing power!
 
 If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g.:
 
@@ -164,7 +164,7 @@ Output (excerpt) from ```bandwidthTest```:
 Result = PASS
 ```
 
-There is 1 NVIDIA GeForce 930MX GPU detected on the laptop.
+There is 1 *NVIDIA GeForce 930MX* GPU detected on the laptop.
 
 The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available and also a much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32).
 
