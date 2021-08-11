@@ -1092,6 +1092,7 @@ an embarrasingly parallel part is the calculation of trapezium medians `fx`, sin
 
 A suitable CUDA kernel for the calculation of trapezium medians should be something like:
 
+```
 __global__ void medianTrapezium(double *a, int n)
 {
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1100,6 +1101,7 @@ __global__ void medianTrapezium(double *a, int n)
   if(idx < n)
     a[idx] = (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
 }
+```
 
 Here `a` is an array of calculated trapezium medians which has to be returned to the host. Notice that the kernel is almost identical to the `for` loop with the global thread index `idx` taking the role of `i`.
 
