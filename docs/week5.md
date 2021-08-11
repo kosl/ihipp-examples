@@ -1002,8 +1002,8 @@ device, e.g., GPU.
 
 The main OpenMP device constructs are:
 
-- the `target` and
-- the `teams` construct.
+- `target`
+- `teams`
 
 By defining a `target` construct a new target task is generated. When the latter starts, the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not all target regions associated with the device are executed on the host. The `teams` construct generates a league of thread teams where the master thread of each team executes the region sequentially as shown on the picture below (source: OpenMP Accelerator Model, IWOMP 2016).
 
