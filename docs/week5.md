@@ -2,19 +2,13 @@
 
 ## 5.1 V: Introduction
 
-In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general purpose computing in many fields. So, in the context of general purpose computing GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach:
+In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general purpose computing in many fields.
 
-- GPUs are used for parallel tasks, while CPUs for serial tasks;
-- GPUs are used to achieve throughput performance, while CPUs for low-latency access.
+GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors. For example, HiPerGator AI is currently 22nd on the TOP500 list of supercomputers in the world (based on the performance metric in FLOPS) but is also 2nd on the Green500 list (based on the power efficiency metric in FLOPS/watt) 
 
-Computing acceleration can be achieved with:
+In the context of general purpose computing GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Computing acceleration can be achieved with existing GPU applications, GPU libraries, directive based methods like OpenMP and OpenACC and special programming languages or extensions like CUDA and OpenCL.
 
-- existing GPU applications
-- GPU libraries
-- directive based methods: OpenMP, OpenACC...
-- special programming languages or extensions: CUDA, OpenCL...
-
-In this week we shall briefly present OpenMP as a means for "off-loading" parallel tasks to GPUs and more thoroughly deal with two extensions to C for programming GPUs: CUDA and OpenCL. On one hand, GPU off-loading is simple to use, but it's quite limited, contrary to GPU programming which requires more effort, but offers more flexibility.
+Through the steps of this week we shall present the architecture of modern GPUs and then the available GPU execution models for computing acceleration. OpenMP as a means for "off-loading" parallel tasks to GPUs will be shortly introduced, while the main focus will be dedicated to two extensions to C for programming GPUs: CUDA and OpenCL. On one hand, GPU off-loading is simple to use, but it's quite limited, contrary to GPU programming which requires more effort, but offers more flexibility. Hopefully, the provided hands-on examples we will introduce you to the topic of GPU programming as smoothly as possible.
 
 ## 5.2 GPU Architecture
 
@@ -22,7 +16,7 @@ In order to understand better the capabilities of GPUs in terms of computing acc
 
 As we already pointed out, GPUs were originally designed to accelerate graphics. They excel at operations (such as shading and rendering) on graphical primitives which constitute a 3D graphical object. The main characteristic of these primitives is that they are independent or, in other words, they can be processed independently in a parallel fashion. Thus, GPU acceleration of graphics was designed for the execution of inherently parallel tasks. On the other hand, CPUs are designed to execute the workflow of any general-purpose program, where many parallel tasks may not be involved. These different design principles reflect the fact that GPUs have many more processing units and higher memory bandwidth, while CPUs are characterized by more specialized processing of instructions and faster clock speed rates.
 
-On the figure (source: nvidia.com) below you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
+On the figure below (source: nvidia.com) you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
 
 - a GPU has many more arithmetic logic units or ALUs (green rectangles) than a CPU;
 - a GPU can control simple, highly parallel workloads well (there's a yellow rectangle for every row of green rectangles), contrary to a CPU which can control more complex workloads;
@@ -102,7 +96,7 @@ Output (excerpt) from ```bandwidthTest```:
 Result = PASS
 ```
 
-There were 4 NVIDIA Tesla V100-SXM2-16GB GPUs detected on the login node of the cluster. Every compute node of the cluster is also equipped with 4 GPUs of the same type, on 980 compute nodes + 8 login nodes there are 3952 GPU accelerators in total. Combined the GPUs account for 97.5% of the total theoretical peak performance of the Marconi-100 supercomputer: 30.83 out of 31.6 PFlops. Really a huge compute power!
+There are 4 NVIDIA Tesla V100-SXM2-16GB GPUs detected on the login node of the cluster. Every compute node of the cluster is also equipped with 4 GPUs of the same type: on 980 compute nodes + 8 login nodes there are 3952 GPU accelerators in total. Combined the GPUs account for 97.5% of the total theoretical peak performance of the Marconi-100 supercomputer: 30.83 out of 31.6 PFlops. Really a huge computing power!
 
 If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g.:
 
@@ -170,7 +164,7 @@ Output (excerpt) from ```bandwidthTest```:
 Result = PASS
 ```
 
-There was 1 NVIDIA GeForce 930MX GPU detected on the laptop.
+There is 1 NVIDIA GeForce 930MX GPU detected on the laptop.
 
 The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available and also a much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32).
 
@@ -236,6 +230,8 @@ Another solution is OpenCL (Open Computing Language), which is a standard open-s
 
 Before explaining CUDA and OpenCL programming models in detail we will introduce GPU programming with a Hello World example.
 
+### Hello world in C
+
 Let's first have a look at the following C code:
 
 ```
@@ -248,6 +244,8 @@ for(int i = 0; i < N; ++i){
 What do you think this code will do if executed as a program? If you are familiar with the concept of a ```for``` loop then you know that in it every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 3. Try to execute it in the notebook to see the expected results:
 
 ![Hello_World_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_C.ipynb)
+
+### Hello world in CUDA
 
 By now we already know that GPUs are really good at executing independent parallel tasks, hence the above ```for``` loop is a good candidate for that. How can we do it in CUDA? Let's give the solution:
 
@@ -263,7 +261,7 @@ __global__ void hello(){
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 ```
 
-A ```for``` loop that is executed sequentially on a CPU is replaced by a kernel on a GPU which is run in parallel by independent threads organized into blocks. In CUDA a kernel is defined by the ```__global__``` prefix and it's called by the CPU as a regular function by the triple chevron syntax ```<<<...>>>```. In the above code there's a kernel ```hello``` which doesn't take any input parameters. Still, it's called with:
+A ```for``` loop that is executed sequentially on a CPU is replaced by a kernel on a GPU which is run in parallel by independent threads organized into blocks. In CUDA a kernel is defined by the ```__global__``` prefix and it's called by the CPU as a regular function by the triple chevron syntax ```<<<...>>>```. In the above code there's a kernel ```hello``` which doesn't take any input parameters (but it could take them, as we will see in some other examples). Still, it's called with:
 
 ```
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
@@ -280,9 +278,13 @@ Of course, the same parameters can be called in the following way:
 hello<<<4, 1>>>();
 ```
 
-What is crucial about the kernel execution on a GPU is that the blocks with threads are executed *in parallel*. So, what does the above kernel do in parallel? For every block index ```idx``` it tries to print the ''Hello world'' message in parallel, where the block index is taken from the built-in variable ```blockIdx.x```. Of course, the messages can't be printed in parallel but the blocks still run in parallel and which ever is faster it's printed before the slower ones. Try to execute the CUDA Hello world in the notebook for a couple of times to see which block indices are printed first. Is the order of block indices always the same or does it change with any new execution of the code?
+What is crucial about the kernel execution on a GPU is that the blocks with threads are executed *in parallel*. So, what does the above kernel do in parallel? For every block index ```idx``` it tries to print the ''Hello world'' message in parallel, where the block index is taken from the built-in variable ```blockIdx.x```. Of course, the messages can't be printed in parallel but the blocks still run in parallel and which ever is faster it's printed before the slower ones.
+
+Try to execute the CUDA Hello world in the notebook for a couple of times to see which block indices are printed first. Is the order of block indices always the same or does it change with any new execution of the code?
 
 ![Hello_World_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA.ipynb)
+
+### Hello world in OpenCL
 
 We can also run the ''Hello world'' example on a GPU in OpenCL. Let's give the solution straight again:
 
@@ -301,7 +303,7 @@ cl_kernel kernel = clCreateKernel(program, "hello", &ret);
 ret = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
 ```
 
-In the case of OpenCL a ```for``` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a  work–item.  In OpenCL a kernel is defined by the ```__kernel ``` prefix and it's called by the CPU with the ```clEnqueueNDRangeKernel()``` function of the OpenCL API. In the above code there's also a kernel ```hello``` which doesn't take any input parameters, but it's still called with:
+In the case of OpenCL a ```for``` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a  work–item.  In OpenCL a kernel is defined by the ```__kernel ``` prefix and it's called by the CPU with the ```clEnqueueNDRangeKernel()``` function of the OpenCL API. In the above code there's also a kernel ```hello``` which doesn't take any input parameters (but it could take them, as we will see in some other examples), but it's still called with:
 
 ```
 clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
@@ -312,8 +314,9 @@ This function of the OpenCL API contains the ''kernel launch parameters'':
 - ```&globalItemSize```: defines the number of work–items times work–groups (in the above example 1 x 4 = 4);
 - ```&localItemSize```: defines the number of work–items (in the above example 1);
 
-So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the ```globalItemSize``` must be divisible with the ```localItemSize```, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-groups with work-items are executed *in parallel*. Try to figure out, what does the kernel in OpenCL
- do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. Try to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
+So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the ```globalItemSize``` must be divisible with the ```localItemSize```, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-groups with work-items are executed *in parallel*.
+
+Try to figure out, what does the kernel in OpenCL do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. (Don't worry if you can't figure this out, you will do an exercise later which will give you the answer.) Try also to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
 
 ![Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
 
@@ -321,6 +324,7 @@ Don't worry if you don't understand completely the codes above. We will explain 
 
 ## 5.8 Exer: Hello world extended on GPU
 
+In this exercise you will extend the Hello world GPU examples to print more information about the executed blocks with threads and work-groups with work-items.
 
 Modify the Hello world CUDA example from the previous step to complete the following tasks:
 
@@ -340,15 +344,17 @@ Similarly, modify the Hello world OpenCL example from the previous step to compl
 
 After exploring the GPU architecture and getting to know the principles of GPU programming we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL. We will present the equivalent OpenCL terminology at the end.
 
-The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture (source: NVIDIA) below.
+The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture below (source: NVIDIA).
 
 ![](images/Execution_Model.png?raw=true)
 
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. A scalar processor is often referred to a GPU "core".
 
-So, when a GPU  kernel  is executed each thread block is assigned  to a SM. A maximum number of thread blocks can be assigned to a SM, depending  on GPU hardware resources. The  runtime  system  maintains  a  list  of  active blocks and  assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to a SM the resources on it are reserved until the execution of all threads in the block is not finished. Each thread block execution is independent from another (no synchronization can be done among blocks). Threads in each block are divided into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from the residing blocks in a SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
+So, when a GPU kernel is executed each thread block is assigned  to a SM. A maximum number of thread blocks can be assigned to a SM, depending  on GPU hardware resources. The  runtime  system  maintains  a  list  of  active blocks and  assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to a SM the resources on it are reserved until the execution of all threads in the block is not finished. Each thread block execution is independent from another (no synchronization can be done among blocks). Threads in each block are divided into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from the residing blocks in a SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
 
-Let's recap everything about the GPU CUDA threads hierarchy with some details:
+### CUDA threads hierarchy
+
+Let's recap everything in terms of the GPU CUDA threads hierarchy with some details:
 
 - threads are organized into blocks: blocks can be 1D, 2D, 3D
 - blocks are organized into a grid: grids can also be 1D, 2D, 3D
@@ -375,7 +381,9 @@ int i = blockDim.x * blockIdx.x + threadIdx.x;
 int j = blockDim.y * blockIdx.y + threadIdx.y;
 ```
 
-These indices are defined in a kernel as internal variables and can be used for thread related computing. We have already seen such an index in the Hello World CUDA example where the index was defined to just identify blocks:
+Can you also define global thread indices for a 3D kernel?
+
+These indices are defined as internal variables in a kernel and can be used for thread related computing. We have already seen such an index in the Hello World CUDA example where the index was defined to just identify blocks:
 
 ```
 int idx = blockIdx.x;
@@ -399,7 +407,7 @@ and print it with:
 printf("Hello world! I'm a global thread index %d in hierarchy\n", gid);
 ```
 
-Of course, the global thread index would run from 0 to ```NUM_BLOCKS * BLOCK_SIZE - 1``` if the ```hello``` kernel is invoked with:
+Of course, the global thread index range is between 0 to ```NUM_BLOCKS * BLOCK_SIZE - 1``` if the ```hello``` kernel is invoked with:
 
 ```
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
@@ -422,7 +430,9 @@ For example, if one sets ```N = 7``` (note that ```N``` is an integer variable d
 int N = 7;
 hello<<<4, 2>>>(N);
 ```
-would print global thread indices from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and ```N```.
+would print global thread indices in the range from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and ```N```.
+
+### OpenCL work-items hierarchy
 
 The GPU OpenCL work-items hierarchy is equivalent to the CUDA threads hierarchy except for terminology and some minor details:
 
@@ -465,6 +475,8 @@ or equivalently with:
 int i = get_global_id(0);
 int j = get_global_id(1);
 ```
+
+Can you again define global work-item indices for a 3D kernel?
 
 As in CUDA, these indices are defined in a kernel as internal variables and can be used for work-items related computing in OpenCL. You can modify the Hello World OpenCL example to print the global work-item index and experiment with launch parameters along with an ```if``` clause in the kernel to limit the print out of indices.
 
