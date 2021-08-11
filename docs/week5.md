@@ -1070,3 +1070,128 @@ You can have a look at the whole code in this notebook:
 ![Riemann_sum_OpenMP_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP_GPU.ipynb)
 
 You can observe that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflows checks. The latter flag has to be added on Ubuntu systems, while the former is needed with the GCC compiler. On other systems and with other compilers, e.g., with CLANG/LLVM other flags are used when compiling OpenMP off-loading to GPU codes. One should keep in mind that GPU SDKs, e.g., CUDA SDK for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP or OpenACC.
+
+## 5.18 Riemann sum with one GPU kernel
+
+When off-loading codes or part of codes to GPUs the easiest approach is to search for parts that are embarrasingly parallel which can be directly (with minimum changes) ported to a GPU programming extension.
+
+In the case of the Riemann sum:
+
+```
+for(int i = 0; i < n; ++i)
+    {
+        double x = (double) i / (double) n;
+
+        double fx = (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
+        sum += fx;
+    }
+```
+an embarrasingly parallel part is the calculation of trapezium medians `fx`, since their calculation is independent. On the other hand, adding the calculated trapezium median to the `sum` at every iteration is a typical sequential task not suited for GPU parallelization. It naturally follows that the calculation of trapezium medians should be off-loaded to the GPU, while adding them should be done sequentially on the host (CPU).
+
+### CUDA kernel `medianTrapezium`
+
+A suitable CUDA kernel for the calculation of trapezium medians should be something like:
+
+__global__ void medianTrapezium(double *a, int n)
+{
+  int idx = blockIdx.x * blockDim.x + threadIdx.x;
+  double x = (double)idx / (double)n;
+ 
+  if(idx < n)
+    a[idx] = (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
+}
+
+Here `a` is an array of calculated trapezium medians which has to be returned to the host. Notice that the kernel is almost identical to the `for` loop with the global thread index `idx` taking the role of `i`.
+
+
+Adding the medians is done simply with a for loop on the host, as well as the calculation of the Riemann sum:
+
+```
+double sum = 0;
+for (int i=0; i < n; i++) sum += a_h[i];
+sum *= (1.0 / sqrt(2.0 * M_PI)) / (double)n;
+```
+
+The array `a_h` is the host counter-part of the device array `a_d`. They are both initialized and allocated in the beginning with:
+
+```
+double* a_h = (double *)malloc(size);
+double* a_d; cudaMalloc((double **) &a_d, size);
+```
+
+The kernel is executed with:
+
+```
+int block_size = 1024;
+int n_blocks = n/block_size + (n % block_size == 0 ? 0:1);
+
+medianTrapezium <<< n_blocks, block_size >>> (a_d, n);
+```
+
+Only the transfer from device to host is needed, since the array of trapezium medians is calculated on the device (GPU):
+
+```
+cudaMemcpy(a_h, a_d, sizeof(double)*n, cudaMemcpyDeviceToHost);
+```
+
+### OpenCL kernel `medianTrapezium`
+
+An equivalent OpenCL kernel is of the form:
+
+```
+__kernel void medianTrapezium(__global double *a, int n) {
+
+    int idx = get_global_id(0);
+    double x = (double)idx / (double)n;
+
+    if(idx < n)
+       a[idx] = (exp(-x * x / 2.0) + exp(-(x + 1 / (double)n) * (x + 1 / (double)n) / 2.0)) / 2.0;
+}
+```
+
+Adding the medians is done again with a for loop on the host, as well as the calculation of the Riemann sum. The array `a` is the host counter-part of the memory buffer `a_mem_obj`, i.e., the array on the device. Both are allocated in the beginning with:
+
+```
+double *a = (double*)malloc(sizeof(double)*n);
+
+cl_mem a_mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE, n * sizeof(double), NULL, &ret);
+```
+
+The kernel is initialized and executed with:
+
+```
+cl_kernel kernel = clCreateKernel(program, "medianTrapezium", &ret);
+
+ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
+ret = clSetKernelArg(kernel, 1, sizeof(cl_int), (void *)&n);
+
+size_t local_item_size = 1024;
+int n_blocks = n/local_item_size + (n % local_item_size == 0 ? 0:1);
+size_t global_item_size = n_blocks * local_item_size;
+
+ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, &local_item_size, 0, NULL, NULL);
+```
+
+Again only the transfer from device to host is needed, since the array of trapezium medians is calculated on the device (GPU):
+
+```
+ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0, n * sizeof(double), a, 0, NULL, NULL);
+```
+
+## 5.19 Exer.: Speed up of the Riemann sum with one GPU kernel
+
+In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes.
+
+Execute the CUDA Riemann sum code:
+
+![Riemann_sum_CUDA_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_one_kernel.ipynb)
+
+and the OpenCL Riemann sum code:
+
+![Riemann_sum_OpenCL_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_one_kernel.ipynb)
+
+with `N` equal to 1 billion. Compare the execution time of the codes. Which is faster? What's the speed up compared to CPU and OpenMP codes?
+
+Use `nvprof` to profile the execution of the CUDA code. Can you identify the bottleneck?
+
+Analyze the diagnostic outputs of the OpenCL code. Can you identify the bottleneck for this code also? Note that execution time measurements of the GPU parts by the CPU are not necessarily trustful.
