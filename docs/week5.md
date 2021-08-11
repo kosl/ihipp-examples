@@ -1182,7 +1182,7 @@ ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0, n * sizeof(doubl
 
 ## 5.19 Exer.: Speed up of the Riemann sum with one GPU kernel
 
-In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes.
+In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes. You will also do a profiling of the codes to identify possible bottlenecks.
 
 Execute the CUDA Riemann sum code:
 
