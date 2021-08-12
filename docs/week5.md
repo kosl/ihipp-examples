@@ -1218,4 +1218,152 @@ Let’s assume we have an array of 16 elements in shared memory. How can we add 
 
 - Step 4: In the last iteration we have Stride = 1, since we have just 2 elements in the array. We just add the values of these elements with IDs 0 and 1 to get the final sum.
 
-This kind of parallel reduction is called sequential addressing. If we have an array of `N` elements we can do a parallel reduction in log<sub>2</sub> N steps. Programmatically we can do this kind of reduction with a reversed loop and strided threadID-based indexing. We will show in the next step how this is done in CUDA and OpenCL. We must also explain why reduction should be done with striding in shared memory. As you probably noticed in the comparison tables from Step 5.13 the GPUs have different type of memories. Global memory is the slowest and therefore access to it should be reduced to a minimum. Instead shared memory (CUDA) or local memory (OpenCL) should be used. This type of memory is much faster than global memory, but can be used only in a block of threads (or work-group of work-items). In it threads or work-items can be synchronized. Striding access to memory is used to achieve coalescing, i.e., combining multiple memory accesses into a single transaction.
+This kind of parallel reduction is called sequential addressing. If we have an array of N elements we can do a parallel reduction in log<sub>2</sub> N steps. Programmatically we can do this kind of reduction with a reversed loop and strided threadID-based indexing. We will show in the next step how this is done in CUDA and OpenCL. We must also explain why reduction should be done with striding in shared memory. As you probably noticed in the comparison tables from Step 5.13 the GPUs have different type of memories. Global memory is the slowest and therefore access to it should be reduced to a minimum. Instead shared memory (CUDA) or local memory (OpenCL) should be used. This type of memory is much faster than global memory, but can be used only in a block of threads (or work-group of work-items). In it threads or work-items can be synchronized. Striding access to memory is used to achieve coalescing, i.e., combining multiple memory accesses into a single transaction.
+
+## 5.21 Riemann sum with parallel reduction on GPU
+
+In this step we will show how to perform a parallel sum reduction described in the previous step with a GPU kernel. The sum reduction kernel will be added to the previous GPU codes, both in CUDA in OpenCL, with the goal to get rid off the bottlenecks.
+
+### Parallel reduction in CUDA
+
+Sequential addressing with a reversed loop and strided threadID-based indexing described in the previous step can be done in CUDA in the following way:
+
+```
+for (int size = block_size/2; size>0; size/=2) {
+    if (idx<size)
+        r[idx] += r[idx+size];
+    __syncthreads();
+}
+```
+
+The variable `block_size` is the initial size of the array on which sum reduction is performed. On every next iteration striding is reduced by a half (`size/=2`). Every thread `idx` add up two elements in the array strided by the current `size` to an element `r[idx]` of the array `r` in shared memory. For synchronization of threads in the block `__syncthreads()`is used.
+
+Because the block size is limited (maximum number of threads per block) on the GPU to 1024 (see Step 5.3), we can use an array of maximum 1024 elements to perform parallel reduction. If we have to sum up an array of more than 1024 elements, we must use more than one block or reduce the array in global memory to an array in shared memory. The latter can be done, e.g., by:
+
+```
+int idx = threadIdx.x;
+double sum = 0;
+for (int i = idx; i < n; i += block_size)
+    sum += a[i];
+extern __shared__ double r[];
+r[idx] = sum;
+__syncthreads();
+```
+
+Here the array `a` of trapezium medians of size `n` in global memory is reduced to the array `r` of size `block_size` in shared memory. Using more blocks in shared memory would be, of course, be a better approach in terms of performance but for simplicity we will use just one block of threads. Ultimately, the sum of trapezium medians in the sum reduction kernel is obtained by:
+
+```
+if (idx == 0)
+    *out = r[0];
+```
+
+The whole code of the `reducerSum` kernel in CUDA is as follows:
+
+```
+__global__ void reducerSum(double *a, double *out, int n, int block_size) {
+    int idx = threadIdx.x;
+    double sum = 0;
+    for (int i = idx; i < n; i += block_size)
+        sum += a[i];
+    extern __shared__ double r[];
+    r[idx] = sum;
+    __syncthreads();
+    for (int size = block_size/2; size>0; size/=2) {
+        if (idx<size)
+            r[idx] += r[idx+size];
+        __syncthreads();
+    }
+    if (idx == 0)
+        *out = r[0];
+}
+```
+
+This kernel is executed after the kernel `medianTrapezium` which calculates the array of trapezium medians `a`. This array is available in the GPU global memory for the kernel `reducerSum` for sum reduction of the trapezium medians. It's executed in the following way:
+
+```
+int block_size = 1024;
+int n_blocks2 = 1;
+printf("CUDA kernel 'reducerSum' launch with %d blocks of %d threads\n\n", n_blocks2, block_size);
+reducerSum <<< n_blocks2, block_size, block_size*sizeof(double) >>> (a_d, out, n, block_size);
+```
+
+As explained, we use 1 block with 1024 threads for sum reduction. You will notice an additional parameter in the triple chevron synthax `block_size*sizeof(double)`. This parameter is needed for the array `r` in shared memory which is primarily allocated on the host with:
+
+```
+double* r = (double *)malloc(block_size * sizeof(double));
+```
+
+### Parallel reduction in OpenCL
+
+Sequential addressing with a reversed loop and strided work-item ID-based indexing can be done in OpenCL in the following way:
+
+```
+for (int size = block_size/2; size>0; size/=2) {
+    if (idx<size)
+        r[idx] += r[idx+size];
+    barrier(CLK_LOCAL_MEM_FENCE);
+}
+```
+
+The `for` loop is identical as in CUDA except for work-items synchronization in the work-group achieved with `barrier(CLK_LOCAL_MEM_FENCE)`.
+
+Similarly, the reduction of the array in global memory to an array in shared memory is achieved with:
+
+```
+int idx = get_local_id(0);
+double sum = 0;
+for (int i = idx; i < n; i += block_size)
+    sum += a[i];
+r[idx] = sum;
+barrier(CLK_LOCAL_MEM_FENCE);
+```
+
+The sum of trapezium medians in the sum reduction kernel is obtained as before by:
+
+```
+if (idx == 0)
+    *out = r[0];
+```
+
+The whole code of the `reducerSum` kernel in OpenCL is as follows:
+
+__kernel void reducerSum(__global double *a, __global double *out, __local double *r, int n, int block_size)
+{
+    int idx = get_local_id(0);
+    double sum = 0;
+    for (int i = idx; i < n; i += block_size)
+        sum += a[i];
+    r[idx] = sum;
+    barrier(CLK_LOCAL_MEM_FENCE);
+
+    for (int size = block_size/2; size>0; size/=2) {
+        if (idx<size)
+            r[idx] += r[idx+size];
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+   
+    if (idx == 0)
+        *out = r[0];
+}
+
+
+Notice, that the OpenCL kernel uses an additional parameter, i.e., `__local double *r` for the array in local memory (the equivalent of shared memory in CUDA). We could have done the same for the CUDA kernel instead of defining `r` as an internal kernel variable in shared memory. As before this kernel is executed after the kernel `medianTrapezium` and is executed in the following way:
+
+```
+int block_size = 1024;
+
+cl_kernel kernel2 = clCreateKernel(program, "reducerSum", &ret);
+
+ret = clSetKernelArg(kernel2, 0, sizeof(cl_mem), (void *)&a_mem_obj);    
+ret = clSetKernelArg(kernel2, 1, sizeof(cl_mem), (void *)&out_mem_obj);   
+ret = clSetKernelArg(kernel2, 2, block_size * sizeof(cl_double), NULL);    
+ret = clSetKernelArg(kernel2, 3, sizeof(cl_int), (void *)&n);   
+ret = clSetKernelArg(kernel2, 4, sizeof(cl_int), (void *)&block_size);
+
+size_t local_item_size2 = block_size;
+size_t global_item_size2 = block_size;
+
+ret = clEnqueueNDRangeKernel(command_queue, kernel2, 1, NULL, &global_item_size2, &local_item_size2, 0, NULL, NULL);
+```
+
+As before we use 1 block (work-group) with 1024 threads (work-items) for sum reduction, since the global item size is equal to the local item size of 1024.
