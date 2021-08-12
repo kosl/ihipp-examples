@@ -1180,7 +1180,7 @@ Again only the transfer from device to host is needed, since the array of trapez
 ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0, n * sizeof(double), a, 0, NULL, NULL);
 ```
 
-## 5.19 Exer.: Speed up of the Riemann sum with one GPU kernel
+## 5.19 Exer.: Profiling of the Riemann sum code with one GPU kernel
 
 In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes. You will also do a profiling of the codes to identify possible bottlenecks.
 
@@ -1197,3 +1197,25 @@ with `N` equal to 1 billion. Compare the execution time of the codes. Which is f
 Use `nvprof` to profile the execution of the CUDA code. Can you identify the bottleneck?
 
 Analyze the diagnostic outputs of the OpenCL code. Can you identify the bottleneck for this code also? Note that execution time measurements of the GPU parts by the CPU are not necessarily trustful.
+
+## 5.20 Sum reduction
+
+In the exercise of the previous step you have profiled the GPU Riemann sum codes with one kernel. The profiling gave you information on the bottlenecks of the code: memory transfer from device (GPU) to host (CPU) of the array of trapezium medians and the calculation in a `for` loop of the sum of medians.
+
+The profiling results of the first version (with one kernel) of the GPU Riemann sum codes give you the idea of what should be avoided in GPU programming: time consuming memory transfers from host (CPU) to device (GPU) and vice versa. The transfer of the array of trapezium medians to the host took 5 seconds, more than half of the total execution time of the code! This is hardly a surprise since an array of 1 billion double precision float elements occupies more than 8 GB in host or device memory. It should be noted that the manipulation of such big arrays is not a good approach in GPU programming: first the GPU global memory is limited and second access to this memory even by the GPU itself is quite slow. We use such a big array just for demonstration purposes.
+
+But how can we get rid off the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved this is not the case in CUDA or OpenCL, since they have to be done in a programmatic manner. One approach or a variant of sum reduction is shown on the picture below (source: nvidia.com).
+
+![](images/sum_reduction.png?raw=true)
+
+Let’s assume we have an array of 16 elements in shared memory. How can we add these elements in terms of sum reduction?
+
+- Step 1: We add the values with IDs 0 and 8 and store the sum into ID 0 of the next array. Likewise we do the same for IDs 1–7 and 9–15. Stride = 8 means that we add elements strided by 8 positions. The results are stored into the next array with IDs 0–7. So, we actually reduced the previous array of 16 elements into an array of 8 elements.
+
+- Step 2: We reduce the stride by half (Stride = 4), meaning we add the values with IDs 0 and 5 and store the sum into ID 0 of the next array. Likewise we do the same for IDs 1–3 and 5–7. The results are stored into the next array with IDs 0–3. Again, we reduced the previous array by half: from 8 to 4 elements.
+
+- Step 3: We again reduce the stride by half (Stride = 2), meaning we add the values with IDs 0 and 2 and store the sum into ID 0 of the next array. Likewise we do the same for IDs 1 and 3. The results are stored into the next array with IDs 0–1. By that we reduced the previous array from 4 to 2 elements.
+
+- Step 4: In the last iteration we have Stride = 1, since we have just 2 elements in the array. We just add the values of these elements with IDs 0 and 1 to get the final sum.
+
+This kind of parallel reduction is called sequential addressing. Programmatically we can do this kind of reduction with a reversed loop and strided threadID-based indexing. We will show in the next step how this is done in CUDA and OpenCL. We must also explain why reduction should be done with striding in shared memory. As you probably noticed in the comparison tables from Step 5.13 the GPUs have different type of memories. Global memory is the slowest and therefore access to it should be reduced to a minimum. Instead shared memory (CUDA) or local memory (OpenCL) should be used. This type of memory is much faster than global memory, but can be used only in a block of threads (or work-group of work-items). In it threads or work-items can be synchronized. Striding access to memory is used to achieve coalescing, i.e., combining multiple memory accesses into a single transaction.
