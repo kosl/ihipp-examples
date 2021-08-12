@@ -1204,7 +1204,7 @@ In the exercise of the previous step you have profiled the GPU Riemann sum codes
 
 The profiling results of the first version (with one kernel) of the GPU Riemann sum codes give you the idea of what should be avoided in GPU programming: time consuming memory transfers from host (CPU) to device (GPU) and vice versa. The transfer of the array of trapezium medians to the host took 5 seconds, more than half of the total execution time of the code! This is hardly a surprise since an array of 1 billion double precision float elements occupies more than 8 GB in host or device memory. It should be noted that the manipulation of such big arrays is not a good approach in GPU programming: first the GPU global memory is limited and second access to this memory even by the GPU itself is quite slow. We use such a big array just for demonstration purposes.
 
-But how can we get rid off the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved this is not the case in CUDA or OpenCL, since they have to be done in a programmatic manner. One approach or a variant of sum reduction is shown on the picture below (source: nvidia.com).
+But how can we get rid of the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved this is not the case in CUDA or OpenCL, since they have to be done in a programmatic manner. One approach or a variant of sum reduction is shown on the picture below (source: nvidia.com).
 
 ![](images/sum_reduction.png?raw=true)
 
@@ -1222,7 +1222,7 @@ This kind of parallel reduction is called sequential addressing. If we have an a
 
 ## 5.21 Riemann sum with parallel reduction on GPU
 
-In this step we will show how to perform a parallel sum reduction described in the previous step with a GPU kernel. The sum reduction kernel will be added to the previous GPU codes, both in CUDA in OpenCL, with the goal to get rid off the bottlenecks.
+In this step we will show how to perform a parallel sum reduction described in the previous step with a GPU kernel. The sum reduction kernel will be added to the previous GPU codes, both in CUDA and OpenCL, with the goal to get rid of the bottlenecks.
 
 ### Parallel reduction in CUDA
 
@@ -1236,7 +1236,7 @@ for (int size = block_size/2; size>0; size/=2) {
 }
 ```
 
-The variable `block_size` is the initial size of the array on which sum reduction is performed. On every next iteration striding is reduced by a half (`size/=2`). Every thread `idx` add up two elements in the array strided by the current `size` to an element `r[idx]` of the array `r` in shared memory. For synchronization of threads in the block `__syncthreads()`is used.
+The variable `block_size` is the initial size of the array on which sum reduction is performed. On every next iteration striding is reduced by half (`size/=2`). Every thread `idx` add up two elements in the array strided by the current `size` to an element `r[idx]` of the array `r` in shared memory. For synchronization of threads in the block `__syncthreads()`is used.
 
 Because the block size is limited (maximum number of threads per block) on the GPU to 1024 (see Step 5.3), we can use an array of maximum 1024 elements to perform parallel reduction. If we have to sum up an array of more than 1024 elements, we must use more than one block or reduce the array in global memory to an array in shared memory. The latter can be done, e.g., by:
 
@@ -1250,7 +1250,7 @@ r[idx] = sum;
 __syncthreads();
 ```
 
-Here the array `a` of trapezium medians of size `n` in global memory is reduced to the array `r` of size `block_size` in shared memory. Using more blocks in shared memory would be, of course, be a better approach in terms of performance but for simplicity we will use just one block of threads. Ultimately, the sum of trapezium medians in the sum reduction kernel is obtained by:
+Here the array `a` of trapezium medians of size `n` in global memory is reduced to the array `r` of size `block_size` in shared memory. Using more blocks in shared memory would be, of course, a better approach in terms of performance but for simplicity we will use just one block of threads. Ultimately, the sum of trapezium medians in the sum reduction kernel is obtained by:
 
 ```
 if (idx == 0)
@@ -1283,7 +1283,7 @@ This kernel is executed after the kernel `medianTrapezium` which calculates the 
 ```
 int block_size = 1024;
 int n_blocks2 = 1;
-printf("CUDA kernel 'reducerSum' launch with %d blocks of %d threads\n\n", n_blocks2, block_size);
+
 reducerSum <<< n_blocks2, block_size, block_size*sizeof(double) >>> (a_d, out, n, block_size);
 ```
 
@@ -1327,6 +1327,7 @@ if (idx == 0)
 
 The whole code of the `reducerSum` kernel in OpenCL is as follows:
 
+```
 __kernel void reducerSum(__global double *a, __global double *out, __local double *r, int n, int block_size)
 {
     int idx = get_local_id(0);
@@ -1341,13 +1342,13 @@ __kernel void reducerSum(__global double *a, __global double *out, __local doubl
             r[idx] += r[idx+size];
         barrier(CLK_LOCAL_MEM_FENCE);
     }
-   
+
     if (idx == 0)
         *out = r[0];
 }
+```
 
-
-Notice, that the OpenCL kernel uses an additional parameter, i.e., `__local double *r` for the array in local memory (the equivalent of shared memory in CUDA). We could have done the same for the CUDA kernel instead of defining `r` as an internal kernel variable in shared memory. As before this kernel is executed after the kernel `medianTrapezium` and is executed in the following way:
+Notice, that the OpenCL kernel uses an additional parameter, i.e., `__local double *r` for the array in local memory (the equivalent of shared memory in CUDA). We could have done the same for the CUDA kernel instead of defining `r` as an internal kernel variable in shared memory. As in CUDA this kernel is executed after the kernel `medianTrapezium` and is executed in the following way:
 
 ```
 int block_size = 1024;
