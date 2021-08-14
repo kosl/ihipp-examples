@@ -1,7 +1,7 @@
 # Installing xeus-cling notebook under WSL2
 WSL2 installed with Debian 10 and CUDA drivers
 ~~~sh
-sudo apt-get install wget
+sudo apt-get install wget openssh-client git
 wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
 bash ./Miniforge3-Linux-x86_64.sh
 rm Miniforge3-Linux-x86_64.sh
