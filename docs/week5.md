@@ -216,7 +216,7 @@ How the characteristics of the GPU in your login session compare to those of the
 
 ## 5.5 Quiz: GPU basics and architecture
 
-## 5.6 GPU programming solutions
+## 5.6 V: GPU programming solutions
 
 As already mentioned, GPUs serve as accelerators to CPUs, i.e., computationally intensive tasks are off-loaded from CPUs to GPUs. Standard programming languages such as Fortran and C/C++ do not permit such off-loading because of their lack of addressing distinct memory spaces and of knowing the GPU architecture. For that purpose special language extensions are needed which basically allow GPU programming.
 
@@ -939,7 +939,7 @@ To sum up we will give a side by side comparison of both the GPU programming mod
 
 ## 5.14 Quiz: CUDA and OpenCL programming and execution models
 
-## 5.15 Numerical integration: Riemann sum with trapeziums
+## 5.15 E: Numerical integration: Riemann sum with trapeziums
 
 We are ready for a somewhat more complex, yet still a fairly school example in numerical computation, to show some extra features of GPU computing: Riemann sum for numerical integration. But first we will show how it's done on a CPU and after that think of how can we parallelize it on the GPU with CUDA and OpenCL. As an excursus in between we will also parallelize the CPU version with OpenMP and show how to off-load the computation on GPU with OpenMP, as well.
 
@@ -1071,7 +1071,7 @@ You can have a look at the whole code in this notebook:
 
 You can observe that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflows checks. The latter flag has to be added on Ubuntu systems, while the former is needed with the GCC compiler. On other systems and with other compilers, e.g., with CLANG/LLVM other flags are used when compiling OpenMP off-loading to GPU codes. One should keep in mind that GPU SDKs, e.g., CUDA SDK for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP or OpenACC.
 
-## 5.18 Riemann sum with one GPU kernel
+## 5.18 E: Riemann sum with one GPU kernel
 
 When off-loading codes or part of codes to GPUs the easiest approach is to search for parts that are embarrasingly parallel which can be directly (with minimum changes) ported to a GPU programming extension.
 
@@ -1180,9 +1180,9 @@ Again only the transfer from device to host is needed, since the array of trapez
 ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0, n * sizeof(double), a, 0, NULL, NULL);
 ```
 
-## 5.19 Exer.: Profiling of the Riemann sum code with one GPU kernel
+## 5.19 Exer.: Profiling of the Riemann sum codes with one GPU kernel
 
-In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes. You will also do a profiling of the codes to identify possible bottlenecks.
+In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes. You will also do profiling of the codes to identify possible bottlenecks.
 
 Execute the CUDA Riemann sum code:
 
@@ -1220,7 +1220,7 @@ Let’s assume we have an array of 16 elements in shared memory. How can we add 
 
 This kind of parallel reduction is called sequential addressing. If we have an array of N elements we can do a parallel reduction in log<sub>2</sub> N steps. Programmatically we can do this kind of reduction with a reversed loop and strided threadID-based indexing. We will show in the next step how this is done in CUDA and OpenCL. We must also explain why reduction should be done with striding in shared memory. As you probably noticed in the comparison tables from Step 5.13 the GPUs have different type of memories. Global memory is the slowest and therefore access to it should be reduced to a minimum. Instead shared memory (CUDA) or local memory (OpenCL) should be used. This type of memory is much faster than global memory, but can be used only in a block of threads (or work-group of work-items). In it threads or work-items can be synchronized. Striding access to memory is used to achieve coalescing, i.e., combining multiple memory accesses into a single transaction.
 
-## 5.21 Riemann sum with parallel reduction on GPU
+## 5.21 E: Riemann sum with parallel reduction on GPU
 
 In this step we will show how to perform a parallel sum reduction described in the previous step with a GPU kernel. The sum reduction kernel will be added to the previous GPU codes, both in CUDA and OpenCL, with the goal to get rid of the bottlenecks.
 
@@ -1368,3 +1368,100 @@ ret = clEnqueueNDRangeKernel(command_queue, kernel2, 1, NULL, &global_item_size2
 ```
 
 As before we use 1 block (work-group) with 1024 threads (work-items) for sum reduction, since the global item size is equal to the local item size of 1024.
+
+## 5.22 Exer.: Profiling of the Riemann sum codes with two GPU kernels
+
+In this exercise you will execute the CUDA and OpenCL Riemann sum codes with two GPU kernels and compare their performance to CPU, OpenMP codes and codes with one GPU kernel. You will also do profiling of the codes to see if the bottlenecks have been got rid of.
+
+Execute the CUDA Riemann sum code with two kernels:
+
+![Riemann_sum_CUDA_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_two_kernels.ipynb)
+
+and the OpenCL Riemann sum code with two kernels:
+
+![Riemann_sum_OpenCL_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_two_kernels.ipynb)
+
+with `N` equal to 1 billion. Compare the execution time of the codes. Which is faster? What's the speed up compared to CPU, OpenMP codes and codes with one GPU kernel?
+
+Use `nvprof` to profile the execution of the CUDA code. How much time does the kernel `reducerSum` take to execute? Have the bottlenecks been got rid of?
+
+Analyze the diagnostic outputs of the OpenCL code. Have the bottlenecks been got rid of, too? Keep in mind that execution time measurements of the GPU parts by the CPU are not necessarily trustful.
+
+## 5.23 V: Visual profiling and tracing of the GPU codes
+
+In this last video we will present some tools for visual profiling and tracing of the GPU codes. These tools are generally available with the GPU SDK, some of them can also be installed separately. The tools can not be invoked through Jupyter notebooks directly, but you can try them if you have access to a system with direct command-line or GUI execution. Profiling and tracing is useful in terms of code performance analysis and hints at optimization.
+
+Tools capable of profiling and/or tracing CUDA and OpenCL codes:
+
+CUDA:
+
+- **nvprof**: command line profiling tool from CUDA toolkit (deprecated in CUDA 11)
+- **nvvp**: visual profiler (GUI) tool from CUDA toolkit (deprecated in CUDA 11)
+- **Nvidia Nsight Systems**
+- **TAU** (Tuning and Analysis Utilities): open source tool for profiling and tracing
+- other tools: **vampir**, **SCALASCA** (for large scale applications)...
+
+OpenCL:
+
+- on NVIDIA cards: **OpenCL profiling not supported since CUDA 8**
+- on AMD cards: OpenCL profiling with **Radeon GPU profiler**
+- **TAU** (Tuning and Analysis Utilities): open source tool for profiling and tracing
+- other tools: **vampir**, **Intel VTune Amplifier**...
+
+## Profiling and tracing of CUDA codes
+
+We have already shown how to use the profiling tool `nvprof`. Tracing can be done with `nvvp`, e.g., for the CUDA Riemann sum code with two kernels:
+
+```
+$ nvprof ./riemann_cuda_double_reduce
+```
+
+The visual profiling can be invoked with many options for analysis of the CUDA code. The picture below shows the traces for the Riemann sum code with two kernels and the summary of both kernels execution (average duration, FLOP, multiprocessor occupancy...).
+
+![](images/nvvp_riemann_cuda_double_reduce_flops.png?raw=true)
+
+One can observe from the traces that the kernel `reducerSum` is executed after the kernel `medianTrapezium` and that for the latter 91.1% Streaming Multiprocessor (SM) occupancy was achieved with 86000005646 Double Precision Floating Point Operations (Flop) in 162.38435 miliseconds. For the kernels the parameters can be shown graphically, e.g., the performance in Flops. You can calculate the latter your self from data in the summary, e.g., for the kernel `medianTrapezium`:
+
+86000005646/162.37872*1000/10^9 = 529.63 GFLOPS
+
+You can then compare this performance to the theoretical FP64 (double) performance of 1371 GFLOPS for the Tesla K80 GPU (on which the CUDA program was executed) and draw conclusions about the efficacy of the code.
+
+As already pointed out the tools `nvprof` and `nvvp` are already deprecated in CUDA 11 and will be discontinued. They are replaced by Nvidia Nsight Systems. The equivalent of `nvprof` in command line is `nsys`. One can profile the CUDA Riemann sum code with two kernels in the following way:
+
+```
+$ nsys profile --trace cuda ./riemann_cuda_double_reduce
+$ nsys stats report1.qdrep
+```
+
+First, we generate the profiling report `report1.qdrep` of which the output can be subsequently invoked in command line by the 'nsys stats' call:
+
+```
+
+ Time(%)  Total Time (ns)  Num Calls     Average       Minimum      Maximum          Name
+ -------  ---------------  ---------  -------------  -----------  -----------  ----------------
+    79.7      614,696,365          1  614,696,365.0  614,696,365  614,696,365  cudaMemcpy
+    19.5      150,392,555          2   75,196,277.5      170,492  150,222,063  cudaMalloc
+     0.8        5,854,639          3    1,951,546.3        2,800    5,766,738  cudaFree
+     0.0           41,361          2       20,680.5        7,670       33,691  cudaLaunchKernel
+
+
+ Time(%)  Total Time (ns)  Instances     Average       Minimum      Maximum                     Name
+ -------  ---------------  ---------  -------------  -----------  -----------  --------------------------------------
+    96.7      594,399,821          1  594,399,821.0  594,399,821  594,399,821  reducerSum(double*, double*, int, int)
+     3.3       20,265,788          1   20,265,788.0   20,265,788   20,265,788  medianTrapezium(double*, int)
+
+
+ Time(%)  Total Time (ns)  Operations  Average  Minimum  Maximum      Operation
+ -------  ---------------  ----------  -------  -------  -------  ------------------
+   100.0            3,040           1  3,040.0    3,040    3,040  [CUDA memcpy DtoH]
+```
+
+The equivalent of `nvvp` is `nsys-ui`. By typing in the command line:
+
+```
+$ nsys-ui
+```
+
+the Nsight Systems GUI will be invoked. One can then load the previously generated report `report1.qdrep` or run the CUDA executable in it to visualize traces. The picture below shows the traces for the Riemann sum code with two kernels visualized by the Nsight Systems GUI.
+
+![](images/nsys-ui_trace.png?raw=true)
