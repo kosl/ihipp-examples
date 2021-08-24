@@ -1433,7 +1433,7 @@ $ nsys profile --trace cuda ./riemann_cuda_double_reduce
 $ nsys stats report1.qdrep
 ```
 
-First, we generate the profiling report `report1.qdrep` of which the output can be subsequently invoked in command line by the 'nsys stats' call:
+First, we generate the profiling report `report1.qdrep` of which the output can be subsequently invoked in command line by the `nsys stats` call:
 
 ```
 
@@ -1465,3 +1465,99 @@ $ nsys-ui
 the Nsight Systems GUI will be invoked. One can then load the previously generated report `report1.qdrep` or run the CUDA executable in it to visualize traces. The picture below shows the traces for the Riemann sum code with two kernels visualized by the Nsight Systems GUI.
 
 ![](images/nsys-ui_trace.png?raw=true)
+
+## Profiling and tracing of OpenCL codes
+
+For profiling and tracing OpenCL codes one can use the TAU Performance System. Unfortunately, it's not part of GPU SDKs, therefore it must be installed separately.
+
+Profiling of the OpenCL Riemann sum code with two kernels with TAU can be done in the following way. First, we generate profiles with:
+
+```
+$ tau_exec -T serial -opencl ./riemann_opencl_double_reduce
+```
+This will generate 2 profile files: `profile.0.0.0` and  `profile.0.0.1`.
+
+Profiling in command line can be done with:
+
+```
+$ pprof
+```
+
+The output is a detailed profiling report, we will show just an excerpt from it:
+
+```
+
+NODE 0;CONTEXT 0;THREAD 1:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0       0.0158            8           1           3       8665 .TAU application
+ 77.4            6            6           1           0       6704 reducerSum
+ 22.4            1            1           1           0       1942 medianTrapezoid
+  0.0      0.00325      0.00325           1           0          3 ReadBuffer
+
+FUNCTION SUMMARY (mean):
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0           13          440           1          17     440906 .TAU application
+ 39.8          175          175         0.5           0     351145 cl_int clBuildProgram(cl_program, cl_uint, const cl_device_id *, const char *, void (*)(cl_program, void *), void *) C
+ 31.4          138          138         0.5           0     276654 cl_context clCreateContext(const cl_context_properties *, cl_uint, const cl_device_id *, void (*)(const char *, const void *, size_t, void *), void *, cl_int *) C
+ 23.7          104          104         0.5           0     209322 cl_int clGetPlatformIDs(cl_uint, cl_platform_id *, cl_uint *) C
+  0.8            3            3         0.5           0       7269 cl_int clEnqueueReadBuffer(cl_command_queue, cl_mem, cl_bool, size_t, size_t, void *, cl_uint, const cl_event *, cl_event *) C
+  0.8            3            3         0.5           0       6704 reducerSum
+  0.2        0.971        0.971         0.5           0       1942 medianTrapezoid
+  0.1        0.423        0.423           1           0        424 cl_int clEnqueueNDRangeKernel(cl_command_queue, cl_kernel, cl_uint, const size_t *, const size_t *, const size_t *, cl_uint, const cl_event *, cl_event *) C
+  0.0       0.0255       0.0255         0.5           0         51 cl_int clReleaseProgram(cl_program) C
+  0.0       0.0245       0.0245           1           0         24 cl_kernel clCreateKernel(cl_program, const char *, cl_int *) C
+  0.0        0.012        0.012         0.5           0         24 cl_command_queue clCreateCommandQueue(cl_context, cl_device_id, cl_command_queue_properties, cl_int *) C
+  0.0       0.0065       0.0065         0.5           0         13 cl_int clFlush(cl_command_queue) C
+  0.0        0.006        0.006         0.5           0         12 cl_program clCreateProgramWithSource(cl_context, cl_uint, const char **, const size_t *, cl_int *) C
+  0.0       0.0045       0.0045         0.5           0          9 cl_int clFinish(cl_command_queue) C
+  0.0       0.0045       0.0045           1           0          4 cl_mem clCreateBuffer(cl_context, cl_mem_flags, size_t, void *, cl_int *) C
+  0.0        0.003        0.003         3.5           0          1 cl_int clSetKernelArg(cl_kernel, cl_uint, size_t, const void *) C
+  0.0        0.002        0.002         0.5           0          4 cl_int clReleaseContext(cl_context) C
+  0.0      0.00162      0.00162         0.5           0          3 ReadBuffer
+  0.0       0.0015       0.0015           1           0          2 cl_int clGetCommandQueueInfo(cl_command_queue, cl_command_queue_info, size_t, void *, size_t *) C
+  0.0       0.0015       0.0015         0.5           0          3 cl_int clGetDeviceIDs(cl_platform_id, cl_device_type, cl_uint, cl_device_id *, cl_uint *) C
+  0.0       0.0015       0.0015           1           0          2 cl_int clGetKernelInfo(cl_kernel, cl_kernel_info, size_t, void *, size_t *) C
+  0.0       0.0015       0.0015           1           0          2 cl_int clReleaseKernel(cl_kernel) C
+  0.0       0.0005       0.0005         0.5           0          1 cl_int clReleaseCommandQueue(cl_command_queue) C
+
+```
+
+The GUI profiling utility can be invoked with:
+
+```
+$ paraprof
+```
+
+The visualisation of profiles (threads), i.e., one profile for OpenCL kernels and the other for OpenCL API calls, can be seen on the pictures below.
+
+![](images/tau_opencl_1.png?raw=true)
+
+![](images/tau_opencl_2.png?raw=true)
+
+Tracing of the OpenCL Riemann sum code with two kernels with TAU can be done in the following way. Again, we first generate traces (`tautrace.0.0.0.trc` and `tautrace.0.0.1.trc`)
+
+```
+$ TAU_TRACE=1 tau_exec -T serial -opencl ./riemann_opencl_double_reduce
+```
+
+Then we can use the `jumpshot` utility within TAU to visualize the traces:
+
+```
+$ tau_treemerge.pl
+$ tau2slog2 tau.trc tau.edf -o tau.slog2
+$ jumpshot tau.slog2
+```
+
+On the pictures below you can see the traces with the description legend.
+
+![](images/jumpshot_riemann_opencl_double_reduce_traces.png?raw=true)
+
+![](images/jumpshot_riemann_opencl_double_reduce_legend_wo-values.png?raw=true)
+
+The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the medianTrapezium` kernel, as is the case in the trace showing CUDA kernels.
