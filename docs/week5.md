@@ -819,7 +819,7 @@ It's important that these arguments follow the same order (indices from 0 to 3) 
 vector_add(__global double *a, __global double *b, __global double *out, int n)
 ```
 
-Notice, that integer variable, e.g. ```n``` in this case, do not need the creation of a memory buffer but still need to be set as a kernel argument.
+Notice, that integer variables, e.g., ```n``` in this case, do not need the creation of a memory buffer but still need to be set as a kernel argument.
 
 Next, we must set local and global work-group sizes:
 
@@ -1413,7 +1413,7 @@ OpenCL:
 We have already shown how to use the profiling tool `nvprof`. Tracing can be done with `nvvp`, e.g., for the CUDA Riemann sum code with two kernels:
 
 ```
-$ nvprof ./riemann_cuda_double_reduce
+$ nvvp ./riemann_cuda_double_reduce
 ```
 
 The visual profiling can be invoked with many options for analysis of the CUDA code. The picture below shows the traces for the Riemann sum code with two kernels and the summary of both kernels execution (average duration, FLOP, multiprocessor occupancy...).
