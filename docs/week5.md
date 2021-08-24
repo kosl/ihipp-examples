@@ -1408,7 +1408,7 @@ OpenCL:
 - **TAU** (Tuning and Analysis Utilities): open source tool for profiling and tracing
 - other tools: **vampir**, **Intel VTune Amplifier**...
 
-## Profiling and tracing of CUDA codes
+### Profiling and tracing of CUDA codes
 
 We have already shown how to use the profiling tool `nvprof`. Tracing can be done with `nvvp`, e.g., for the CUDA Riemann sum code with two kernels:
 
@@ -1466,7 +1466,7 @@ the Nsight Systems GUI will be invoked. One can then load the previously generat
 
 ![](images/nsys-ui_trace.png?raw=true)
 
-## Profiling and tracing of OpenCL codes
+### Profiling and tracing of OpenCL codes
 
 For profiling and tracing OpenCL codes one can use the TAU Performance System. Unfortunately, it's not part of GPU SDKs, therefore it must be installed separately.
 
