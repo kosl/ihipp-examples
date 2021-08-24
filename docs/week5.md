@@ -1470,7 +1470,7 @@ the Nsight Systems GUI will be invoked. One can then load the previously generat
 
 For profiling and tracing OpenCL codes one can use the TAU Performance System. Unfortunately, it's not part of GPU SDKs, therefore it must be installed separately.
 
-Profiling of the OpenCL Riemann sum code with two kernels with TAU can be done in the following way. First, we generate profiles with:
+Profiling of the OpenCL Riemann sum code with two kernels can be done with TAU in the following way. First, we generate profiles with:
 
 ```
 $ tau_exec -T serial -opencl ./riemann_opencl_double_reduce
@@ -1540,7 +1540,7 @@ The visualisation of profiles (threads), i.e., one profile for OpenCL API calls 
 
 ![](images/tau_opencl_2.png?raw=true)
 
-Tracing of the OpenCL Riemann sum code with two kernels with TAU can be done in the following way. Again, we first generate traces (`tautrace.0.0.0.trc` and `tautrace.0.0.1.trc`) with:
+Tracing of the OpenCL Riemann sum code with two kernels can be done with TAU in the following way. Again, we first generate traces (`tautrace.0.0.0.trc` and `tautrace.0.0.1.trc`) with:
 
 ```
 $ TAU_TRACE=1 tau_exec -T serial -opencl ./riemann_opencl_double_reduce
@@ -1560,4 +1560,4 @@ On the pictures below you can see the traces with the description legend.
 
 ![](images/jumpshot_riemann_opencl_double_reduce_legend_wo-values.png?raw=true)
 
-The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case in the trace showing CUDA kernels.
+The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case of the trace showing CUDA kernels.
