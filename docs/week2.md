@@ -409,6 +409,68 @@ Don't worry if you always get a correct output, because a compiler may use a pri
 
 [Jupyter notebook: Exercise: Parallel region](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Parallel-region.ipynb)
 
+## 1.6 Q: Quiz on OpenMP basics
+
+We just covered the basics of OpenMP, runtime functions, constructs and directive format. This quiz tests your knowledge of OpenMP basics.
+
+### Question 1
+Directives appear just before a block of code, which is delimited by:
+ 
+* ( … )
+* [ … ]
+* { … }
+* < … >
+
+### Question 2
+Which of these is a correct way for an OpenMP program to set the number of available threads to 4?
+ 
+* At the beginning of an OpenMP program, use the library function omp_get_num_threads(4) to set the number of threads to 4.
+* At the beginning of an OpenMP program, use the library function num_threads(4) to set the number of threads to 4.
+* In bash, export OMP_NUM_THREADS=4.
+* At the beginning of an OpenMP program, use the library function omp_num_threads(4) to set the number of threads to 4.
+
+### Question 3
+Variables defined in the shared clause are shared among all threads.
+
+* True
+* False
+
+### Question 4
+When compiling an OpenMP program with gcc, what flag must be included?
+
+* -fopenmp
+* -o hello
+* ./openmp
+* None of the answers
+
+### Question 5
+Code in an OpenMP program that is not covered by a pragma is executed by how many threads?
+
+* Single thread
+* Two threads
+* All threads
+
+### Question 6
+If a variable is defined in the private clause within a construct, a separate copy of the same variable is created for every thread.
+
+* True
+* False
+
+### Question 7
+How many iterations are executed if 4 threads execute the below program?
+
+~~~c
+#pragma omp parallel private(i)
+for (int i = 0; i < 100; i++) {
+    a[i] = i;
+}
+~~~
+
+* 20
+* 40
+* 25
+* 35
+
 
 ## 2.1. Which thread executes which statement or operation?
 
@@ -694,7 +756,104 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 
 [Jupyter notebook: Exercise: Compute pi](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi.ipynb)
 
-## 2.6 Private and shared variables
+## 2.6 Q: Do you understand worksharing directives?
+
+This quiz covers various aspects of worksharing directives that have been discussed so far this week.
+
+### Question 1
+The purpose of `#pragma omp for` is
+
+* Loop work is to be divided into user defined sections
+* Work to be done in a loop when done, don’t wait
+* Work to be done in a loop
+
+### Question 2
+What is the purpose of `#pragma omp sections`?
+
+* Loop work is to be divided into user defined sections
+* Work to be done in a loop when done, don’t wait
+* Work to be done in a loop
+
+### Question 3
+What is the output of the following program?
+
+~~~c
+#pragma omp parallel num_threads(2)
+{
+    #pragma omp single
+    printf("read input\n");
+    printf("compute results\n");
+    #pragma omp single
+    Printf("write output\n");
+}
+~~~
+
+* read input, compute results, write output
+* read input, read input, compute results, write output, write output
+* read input, compute results, compute results, write output
+* Error in program
+
+### Question 4
+What is the purpose of `#pragma omp for nowait`?
+
+* Loop work is to be divided into user defined sections
+* Work to be done in a loop when done, don’t wait
+* Work to be done in a loop
+
+### Question 5
+Which directive must come before the directive `#pragma omp sections`?
+
+* `#pragma omp section`
+* `#pragma omp parallel`
+* None
+* `#pragma omp master`
+
+### Question 6
+The following code forces threads to wait till all are done:
+
+* `#pragma omp parallel`
+* `#pragma omp barrier`
+* `#pragma omp critical`
+* `#pragma omp sections`
+
+### Question 7
+What is the output of the following code when run with OMP_NUM_THREADS=4?
+
+~~~c
+int arr[4] = {1,2,3,4};
+int x=0, y=0, j;
+
+#pragma omp parallel
+{
+    #pragma omp for
+    for (j = 0; j < 4; j++)
+    {
+        #pragma omp critical
+        x += arr[j];
+    }
+}
+    
+
+#pragma omp parallel
+{
+    #pragma omp single
+    for (j = 0; j < 4; j++)
+    {
+        #pragma omp critical
+        y += arr[j];
+    }
+}
+
+printf("%d %d", x, y);
+~~~
+
+* 10, 10
+* 10, 40
+* 40, 10
+* 40, 40
+
+
+## 3.1 Private and shared variables
 
 ## Data Scope Clauses
 
@@ -761,7 +920,7 @@ Take a moment and try to guess the values of variables after the parallel region
 
 [Jupyter notebook: Data scope](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Data-scope.ipynb)
 
-## 3.1 Reduction clause
+## 3.2 Reduction clause
 
 The reduction clause is a data scope clause that can be used to perform some form of recurrence calculations in parallel. It defines the region in which a reduction is computed and specifies an operator and one or more list reduction variables. The syntax of the `reduction` clause is as follows:
 
@@ -807,7 +966,7 @@ The reduction variable is `sum` and the reduction operation is `+`.  The reducti
 
 [Jupyter notebook: Combined Constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Combined-Constructs.ipynb)
 
-## 3.2 Exercise: Sum and substract
+## 3.3 Exercise: Sum and substract
 
 In this exercise you will get to practice a sum and substract reduction within a combined parallel loop construct.  
 
@@ -851,7 +1010,7 @@ Then answer this:
 
 [Jupyter notebook: Reduction](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Reduction.ipynb)
 
-## 3.3 Combined parallel worksharing directives
+## 3.4 Combined parallel worksharing directives
 
 Combined constructs are shortcuts for specifying one construct immediately nested inside another construct. Specifying a combined construct is semantically identical to specifying the first construct that encloses an instance of the second construct and no other statements. Most of the rules, clauses and restrictions that apply to both directives are in effect. The `parallel` construct can be combined with one of the worksharing constructs, for example `for` and `sections`. 
 
@@ -877,7 +1036,7 @@ int f = 7;
      }
 ~~~
 
-## 3.4 Exercise: Calculate Pi with combined constructs
+## 3.5 Exercise: Calculate Pi with combined constructs
 
 In this exercise you will get to practice using combined constructs. You will get to use the reduction clause and combined construct parallel for.
 
@@ -891,7 +1050,7 @@ Now change the parallel region so you use the combined construct parallel for an
 
 [Jupyter notebook: Exercise: Compute pi again](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi-again.ipynb)
 
-## 3.5. Exercise: Heat transfer
+## 3.6. Exercise: Heat transfer
 
 In this exercise you will get to practice using directives and clauses that we have learned so far, such as `parallel`, `for`, `single`, `critical`, `private` and `shared`. It is your job to recognize where each of those are required. 
 
@@ -1051,6 +1210,129 @@ Now the parallel version should be a little bit faster. The reason for only a sl
 
 [Jupyter notebook: Exercise: Heat](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Heat.ipynb)
 
+## 3.7 Q: Do you understand combined constructs?
+
+This quiz tests your knowledge on OpenMP data environment and combined constructs.
+
+### Question 1
+Within a parallel region, declared variables are by default
+
+* private
+* local
+* shared
+* firstprivate
+
+### Question 2
+What is the output of the following code when run with OMP_NUM_THREADS=4?
+
+~~~c
+int arr[4] = {1,2,3,4};
+
+int x = 1, j;
+#pragma omp parallel for reduction(*:x)
+for(j = 0; j < 4; j++) {
+    x *= arr[j];
+}
+printf("%d", x);
+~~~
+
+* 24
+* 0
+* 10
+* 4
+
+### Question 3
+What does the `nowait` clause do?
+
+* Skips to the next OpenMP construct
+* Prioritizes the following OpenMP construct
+* Removes the synchronization barrier from the previous construct
+* Removes the synchronization barrier from the current construct
+
+### Question 4
+What is the data scoping of the variables a, b, c and d in following code snippet in the parallel region?
+
+~~~c
+int a = 0;
+int b = 23;
+int c = -3;
+#pragma omp parallel num_threads(2) private(a) reduction(+:c)
+{
+    int d = omp_get_thread_num();
+    a = 42 + d;
+    #pragma omp critical
+    b = 1;
+    c += a + b;
+}
+c = c / 2;
+printf("a=%d, b=%d, c=%d\n", a, b, c);
+~~~
+
+* a: shared
+* a: private
+* b: shared
+* b: private
+* c: shared
+* c: private
+* c: reduction
+* d: shared
+* d: private
+
+### Question 5
+What is printed when executing the below code?
+
+~~~c
+int a = 0;
+int b = 23;
+int c = -3;
+#pragma omp parallel num_threads(2) private(a) reduction(+:c)
+{
+    int d = omp_get_thread_num();
+    a = 42 + d;
+    #pragma omp critical
+    b = 1;
+    c += a + b;
+}
+c = c / 2;
+printf("a=%d, b=%d, c=%d\n", a, b, c);
+~~~
+
+* a=0, b=23, c=-3
+* a=44, b=23, c=84
+* a=0, b=23, c=42
+* a=0, b=1, c=42
+
+### Question 6
+Which of the following clauses specifies that the enclosing context’s version of the variable is set equal to the private version of whichever thread executes the final iteration?
+
+* private
+* firstprivate
+* lastprivate
+* default
+
+### Question 7
+The following code will result in a data race:
+
+~~~c
+#pragma omp parallel for
+for (int i = 1; i < 10; i++)
+{
+    factorial[i] = i * factorial[i-1];
+}
+~~~
+
+* True
+* False
+
+### Question 8
+Which of these parallel programming errors is impossible in the given OpenMP construct?
+
+* Data dependency in #pragma omp for
+* Data conflict in #pragma omp critical
+* Data race in #pragma omp parallel
+* Deadlock in #pragma omp parallel
+
+
 ## 4.1. Tasking model
 
 Tasking allows the parallelization of applications where units of work
@@ -1197,6 +1479,76 @@ Parallelize the provided program using parallel region, tasks and other directiv
 Did the parallelization give faster results?
 
 [Jupyter notebook: Exercise: Traversing of a tree](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Traversing-tree.ipynb)
+
+## 4.5 Q: Quiz on OpenMP tasking
+
+This quiz tests your knowledge on OpenMP tasking with which we will finish this week’s material.
+
+### Question 1
+The default clause sets the default scheduling of threads in a loop constructs.
+
+* True
+* False
+
+### Question 2
+Which tasks are synchronized with a `taskwait` construct?
+
+* All tasks of the same thread team.
+* All descendant tasks.
+* The direct child tasks.
+
+### Question 3
+Look at the following code snippet.
+
+~~~c
+int x = 42;
+#pragma omp parallel private(x)
+{
+    #pragma omp task
+    {
+        x = 3;
+    }
+}
+printf("x=%d\n", x);
+~~~
+What is the data scope of x in the task region and what is printed at the end?
+
+* shared, x=3
+* firstprivate, x=3
+* firstprivate, x=42
+
+### Question 4
+Look at the following code snippet.
+
+~~~c
+int x = 42;
+int y = 0;
+#pragma omp parallel num_threads(4)
+{
+    #pragma omp task
+    {
+        #pragma omp critical
+        {
+            y += x;
+        }
+    }
+}
+printf("y=%d\n", y);
+~~~
+
+What is the data scope of y in the task region and what is printed at the end?
+
+* shared, y=42
+* shared, y=168
+* firstprivate, y=168
+
+### Question 5
+What happens to tasks at a `barrier` construct?
+
+* All existing tasks are guaranteed to be completed at barrier exit.
+* All tasks of the current thread team are guaranteed to be completed at barrier exit.
+* Only the direct child tasks are guaranteed to be completed at barrier exit.
+
 
 ### Differences in subsection for & synchronisation in GH and FL
 ## Worksharing constructs
