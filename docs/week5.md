@@ -1487,46 +1487,44 @@ $ pprof
 The output is a detailed profiling report, we will show just an excerpt from it:
 
 ```
-
 NODE 0;CONTEXT 0;THREAD 1:
 ---------------------------------------------------------------------------------------
 %Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
               msec   total msec                          usec/call
 ---------------------------------------------------------------------------------------
-100.0       0.0158            8           1           3       8665 .TAU application
- 77.4            6            6           1           0       6704 reducerSum
- 22.4            1            1           1           0       1942 medianTrapezoid
-  0.0      0.00325      0.00325           1           0          3 ReadBuffer
+100.0      0.00825            8           1           3       8643 .TAU application
+ 77.5            6            6           1           0       6697 reducerSum
+ 22.4            1            1           1           0       1935 medianTrapezium
+  0.0        0.003        0.003           1           0          3 ReadBuffer
 
 FUNCTION SUMMARY (mean):
 ---------------------------------------------------------------------------------------
 %Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
               msec   total msec                          usec/call
 ---------------------------------------------------------------------------------------
-100.0           13          440           1          17     440906 .TAU application
- 39.8          175          175         0.5           0     351145 cl_int clBuildProgram(cl_program, cl_uint, const cl_device_id *, const char *, void (*)(cl_program, void *), void *) C
- 31.4          138          138         0.5           0     276654 cl_context clCreateContext(const cl_context_properties *, cl_uint, const cl_device_id *, void (*)(const char *, const void *, size_t, void *), void *, cl_int *) C
- 23.7          104          104         0.5           0     209322 cl_int clGetPlatformIDs(cl_uint, cl_platform_id *, cl_uint *) C
-  0.8            3            3         0.5           0       7269 cl_int clEnqueueReadBuffer(cl_command_queue, cl_mem, cl_bool, size_t, size_t, void *, cl_uint, const cl_event *, cl_event *) C
-  0.8            3            3         0.5           0       6704 reducerSum
-  0.2        0.971        0.971         0.5           0       1942 medianTrapezoid
-  0.1        0.423        0.423           1           0        424 cl_int clEnqueueNDRangeKernel(cl_command_queue, cl_kernel, cl_uint, const size_t *, const size_t *, const size_t *, cl_uint, const cl_event *, cl_event *) C
-  0.0       0.0255       0.0255         0.5           0         51 cl_int clReleaseProgram(cl_program) C
-  0.0       0.0245       0.0245           1           0         24 cl_kernel clCreateKernel(cl_program, const char *, cl_int *) C
-  0.0        0.012        0.012         0.5           0         24 cl_command_queue clCreateCommandQueue(cl_context, cl_device_id, cl_command_queue_properties, cl_int *) C
-  0.0       0.0065       0.0065         0.5           0         13 cl_int clFlush(cl_command_queue) C
-  0.0        0.006        0.006         0.5           0         12 cl_program clCreateProgramWithSource(cl_context, cl_uint, const char **, const size_t *, cl_int *) C
-  0.0       0.0045       0.0045         0.5           0          9 cl_int clFinish(cl_command_queue) C
-  0.0       0.0045       0.0045           1           0          4 cl_mem clCreateBuffer(cl_context, cl_mem_flags, size_t, void *, cl_int *) C
-  0.0        0.003        0.003         3.5           0          1 cl_int clSetKernelArg(cl_kernel, cl_uint, size_t, const void *) C
+100.0            4          578           1          17     578860 .TAU application
+ 78.9          456          456         0.5           0     913667 cl_int clBuildProgram(cl_program, cl_uint, const cl_device_id *, const char *, void (*)(cl_program, void *), void *) C
+ 15.6           90           90         0.5           0     180796 cl_context clCreateContext(const cl_context_properties *, cl_uint, const cl_device_id *, void (*)(const char *, const void *, size_t, void *), void *, cl_int *) C
+  3.2           18           18         0.5           0      37437 cl_int clGetPlatformIDs(cl_uint, cl_platform_id *, cl_uint *) C
+  0.7            4            4         0.5           0       8359 cl_int clEnqueueReadBuffer(cl_command_queue, cl_mem, cl_bool, size_t, size_t, void *, cl_uint, const cl_event *, cl_event *) C
+  0.6            3            3         0.5           0       6697 reducerSum
+  0.2        0.968        0.968         0.5           0       1935 medianTrapezium
+  0.1        0.294        0.294           1           0        294 cl_int clEnqueueNDRangeKernel(cl_command_queue, cl_kernel, cl_uint, const size_t *, const size_t *, const size_t *, cl_uint, const cl_event *, cl_event *) C
+  0.0       0.0175       0.0175         0.5           0         35 cl_int clReleaseProgram(cl_program) C
+  0.0        0.013        0.013         0.5           0         26 cl_command_queue clCreateCommandQueue(cl_context, cl_device_id, cl_command_queue_properties, cl_int *) C
+  0.0        0.009        0.009           1           0          9 cl_kernel clCreateKernel(cl_program, const char *, cl_int *) C
+  0.0       0.0055       0.0055           1           0          6 cl_mem clCreateBuffer(cl_context, cl_mem_flags, size_t, void *, cl_int *) C
+  0.0        0.005        0.005         0.5           0         10 cl_program clCreateProgramWithSource(cl_context, cl_uint, const char **, const size_t *, cl_int *) C
+  0.0       0.0035       0.0035         0.5           0          7 cl_int clFlush(cl_command_queue) C
+  0.0        0.003        0.003         0.5           0          6 cl_int clFinish(cl_command_queue) C
+  0.0        0.002        0.002         0.5           0          4 cl_int clGetDeviceIDs(cl_platform_id, cl_device_type, cl_uint, cl_device_id *, cl_uint *) C
   0.0        0.002        0.002         0.5           0          4 cl_int clReleaseContext(cl_context) C
-  0.0      0.00162      0.00162         0.5           0          3 ReadBuffer
-  0.0       0.0015       0.0015           1           0          2 cl_int clGetCommandQueueInfo(cl_command_queue, cl_command_queue_info, size_t, void *, size_t *) C
-  0.0       0.0015       0.0015         0.5           0          3 cl_int clGetDeviceIDs(cl_platform_id, cl_device_type, cl_uint, cl_device_id *, cl_uint *) C
-  0.0       0.0015       0.0015           1           0          2 cl_int clGetKernelInfo(cl_kernel, cl_kernel_info, size_t, void *, size_t *) C
+  0.0        0.002        0.002         3.5           0          1 cl_int clSetKernelArg(cl_kernel, cl_uint, size_t, const void *) C
+  0.0       0.0015       0.0015         0.5           0          3 ReadBuffer
   0.0       0.0015       0.0015           1           0          2 cl_int clReleaseKernel(cl_kernel) C
-  0.0       0.0005       0.0005         0.5           0          1 cl_int clReleaseCommandQueue(cl_command_queue) C
-
+  0.0        0.001        0.001           1           0          1 cl_int clGetCommandQueueInfo(cl_command_queue, cl_command_queue_info, size_t, void *, size_t *) C
+  0.0        0.001        0.001         0.5           0          2 cl_int clReleaseCommandQueue(cl_command_queue) C
+  0.0       0.0005       0.0005           1           0          0 cl_int clGetKernelInfo(cl_kernel, cl_kernel_info, size_t, void *, size_t *) C
 ```
 
 The GUI profiling utility can be invoked with:
