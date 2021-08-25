@@ -79,12 +79,13 @@ We just covered the basics of MPI, communicators and messages. This quiz tests y
 ### Question 1
 Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
  
+* MPI_COMM_DEFAULT
 * MPI_COMM_SELF
 * MPI_COMM_WORLD
 * MPI_COMM_NULL
 
 ### Question 2
-What does MPI_COMM_RANK return?
+What does `MPI_Comm_rank()` return?
 
 * Number of processes in an MPI program
 * Priority of the current process
