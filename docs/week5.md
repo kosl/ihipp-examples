@@ -1438,7 +1438,6 @@ $ nsys stats report1.qdrep
 First, we generate the profiling report `report1.qdrep` of which the output can be subsequently invoked in command line by the `nsys stats` call:
 
 ```
-
  Time(%)  Total Time (ns)  Num Calls     Average       Minimum      Maximum          Name
  -------  ---------------  ---------  -------------  -----------  -----------  ----------------
     79.7      614,696,365          1  614,696,365.0  614,696,365  614,696,365  cudaMemcpy
