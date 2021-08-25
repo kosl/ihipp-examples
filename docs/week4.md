@@ -308,6 +308,38 @@ Through the following excercise we will see why the barrier is necessary.
 ### Example with MPI_recv
 (example from D3P1S9)
 
+## 2.5 Q: Quiz on Hybrid programming with OpenMP and MPI
+
+Do you understand how OpenMP can be included and used with MPI? Test your understanding of this topic with this quiz.
+
+### Question 1
+An MPI process is generally single-threaded unless the code has been augmented with multithreading directives or library calls.
+
+* True
+* False
+
+### Question 2
+If MPI_Init_thread returns MPI_THREAD_FUNNELED, MPI messages can only be passed between main threads.
+
+* True
+* False
+
+### Question 3
+Which argument to MPI_Send my be used to identify the destination thread?
+
+* rank
+* count
+* tag
+* communicator
+
+### Question 4
+MPI messages can be passed between any two threads, provided each is enclosed in an omp single construct, when MPI_Init_thread returns what value?
+
+* MPI_THREAD_SINGLE
+* MPI_THREAD_FUNNELED
+* MPI_THREAD_SERIALIZED
+* MPI_THREAD_MULTIPLE
+
 
 ## 3. User defined datatypes
 
