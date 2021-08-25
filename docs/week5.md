@@ -943,7 +943,9 @@ To sum up we will give a side by side comparison of both the GPU programming mod
 
 We are ready for a somewhat more complex, yet still a fairly school example in numerical computation, to show some extra features of GPU computing: Riemann sum for numerical integration. But first we will show how it's done on a CPU and after that think of how can we parallelize it on the GPU with CUDA and OpenCL. As an excursus in between we will also parallelize the CPU version with OpenMP and show how to off-load the computation on GPU with OpenMP, as well.
 
-Approximation of a definite integral of a function can be done using the trapezium rule. The area under the function on the interval from a to b, which represents the definite integral, is divided into N trapeziums. The area of each trapezium is equal to the median of the trapezium `(f(x+h)+f(x))/2` multiplied with the sub-interval width `(b-a)/N`. The sum of all trapezium areas is an approximation of the definite integral of the function from a to b. For simplicity we choose `a = 0` and `b = 1` to calculate the normal distribution function from 0 to 1 which is equal to 0.341345.
+Approximation of a definite integral of a function can be done using the trapezium rule. The area under the function on the interval from a to b, which represents the definite integral, is divided into N trapeziums. The area of each trapezium is equal to the median of the trapezium `(f(x+h)+f(x))/2` multiplied with the sub-interval width `(b-a)/N`. The sum of all trapezium areas is an approximation of the definite integral of the function from a to b. For simplicity we choose `a = 0` and `b = 1` to calculate the normal distribution function from 0 to 1 which is equal to 0.3413447460685429 (see picture below).
+
+![](images/riemann_sum.png?raw=true)
 
 How can we do this example on the CPU? The simplest approach is, of course, using a `for` loop to calculate trapezium medians and trapezium sums:
 
