@@ -718,15 +718,21 @@ Before initializing the device it's necessary to get platform and device informa
 
 - declare context:
 
+```
 cl_context context = clCreateContext(NULL, 1, &device_id, NULL, NULL, &ret);
+```
 
 - choose a device from context:
 
+```
 ret = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 1, &device_id, &ret_num_devices);
+```
 
 - create a command queue with device and context:
 
+```
 cl_command_queue command_queue = clCreateCommandQueue(context, device_id, 0, &ret);
+```
 
 This is still more or less boiler-plate code which is basically the same for every OpenCL program.
 
@@ -1412,7 +1418,45 @@ OpenCL:
 
 ### Profiling and tracing of CUDA codes
 
-We have already shown how to use the profiling tool `nvprof`. Tracing can be done with `nvvp`, e.g., for the CUDA Riemann sum code with two kernels:
+You already know how to use the profiling tool `nvprof`, e.g., for the CUDA Riemann sum code with two kernels:
+
+```
+$ nvprof ./riemann_cuda_double_reduce
+```
+
+you obtained the following output in command line (exercise in Step 5.19 ):
+
+```
+
+==2194== NVPROF is profiling process 2194, command: ./riemann_cuda_double_reduce
+Found GPU 'Tesla K80' with 11.173 GB of global memory, max 1024 threads per block, and 13 multiprocessors
+CUDA kernel 'medianTrapezium' launch with 976563 blocks of 1024 threads
+CUDA kernel 'reducerSum' launch with 1 blocks of 1024 threads
+
+Riemann sum CUDA (double precision) for N = 1000000000    : 0.34134474606854243
+Total time (measured by CPU)                              : 2.130000 s
+==2194== Profiling application: ./riemann_cuda_double_reduce
+==2194== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   79.45%  668.84ms         1  668.84ms  668.84ms  668.84ms  reducerSum(double*, double*, int, int)
+                   20.55%  172.96ms         1  172.96ms  172.96ms  172.96ms  medianTrapezium(double*, int)
+                    0.00%  8.4480us         1  8.4480us  8.4480us  8.4480us  [CUDA memcpy DtoH]
+      API calls:   46.26%  1.01224s         3  337.41ms  10.109us  1.00527s  cudaFree
+                   38.47%  841.87ms         1  841.87ms  841.87ms  841.87ms  cudaMemcpy
+                   14.56%  318.66ms         2  159.33ms  587.33us  318.07ms  cudaMalloc
+                    0.34%  7.3509ms       582  12.630us     305ns  476.82us  cuDeviceGetAttribute
+                    0.27%  6.0104ms         6  1.0017ms  998.14us  1.0108ms  cuDeviceTotalMem
+                    0.05%  1.1714ms         1  1.1714ms  1.1714ms  1.1714ms  cudaGetDeviceProperties
+                    0.03%  589.12us         6  98.187us  95.529us  103.46us  cuDeviceGetName
+                    0.01%  267.51us         2  133.76us  23.377us  244.14us  cudaLaunchKernel
+                    0.00%  31.279us         6  5.2130us  2.8280us  15.291us  cuDeviceGetPCIBusId
+                    0.00%  10.163us         1  10.163us  10.163us  10.163us  cudaSetDevice
+                    0.00%  6.6350us        12     552ns     392ns  1.2660us  cuDeviceGet
+                    0.00%  3.6970us         3  1.2320us     417ns  2.0400us  cuDeviceGetCount
+                    0.00%  2.4670us         6     411ns     357ns     584ns  cuDeviceGetUuid
+```
+
+Tracing can be done with `nvvp`, e.g., for the CUDA Riemann sum code with two kernels:
 
 ```
 $ nvvp ./riemann_cuda_double_reduce
@@ -1422,9 +1466,9 @@ The visual profiling can be invoked with many options for analysis of the CUDA c
 
 ![](images/nvvp_riemann_cuda_double_reduce_flops.png?raw=true)
 
-One can observe from the traces that the kernel `reducerSum` is executed after the kernel `medianTrapezium` and that for the latter 91.1% Streaming Multiprocessor (SM) occupancy was achieved with 86000005646 Double Precision Floating Point Operations (Flop) in 162.38435 miliseconds. For the kernels the parameters can be shown graphically, e.g., the performance in Flops. You can calculate the latter your self from data in the summary, e.g., for the kernel `medianTrapezium`:
+One can observe from the traces that the kernel `reducerSum` is executed after the kernel `medianTrapezium` and that for the latter 91.1% Streaming Multiprocessor (SM) occupancy was achieved with 86000005646 Double Precision Floating Point Operations (Flop) in 172.91868 miliseconds. For the kernels the parameters can be shown graphically, e.g., the performance in Flops. You can calculate the latter your self from data in the summary, e.g., for the kernel `medianTrapezium`:
 
-86000005646/162.37872*1000/10^9 = 529.63 GFLOPS
+86000005646/172.91868*1000/10^9 = 497.34 GFLOPS
 
 You can then compare this performance to the theoretical FP64 (double) performance of 1371 GFLOPS for the Tesla K80 GPU (on which the CUDA program was executed) and draw conclusions about the efficacy of the code.
 
