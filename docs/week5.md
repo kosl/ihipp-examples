@@ -4,11 +4,11 @@
 
 In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general purpose computing in many fields.
 
-GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors. For example, *HiPerGator AI* is currently #22 on the TOP500 list of supercomputers in the world (based on the performance metric in Flops, i.e., floating point operations per second) but is also #2 on the Green500 list (based on the power efficiency metric in Flops/watt, i.e., floating point operations per second per watt).
+GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors. For example, *HiPerGator AI* is currently #22 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world (based on the performance metric in Flops, i.e., floating point operations per second) but is also #2 on the [Green500 list](https://www.top500.org/lists/green500/list/2021/06/) (based on the power efficiency metric in Flops/watt, i.e., floating point operations per second per watt).
 
-In the context of general purpose computing GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Computing acceleration can be achieved with existing GPU applications, GPU libraries, directive based methods like OpenMP and OpenACC and special programming languages or extensions like CUDA and OpenCL.
+In the context of general purpose computing GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Computing acceleration can be achieved with: existing GPU applications, GPU libraries, directive based methods (like OpenMP and OpenACC) and special programming languages or extensions (like CUDA and OpenCL).
 
-Through the steps of this week we shall present the architecture of modern GPUs and then the available GPU execution models for computing acceleration. OpenMP as a means for "off-loading" parallel tasks to GPUs will be shortly introduced, while the main focus will be dedicated to two extensions to C for programming GPUs: CUDA and OpenCL. On one hand, GPU off-loading is simple to use, but it's quite limited, contrary to GPU programming which requires more effort, but offers more flexibility. Hopefully, the provided hands-on examples we will introduce you to the topic of GPU programming as smoothly as possible.
+Through the steps of this week we shall present the architecture of modern GPUs and then the available GPU execution models for computing acceleration. OpenMP as a means for "off-loading" parallel tasks to GPUs will be shortly introduced, while the main focus will be dedicated to two extensions to C for programming GPUs: CUDA and OpenCL. On one hand, directive based GPU off-loading is simple to use, but it's quite limited, contrary to GPU programming which requires more effort, but offers more flexibility. Hopefully, the provided hands-on examples will introduce you to the topic of GPU programming as smoothly as possible.
 
 ## 5.2 GPU Architecture
 
@@ -20,7 +20,7 @@ On the figure below (source: nvidia.com) you can observe schematics of both CPU 
 
 - a GPU has many more arithmetic logic units or ALUs (green rectangles) than a CPU;
 - a GPU can control simple, highly parallel workloads well (there's a yellow rectangle for every row of green rectangles), contrary to a CPU which can control more complex workloads;
-- a core (green rectangle) in a CPU is different than a "core" or ALU (green rectangle) in a GPU: the former is comprised by ALUs and FPUs which are more specialized than ALUs in a GPU;
+- a core (green rectangle) in a CPU is different than a "core" or ALU (green rectangle) in a GPU: the former is comprised of ALUs and FPUs which are more specialized than ALUs in a GPU;
 - a CPU has more cache memory than a GPU.
 
 ![](images/CPU_vs_GPU_architecture.png?raw=true)
@@ -31,9 +31,9 @@ It has to be noted that the term "GPU core" is more or less a marketing term. Th
 
 Nowadays, desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities ```deviceQuery``` and ```bandwidthTest``` in the terminal of the login node we can get:
+First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities `deviceQuery` and `bandwidthTest` in the terminal of the login node we can get:
 
-Output (excerpt) from ```deviceQuery```:
+Output (excerpt) from `deviceQuery`:
 
 ```
 Detected 4 CUDA Capable device(s)
@@ -72,7 +72,7 @@ Device 0: "Tesla V100-SXM2-16GB"
   Supports MultiDevice Co-op Kernel Launch:      Yes
   Device PCI Domain ID / Bus ID / location ID:   4 / 4 / 0
 ```
-Output (excerpt) from ```bandwidthTest```:
+Output (excerpt) from `bandwidthTest`:
 
 ```
  Device 0: Tesla V100-SXM2-16GB
@@ -100,7 +100,7 @@ There are 4 *NVIDIA Tesla V100-SXM2-16GB* GPUs detected on the login node of the
 
 If we do the same on a consumer grade laptop (assuming it is equipped with a standalone GPU by NVIDIA), we get, e.g.:
 
-Output (excerpt) from ```deviceQuery```:
+Output (excerpt) from `deviceQuery`:
 
 ```
 Detected 1 CUDA Capable device(s)
@@ -140,7 +140,7 @@ Device 0: "GeForce 930MX"
   Device PCI Domain ID / Bus ID / location ID:   0 / 1 / 0
 ```
 
-Output (excerpt) from ```bandwidthTest```:
+Output (excerpt) from `bandwidthTest`:
 
 ```
  Device 0: GeForce 930MX
@@ -166,9 +166,9 @@ Result = PASS
 
 There is 1 *NVIDIA GeForce 930MX* GPU detected on the laptop.
 
-The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available and also a much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32).
+The outputs show that a professional high-end card has much more global memory, streaming multiprocessors (SMs) and "cores" available, as well as a much higher memory bandwidth than a consumer grade card: 16 GB, 80 SMs, 5120 CUDA cores, 712.9 GB/s and 2 GB, 3 SMs, 384 CUDA cores, 13520.2 MB/s, respectively. The V100 has also a much higher theoretical throughput of 15.7 TFlops (for FP32) than the GeForce 930MX with throughput of 0.765 TFlops (for FP32). You can obtain the latter information from the GPU data sheets available on nvidia.com.
 
-In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used in HPC systems or data centers.
+In short, both cards share the same technology but consumer grade ones are quite inferior in terms of hardware resources. Of course, there are some other differences (like the underlying microarchitecture, e.g., the V100 is based on the newer Volta, while the GeForce 930MX on the older Maxwell microarchitecture), but both can be used for GPU computing albeit with a big difference in performance. To be completely frank there also exist gaming cards with better performance, even somewhat comparable to professional cards, but we won't go into details of why they are not used on HPC systems or data centers.
 
 Here we have compared only GPUs of one manufacturer (NVIDIA). Similar characteristics apply also for consumer grade and professional cards of other manufacturers, e.g., AMD.
 
@@ -176,13 +176,13 @@ Here we have compared only GPUs of one manufacturer (NVIDIA). Similar characteri
 
 In this exercise you will check the information and compute capabilities of the GPU available for you in the current sesion of Colab.
 
-Login to Colab and first check if your runtime type is set to ```GPU``` by:
+Login to Colab and first check if your runtime type is set to `GPU` by:
 
 ```
 Runtime -> Change runtime type
 ```
 
-If not change it to ```GPU``` in the ```Hardware accelerator``` dropdown menu.
+If not change it to `GPU` in the `Hardware accelerator` dropdown menu.
 
 Now you can complete the following tasks:
 
@@ -192,7 +192,7 @@ Now you can complete the following tasks:
 !nvidia-smi
 ```
 
-- find the diagnostic programs ```deviceQuery``` and ```bandwidthTest``` by:
+- find the diagnostic programs `deviceQuery` and `bandwidthTest` by:
 
 ```
 !ls -l /usr/local/cuda-11.0/extras/demo_suite
@@ -216,19 +216,19 @@ How the characteristics of the GPU in your login session compare to those of the
 
 ## 5.5 Quiz: GPU basics and architecture
 
-## 5.6 V: GPU programming solutions
+## 5.6 V: GPU execution models and programming solutions
 
 As already mentioned, GPUs serve as accelerators to CPUs, i.e., computationally intensive tasks are off-loaded from CPUs to GPUs. Standard programming languages such as Fortran and C/C++ do not permit such off-loading because of their lack of addressing distinct memory spaces and of knowing the GPU architecture. For that purpose special language extensions are needed which basically allow GPU programming.
 
-Many solutions exist for programming GPUs, we will talk about the two mostly used, i.e., CUDA and OpenCL. CUDA (Compute Unified Device Architecture) is a set of extensions to higher level programming languages (C, C++ and Fortran) developed by NVIDIA for its GPUs. CUDA comes with a developer toolkit for compiling, debugging and profiling programs. It's the first solution for GPU programming (the current version is 11.x) but unfortunately it's only supported by GPUs manufactured by NVIDIA.
+Many solutions exist for programming GPUs, we will talk about the two mostly used, i.e., CUDA and OpenCL. CUDA (Compute Unified Device Architecture) is a set of extensions to higher level programming languages (C, C++ and Fortran) developed by NVIDIA for its GPUs. CUDA comes with a developer toolkit for compiling, debugging and profiling programs. It's the first solution for GPU programming (the latest version is 11.4) but unfortunately it's only supported by GPUs manufactured by NVIDIA.
 
-Another solution is OpenCL (Open Computing Language), which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA), now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming model is similar to CUDA, it's more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and is de facto oriented to heterogeneous computing. In principle that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's standard is currently at 2.x. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is offered only for OpenCL 1.2.
+Another solution is OpenCL (Open Computing Language), which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA), now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming/execution model is similar to CUDA, it's more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and is de facto oriented to heterogeneous computing. In principle that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's latest standard is currently at 3.0. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is still offered only for OpenCL 1.2.
 
 ![](images/CUDA_OpenCL.png?raw=true)
 
 ## 5.7 E: Hello world on GPU
 
-Before explaining CUDA and OpenCL programming models in detail we will introduce GPU programming with a Hello World example.
+Before explaining CUDA and OpenCL programming/execution models in detail we will introduce GPU programming with a Hello World example.
 
 ### Hello world in C
 
@@ -241,13 +241,13 @@ for(int i = 0; i < N; ++i){
 }
 ```
 
-What do you think this code will do if executed as a program? If you are familiar with the concept of a ```for``` loop then you know that in it every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 3. Try to execute it in the notebook to see the expected results:
+What do you think this code will do if executed as a program? If you are familiar with the concept of a `for` loop then you know that in it every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 3. Try to execute it in the notebook to see the expected results:
 
 ![Hello_World_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_C.ipynb)
 
 ### Hello world in CUDA
 
-By now we already know that GPUs are really good at executing independent parallel tasks, hence the above ```for``` loop is a good candidate for that. How can we do it in CUDA? Let's give the solution:
+By now we already know that GPUs are really good at executing independent parallel tasks, hence the above `for` loop is a good candidate for that. How can we do it in CUDA? Let's give the solution:
 
 ```
 #define NUM_BLOCKS 4
@@ -261,16 +261,16 @@ __global__ void hello(){
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 ```
 
-A ```for``` loop that is executed sequentially on a CPU is replaced by a kernel on a GPU which is run in parallel by independent threads organized into blocks. In CUDA a kernel is defined by the ```__global__``` prefix and it's called by the CPU as a regular function by the triple chevron syntax ```<<<...>>>```. In the above code there's a kernel ```hello``` which doesn't take any input parameters (but it could take them, as we will see in some other examples). Still, it's called with:
+A `for` loop that is executed sequentially on a CPU is replaced by a kernel on a GPU which is run in parallel by independent threads organized into blocks. In CUDA a kernel is defined by the `__global__` prefix and it's called by the CPU as a regular function by the triple chevron syntax `<<<...>>>`. In the above code there's a kernel `hello` which doesn't take any input parameters (but it could take them, as we will see in some other examples). Still, it's called with:
 
 ```
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 ```
 
-The triple chevron launch syntax ```<<<NUM_BLOCKS, BLOCK_SIZE>>>``` contains the ''kernel launch parameters'':
+The triple chevron launch syntax `<<<NUM_BLOCKS, BLOCK_SIZE>>>` contains the ''kernel launch parameters'':
 
-- ```NUM_BLOCKS```: defines the number of blocks to use (in the above example 4);
-- ```BLOCK_WIDTH```: defines the number of threads per block (in the above example 1);
+- `NUM_BLOCKS`: defines the number of blocks to use (in the above example 4)
+- `BLOCK_WIDTH`: defines the number of threads per block (in the above example 1)
 
 Of course, the same parameters can be called in the following way:
 
@@ -278,7 +278,7 @@ Of course, the same parameters can be called in the following way:
 hello<<<4, 1>>>();
 ```
 
-What is crucial about the kernel execution on a GPU is that the blocks with threads are executed *in parallel*. So, what does the above kernel do in parallel? For every block index ```idx``` it tries to print the ''Hello world'' message in parallel, where the block index is taken from the built-in variable ```blockIdx.x```. Of course, the messages can't be printed in parallel but the blocks still run in parallel and which ever is faster it's printed before the slower ones.
+What is crucial about the kernel execution on a GPU is that the blocks with threads are executed *in parallel*. So, what does the above kernel do in parallel? For every block index `idx` it tries to print the ''Hello world'' message in parallel, where the block index is taken from the built-in variable `blockIdx.x`. Of course, the messages can't be printed in parallel but the blocks still run in parallel and which ever is faster it's printed before the slower ones.
 
 Try to execute the CUDA Hello world in the notebook for a couple of times to see which block indices are printed first. Is the order of block indices always the same or does it change with any new execution of the code?
 
@@ -303,7 +303,7 @@ cl_kernel kernel = clCreateKernel(program, "hello", &ret);
 ret = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
 ```
 
-In the case of OpenCL a ```for``` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a  work–item.  In OpenCL a kernel is defined by the ```__kernel ``` prefix and it's called by the CPU with the ```clEnqueueNDRangeKernel()``` function of the OpenCL API. In the above code there's also a kernel ```hello``` which doesn't take any input parameters (but it could take them, as we will see in some other examples), but it's still called with:
+In the case of OpenCL a `for` loop (that is executed sequentially on a CPU) is replaced by a kernel on a GPU which is run in parallel by independent work–items organized into work–groups. This is just different terminology: in OpenCL the equivalent of a block is called a work–group, while the equivalent of a thread is a work–item.  In OpenCL a kernel is defined by the `__kernel ` prefix and it's called by the CPU with the `clEnqueueNDRangeKernel()` function of the OpenCL API. In the above code there's also a kernel `hello` which doesn't take any input parameters (but it could take them, as we will see in some other examples), but it's still called with:
 
 ```
 clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
@@ -311,12 +311,12 @@ clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalItemSize, &localIte
 
 This function of the OpenCL API contains the ''kernel launch parameters'':
 
-- ```&globalItemSize```: defines the number of work–items times work–groups (in the above example 1 x 4 = 4);
-- ```&localItemSize```: defines the number of work–items (in the above example 1);
+- `&globalItemSize`: defines the number of work–items times work–groups (in the above example 1 x 4 = 4)
+- `&localItemSize`: defines the number of work–items (in the above example 1)
 
-So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the ```globalItemSize``` must be divisible with the ```localItemSize```, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-groups with work-items are executed *in parallel*.
+So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA. What one needs to pay attention to is that the `globalItemSize` must be divisible with the `localItemSize`, otherwise the kernel execution will go into error. As in CUDA the kernel execution on a GPU in OpenCL means that the work-groups with work-items are executed *in parallel*.
 
-Try to figure out, what does the kernel in OpenCL do in parallel and if there's an equivalent of the block index ```idx``` for the work-group index in the OpenCL code. (Don't worry if you can't figure this out, you will do an exercise later which will give you the answer.) Try also to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
+Try to figure out what does the kernel in OpenCL do in parallel and if there's an equivalent of the block index `idx` for the work-group index in the OpenCL code. (Don't worry if you can't figure this out, you will do an exercise later which will give you the answer.) Try also to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
 
 ![Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
 
@@ -328,15 +328,15 @@ In this exercise you will extend the Hello world GPU examples to print more info
 
 Modify the Hello world CUDA example from the previous step to complete the following tasks:
 
-- define 2 blocks with 4 threads each;
-- print the "Hello World" message to reflect also information on the thread number from each block (hint: use the built-in variable ```threadIdx.x```).
+- define 2 blocks with 4 threads each
+- print the "Hello World" message to reflect also information on the thread number from each block (hint: use the built-in variable `threadIdx.x`)
 
 ![Hello_World_CUDA_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA_extended.ipynb)
 
 Similarly, modify the Hello world OpenCL example from the previous step to complete the following tasks:
 
-- define 2 blocks (work-groups) with 4 threads (work-items) each;
-- print the "Hello World" message to reflect also information on the thread (work-item) number from each block (work-group) (hint: use the built-in variables ```get_group_id(0)``` for work-groups and ```get_local_id(0)``` for work-items).
+- define 2 blocks (work-groups) with 4 threads (work-items) each
+- print the "Hello World" message to reflect also information on the thread (work-item) number from each block (work-group) (hint: use the built-in variables `get_group_id(0)` for work-groups and `get_local_id(0)` for work-items)
 
 ![Hello_World_OpenCL_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL_extended.ipynb)
 
@@ -344,13 +344,13 @@ Similarly, modify the Hello world OpenCL example from the previous step to compl
 
 After exploring the GPU architecture and getting to know the principles of GPU programming we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL. We will present the equivalent OpenCL terminology at the end.
 
-The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture below (source: NVIDIA).
+The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture below (source: nvidia.com).
 
 ![](images/Execution_Model.png?raw=true)
 
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. A scalar processor is often referred to a GPU "core".
 
-So, when a GPU kernel is executed each thread block is assigned  to a SM. A maximum number of thread blocks can be assigned to a SM, depending  on GPU hardware resources. The  runtime  system  maintains  a  list  of  active blocks and  assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to a SM the resources on it are reserved until the execution of all threads in the block is not finished. Each thread block execution is independent from another (no synchronization can be done among blocks). Threads in each block are divided into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from the residing blocks in a SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
+So, when a GPU kernel is executed each thread block is assigned  to a SM. A maximum number of thread blocks can be assigned to a SM, depending on GPU hardware resources. The runtime system maintains a list of active blocks and  assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to a SM the resources on it are reserved until the execution of all threads in the block is not finished. Each thread block execution is independent from another (no synchronization can be done among blocks). Threads in each block are divided into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from the residing blocks in a SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
 
 ### CUDA threads hierarchy
 
@@ -358,23 +358,23 @@ Let's recap everything in terms of the GPU CUDA threads hierarchy with some deta
 
 - threads are organized into blocks: blocks can be 1D, 2D, 3D
 - blocks are organized into a grid: grids can also be 1D, 2D, 3D
-- each block or thread has a unique ID: ```.x```, ```.y```, ```.z``` are components in every dimension
+- each block or thread has a unique ID: `.x`, `.y`, `.z` are components in every dimension
 - built-in variables for the CUDA threads hierarchy:
-    - ```threadIdx```: thread coordinate inside the block
-    - ```blockIdx```: block coordinate inside the grid
-    - ```blockDim```: block dimension in thread units
-    - ```gridDim```: grid dimension in block units
+    - `threadIdx`: thread coordinate inside the block
+    - `blockIdx`: block coordinate inside the grid
+    - `blockDim`: block dimension in thread units
+    - `gridDim`: grid dimension in block units
 
 The picture below (source: nvidia.com) shows an example of a CUDA threads hierarchy with 2D blocks.
 
 ![](images/grid-of-thread-blocks.png?raw=true)
 
-Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index ```idx``` in the following way:
+Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index `idx` in the following way:
 
 ```
 int idx = blockIdx.x * blockDim.x + threadIdx.x;
 ```
-Similarly, we can define global thread indices ```i``` and  ```j``` for a 2D kernel:
+Similarly, we can define global thread indices `i` and  `j` for a 2D kernel:
 
 ```
 int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -395,7 +395,7 @@ and later used to print the block ID number:
 printf("Hello world! I'm a thread in block %d\n", idx);
 ```
 
-You could instead define a global thread index ```gid```:
+You could instead define a global thread index `gid`:
 
 ```
 int gid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -407,13 +407,13 @@ and print it with:
 printf("Hello world! I'm a global thread index %d in hierarchy\n", gid);
 ```
 
-Of course, the global thread index range is between 0 to ```NUM_BLOCKS * BLOCK_SIZE - 1``` if the ```hello``` kernel is invoked with:
+Of course, the global thread index range is between 0 to `NUM_BLOCKS * BLOCK_SIZE - 1` if the `hello` kernel is invoked with:
 
 ```
 hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 ```
 
-One should remember that the kernel on the GPU is run with all the threads defined by the launch parameters in the triple chevron synthax ```<<<...>>>``` but the calculation could be limited, e.g., with an ```if``` clause:
+One should remember that the kernel on the GPU is run with all the threads defined by the launch parameters in the triple chevron synthax `<<<...>>>` but the calculation could be limited, e.g., with an `if` clause:
 
 ```
 __global__ void hello(int N){
@@ -423,14 +423,14 @@ __global__ void hello(int N){
 }
 ```
 
-For example, if one sets ```N = 7``` (note that ```N``` is an integer variable defined outside the kernel, hence it must be called as an input parameter in a function like manner) the kernel invoked by:
-
+For example, if one sets `N = 7` (note that `N` is an integer variable defined outside the kernel, hence it must be called as an input parameter in a function like manner) the kernel invoked by:
 
 ```
 int N = 7;
 hello<<<4, 2>>>(N);
 ```
-would print global thread indices in the range from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and ```N```.
+
+would print global thread indices in the range from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and `N`.
 
 ### OpenCL work-items hierarchy
 
@@ -439,34 +439,34 @@ The GPU OpenCL work-items hierarchy is equivalent to the CUDA threads hierarchy 
 - work-items are organized into work-groups
 - the number of work-items can be specified in a work-group – this is called the local (work-group) size
 - both work-items and work-groups can be 1D, 2D, 3D
-- each work-item and work-group has a unique ID: ```(0)```, ```(1)```, ```(2)``` are components in every dimension
+- each work-item and work-group has a unique ID: `(0)`, `(1)`, `(2)` are components in every dimension
 - built-in variables for the OpenCL work-items hierarchy:
-    - ```get_local_id``` equivalent to ```threadIdx```
-    - ```get_group_id``` equivalent to ```blockIdx```
-    - ```get_local_size``` equivalent to ```blockDim```
-    - ```get_global_id``` equivalent to ```blockIdx * blockDim + threadIdx```
+    - `get_local_id` equivalent to `threadIdx`
+    - `get_group_id` equivalent to `blockIdx`
+    - `get_local_size` equivalent to `blockDim`
+    - `get_global_id` equivalent to `blockIdx * blockDim + threadIdx`
 
 The picture below (source: khronos.org) shows an example of an OpenCL work-items hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
 
 ![](images/ndrange-work-items.png?raw=true)
 
-As in CUDA we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index ```idx``` in the following way:
+As in CUDA we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index `idx` in the following way:
 
 ```
-int idx = get_group_id(0) * get_local_size(0) + get_local_id(0)
+int idx = get_group_id(0) * get_local_size(0) + get_local_id(0);
 ```
 
-This is of course unnecessary since OpenCL offers the ```get_global_id``` variable which returns a global work-item index:
+This is of course unnecessary since OpenCL offers the `get_global_id` variable which returns a global work-item index:
 
 ```
 int idx = get_global_id(0);
 ```
 
-As in CUDA, we can define global work-item indices ```i``` and  ```j``` for a 2D kernel in OpenCL with:
+As in CUDA, we can define global work-item indices `i` and `j` for a 2D kernel in OpenCL with:
 
 ```
-int i = get_group_id(0) * get_local_size(0) + get_local_id(0)
-int j = get_group_id(1) * get_local_size(1) + get_local_id(1)
+int i = get_group_id(0) * get_local_size(0) + get_local_id(0);
+int j = get_group_id(1) * get_local_size(1) + get_local_id(1);
 ```
 
 or equivalently with:
@@ -478,13 +478,13 @@ int j = get_global_id(1);
 
 Can you again define global work-item indices for a 3D kernel?
 
-As in CUDA, these indices are defined in a kernel as internal variables and can be used for work-items related computing in OpenCL. You can modify the Hello World OpenCL example to print the global work-item index and experiment with launch parameters along with an ```if``` clause in the kernel to limit the print out of indices.
+As in CUDA, these indices are defined in a kernel as internal variables and can be used for work-items related computing in OpenCL. You can modify the Hello World OpenCL example to print the global work-item index and experiment with launch parameters along with an `if` clause in the kernel to limit the print out of indices.
 
 ## 5.10 E: Vector addition on GPU
 
 A standard introductory example for GPU computing is vector addition. We will first show how it is done on a CPU and then on a GPU. In the next two steps we will use this example to present a step-by-step approach to GPU programming, both in CUDA and OpenCL.
 
-Vector addition on a CPU can be done with a ```for``` loop. Each iteration computes the sum of one component of vectors ```a``` and  ```b```. The vector sum is stored in ```out```.
+Vector addition on a CPU can be done with a `for` loop. Each iteration computes the sum of one component of vectors `a` and  `b`. The vector sum is stored in `out`.
 
 ```
 for(int i = 0; i < N; i++){
@@ -496,7 +496,7 @@ You can have a look at the program for vector addition in C and execute it:
 
 ![Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_C.ipynb)
 
-By now we should know how to transform this ```for``` loop into a GPU kernel. The only difference is that the kernel in this case will take some extra parameters, i.e., the vectors ```a```, ```b```, ```out``` and the vector size ```n```. Let's write down the CUDA kernel first:
+By now we should know how to transform this `for` loop into a GPU kernel. The only difference is that the kernel in this case will take some extra parameters, i.e., the vectors `a`, `b`, `out` and the vector size `n`. Let's write down the CUDA kernel first:
 
 ```
 __global__ void vector_add(double *out, double *a, double *b, int n)
@@ -507,7 +507,7 @@ __global__ void vector_add(double *out, double *a, double *b, int n)
 }
 ```
 
-You can see that the input parameters for the kernel ```vector_add``` are defined in a function like manner and that the index ```i``` defined inside the kernel represents the global thread index. In that way the kernel sums the vector components in parallel (keep in mind that this is true if enough resources on the GPU are available): for every component addition there's a thread which takes care of the computing task, while the ```if``` clause makes sure that the calculations are done only within the vector size. We will see in the next step how the kernel is called and the parameters or variables must be defined.
+You can see that the input parameters for the kernel `vector_add` are defined in a function like manner and that the index `i` defined inside the kernel represents the global thread index. In that way the kernel sums the vector components in parallel (keep in mind that this is true if enough resources on the GPU are available): for every component addition there's a thread which takes care of the computing task, while the `if` clause makes sure that the calculations are done only within the vector size. We will see in the next step how the kernel is called and the parameters or variables must be defined.
 
 For the same task we can use an OpenCL kernel instead:
 
@@ -541,7 +541,7 @@ In this step we will explain in detail the vector addition in CUDA, which is a t
 - Transfer outputs from the GPU back to the host (CPU)
 - Free GPU memory
 
-It has to be mentioned that recent NVIDIA GPUs (Pascal microarchitecture or newer) support unified memory (invoked with ```cudaMallocManaged()```) in a single-pointer-to-data model meaning CPUs and GPUs can use the same memory address space. Consequently, transfers from/to GPU memory are no longer needed or at least less important in a GPU accelerated code.
+It has to be mentioned that recent NVIDIA GPUs (Pascal microarchitecture or newer) support unified memory (invoked with `cudaMallocManaged()`) in a single-pointer-to-data model meaning CPUs and GPUs can use the same memory address space. Consequently, transfers from/to GPU memory are no longer needed or at least less important in a GPU accelerated code.
 
 Let's analyze the CUDA vector addition code:
 
@@ -551,25 +551,25 @@ step-by step and explain how to compile it into an executable program.
 
 1. Initialize device
 
-The first available CUDA device (GPU) is automatically initialized to ```0```, but you could still set it yourself by:
+The first available CUDA device (GPU) is automatically set to `0`, but you could still set it yourself by:
 
 ```
 CudaSetDevice(0);
 ```
 
-Such initialization is important in multi GPU systems where there's a need for switching from one device to another, e.g., switching to device ```1``` can be done with:
+Such initialization is important in multi GPU systems where there's a need for switching from one device to another, e.g., switching to device `1` can be done with:
 
 ```
 CudaSetDevice(1);
 ```
 
-It's a good approach to initialize CUDA through the ```CUDA_ERROR()``` API call:
+It's a good approach to initialize CUDA through the `CUDA_ERROR()` API call:
 
 ```
 CUDA_ERROR(cudaSetDevice(0));
 ```
 
-In this way a CUDA program will continue with execution only if a CUDA capable device is available. Sometimes it's useful to get the device properties through ```cudaGetDeviceProperties()``` by:
+In this way a CUDA program will continue with execution only if a CUDA capable device is available. Sometimes it's useful to get the device properties through `cudaGetDeviceProperties()` by:
 
 ```
 cudaDeviceProp prop;
@@ -592,7 +592,7 @@ what is now redundant. Still, you can put this lines at the beginning of CUDA co
 
 2. Allocate GPU memory
 
-Memory allocation on the device is done with ```cudaMalloc()```:
+Memory allocation on the device is done with `cudaMalloc()`:
 
 ```
 cudaMalloc((void**)&d_a, sizeof(double) * N);
@@ -600,24 +600,24 @@ cudaMalloc((void**)&d_b, sizeof(double) * N);
 cudaMalloc((void**)&d_out, sizeof(double) * N);
 ```
 
-For every variable on the host (CPU) from which or to which GPU memory transfers will be done we must allocate memory on the GPU of the same size and type.
+For every variable on the host (CPU), from which or to which GPU memory transfers will be done, we must allocate memory on the GPU of the same size and type.
 
-It's also a good approach to use "d" for the variables in GPU memory as a indication for device, e.g., ```d_a``` or ```a_d```. This naming convention is optional but quite useful in terms of code readability.
+It's also a good approach to use "d" for the variables in GPU memory as an indication for device, e.g., `d_a` or `a_d`. This naming convention is optional but quite useful in terms of code readability.
 
 3. Transfer data from host to device memory
 
-Data transfer from host (CPU) to device (GPU) is done with ```cudaMemcpy()``` and the option ```cudaMemcpyHostToDevice```. In the example of vector addition we have to transfer data from host variables ```a``` and ```b``` to device variables ```d_a``` and ```d_b```:
+Data transfer from host (CPU) to device (GPU) is done with `cudaMemcpy()` and the option `cudaMemcpyHostToDevice`. In the example of vector addition we have to transfer data from host variables `a` and `b` to device variables `d_a` and `d_b`:
 
 ```
 cudaMemcpy(d_a, a, sizeof(double) * N, cudaMemcpyHostToDevice);
 cudaMemcpy(d_b, b, sizeof(double) * N, cudaMemcpyHostToDevice);
 ```
 
-Basically, we transfer the values of the components of vectors ```a``` and ```b``` from host do device memory. Note, that host and device variables must be of same size and type.
+Basically, we transfer the values of the components of vectors `a` and `b` from host do device memory. Note, that host and device variables must be of the same size and type.
 
 4. Execute kernel on device variables as inputs
 
-After transfering the components of vectors ```a``` and ```b``` from host do device memory we can sum the vector components in parallel on the GPU. In the previous step we have already shown how to do that, i.e., with the kernel ```vector_add```:
+After transfering the components of vectors `a` and `b` from host do device memory we can sum the vector components in parallel on the GPU. In the previous step we have already shown how to do that, i.e., with the kernel `vector_add`:
 
 ```
 __global__ void vector_add(double *out, double *a, double *b, int n)
@@ -648,17 +648,17 @@ Now we can launch the kernel with these parameters:
 vector_add<<<blocksPerGrid, threadsPerBlock>>>(d_out, d_a, d_b, N);
 ```
 
-Note that we launched the kernel with the allocated device variables ```d_out```, ```d_a``` and ```d_b``` as is usuallly done with function calls. Note also that integers and constant type variables can be passed to the kernel without device memory allocation. In this case we passed the vector size ```N``` in this way.
+Note that we launched the kernel with the allocated device variables `d_out`, `d_a` and `d_b` as is usually done with function calls. Note also that integers and constant type variables can be passed to the kernel without device memory allocation. In this case we passed the vector size `N` in this way.
 
 5. Transfer data back from device to host
 
-The kernel ```vector_add``` calculates the vector sum of ```d_a``` and ```d_b``` and puts it into the variable ```d_out```. This variable with the vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable ```out```. This is done again with ```cudaMemcpy()``` except that now the option used is ```cudaMemcpyDeviceToHost```:
+The kernel `vector_add` calculates the vector sum of `d_a` and `d_b` and puts it into the variable `d_out`. This variable with the vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable `out`. This is done again with `cudaMemcpy()` except that now the option used is `cudaMemcpyDeviceToHost`:
 
 ```
 cudaMemcpy(out, d_out, sizeof(double) * N, cudaMemcpyDeviceToHost);
 ```
 
-Again, the counterpart host variable ```out``` must be of the same size and type as the device variable ```d_out```.
+Again, the counterpart host variable `out` must be of the same size and type as the device variable `d_out`.
 
 6. Deallocate (free) device memory
 
@@ -672,7 +672,7 @@ cudaFree(d_out);
 
 7. Compiling the code
 
-CUDA codes reside in ```*.cu``` files and the NVIDIA CUDA (nvcc) compiler can be used to compile them, e.g., in the case of the vector addition CUDA code:
+CUDA codes reside in `*.cu` files and the NVIDIA CUDA (nvcc) compiler can be used to compile them, e.g., in the case of the vector addition CUDA code:
 
 ```
 !nvcc -o vector_add_cuda vector_add_cuda.cu
@@ -714,7 +714,7 @@ As opposed to CUDA a specific OpenCL header must be included at the beginning of
 #endif
 ```
 
-Before initializing the device it's necessary to get platform and device information; this is more or less boiler-plate code that you can copy/paste it to every OpenCL code. Device initialization consists of the following steps:
+Before initializing the device it's necessary to get platform and device information. This is more or less boiler-plate code that you can copy/paste to every OpenCL code. Device initialization consists of the following steps:
 
 - declare context:
 
@@ -736,9 +736,9 @@ cl_command_queue command_queue = clCreateCommandQueue(context, device_id, 0, &re
 
 This is still more or less boiler-plate code which is basically the same for every OpenCL program.
 
-2. Create buffers and memory transfer device
+2. Create buffers and memory transfer to device
 
-Next we create buffers which is essentialy memory allocation on the GPU:
+Next we create buffers which is essentially memory allocation on the GPU:
 
 ```
 cl_mem a_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, N * sizeof(double), NULL, &ret);
@@ -746,16 +746,16 @@ cl_mem b_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, N * sizeof(double),
 cl_mem out_mem_obj = clCreateBuffer(context, CL_MEM_WRITE_ONLY, N * sizeof(double), NULL, &ret);
 ```
 
-Notice, that we used the flag ```CL_MEM_READ_ONLY``` to create buffers for vectors ```a``` and ```b``` since the GPU kernel will only read these data. The vector sum will be stored in the buffer ```out_mem_obj``` and the GPU kernel will only write to it, hence the use of the ```CL_MEM_WRITE_ONLY``` flag. If there's the need of both reading from and writing to memory buffers one could use the flag ```CL_MEM_READ_WRITE```.
+Notice, that we used the flag `CL_MEM_READ_ONLY` to create buffers for vectors `a` and `b` since the GPU kernel will only read these data. The vector sum will be stored in the buffer `out_mem_obj` and the GPU kernel will only write to it, hence the use of the `CL_MEM_WRITE_ONLY` flag. If there's the need of both reading from and writing to memory buffers one could use the flag `CL_MEM_READ_WRITE`.
 
-After buffer creation we can transfer host data to the device. Transfering the host variables ```a``` and ```b``` to GPU memory buffers ```a_mem_obj``` and ```b_mem_obj``` is done with the following calls:
+After buffer creation we can transfer host data to the device. Transfering the host variables `a` and `b` to GPU memory buffers `a_mem_obj` and `b_mem_obj` is done with the following calls:
 
 ```
 ret = clEnqueueWriteBuffer(command_queue, a_mem_obj, CL_TRUE, 0, N * sizeof(double), a, 0, NULL, NULL);
 ret = clEnqueueWriteBuffer(command_queue, b_mem_obj, CL_TRUE, 0, N * sizeof(double), b, 0, NULL, NULL);
 ```
 
-As in CUDA the size and the type of the memory buffers of the device variables must be the same as for the host counterparts, in this case: ```N * sizeof(double)```.
+As in CUDA the size and the type of the memory buffers of the device variables must be the same as for the host counterparts, in this case: `N * sizeof(double)`.
 
 3. Build program and select kernel
 
@@ -776,7 +776,7 @@ source_size = fread( source_str, 1, MAX_SOURCE_SIZE, fp);
 fclose( fp );
 ```
 
-These lines basically load the OpenCL kernel ```vector_add``` for vector addition (shown in Step 5.10):
+These lines basically load the OpenCL kernel `vector_add` for vector addition (shown in Step 5.10):
 
 ```
 __kernel void vector_add(__global double *a, __global double *b, __global double *out, int n) {
@@ -786,9 +786,9 @@ __kernel void vector_add(__global double *a, __global double *b, __global double
 }
 ```
 
-as a string from the file ```vector_add.cl```. It's common practice in OpenCL programming to have kernels in ```*.cl``` files but one could also define them in the main code as plain strings.
+as a string from the file `vector_add.cl`. It's common practice in OpenCL programming to have kernels in `*.cl` files but one could also define them in the main code as plain strings.
 
-With kernel source loaded we can create a program from it:
+With the kernel source loaded we can create a program from it:
 
 ```
 cl_program program = clCreateProgramWithSource(context, 1, (const char **)&source_str, (const size_t *)&source_size, &ret);
@@ -806,7 +806,7 @@ and create the OpenCL kernel:
 cl_kernel kernel = clCreateKernel(program, "vector_add", &ret);
 ```
 
-Notice the constant use of the variable ```ret``` of the ```cl_int``` type defined at beginning. This variable accepts return values for the OpenCL API. As said before you can use many of the OpenCL API calls as boiler-plate code as long as you are consistent with the variables definitions in these calls.
+Notice the constant use of the variable `ret` of the `cl_int` type defined at the beginning. This variable accepts return values for the OpenCL API. As said before you can use many of the OpenCL API calls as boiler-plate code as long as you are consistent with the variables definitions in these calls.
 
 4. Set arguments and enqueue kernel
 
@@ -825,7 +825,7 @@ It's important that these arguments follow the same order (indices from 0 to 3) 
 vector_add(__global double *a, __global double *b, __global double *out, int n)
 ```
 
-Notice, that integer variables, e.g., ```n``` in this case, do not need the creation of a memory buffer but still need to be set as a kernel argument.
+Notice, that integer variables, e.g., `n` in this case, do not need the creation of a memory buffer but still need to be set as a kernel argument.
 
 Next, we must set local and global work-group sizes:
 
@@ -843,11 +843,11 @@ Finally, we execute the kernel with:
 ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, &local_item_size, 0, NULL, NULL);
 ```
 
-You will notice that the execution of a kernel in OpenCL is different than in CUDA. The main difference is that the kernel in OpenCL is not called in a function-like manner, i.e., with passing arguments to it. In OpenCL the arguments of a kernel are set with the ```clSetKernelArg()``` API function before the kernel is executed. On the other hand, launch parameters for the kernel, i.e., ```global_item_size``` and ```local_item_size``` are set at kernel execution, as in CUDA.
+You will notice that the execution of a kernel in OpenCL is different than in CUDA. The main difference is that the kernel in OpenCL is not called in a function-like manner, i.e., with passing arguments to it. In OpenCL the arguments of a kernel are set with the `clSetKernelArg()` API function before the kernel is executed. On the other hand, launch parameters for the kernel, i.e., `global_item_size` and `local_item_size` are set at kernel execution, as in CUDA.
 
 5. Transfer back results
 
-The kernel ```vector_add``` calculates the vector sum of ```a_mem_obj``` and ```b_mem_obj``` and puts it into the memory buffer ```out_mem_obj```. As in CUDA, this vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable ```out```. The transfer is done with:
+The kernel `vector_add` calculates the vector sum of `a_mem_obj` and `b_mem_obj` and puts it into the memory buffer `out_mem_obj`. As in CUDA, this vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable `out`. The transfer is done with:
 
 ```
 ret = clEnqueueReadBuffer(command_queue, out_mem_obj, CL_TRUE, 0, N * sizeof(double), out, 0, NULL, NULL);
@@ -875,7 +875,7 @@ ret = clReleaseContext(context);
 
 7. Compiling the code
 
-OpenCL codes reside in *.c files (main code) and *.cl files (kernels). Compilers that can link to the OpenCL library (generally with the flag ```-lOpenCL```) can be used, e.g., gcc or nvcc. One should be aware that for running OpenCL codes on a GPU a Software Developer Kit (SDK) for it must be installed. For NVIDIA GPUs the installation of the CUDA SDK is generally enough and compiling can be done with:
+OpenCL codes reside in `*.c` files (main code) and `*.cl` files (kernels). Compilers that can link to the OpenCL library (generally with the flag `-lOpenCL`) can be used, e.g., `gcc` or `nvcc`. One should be aware that for running OpenCL codes on a GPU a Software Developer Kit (SDK) for it must be installed. For NVIDIA GPUs the installation of the CUDA SDK is generally enough and compiling can be done with:
 
 ```
 !nvcc -o vector_add_opencl vector_add_opencl.c -lOpenCL
@@ -1468,9 +1468,9 @@ The visual profiling can be invoked with many options for analysis of the CUDA c
 
 One can observe from the traces that the kernel `reducerSum` is executed after the kernel `medianTrapezium` and that for the latter 91.1% Streaming Multiprocessor (SM) occupancy was achieved with 86000005646 Double Precision Floating Point Operations (Flop) in 172.91868 miliseconds. For the kernels the parameters can be shown graphically, e.g., the performance in Flops. You can calculate the latter your self from data in the summary, e.g., for the kernel `medianTrapezium`:
 
-86000005646/172.91868*1000/10^9 = 497.34 GFLOPS
+86000005646/172.91868*1000/10^9 = 497.34 GFlops
 
-You can then compare this performance to the theoretical FP64 (double) performance of 1371 GFLOPS for the Tesla K80 GPU (on which the CUDA program was executed) and draw conclusions about the efficacy of the code.
+You can then compare this performance to the theoretical FP64 (double) performance of 1371 GFlops for the Tesla K80 GPU (on which the CUDA program was executed) and draw conclusions about the efficacy of the code.
 
 As already pointed out the tools `nvprof` and `nvvp` are already deprecated in CUDA 11 and will be discontinued. They are replaced by Nvidia Nsight Systems. The equivalent of `nvprof` in command line is `nsys`. One can profile the CUDA Riemann sum code with two kernels in the following way:
 
