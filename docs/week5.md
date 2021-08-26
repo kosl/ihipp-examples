@@ -1604,3 +1604,20 @@ On the pictures below you can see the traces with the description legend.
 ![](images/jumpshot_riemann_opencl_double_reduce_legend_wo-values.png?raw=true)
 
 The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case of the trace showing CUDA kernels.
+
+## 5.24 D: Week 5 wrap up
+
+In this week we:
+
+- gave an introduction to Graphical Processing Units (GPUs) as a means to accelerate computing
+- introduced you to GPU architectures and GPU execution models
+- gave step-by-step introductions to the most widely used GPU programming extensions: CUDA and OpenCL
+- briefly introduced you to OpenMP as a means to off-load computation to GPUs
+
+We are interested in your opinion on the Week 5 content:
+
+- did you find the introduction to the topic of GPU parallel computing easy to follow?
+- did the examples in Jupyter notebooks work as expected?
+- what were the parts of Week 5 that were the most difficult to understand?
+- do you think GPU computation techniques you learned about will be useful for you?
+
