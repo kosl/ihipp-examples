@@ -1606,7 +1606,7 @@ On the pictures below you can see the traces with the description legend.
 The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case of the trace showing CUDA kernels.
 
 The latter observation should be clarified in some detail. In CUDA all operations executed on the device belong to
-the so-called default stream. Multiple Kernels submitted to the same stream are executed consequently one after another. If one needs concurrent execution of multiple kernels, then every kernel must be defined in a different stream. For synchronization of kernels execution one can use `cudaDeviceSynchronize()` which is in fact a blocking call, i.e., it blocks any further execution until the device (GPU) has finished all the tasks launched to that point.
+the so-called default stream. Multiple kernels submitted to the same stream are executed consequently one after another. If one needs concurrent execution of multiple kernels, then every kernel must be defined in a different stream. For synchronization of kernels execution one can use `cudaDeviceSynchronize()` which is in fact a blocking call, i.e., it blocks any further execution until the device (GPU) has finished all the tasks launched to that point.
 
 Similarly, multiple OpenCL kernels enqueued in the same command queue are executed consequently one after another. Concurrent execution of multiple kernels is achieved by creating multiple command queues.
 
