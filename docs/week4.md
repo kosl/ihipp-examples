@@ -255,14 +255,80 @@ MPI_THREAD_MULTIPLE
 
 [Jupyter notebook: Threading methods](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
 
-## 2.2 E: Calculate pi! Using MPI_THREAD_FUNNLED
+## 2.2 Calculate pi! Using MPI_THREAD_FUNNELED
 
-### Learning outcomes for the excercise 
-We will see through this excercise that with MPI_THREAD_FUNNLED
-- It Fits nicely with most OpenMP models
-- Expensive loops parallelized with OpenMP
-- Communication and MPI calls between loops
-- Eliminates need for true “thread-safe” MPI
+The safest and the easiest way to use threading is to use `MPI_THREAD_FUNNELED`. This level of thread safety assures multithreading, but only the main thread makes the MPI calls (the one that called MPI_Init_thread). All MPI calls are made by the master thread, outside the OpenMP parallel regions or in OpenMP master regions. 
+
+This example notebook shows how to calculate the value of pi by solving this integral approximation. 
+
+$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx$$ \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+
+You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous weeks. What we did in this example is use both. The goal is to minimaly use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. This is the complete code shown below. 
+
+~~~c
+#include <omp.h>
+#include <mpi.h>
+#include <stdio.h>
+#define N 1000000
+
+int main(int argc, char *argv[])
+{
+  int rank;
+  int size;
+  double subsum = 0.0;
+
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  omp_set_num_threads(2);
+  
+  int nthreads = omp_get_num_threads();
+  #pragma omp parallel
+  {  
+    int tid = omp_get_thread_num();
+    printf("Thread %d within rank %d started.\n", tid, rank);
+    #pragma omp for reduction(+:subsum)
+    for(int i = rank; i < N; i += size*nthreads)
+      {
+        double x = (i+0.5)/N;
+        subsum += 4/(1 + x*x);
+      }
+  }
+  double sum;
+  MPI_Reduce(&subsum, &sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  if (rank == 0)
+     printf("pi = %.10lf\n", sum/N);
+  MPI_Finalize();
+  return 0;
+}
+~~~
+
+When we have threading it is important to think about how to split up the workload. You can see how the workload is split with this line below so we follow the same principles asked by the MPI. If we have `nthreads`, then we need to increase the jump to the next chunk by the value of `size*nthreads`. Each chunk is computed this way. 
+
+~~~c
+for(int i = rank; i < N; i += size*nthreads)
+~~~
+
+The collection of `subsum`, that is actually a shared variable within the threads and starts for each MPI process as `0.0`, is collected from each thread in one rank, so we get subsum for each MPI process at the end of OpenMP parallel region. After that the master thread reduces this `subsum` together as `sum` with MPI. 
+
+We run this program on 3 processes and by setting 2 threads inside the code we have 6 threads in total within 3 ranks (rank 0, 1 and 2). 
+
+~~~c
+mpicc -fopenmp pi-hybrid.c && mpirun -n 3 –allow-run-as-root a.out
+~~~
+
+Look and run the code in the notebook at the end of this article. 
+
+### Learning outcomes for the exercise
+
+This program was done in the first way of threading methods (MPI + OpenMP). 
+
+* This way of parallelization that we just did in the notebook example fits nicely with most OpenMP models. 
+* Expensive loops are parallelized with OpenMP and that is faster. You can utilize many of the processor cores, so doubling the number of threads, instead of cores. So running programs this way surely has some potential. 
+* Communication and MPI calls between loops
+* Eliminates need for true “thread-safe” MPI
+
+[Jupyter notebook: Compute Pi Funneled](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
 
 ## 2.3 D:
 
