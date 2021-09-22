@@ -261,7 +261,7 @@ The safest and the easiest way to use threading is to use `MPI_THREAD_FUNNELED`.
 
 This example notebook shows how to calculate the value of pi by solving this integral approximation. 
 
-$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx$$ \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous weeks. What we did in this example is use both. The goal is to minimaly use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. This is the complete code shown below. 
 
