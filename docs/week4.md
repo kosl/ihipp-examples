@@ -33,7 +33,7 @@ Perhaps you can already see it clearly that fundametally it is non blocking in t
 
 In similiar ways we can initiate the non blocking receive. So in our ring example it would mean that we initiate non-blocking receive from the left neighbour. This would imply that we will receive something, but maybe not not now, maybe later, and we do some work. In this case it would mean sending information to the following receiver so, send the message to the right neighbour. Finally, we would call the MPI_wait function to wait for non-blocking receive to complete.
 
-Let us try to furhter consolidate these ideas by implementing them in the following excercise!
+Let us try to furhter consolidate these ideas by implementing them in the following exercise!
 
 ## 1.2 E: Rotating information around a ring (non-blocking)
 
@@ -123,7 +123,7 @@ In the same manner MPI_Get is similar to the put operation, except that data is 
 ~~~c
 MPI_Get(void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype_target_datatype, MPI_Win win);
 ~~~
-We will understand in depth about the arguments of these functions in the following excercise. But before we get into that another important thing that we need to discuss is the Synchronization. If you remember we discussed this concept briefly in the (number) week when we were learning about the concepts of OpenMP. 
+We will understand in depth about the arguments of these functions in the following exercise. But before we get into that another important thing that we need to discuss is the Synchronization. If you remember we discussed this concept briefly in the (number) week when we were learning about the concepts of OpenMP. 
 In MPI in one sided communication (image S24)  the target process  calls the function to create the window in order to give access of its memory to other processes. However, in the case of multiple users it is already quite plain to see that if these users try to simultaneously access this data can already lead to some problems. For example, lets say two users access the window to put data using the MPI_Put function this is clealry a race condition that needs to be avoided. This is where synchronisation comes into the play. So in order to avoid this before and after each 'one sided communication' function i.e MPI-Get and MPI_Put we need to use this function
 ~~~c
 MPI_Win_fence(0, MPI_Win win);
@@ -353,26 +353,79 @@ So this tracing is one kind of such problems, which is best done with MPI + Open
 ### Calling MPI inside of OMP MASTER
 If we would like to do communication, then it is usually best to do OMP master thread. This ensures that one thread only communicates with the SMPI. However, we will still need to do some synchronization. As we learnt in the previous weeks about synchronisation that sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. Synchronization means that  whenever we do MPI, the old threads will need to stop at some point and do the barrier.
 
-In OpenMP the MPI is called inside of a parallel region, with “OMP MASTER”• It requires MPI_THREAD_FUNNELED, and we saw in the previous subsection this implies that only master thread will make MPI-calls. However we need to take care that there isn’t any synchronization with “OMP MASTER”! Therefore, with the “OMP BARRIER” normally necessary to guarantee, that data or buffer space from/for other threads is available before/after the MPI call!
+In OpenMP the MPI is called inside of a parallel region, with “OMP MASTER”• It requires MPI_THREAD_FUNNELED, and we saw in the previous subsection this implies that only master thread will make MPI-calls. However we need to take care that there isn’t any synchronization with “OMP MASTER”! There is no implicit barrier in the master workshare construct. Therefore, with the “OMP BARRIER” normally necessary to guarantee, that data or buffer space from/for other threads is available before/after the MPI call!
 
-~~~c
+~~~Fortran
 !$OMP BARRIER
 !$OMP MASTER
 call MPI_Xxx(...)
 !$OMP END MASTER
 !$OMP BARRIER
+~~~
+
+~~~c
 #pragma omp barrier
 #pragma omp master
-MPI_Xxx(...);
+{
+    MPI_Xxx(...);
+}
 #pragma omp barrier
 ~~~
 
-We can see above that it implies that all threads are sleeping, and the additional barrier implies the necessary cache flush!
+We can see above that it implies that all threads are sleeping, and the additional barrier implies the necessary cache flush! The barrier is necessary to prevent data races. 
 
-Through the following excercise we will see why the barrier is necessary. 
+Through the following exercise we will see why the barrier is necessary. 
 
 ### Example with MPI_recv
-(example from D3P1S9)
+
+In the example, the master thread will execute a single MPI call within the OMP_MASTER construct, while all the other threads are idle. As illustrated barriers may be required in two places:
+
+* Before the MPI call, in case the MPI call needs to wait on the results of other threads. 
+* After the MPI call, in case other threads immediately need the results of the MPI call. 
+
+~~~Fortran
+!$OMP parallel
+    !$OMP do
+        do i=1, 1000
+            a(i) = buf(i)
+        end do
+    !$OMP end do nowait
+
+    !$OMP barrier
+    !$OMP master
+        call MPI_Recv(buf, …)
+    !$OMP end master
+    !$OMP barrier
+
+    !$OMP do
+        do i=1, 1000
+            c(i) = buf(i)
+        end do
+    !$OMP end do nowait
+!$OMP end parallel
+~~~
+
+~~~c
+#pragma omp parallel
+{
+    #pragma omp for nowait
+    for (i = 0; i < 1000; i++)
+        a[i] = buf[i];
+
+    #pragma omp barrier
+    #pragma omp master
+    {
+        MPI_Recv(buf,....);
+    } 
+    #pragma omp barrier
+
+    #pragma omp for nowait
+    for (i = 0; i < 1000; i++)
+        c[i] = buf[i];
+}
+~~~
+
+
 
 ## 2.5 Q: Quiz on Hybrid programming with OpenMP and MPI
 
