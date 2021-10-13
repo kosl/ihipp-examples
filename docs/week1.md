@@ -1,4 +1,4 @@
-# Week 1
+# Introduction to parallel programming
 
 ## A->V:Intro to parallel programming
 ### V: Intro to Week 1, Serial vs Parallel
@@ -68,3 +68,5 @@ You need to have quite a good overview of the architecture that you are doing, t
 ### Where to search for a help
 
 ## Test:
+
+###### tags: ipp, HPCFS
