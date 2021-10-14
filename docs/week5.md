@@ -1,4 +1,5 @@
-# Week 5: Beyond OpenMP and MPI: GPU parallelisation 
+# Beyond OpenMP and MPI: GPU parallelisation 
+
 
 ## 5.1 V: Introduction
 
@@ -23,7 +24,7 @@ On the figure below (source: nvidia.com) you can observe schematics of both CPU 
 - a core (green rectangle) in a CPU is different than a "core" or ALU (green rectangle) in a GPU: the former is comprised of ALUs and FPUs which are more specialized than ALUs in a GPU;
 - a CPU has more cache memory than a GPU.
 
-![](images/CPU_vs_GPU_architecture.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/CPU_vs_GPU_architecture.png)
 
 It has to be noted that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores" (typically more than 100). Each SM has a lot of (L1 cache) registers (32-64 KB), instruction scheduler dispatchers and a very fast shared memory. In the next step we will put everything explained so far into perspective by showing some numbers.
 
@@ -224,7 +225,7 @@ Many solutions exist for programming GPUs, we will talk about the two mostly use
 
 Another solution is OpenCL (Open Computing Language), which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA), now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming/execution model is similar to CUDA, it's more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and is de facto oriented to heterogeneous computing. In principle that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's latest standard is currently at 3.0. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is still offered only for OpenCL 1.2.
 
-![](images/CUDA_OpenCL.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/CUDA_OpenCL.png)
 
 ## 5.7 E: Hello world on GPU
 
@@ -243,7 +244,7 @@ for(int i = 0; i < N; ++i){
 
 What do you think this code will do if executed as a program? If you are familiar with the concept of a `for` loop then you know that in it every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 3. Try to execute it in the notebook to see the expected results:
 
-![Hello_World_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_C.ipynb)
+[Hello_World_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_C.ipynb)
 
 ### Hello world in CUDA
 
@@ -282,7 +283,7 @@ What is crucial about the kernel execution on a GPU is that the blocks with thre
 
 Try to execute the CUDA Hello world in the notebook for a couple of times to see which block indices are printed first. Is the order of block indices always the same or does it change with any new execution of the code?
 
-![Hello_World_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA.ipynb)
+[Hello_World_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA.ipynb)
 
 ### Hello world in OpenCL
 
@@ -318,7 +319,7 @@ So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA
 
 Try to figure out what does the kernel in OpenCL do in parallel and if there's an equivalent of the block index `idx` for the work-group index in the OpenCL code. (Don't worry if you can't figure this out, you will do an exercise later which will give you the answer.) Try also to execute the OpenCL Hello world in the notebook for a couple of times to see which indices are printed first. Is the order of indices always the same or does it change with any new execution of the code?
 
-![Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
+[Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
 
 Don't worry if you don't understand completely the codes above. We will explain everything in detail (including compiling of the codes) in the following steps.
 
@@ -331,14 +332,14 @@ Modify the Hello world CUDA example from the previous step to complete the follo
 - define 2 blocks with 4 threads each
 - print the "Hello World" message to reflect also information on the thread number from each block (hint: use the built-in variable `threadIdx.x`)
 
-![Hello_World_CUDA_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA_extended.ipynb)
+[Hello_World_CUDA_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA_extended.ipynb)
 
 Similarly, modify the Hello world OpenCL example from the previous step to complete the following tasks:
 
 - define 2 blocks (work-groups) with 4 threads (work-items) each
 - print the "Hello World" message to reflect also information on the thread (work-item) number from each block (work-group) (hint: use the built-in variables `get_group_id(0)` for work-groups and `get_local_id(0)` for work-items)
 
-![Hello_World_OpenCL_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL_extended.ipynb)
+[Hello_World_OpenCL_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL_extended.ipynb)
 
 ## 5.9 CUDA and OpenCL execution model
 
@@ -346,7 +347,7 @@ After exploring the GPU architecture and getting to know the principles of GPU p
 
 The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the multiple SMs, and each block contains multiple threads, mapping onto the cores in an SM. We can see this concept on the picture below (source: nvidia.com).
 
-![](images/Execution_Model.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/Execution_Model.png)
 
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. A scalar processor is often referred to a GPU "core".
 
@@ -367,7 +368,7 @@ Let's recap everything in terms of the GPU CUDA threads hierarchy with some deta
 
 The picture below (source: nvidia.com) shows an example of a CUDA threads hierarchy with 2D blocks.
 
-![](images/grid-of-thread-blocks.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//grid-of-thread-blocks.png)
 
 Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index `idx` in the following way:
 
@@ -448,7 +449,7 @@ The GPU OpenCL work-items hierarchy is equivalent to the CUDA threads hierarchy 
 
 The picture below (source: khronos.org) shows an example of an OpenCL work-items hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
 
-![](images/ndrange-work-items.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//ndrange-work-items.png)
 
 As in CUDA we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index `idx` in the following way:
 
@@ -494,7 +495,7 @@ for(int i = 0; i < N; i++){
 
 You can have a look at the program for vector addition in C and execute it:
 
-![Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_C.ipynb)
+[Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_C.ipynb)
 
 By now we should know how to transform this `for` loop into a GPU kernel. The only difference is that the kernel in this case will take some extra parameters, i.e., the vectors `a`, `b`, `out` and the vector size `n`. Let's write down the CUDA kernel first:
 
@@ -523,11 +524,11 @@ You can see that the kernel looks basically the same, except for variable type p
 
 If you are curious how the codes for vector addition on GPU look like, you can have look, for the CUDA version:
 
-![Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
+[Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
 
 and the OpenCL version:
 
-![Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
+[Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
 
 Don't be afraid if you find them difficult to grasp, we will explore and explain them in a step-by-step fashion in the next steps.
 
@@ -545,7 +546,7 @@ It has to be mentioned that recent NVIDIA GPUs (Pascal microarchitecture or newe
 
 Let's analyze the CUDA vector addition code:
 
-![Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
+[Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
 
 step-by step and explain how to compile it into an executable program.
 
@@ -698,7 +699,7 @@ In this step we will explain in detail the vector addition also in OpenCL. A typ
 
 Let's also analyze the OpenCL vector addition code:
 
-![Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
+[Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
 
 step-by step and explain how to compile it into an executable program.
 
@@ -951,7 +952,7 @@ We are ready for a somewhat more complex, yet still a fairly school example in n
 
 Approximation of a definite integral of a function can be done using the trapezium rule. The area under the function on the interval from a to b, which represents the definite integral, is divided into N trapeziums. The area of each trapezium is equal to the median of the trapezium `(f(x+h)+f(x))/2` multiplied with the sub-interval width `(b-a)/N`. The sum of all trapezium areas is an approximation of the definite integral of the function from a to b. For simplicity we choose `a = 0` and `b = 1` to calculate the normal distribution function from 0 to 1 which is equal to 0.3413447460685429 (see picture below).
 
-![](images/riemann_sum.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//riemann_sum.png)
 
 How can we do this example on the CPU? The simplest approach is, of course, using a `for` loop to calculate trapezium medians and trapezium sums:
 
@@ -976,7 +977,7 @@ Notice, that in the code above we calculate trapezium medians for every sub-inte
 
 The whole Riemann sum CPU code can be found in this notebook:
 
-![Riemann_sum_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_C.ipynb)
+[Riemann_sum_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_C.ipynb)
 
 If you compile the code for `N` equal to 1 billion, i.e.:
 
@@ -1001,7 +1002,7 @@ Did you succeed to gain any speed up with the use of OpenMP? Leave a comment wit
 
 If you have any troubles to modify the code or compile it you can have a look at the solution given in the notebook below:
 
-![Riemann_sum_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP.ipynb)
+[Riemann_sum_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP.ipynb)
 
 ## 5.17 OpenMP off-loading to GPU for Riemann sum
 
@@ -1015,7 +1016,7 @@ The main OpenMP device constructs are:
 
 By defining a `target` construct a new target task is generated. When the latter starts, the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not all target regions associated with the device are executed on the host. The `teams` construct generates a league of thread teams where the master thread of each team executes the region sequentially as shown on the picture below (source: OpenMP Accelerator Model, IWOMP 2016).
 
-![](images/OpenMP_execution_model.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/OpenMP_execution_model.png)
 
 Some important OpenMP 4.x device constructs are listed in the following table:
 
@@ -1075,7 +1076,7 @@ Such OpenMP off-loading to the GPU results in speed up greater than in typical m
 
 You can have a look at the whole code in this notebook:
 
-![Riemann_sum_OpenMP_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP_GPU.ipynb)
+[Riemann_sum_OpenMP_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP_GPU.ipynb)
 
 You can observe that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflows checks. The latter flag has to be added on Ubuntu systems, while the former is needed with the GCC compiler. On other systems and with other compilers, e.g., with CLANG/LLVM other flags are used when compiling OpenMP off-loading to GPU codes. One should keep in mind that GPU SDKs, e.g., CUDA SDK for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP or OpenACC.
 
@@ -1194,11 +1195,11 @@ In this exercise you will execute the CUDA and OpenCL Riemann sum codes with one
 
 Execute the CUDA Riemann sum code:
 
-![Riemann_sum_CUDA_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_one_kernel.ipynb)
+[Riemann_sum_CUDA_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_one_kernel.ipynb)
 
 and the OpenCL Riemann sum code:
 
-![Riemann_sum_OpenCL_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_one_kernel.ipynb)
+[Riemann_sum_OpenCL_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_one_kernel.ipynb)
 
 with `N` equal to 1 billion. Compare the execution time of the codes. Which is faster? What's the speed up compared to CPU and OpenMP codes?
 
@@ -1214,7 +1215,7 @@ The profiling results of the first version (with one kernel) of the GPU Riemann 
 
 But how can we get rid of the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved this is not the case in CUDA or OpenCL, since they have to be done in a programmatic manner. One approach or a variant of sum reduction is shown on the picture below (source: nvidia.com).
 
-![](images/sum_reduction.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/sum_reduction.png)
 
 Let’s assume we have an array of 16 elements in shared memory. How can we add these elements in terms of sum reduction?
 
@@ -1383,11 +1384,11 @@ In this exercise you will execute the CUDA and OpenCL Riemann sum codes with two
 
 Execute the CUDA Riemann sum code with two kernels:
 
-![Riemann_sum_CUDA_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_two_kernels.ipynb)
+[Riemann_sum_CUDA_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_two_kernels.ipynb)
 
 and the OpenCL Riemann sum code with two kernels:
 
-![Riemann_sum_OpenCL_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_two_kernels.ipynb)
+[Riemann_sum_OpenCL_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_two_kernels.ipynb)
 
 with `N` equal to 1 billion. Compare the execution time of the codes. Which is faster? What's the speed up compared to CPU, OpenMP codes and codes with one GPU kernel?
 
@@ -1464,7 +1465,7 @@ $ nvvp ./riemann_cuda_double_reduce
 
 The visual profiling can be invoked with many options for analysis of the CUDA code. The picture below shows the traces for the Riemann sum code with two kernels and the summary of both kernels execution (average duration, FLOP, multiprocessor occupancy...).
 
-![](images/nvvp_riemann_cuda_double_reduce_flops.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/nvvp_riemann_cuda_double_reduce_flops.png)
 
 One can observe from the traces that the kernel `reducerSum` is executed after the kernel `medianTrapezium` and that for the latter 91.1% Streaming Multiprocessor (SM) occupancy was achieved with 86000005646 Double Precision Floating Point Operations (Flop) in 172.91868 miliseconds. For the kernels the parameters can be shown graphically, e.g., the performance in Flops. You can calculate the latter your self from data in the summary, e.g., for the kernel `medianTrapezium`:
 
@@ -1509,7 +1510,7 @@ $ nsys-ui
 
 the Nsight Systems GUI will be invoked. One can then load the previously generated report `report1.qdrep` or run the CUDA executable in it to visualize traces. The picture below shows the traces for the Riemann sum code with two kernels visualized by the Nsight Systems GUI.
 
-![](images/nsys-ui_trace.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/nsys-ui_trace.png)
 
 ### Profiling and tracing of OpenCL codes
 
@@ -1579,9 +1580,9 @@ $ paraprof
 
 The visualisation of profiles (threads), i.e., one profile for OpenCL API calls and the other for OpenCL kernels, can be seen on the pictures below.
 
-![](images/tau_opencl_1.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_opencl_1.png)
 
-![](images/tau_opencl_2.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_opencl_2.png)
 
 Tracing of the OpenCL Riemann sum code with two kernels can be done with TAU in the following way. Again, we first generate traces (`tautrace.0.0.0.trc` and `tautrace.0.0.1.trc`) with:
 
@@ -1599,9 +1600,9 @@ $ jumpshot tau.slog2
 
 On the pictures below you can see the traces with the description legend.
 
-![](images/jumpshot_riemann_opencl_double_reduce_traces.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/jumpshot_riemann_opencl_double_reduce_traces.png)
 
-![](images/jumpshot_riemann_opencl_double_reduce_legend_wo-values.png?raw=true)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/jumpshot_riemann_opencl_double_reduce_legend_wo-values.png)
 
 The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case of the trace showing CUDA kernels.
 
@@ -1625,3 +1626,5 @@ We are interested in your opinion on the Week 5 content:
 - did the examples in Jupyter notebooks work as expected?
 - what were the parts of Week 5 that were the most difficult to understand?
 - do you think GPU computation techniques you learned about will be useful for you?
+
+###### tags: GPU
