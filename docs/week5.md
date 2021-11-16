@@ -559,10 +559,23 @@ Such initialization is important in multi GPU systems where there's a need for s
 CudaSetDevice(1);
 ~~~
 
-It's a good approach to initialize CUDA with the `CUDA_ERROR()` API call:
+It's a good approach to initialize CUDA with:
 
 ~~~c
 CUDA_ERROR(cudaSetDevice(0));
+~~~
+
+This call makes use of a custom defined error wrapper `CUDA_ERROR()`:
+
+~~~c
+/* CUDA error wraper */
+static void CUDA_ERROR( cudaError_t err) 
+{
+    if (err != cudaSuccess) {
+        printf("CUDA ERROR: %s, exiting\n", cudaGetErrorString(err));
+        exit(-1);
+    }
+}
 ~~~
 
 This way, a CUDA program will continue with execution only if a CUDA capable device is available. Sometimes it is useful to get the device properties with `cudaGetDeviceProperties()`:
