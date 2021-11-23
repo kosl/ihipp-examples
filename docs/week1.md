@@ -121,6 +121,42 @@ The latter rises the question, why would one invest in one million of processors
 Such a user can usually tailor the problem to her/his expectations and the hardware available. In other words, Gustafson's law fixes the time available to the user. By fixing the time, the problem can be scaled to the size that will give you the most accurate result for a chosen run time. Instead of looking how the code can get faster one can look how to get better results in the available run time. Of course, for some codes the expected time for the results to converge can take a week or month, so we can tailor a problem size to the currently available hardware and get the job done in the specified run time.
 
 ### A, D: Languages for parallel programming
+
+When speaking of languages for parallel programming we actually mean parallelization paradigms in host languages. Such paradigms are generally available in the form of Application Programming Interfaces (APIs) that are installed on the user system and can be used as directives or extensions for compiling the parallelized code into executables.
+
+Historically, the first host languages for parallel programming are C/C++ and Fortran. These languages are still a standard for using classical paradigms like OpenMP and MPI and also for accelerated programming like CUDA and OpenCL. While Python as an interpreted language is not a common choice for parallel programming, some of its libraries, e.g., Cython, make use of parallelization paradigms, such as OpenMP, to speed up Python programs or scripts. Also, a Python library for MPI support exist (mpi4py), although it is not much used in HPC. On the other hand specialized Python libraries for Machine Learning and Deep Learning in the area of Artificial Intelligence heavily use parallel paradigms for accelerators (GPUs).
+
+On the following list some parallelization paradigms available as APIs are given:
+
+* Open Multi-Processing (OpenMP):
+  - supports multi-platform shared-memory parallel programming in C/C++ and Fortran
+  - defines a portable, scalable model with a simple and flexible interface for developing parallel applications on several platforms
+  - annotation of source code to identify the areas that should be accelerated using compiler directives and additional functions
+  - targets both the CPU and GPU architectures and off-loads computational code on them
+* Message Passing Interface (MPI):
+  - a standardized and portable message-passing standard designed to function on parallel computing architectures
+  - defines the syntax and semantics of library routines that are useful to a wide range of users writing portable message-passing programs in C, C++, and Fortran.
+* Open Accelerators (OpenACC):
+  - a programming standard for parallel computing designed to simplify parallel programming of heterogeneous CPU/GPU systems
+  - annotation of C, C++ and Fortran source code to identify the areas that should be accelerated using compiler directives and additional functions
+  - targets both the CPU and GPU architectures and off-loads computational code on them
+* Compute Unified Device Architecture (CUDA):
+  - a parallel computing platform for general-purpose computing GPUs (GPGPU)
+  - designed specifically for NVIDIA GPUs
+  - a software layer for direct access to the GPU's virtual instruction set and parallel computational elements and for the execution of compute kernels
+  - designed to work with programming languages such as C, C++, and Fortran.
+* Open Computing Language (OpenCL):
+  - a framework for writing programs that execute across heterogeneous platforms (CPUs, GPUs, DSPs, FPGAs and other processors or hardware accelerators) - - - specifies programming languages (based on C99, C++14 and C++17) for programming these devices to control the platform and execute programs on the compute devices
+  - provides a standard interface for parallel computing using task-based and data-based parallelism
+  - an open standard maintained by the non-profit technology consortium Khronos Group
+* SYCL:
+ - a higher-level programming model to improve programming productivity on various hardware accelerators
+ - a single-source domain-specific embedded language (DSEL) based on pure C++17
+ - a standard developed by Khronos Group
+* Open Hybrid Multicore Parallel Programming (OpenHMPP):
+  - programming standard for heterogeneous computing
+  - based on a set of compiler directives, a programming model designed to handle hardware accelerators without the complexity associated with GPU programming
+
 ### Q: Performance, Easy to use
 
 
