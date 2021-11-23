@@ -128,32 +128,33 @@ Historically, the first host languages for parallel programming are C/C++ and Fo
 
 On the following list some parallelization paradigms available as APIs are given:
 
-* Open Multi-Processing (OpenMP):
+* **Open Multi-Processing (OpenMP)**:
   - supports multi-platform shared-memory parallel programming in C/C++ and Fortran
   - defines a portable, scalable model with a simple and flexible interface for developing parallel applications on several platforms
   - annotation of source code to identify the areas that should be accelerated using compiler directives and additional functions
   - targets both the CPU and GPU architectures and off-loads computational code on them
-* Message Passing Interface (MPI):
+* **Message Passing Interface (MPI)**:
   - a standardized and portable message-passing standard designed to function on parallel computing architectures
   - defines the syntax and semantics of library routines that are useful to a wide range of users writing portable message-passing programs in C, C++, and Fortran.
-* Open Accelerators (OpenACC):
+* **Open Accelerators (OpenACC)**:
   - a programming standard for parallel computing designed to simplify parallel programming of heterogeneous CPU/GPU systems
   - annotation of C, C++ and Fortran source code to identify the areas that should be accelerated using compiler directives and additional functions
   - targets both the CPU and GPU architectures and off-loads computational code on them
-* Compute Unified Device Architecture (CUDA):
+* **Compute Unified Device Architecture (CUDA)**:
   - a parallel computing platform for general-purpose computing GPUs (GPGPU)
   - designed specifically for NVIDIA GPUs
   - a software layer for direct access to the GPU's virtual instruction set and parallel computational elements and for the execution of compute kernels
   - designed to work with programming languages such as C, C++, and Fortran.
-* Open Computing Language (OpenCL):
-  - a framework for writing programs that execute across heterogeneous platforms (CPUs, GPUs, DSPs, FPGAs and other processors or hardware accelerators) - - - specifies programming languages (based on C99, C++14 and C++17) for programming these devices to control the platform and execute programs on the compute devices
+* **Open Computing Language (OpenCL)**:
+  - a framework for writing programs that execute across heterogeneous platforms (CPUs, GPUs, DSPs, FPGAs and other processors or hardware accelerators)
+  - specifies programming languages (based on C99, C++14 and C++17) for programming these devices to control the platform and execute programs on the compute devices
   - provides a standard interface for parallel computing using task-based and data-based parallelism
   - an open standard maintained by the non-profit technology consortium Khronos Group
-* SYCL:
+* **SYCL**:
  - a higher-level programming model to improve programming productivity on various hardware accelerators
  - a single-source domain-specific embedded language (DSEL) based on pure C++17
  - a standard developed by Khronos Group
-* Open Hybrid Multicore Parallel Programming (OpenHMPP):
+* **Open Hybrid Multicore Parallel Programming (OpenHMPP)**:
   - programming standard for heterogeneous computing
   - based on a set of compiler directives, a programming model designed to handle hardware accelerators without the complexity associated with GPU programming
 
