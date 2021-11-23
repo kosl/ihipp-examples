@@ -151,9 +151,9 @@ On the following list some parallelization paradigms available as APIs are given
   - provides a standard interface for parallel computing using task-based and data-based parallelism
   - an open standard maintained by the non-profit technology consortium Khronos Group
 * **SYCL**:
- - a higher-level programming model to improve programming productivity on various hardware accelerators
- - a single-source domain-specific embedded language (DSEL) based on pure C++17
- - a standard developed by Khronos Group
+  - a higher-level programming model to improve programming productivity on various hardware accelerators
+  - a single-source domain-specific embedded language (DSEL) based on pure C++17
+  - a standard developed by Khronos Group
 * **Open Hybrid Multicore Parallel Programming (OpenHMPP)**:
   - programming standard for heterogeneous computing
   - based on a set of compiler directives, a programming model designed to handle hardware accelerators without the complexity associated with GPU programming
