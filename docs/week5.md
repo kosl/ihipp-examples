@@ -5,7 +5,7 @@
 
 In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general-purpose computing in many fields.
 
-GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors. For example, *HiPerGator AI* is currently #22 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world (based on the performance metric in Flops, i.e., floating point operations per second) but is also #2 on the [Green500 list](https://www.top500.org/lists/green500/list/2021/06/) (based on the power efficiency metric in Flops/watt, i.e., floating point operations per second per watt).
+GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors (7 clusters out of Top10 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers use GPUs). For example, the fastest most efficient cluster is *Perlmutter*, which is currently #5 on the Top500 list of supercomputers in the world (based on the performance metric in Flops, i.e., floating point operations per second) but is also #7 on the [Green500 list](https://www.top500.org/lists/green500/list/2021/06/) (based on the power efficiency metric in Flops/watt, i.e., floating point operations per second per watt).
 
 In the context of general-purpose computing, GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand, GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Computing acceleration can be achieved with: existing GPU applications, GPU libraries, directive-based methods (like OpenMP and OpenACC) and special programming languages or extensions (like CUDA and OpenCL).
 
@@ -32,7 +32,7 @@ Note that the term "GPU core" is more or less a marketing term. The equivalent o
 
 Desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how do such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #14 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities `deviceQuery` and `bandwidthTest` in the terminal of the login node we can get:
+First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #18 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities `deviceQuery` and `bandwidthTest` in the terminal of the login node we can get:
 
 Output (excerpt) from `deviceQuery`:
 
