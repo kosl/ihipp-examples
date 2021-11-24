@@ -171,7 +171,7 @@ As of 2021, the latest version of OpenMP API is 5.2. The OpenMP API is comprised
 - Runtime Library Routines
 - Environment Variables 
 
-*Compiler Directives*
+**Compiler Directives**
 
 Compiler directives are in the form of comments in the source code and are taken into account at compile time only if an appropriate compiler flag is specified. OpenMP compiler directives are used for:
 
@@ -189,7 +189,7 @@ sentinel  directive-name  [clause, ...]
 
 In step [E: Hello World!] you have already learned the syntax of the OpenMP compiler directive in C and Fortran, i.e., for the directive name *parallel*.
 
-*Run-time Library Routines*
+**Run-time Library Routines**
 
 These routines can be used for:
 
@@ -229,7 +229,7 @@ Also note, that in C/C++ a specific header:
 
 has to be generally included and that, contrary to Fortran, C/C++ routines are case sensitive.
 
-*Environment Variables*
+**Environment Variables**
 
 OpenMP environment variables can be used to control the execution of parallel code at run-time by:
 
@@ -244,13 +244,13 @@ OpenMP environment variables can be used to control the execution of parallel co
   - nested parallelism
   - dynamic threads
 
-The OpenMP environment variables are set as any other environment variables, depending on the shell used, e.g., you can set the number of OpenMP threads in bash with:
+The OpenMP environment variables are set as any other environment variables, depending on the shell used, e.g., you can set the number of OpenMP threads in *bash* with:
 
 ~~~bash
 export OMP_NUM_THREADS=2
 ~~~
 
-and in csh with:
+and in *csh* with:
 
 ~~~csh
 setenv OMP_NUM_THREADS 2
