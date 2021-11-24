@@ -76,7 +76,7 @@ The parallel computing approach tends to use as many computing cores as possible
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_embarassingly_simple.png)
 
-Such kind of computing is actually not considered High Performance Computing (HPC). You have many other solutions, e.g., grid computing that is usually distributed and cloud computing that you can rent. Such problems that are being solved are not actually interdependent, so the parallelization here is 100% and no communication is needed among the processes. Running such a problem on HPC would mean underutilization of a supercomputer since the main point of HPC is having closely coupled compute cores on multiple nodes. In such cases you have quite good scaling, i.e., your program can run equally well on one core as on one million cores because there is no interdependence. Such problems are, e.g., searching for an optimum of some function for which you do not know its location, so you greedily search the domain. There can be also some intelligence behind, like a genetic algorithm, but this is just actually complicating the problem since there can be overlap of the search domains. And such algorithms are just maybe empirically describing the theory behind those. That's what supercomputing actually is not, although we are very fine with such kind of computing problems. There are also other problems that can be highly parallel, e.g., some kind of direct numerical computing or kinetic simulations could be very close to what embarrassingly simple computing is. For the large racks of computers the setup is usually like this.
+Such kind of computing is actually not considered High Performance Computing (HPC). You have many other solutions, e.g., grid computing that is usually distributed and cloud computing that you can rent. Such problems that are being solved are not actually interdependent, so the parallelization here is 100% and no communication is needed among the processes. Running such a problem on HPC would mean underutilization of a supercomputer since the main point of HPC is having closely coupled compute cores on multiple nodes. In such cases you have quite good scaling, i.e., your program can run equally well on one core as on one million cores because there is no interdependence. Such problems are, e.g., searching for an optimum of some function for which you do not know its location, so you greedily search the domain. There can be also some intelligence behind, like a genetic algorithm, but this is just actually complicating the problem since there can be overlap of the search domains. And such algorithms are just maybe empirically describing the theory behind those. That's what supercomputing actually is not, although we are very fine with such kind of computing problems. There are also other problems that can be highly parallel, e.g., some kind of direct numerical computing or kinetic simulations could be very close to what embarrassingly simple computing is.
 
 For efficient parallellization you need to know the computer architecture on which programs will run. Let's have a look at a computing node found in modern supercomputers. On the picture below you can observe that the compute node is a standalone Von Neumann computer.
 
@@ -86,7 +86,7 @@ The schematic below shows the logical view of a compute node.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_logical_view_compute_node.png)
 
-We have two or maybe four CPU sockets that are interconnected by a bus or fast bus. The nodes are also connected with fast internet or Infiniband, by a network that has small latency. Such an architecture was a standard for computers 10 years ago. In the recent years main-stream computers besides CPU sockets also have accelerators, i.e., general-purpose graphical processing units (GPU) for speed up of computing. Therefore, the non-uniform memory is even more non-uniform. Coding or porting old codes with MPI and accelerating parts of it has become increasingly difficult to achieve. We will introduce you to accelerated programming with CUDA and OpenCL in Week 5, i.e., how to off-load parts of the code to the accelerators. Combining everything to run on a large cluster requires quite a lot of experience, also with the trial and error approach to identify, e.g., the bottlenecks. In order to resolve interconnection problems of nodes in the Infiniband network, as well as among the processor sockets and accelerators (GPUs) in the node some newer languages or upgrades to the existing programming languages were developed. To utilize these new paradigms some new tricks with the old code are needed, although rethinking or rewriting the code is usually the best approach. The new code approaches can be used even without the intervention of the programmer or any thinking, e.g., Coarray Fortran has some of intelligence behind how to do non-uniform memory operations on matrices and so on, but actually one will need to understand a few things.
+We have two or maybe four CPU sockets with shared memory that are interconnected by a bus or fast bus. The nodes are also connected with fast internet or Infiniband, by a network that has small latency. Such an architecture was a standard for computers 10 years ago. In the recent years main-stream computers besides CPU sockets also have accelerators, i.e., general-purpose graphical processing units (GPU) for speed up of computing. Therefore, the non-uniform memory is even more non-uniform. Coding or porting old codes with MPI and accelerating parts of it has become increasingly difficult to achieve. We will introduce you to accelerated programming with CUDA and OpenCL in Week 5, i.e., how to off-load parts of the code to the accelerators. Combining everything to run on a large cluster requires quite a lot of experience, also with the trial and error approach to identify, e.g., the bottlenecks. In order to resolve interconnection problems of nodes in the Infiniband network, as well as among the processor sockets and accelerators (GPUs) in the node some newer languages or upgrades to the existing programming languages were developed. To utilize these new paradigms some new tricks with the old code are needed, although rethinking or rewriting the code is usually the best approach. The new code approaches can be used even without the intervention of the programmer or any thinking, e.g., Coarray Fortran has some of intelligence behind how to do non-uniform memory operations on matrices and so on, but actually one will need to understand a few things.
 
 Let's also discuss how nodes in a supercomputer are interconnected.
 
@@ -96,7 +96,7 @@ The figure on the left shows the nodes architecture that was typical in the past
 
 So, for the development of parallel codes, you need to have quite a good overview of the architecture that you are using. Usually, many computing centers provide different machines, depending on the type of users. General purpose codes are usually not best suited for parallel computing. You need to understand the bottlenecks or which parts of the code consume most of the time. These parts must be optimized and that is the usual approach for the parallelization of the code.
 
-On HPC, optimal communication is crucial for overcoming the bottlenecks. The main reason for bottlenecks can be generally found in communication among many parts of the code(s). To understand communication one should generally do profiling of the codes. Based on the profiling results one could, e.g., distribute the overhead of communication evenly to get rid of the peaks of it. Of course, this depends on the specific problem. Communication overall is important to be understood, but for embarassingly simple programs or those that do not have, have little or infrequent communication that is not interdependent, any communication network could be just fine, even the plain old ethernet. On the other hand, for solving large problems with coupled systems of equations, it's important not having large delays among coupled parts. The main difference between plain internet/ethernet and Infiniband, is the latency time or how much time is needed to establish communication from one processor to another and to transfer the data between them, whether the data is small or large. If you have such kind of problems with communication you probably would like to group the bunch of messages into a single message in order to have some useful workload.
+On HPC, optimal communication is crucial for overcoming the bottlenecks. The main reason for bottlenecks can be generally found in communication among many parts of the code(s). To understand communication one should generally do profiling of the codes. Based on the profiling results one could, e.g., distribute the overhead of communication evenly to get rid of the peaks of it. Of course, this depends on the specific problem. Communication overall is important to be understood, but for embarassingly simple programs or those that do not have, have little or infrequent communication (for such problems communication is basically not interdependent), any communication network could be just fine, even the plain old ethernet. On the other hand, for solving large problems with coupled systems of equations, it's important not having large delays among coupled parts. The main difference between plain internet/ethernet and Infiniband, is in the latency time or how much time is needed to establish communication from one processor to another and to transfer the data between them, whether the data is small or large. Networks like Infiniband offer low-latency transfer among hardware resources connected to it. If you have such kind of problems with communication you probably would like to group the bunch of messages into a single message in order to have some useful workload.
 
 We can recap what was already said regarding the development of parallel codes with the following points:
 
@@ -124,7 +124,7 @@ Such a user can usually tailor the problem to her/his expectations and the hardw
 
 When speaking of languages for parallel programming we actually mean parallelization paradigms in host languages. Such paradigms are generally available in the form of Application Programming Interfaces (APIs) that are installed on the user system and can be used as directives or extensions for compiling the parallelized code into executables.
 
-Historically, the first host languages for parallel programming are C/C++ and Fortran. These languages are still a standard for using classical paradigms like OpenMP and MPI and also for accelerated programming like CUDA and OpenCL. While Python as an interpreted language is not a common choice for parallel programming, some of its libraries, e.g., Cython, make use of parallelization paradigms, such as OpenMP, to speed up Python programs or scripts. Also, a Python library for MPI support exist (mpi4py), although it is not much used in HPC. On the other hand specialized Python libraries for Machine Learning and Deep Learning in the area of Artificial Intelligence heavily use parallel paradigms for accelerators (GPUs).
+Historically, the first host languages for parallel programming were C/C++ and Fortran. These languages are still a standard for using classical paradigms like OpenMP and MPI and also for accelerated programming, e.g., with CUDA and OpenCL. While Python as an interpreted language is not a common choice for parallel programming, some of its libraries, e.g., Cython, make use of parallelization paradigms, such as OpenMP, to speed up Python programs or scripts. Also, a Python library for MPI support exist (mpi4py), although it is not much used in HPC. On the other hand specialized Python libraries for Machine Learning and Deep Learning in the area of Artificial Intelligence heavily use parallel paradigms for accelerators (GPUs).
 
 On the following list some parallelization paradigms available as APIs are given:
 
@@ -160,11 +160,107 @@ On the following list some parallelization paradigms available as APIs are given
 
 ### Q: Performance, Easy to use
 
-
-## OpenMP overview:
+## OpenMP overview
 ### A: Brief intro to OpenMP
-### What is shared memory
+
+OpenMP (Open specifications for Multi Processing) is an API for shared-memory parallel computing. It was developed as an open standard for portable and scalable parallel programming, primarly designed for Fortran and C/C++. It is a flexible and easy to implement solution, which offers a specification for a set of compiler directives, library routines and environment variables.
+
+As of 2021, the latest version of OpenMP API is 5.2. The OpenMP API is comprised of three components:
+
+- Compiler Directives
+- Runtime Library Routines
+- Environment Variables 
+
+*Compiler Directives*
+
+Compiler directives are in the form of comments in the source code and are taken into account at compile time only if an appropriate compiler flag is specified. OpenMP compiler directives are used for:
+
+- spawning a parallel region
+- dividing blocks of code among threads
+- distributing loop iterations between threads
+- serializing sections of code
+- synchronization of work among threads 
+
+The syntax of the compiler directives is as follows:
+
+```
+sentinel  directive-name  [clause, ...]
+```
+
+In step [E: Hello World!] you have already learned the syntax of the OpenMP compiler directive in C and Fortran, i.e., for the directive name *parallel*.
+
+*Run-time Library Routines*
+
+These routines can be used for:
+
+* setting and querying:
+  - number of threads
+  - dynamic threads feature
+  - nested parallelism
+* querying:
+  - thread ID
+  - thread ancestor's identifier
+  - thread team size
+  - wall clock time and resolution
+  - a parallel region and its level
+* setting, initializing and terminating:
+  - locks
+  - nested locks
+
+All the run-time library routines in C/C++ are subroutines, while in Fortran some are functions, e.g., the run-time library routine for querying the number of threads in C:
+
+~~~c
+int omp_get_num_threads(void)
+~~~
+
+is a subroutine, while in Fortran:
+
+~~~fortran
+INTEGER FUNCTION OMP_GET_NUM_THREADS()
+~~~
+
+is a function.
+
+Also note, that in C/C++ a specific header:
+
+~~~c
+#include <omp.h>
+~~~
+
+has to be generally included and that, contrary to Fortran, C/C++ routines are case sensitive.
+
+*Environment Variables*
+
+OpenMP environment variables can be used to control the execution of parallel code at run-time by:
+
+* setting:
+  - number of threads
+  - thread stack size
+  - thread wait policy
+  - maximum levels of nested parallelism
+* specifying how loop interations are divided
+* binding threads to processors
+* enabling/disabling:
+  - nested parallelism
+  - dynamic threads
+
+The OpenMP environment variables are set as any other environment variables, depending on the shell used, e.g., you can set the number of OpenMP threads in bash with:
+
+~~~bash
+export OMP_NUM_THREADS=2
+~~~
+
+and in csh with:
+
+~~~csh
+setenv OMP_NUM_THREADS 2
+~~~
+
 ### V: OpenMP programming and execution models
+
+OpenMP is based on the shared memory model of multi-processor/core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP programs accomplish parallelism exclusively with the use of threads (thread based parallelism). A thread is the smallest unit of processing that can be scheduled. Threads can exist only within the resources of a single process. When the process is finished, also the threads vanish. The maximum number of threads is equal to the number of processors/cores available. The actual number of threads used is defined by the user or application used.
+
+
 ### V: OpenMP memory models
 ### E: For loop
 
