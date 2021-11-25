@@ -13,7 +13,7 @@ Parallel computing cannot be done better on a single machine or many single mach
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_parallelization.png)
 
-There are different approaches or programming models that were developed during the years and they are still being developed. Along with the languages that might help you to resolve some of the issues of the hardware, for parallel computing is also essential the underlying hardware topology that we see usually as a combination of memory and CPUs. In the past, there were just a single processor and memory per node, and many of those nodes were combined together to make a cluster. In the recent years a cluster of compute nodes, so called "Beowulf", is being upgraded with many cores per node and shared memory. The cores share a memory, there can also be many sockets. The programming model for such a hardware architecture is a combination of languages. We have, e.g., OpenMP, a parallelization that can be easily done on a single computer, whether this is your PC laptop or a remote computer. This is quite an easy approach to do automatic parallelization. It means that you will start with a serial program and upgrade it with the command directives. The result is multi-threaded code that runs faster. We will introduce OpenMP in this week, while in Week 2 we will present it in detail.
+There are different approaches or programming models that were developed during the years and they are still being developed. Along with the languages that might help you to resolve some of the issues of the hardware, for parallel computing is also essential the underlying hardware topology that we see usually as a combination of memory and CPUs. In the past, there were just a single processor and memory per node, and many of those nodes were combined together to make a cluster. In the recent years a cluster of compute nodes, so called "Beowulf", is being upgraded with many cores per node and shared memory. The cores share a memory, there can also be many sockets. The programming model for such a hardware architecture is a combination of languages. We have, e.g., OpenMP, a parallelization that can be easily done on a single computer, whether this is your PC laptop or a remote computer. This is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the command directives. The result is multi-threaded code that runs faster. We will introduce OpenMP in this week, while in Week 2 we will present it in detail.
 
 ### D: What team are you on?
 
@@ -92,7 +92,7 @@ Let's also discuss how nodes in a supercomputer are interconnected.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_nodes_interconnect.png)
 
-The figure on the left shows the nodes architecture that was typical in the past, while the figure on the right shows the present standard: also accelerators can be attached to memory from the other side. The distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, meaning usually Infiniband or some kind of similar technology, like Tofu Interconnect or RES, which are actually dependent on the vendor, is used. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, what was actually the initial idea to use commodity hardware and interconnect it by a high speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code. A typical test, still used to measure the performanceo of such machines, is the LINPACK test. Usually, the result is given in TFlops or teraFLops. 1 TFlops means the capability of a trillion floating-point operations per second. Currently, the TOP10 supercomputers in the world exceed 30 thousand TFlops mark with the fastest at about 442 thousand TFlops.
+The figure on the left shows the nodes architecture that was typical in the past, while the figure on the right shows the present standard: also accelerators can be attached to memory from the other side. The distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, meaning usually Infiniband or some kind of similar technology, like Tofu Interconnect or RES, which are actually dependent on the vendor, is used. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, what was actually the initial idea to use commodity hardware and interconnect it by a high speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code. A typical test, still used to measure the performanceo of such machines, is the LINPACK test. Usually, the result is given in TFlops or teraFLops. 1 TFlops means the capability of a trillion floating-point operations per second. Currently, the TOP10 supercomputers in the world exceed the 30 thousand TFlops mark with the fastest at about 442 thousand TFlops.
 
 So, for the development of parallel codes, you need to have quite a good overview of the architecture that you are using. Usually, many computing centers provide different machines, depending on the type of users. General purpose codes are usually not best suited for parallel computing. You need to understand the bottlenecks or which parts of the code consume most of the time. These parts must be optimized and that is the usual approach for the parallelization of the code.
 
@@ -252,25 +252,85 @@ export OMP_NUM_THREADS=2
 
 and in *csh* with:
 
-~~~csh
+~~~bash
 setenv OMP_NUM_THREADS 2
 ~~~
 
-### V: OpenMP programming and execution models
+### V: OpenMP memory, programming and execution model
 
-OpenMP is based on the shared memory model of multi-processor/core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP programs accomplish parallelism exclusively with the use of threads (thread based parallelism). A thread is the smallest unit of processing that can be scheduled. Threads can exist only within the resources of a single process. When the process is finished, also the threads vanish. The maximum number of threads is equal to the number of processors/cores available. The actual number of threads used is defined by the user or application used.
+OpenMP is based on the *shared memory model* of multi-processor/core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP programs accomplish parallelism exclusively with the use of threads (thread based parallelism).
 
+A thread is the smallest unit of processing that can be scheduled. Threads can exist only within the resources of a single process. When the process is finished, also the threads vanish. The maximum number of threads is equal to the number of processors/cores available. The actual number of threads used is defined by the user or application used.
 
-### V: OpenMP memory models
+While we referred OpenMP in the introduction to an easy approach for doing "automatic" parallelization, in reality OpenMP is an explicit *programming model*, that offers the user full control over parallelization. Although not automatic in a strict sense, parallelization is simply achieved by inserting compiler directives in a serial program and hence "automatically" transform it into a parallel program. Of course, OpenMP offers also complex programming approaches such as inserting subroutines to set multiple levels of parallelism, locks and nested locks, etc.
+
+The basis of OpenMP's *execution model* is the the **fork-join model** of parallel execution. OpenMP programs begin as a *master thread*, that is executed sequentially until the first parallel region construct is encountered. The master thread then creates a team of parallel threads - a *fork*. The executable statements that are inside the parallel region construct are executed in parallel by the team threads. After the team threads finish execution of the statements in the parallel region construct, synchronization among them occurs and finally their termination results in a *join*, with the master thread as the only thread left.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_OpenMP_fork-join.png)
+
+Let's recap the OpenMP terminology discussed so far with descriptions:
+
+| Term | Description |
+| :--------------: | :-------------------------------------------: |
+| OpenMP thread | a running process specified by OpenMP |
+| thread team | a set of threads which cooperate on a task |
+| master thread | main thread which coordinates the thread |
+| thread safety | correct execution of multiple threads |
+| OpenMP directive | OpenMP line of code for compilers with OpenMP |
+| construct | an OpenMP executable directive |
+| clause | controls the scoping of the variables during execution |
+
 ### E: For loop
 
+In this example you will learn how to use a `for` OpenMP directive in C and a `DO` OpenMP directive in Fortran for vector addition.
+
+Let's assume we want to add arrays `a` and `b` into the sum (array) `c`. In C we can do that by using the `parallel` and `for` OpenMP directives:
+
+~~~c
+#pragma omp parallel shared(a,b,c,chunk) private(i)
+  {
+
+  #pragma omp for schedule(dynamic,chunk) nowait
+  for (i=1; i <= N; i++)
+    c[i] = a[i] + b[i];
+
+  }  /* end of parallel section */
+~~~
+
+Let's explain the code in detail:
+
+- the clause `shared(a,b,c,chunk)` in the `parallel` directive indicates that arrays `a`, `b`, `c` and the variable `chunk` will be shared by all threads
+- the clause `private(i)` in the `parallel` directive indicates that the variable `i` will be private to each thread and that each thread will have its own unique copy
+- the clause `schedule(dynamic,chunk)` in the `for` directive indicates that the iterations of the for loop will be distributed dynamically in `chunk` sizes
+- the clause `nowait` in the `for` directive indicates that the threads will not synchronize after completing their individual pieces of work
+
+Explore the whole C code in the notebook and run it. Are the results as you expected?
+
+Now, compare the OpenMP code in Fortran:
+
+~~~fortran
+!$OMP PARALLEL SHARED(A,B,C,CHUNK) PRIVATE(I)
+
+!$OMP DO SCHEDULE(DYNAMIC,CHUNK)
+      DO I = 1, N
+         C(I) = A(I) + B(I)
+      ENDDO
+!$OMP END DO NOWAIT
+
+!$OMP END PARALLEL
+~~~
+
+with the code in C and identify the differences in the syntax of OpenMP directives and clauses.
+
+Explore also the whole Fortran code in the notebook and run it. Are the results the same as in C?
+
+[for_DO_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/for_DO_OpenMP.ipynb)
 
 ## MPI overview
-### A/V:
-### A: /Different types of communications/
+### A/V: Brief intro to MPI
+### A: Different types of communication
 ### Programming point of view
 ### E: MPI hello world
-
 
 ## Accelerators overview?
 ### A: graphic accelerators
