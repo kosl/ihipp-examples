@@ -272,7 +272,7 @@ You have already seen in step [E: Hello World!] how to compile C and Fortran cod
 
 We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with the compiler flag `-fopenmp` to tell the compiler to take OpenMP directives into account. This flag is dependent on the compiler used, the following table shows which flags has to be used by typical compilers for Unix systems.
 
-| Vendor | Compiler | Flag |
+| Vendor/Provider | Compiler | Flag |
 | :--------------: | :--------------: |:--------------: |
 | GNU | `gcc` | `-fopenmp` |
 |     | `g++` |            |
