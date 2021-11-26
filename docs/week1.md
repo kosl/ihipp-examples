@@ -169,7 +169,9 @@ As of 2021, the latest version of OpenMP API is 5.2. The OpenMP API is comprised
 
 - Compiler Directives
 - Runtime Library Routines
-- Environment Variables 
+- Environment Variables
+
+Many compilers (proprietary or open source) allow compilation of OpenMP directives in C or Fortran codes. Before using any of them one should check which OpenMP version the compiler's version supports.
 
 **Compiler Directives**
 
@@ -187,7 +189,7 @@ The syntax of the compiler directives is as follows:
 sentinel  directive-name  [clause, ...]
 ```
 
-In step [E: Hello World!] you have already learned the syntax of the OpenMP compiler directive in C and Fortran, i.e., for the directive name *parallel*.
+In step [E: Hello World!] you have already learned the syntax of the OpenMP compiler directive in C and Fortran, i.e., for the directive name (construct) *parallel*.
 
 **Run-time Library Routines**
 
@@ -256,6 +258,36 @@ and in *csh* with:
 setenv OMP_NUM_THREADS 2
 ~~~
 
+**Compiling codes with OpenMP directives**
+
+You have already seen in step [E: Hello World!] how to compile C and Fortran codes with OpenMP directives:
+
+~~~bash
+!gcc hello_world.c -o hello_world -fopenmp
+~~~
+
+~~~bash
+!gfortran hello_world.f90 -o hello_world.exe -fopenmp
+~~~
+
+We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with the compiler flag `-fopenmp` to tell the compiler to take OpenMP directives into account. This flag is dependent on the compiler used, the following table shows which flags has to be used by typical compiler for Unix systems.
+
+| Vendor | Compiler | Flag |
+| :--------------: | :--------------: |:--------------: |
+| GNU | `gcc` | `-fopenmp` |
+|     | `g++` |            |
+|     | `g77` |            |
+|     | `gfortran` |            |
+| :--------------: | :--------------: |:--------------: |
+| Intel | `icc` | `-openmp` |
+|       | `icpc` |            |
+|       | `ifort` |            |
+| :--------------: | :--------------: |:--------------: |
+| PGI | `pgcc`  | `-mp` |
+|     | `pgCC`  |       |
+|     | `pgf77` |       |
+|     | `pgf90` |       |
+
 ### V: OpenMP memory, programming and execution model
 
 OpenMP is based on the *shared memory model* of multi-processor/core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP programs accomplish parallelism exclusively with the use of threads (thread based parallelism).
@@ -274,7 +306,7 @@ Let's recap the OpenMP terminology discussed so far with descriptions:
 | :--------------: | :-------------------------------------------: |
 | OpenMP thread | a running process specified by OpenMP |
 | thread team | a set of threads which cooperate on a task |
-| master thread | main thread which coordinates the thread |
+| master thread | main thread which coordinates the threads |
 | thread safety | correct execution of multiple threads |
 | OpenMP directive | OpenMP line of code for compilers with OpenMP |
 | construct | an OpenMP executable directive |
@@ -282,9 +314,9 @@ Let's recap the OpenMP terminology discussed so far with descriptions:
 
 ### E: For loop
 
-In this example you will learn how to use a `for` OpenMP directive in C and a `DO` OpenMP directive in Fortran for vector addition.
+In this example you will learn how to use a `for` OpenMP construct (directive-name) in C and a `DO` OpenMP construct (directive-name) in Fortran for vector addition.
 
-Let's assume we want to add arrays `a` and `b` into the sum (array) `c`. In C we can do that by using the `parallel` and `for` OpenMP directives:
+Let's assume we want to add arrays `a` and `b` into the sum (array) `c`. In C we can do that by using the `parallel` and `for` OpenMP constructs:
 
 ~~~c
 #pragma omp parallel shared(a,b,c,chunk) private(i)
@@ -299,10 +331,13 @@ Let's assume we want to add arrays `a` and `b` into the sum (array) `c`. In C we
 
 Let's explain the code in detail:
 
-- the clause `shared(a,b,c,chunk)` in the `parallel` directive indicates that arrays `a`, `b`, `c` and the variable `chunk` will be shared by all threads
-- the clause `private(i)` in the `parallel` directive indicates that the variable `i` will be private to each thread and that each thread will have its own unique copy
-- the clause `schedule(dynamic,chunk)` in the `for` directive indicates that the iterations of the for loop will be distributed dynamically in `chunk` sizes
-- the clause `nowait` in the `for` directive indicates that the threads will not synchronize after completing their individual pieces of work
+* in the `parallel` construct:
+  - the clause `shared(a,b,c,chunk)` indicates that arrays `a`, `b`, `c` and the variable `chunk` will be shared by all threads
+  - the clause `private(i)` indicates that the variable `i` will be private to each thread and that each thread will have its own unique copy
+
+* in the `for` construct:
+  - the clause `schedule(dynamic,chunk)` indicates that the iterations of the for loop will be distributed dynamically in `chunk` sizes
+  - the clause `nowait` indicates that the threads will not synchronize after completing their individual pieces of work
 
 Explore the whole C code in the notebook and run it. Are the results as you expected?
 
@@ -320,7 +355,7 @@ Now, compare the OpenMP code in Fortran:
 !$OMP END PARALLEL
 ~~~
 
-with the code in C and identify the differences in the syntax of OpenMP directives and clauses.
+with the code in C and identify the differences in the syntax of OpenMP directives (constructs) and clauses.
 
 Explore also the whole Fortran code in the notebook and run it. Are the results the same as in C?
 
