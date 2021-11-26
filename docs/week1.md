@@ -171,7 +171,7 @@ As of 2021, the latest version of OpenMP API is 5.2. The OpenMP API is comprised
 - Runtime Library Routines
 - Environment Variables
 
-Many compilers (proprietary or open source) allow compilation of OpenMP directives in C or Fortran codes. Before using any of them one should check which OpenMP version the compiler's version supports.
+Many compilers (proprietary or open source) allow compilation of OpenMP directives in C or Fortran codes. Before using any of them one should [check](https://www.openmp.org/resources/openmp-compilers-tools/) which OpenMP version the compiler's version supports.
 
 **Compiler Directives**
 
@@ -270,7 +270,7 @@ You have already seen in step [E: Hello World!] how to compile C and Fortran cod
 !gfortran hello_world.f90 -o hello_world.exe -fopenmp
 ~~~
 
-We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with the compiler flag `-fopenmp` to tell the compiler to take OpenMP directives into account. This flag is dependent on the compiler used, the following table shows which flags has to be used by typical compiler for Unix systems.
+We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with the compiler flag `-fopenmp` to tell the compiler to take OpenMP directives into account. This flag is dependent on the compiler used, the following table shows which flags has to be used by typical compilers for Unix systems.
 
 | Vendor | Compiler | Flag |
 | :--------------: | :--------------: |:--------------: |
@@ -278,11 +278,9 @@ We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with th
 |     | `g++` |            |
 |     | `g77` |            |
 |     | `gfortran` |            |
-| :--------------: | :--------------: |:--------------: |
 | Intel | `icc` | `-openmp` |
 |       | `icpc` |            |
 |       | `ifort` |            |
-| :--------------: | :--------------: |:--------------: |
 | PGI | `pgcc`  | `-mp` |
 |     | `pgCC`  |       |
 |     | `pgf77` |       |
