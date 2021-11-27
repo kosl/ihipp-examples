@@ -364,7 +364,7 @@ Explore also the whole Fortran code in the notebook and run it. Are the results 
 
 Message Passing Interface (MPI) is a specification of message passing libraries for developers and users. MPI mainly addresses the parallel message-passing programming model. Many open-source MPI implementations exist, which are used for the development of portable and scalable large-scale parallel applications. 
 
-The latest released MPI standard is currently MPI 4.0. One should be aware of the version and features of the standard the MPI library implementation at her/his disposal supports. Two of the most used MPI library implementations with the appropriate compilers for Linux systems are presented in the following table.
+The latest released MPI standard is currently MPI 4.0. One should be aware of the version and features of the standard the MPI library implementation at her/his disposal supports. Many host languages are supported (C/C++, Fortran, Python, Java...). Two of the mostly used MPI library implementations with the appropriate compilers for Linux systems are presented in the following table.
 
 
 | MPI library | Language | Compiler |
@@ -395,7 +395,7 @@ The Message-Passing programming paradigm can be described with the following poi
 
 Each processor (core) in a MPI program runs a sub-program, which is typically the same on each processor (core).  The variables of each sub-program have the same name but different locations and data (distributed memory), i.e., all variables are private.  Processors (cores) communicate via special send and receive routines  (message passing).
 
-MPI offers point-to-point as well as collective communications. Many host languages are supported (C/C++, Fortran, Python, Java...).
+MPI offers point-to-point as well as collective communications. We will present them in the following step.
 
 ### A: Different types of communication
 ### Programming point of view
