@@ -361,6 +361,42 @@ Explore also the whole Fortran code in the notebook and run it. Are the results 
 
 ## MPI overview
 ### A/V: Brief intro to MPI
+
+Message Passing Interface (MPI) is a specification of message passing libraries for developers and users. MPI mainly addresses the parallel message-passing programming model. Many open-source MPI implementations exist, which are used for the development of portable and scalable large-scale parallel applications. 
+
+The latest released MPI standard is currently MPI 4.0. One should be aware of the version and features of the standard the MPI library implementation at her/his disposal supports. Two of the most used MPI library implementations with the appropriate compilers for Linux systems are presented in the following table.
+
+
+| MPI library | Language | Compiler |
+| :--------------: | :--------------: |:--------------: |
+| MVAPICH2 | C   | `mpicc`  |
+|          | C++ | `mpicxx` |
+|          |     | `mpic++` |
+|          | Fortran | `mpif77`  |
+|          |         | `mpif90`  |
+|          |         | `mpifort` |
+| Open MPI | C   | `mpicc`  |
+|          | C++ | `mpiCC`  |
+|          |     | `mpic++` |
+|          |     | `mpicxx` |
+|          | Fortran | `mpif77`  |
+|          |         | `mpif90`  |
+|          |         | `mpifort` |
+
+MPI was originally designed for distributed memory architectures (still a de facto standard for distributed computing), although today runs also on shared memory or hybrid memory architectures. However, the memory model is inherently a distributed memory model, regardless of the underlying machine's physical architecture. Such a design is therefore suitable for scalability on HPC systems. The programming model is explicit, i.e., responsibilty to correctly identify parallelism and implement parallel algorithms with MPI constructs lies with the user.
+
+The Message-Passing programming paradigm can be described with the following points:
+
+- data is distributed across processors (cores) 
+- each processor (core) performs simultaneously  operations with different data 
+- processores (cores) may need to interact with each other
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_MPI_programming_paradigm.png)
+
+Each processor (core) in a MPI program runs a sub-program, which is typically the same on each processor (core).  The variables of each sub-program have the same name but different locations and data (distributed memory), i.e., all variables are private.  Processors (cores) communicate via special send and receive routines  (message passing).
+
+MPI offers point-to-point as well as collective communications. Many host languages are supported (C/C++, Fortran, Python, Java...).
+
 ### A: Different types of communication
 ### Programming point of view
 ### E: MPI hello world
