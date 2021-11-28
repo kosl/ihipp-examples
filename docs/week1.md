@@ -397,8 +397,79 @@ Each processor (core) in a MPI program runs a sub-program, which is typically th
 
 MPI offers point-to-point as well as collective communications. We will present them in the following step.
 
-### A: Different types of communication
-### Programming point of view
+### A: Messages and communication
+
+The type of communication in MPI is generally related to the number of processes involved. The simplest form of message passing is *point-to-point communication* in which one process sends a message to another process. In *collective communication* several processes are involved at a time. There are 3 classes of such communication: synchronization, data movement, collective computation. In relation to the completion of operations two types exist: blocking and non-blocking operations. We will briefly describe all the types of communication, you can find details with descriptions of relevant MPI routines in Week 3.
+
+**Messages**
+
+Messages are packets of data moving between sub-programs .
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_messages.png)
+
+The necessary information for a message-passing system is the following:
+ 
+- data size and type 
+- pointer to sent or received data 
+- sending process and receiving process, i.e., the ranks 
+- tag of the message 
+- the communicator, i.e., `MPI_COMM_WORLD`
+
+**Point-to-point communication**
+
+This type relates to communication between two processes. The source process sends a message to the destination process. Processes are identified by their ranks in the communicator.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_point-to-point.png)
+
+Blocking routines (return only after completion of operations) for send and receive messages:
+
+- `MPI_Send(...)`
+- `MPI_Recv(...)`
+
+Non-blocking routines (return immediately and allow sub-programs to perform other work) for send and receive messages:
+
+- `MPI_ISend(...)`
+- `MPI_IRecv(...)`
+
+**Collective communication**
+
+Collective operations are of the following type:
+
+- *synchronization*: processes wait until all members of the group have reached the synchronization point
+- *data movement*: broadcast, scatter/gather, all to all
+- *collective computation* (reductions): one member of the group collects data from the other members and performs an operation (min, max, add, multiply...) on that data
+
+Let's describe some examples of collective communication:
+
+1. *Broadcast*
+
+Broadcasting can be accomplished by using `MPI_Bcast(...)`. One process sends the same data to all processes in a communicator.
+It can be used  to send out user input or parameters to all processes. The communication pattern of a broadcast is depicted on the figure below.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_broadcast.png)
+
+2. *Scatter*
+
+Scatter can be accomplished by using `MPI_Scatter(...)`. This operation involves a root process sending data to all processes  in a communicator. The difference between `MPI_Bcast` and `MPI_Scatter` is the following:
+ 
+- `MPI_Bcast` sends the same piece of data to all processes 
+- `MPI_Scatter` sends chunks of data to different processes: after the call the sender has only part of original data available
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_scatter.png)
+
+3. *Gather*
+
+Gather can be accomplished by using `MPI_Gather(...)`. This operation is the inverse of Scatter: it takes elements from many processes and gathers them to one single process.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_gather.png)
+
+4. *Reduce*
+
+Reduce can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns  an array of output elements to the root process. The output elements contain  the reduced result.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_reduce.png)  
+
+### A: Programming point of view
 ### E: MPI hello world
 
 ## Accelerators overview?
