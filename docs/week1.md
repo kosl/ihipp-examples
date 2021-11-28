@@ -399,7 +399,7 @@ MPI offers point-to-point as well as collective communications. We will present 
 
 ### A: Messages and communication
 
-The type of communication in MPI is generally related to the number of processes involved. The simplest form of message passing is *point-to-point communication* in which one process sends a message to another process. In *collective communication* several processes are involved at a time. There are 3 classes of such communication: synchronization, data movement, collective computation. In relation to the completion of operations two types exist: blocking and non-blocking operations. We will briefly describe all the types of communication, you can find details with descriptions of relevant MPI routines in Week 3.
+The type of communication in MPI is generally related to the number of processes involved. The simplest form of message passing is *point-to-point communication* in which one process sends a message to another process. In *collective communication* several processes are involved at a time. There are 3 classes of such communication: synchronization, data movement and collective computation. In relation to the completion of operations two types exist: blocking and non-blocking operations. We will briefly describe all the types of communication, you can find details with descriptions of relevant MPI routines in Week 3.
 
 **Messages**
 
@@ -465,9 +465,9 @@ Gather can be accomplished by using `MPI_Gather(...)`. This operation is the inv
 
 4. *Reduce*
 
-Reduce can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns  an array of output elements to the root process. The output elements contain  the reduced result.
+Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns  an array of output elements to the root process. The output elements contain  the reduced result.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_reduce.png)  
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_reduction.png)  
 
 ### A: Programming point of view
 ### E: MPI hello world
