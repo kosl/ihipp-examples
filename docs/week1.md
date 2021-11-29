@@ -465,16 +465,110 @@ Gather can be accomplished by using `MPI_Gather(...)`. This operation is the inv
 
 4. *Reduce*
 
-Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns  an array of output elements to the root process. The output elements contain  the reduced result.
+Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns  an array of output elements to the root process. The output elements contain  the reduced result. The image below depicts sum reduction, i.e., an array with four elements of integer type is reduced to an aray with one element containing the sum of the elements of the source array.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_reduction.png)  
 
 ### A: Programming point of view
-### E: MPI hello world
 
-## Accelerators overview?
-### A: graphic accelerators
-### V: GPGPU programming/Thread hierarchy
+In this step we will present how MPI programs are structured, how to compile them and finally how to run them. The description is pertinent to C/C++, for other host languages the differences can be seen from examples in Week 3.
+
+**MPI program structure**
+
+A typical MPI program in C/C++ has the following structure (see figure below): 
+
+* inclusion of an MPI header
+* declarations of variables and functions, defining prototypes etc.
+* main program with:
+  - serial code
+  - parallel code: initialization of MPI environment, MPI code (work, calls etc.), termination of MPI environment
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_MPI_program_structure.png)
+
+A MPI program in C is something like:
+
+~~~c
+#include <mpi.h>
+
+int main() {
+
+  MPI_Init(NULL,NULL);
+
+  MPI_Xxxxxx(parameter, ...);
+
+  MPI_Finalize();
+
+  return 0;
+}
+~~~
+
+In this generic example the header file `<mpi.h>` is included. MPI is initialized with `MPI_Init()`, this routine must be called before any other MPI routine. All MPI functions or routines are of the format `MPI_Xxxxxx(parameter, ...)`. MPI is finalized with `MPI_Finalize()`. This routine must be called last by all processes. Further MPI calls are forbidden after it.
+
+**Compilation of MPI programs**
+
+Suitable compilers that support MPI or special MPI compilers has to be used for compilation, e.g., one could use
+
+~~~bash
+!mpicc hello_world.c -o hello_world
+~~~
+
+for compiling MPI codes in C, or:
+
+~~~bash
+!mpif90 hello_world.f90 -o hello_world.exe
+~~~
+
+for compiling MPI codes in Fortran.
+
+**Running MPI programs**
+
+To run an MPI program `prg` with `num` processes (processors) one should use the following command:
+
+~~~bash
+mpirun -n num ./prg
+~~~
+
+For example, the executables produced as shown in the previous section can be run with 4 processes (processors) with:
+
+~~~bash
+!mpirun -np 4 ./hello_world
+~~~
+
+~~~bash
+!mpirun -np 4 ./hello_world.exe
+~~~
+
+### E: MPI Hello World!
+
+In this exercise you will run an MPI "Hello World!" example in **C**, Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no communication between the processes, so that the compiled code is run on many processors independently. You will upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will communicate with the use of MPI calls.
+
+Compare the codes of the different languages in the notebook:
+
+[Hello_world_MPI.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/Hello_world_MPI.ipynb)
+
+How is the MPI library included in the different languages?
+
+Compile and run the codes. Are the results as you expected? Also run the code(s) with the number of processors equal 128. What is the result?
+
+## Accelerators overview
+### A: Graphics accelerators
+
+Graphics accelerators or graphics processing units (GPUs) are devices with many highly parallel processing units (also called streaming multiprocessors) and very high bandwidth memory. With these two characteristics differ from classic processors (CPUs). Apart from their originally intended use, i.e., for intensive 3D graphical rendering (graphics applications), another use is for GPGPU (General Purpose GPU) computing (scientific and engineering applications).
+
+GPUs are more and more used in the area of High-Performance Computing (HPC) because of their much higher power efficiency compared to classic processors (7 clusters out of Top10 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers use GPUs). For example, the fastest most efficient cluster is *Perlmutter*, which is currently #5 on the Top500 list of supercomputers in the world (based on the performance metric in Flops, i.e., floating point operations per second) but is also #7 on the [Green500 list](https://www.top500.org/lists/green500/list/2021/06/) (based on the power efficiency metric in Flops/watt, i.e., floating point operations per second per watt).
+
+In the context of general-purpose computing, GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is greater computational capability and high-bandwidth memory, but on the other hand, GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Therefore, a GPU can be seen as coprocessor to a CPU, as illustrated on the figure below.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_GPGPU_model.png)
+
+Computing acceleration can be achieved with:
+
+- existing GPU applications
+- GPU libraries
+- directive-based methods (like OpenMP and OpenACC)
+- special programming languages or extensions (like CUDA and OpenCL).
+
+### A/V: GPU Hello World
 
 
 ## Resources:
