@@ -163,6 +163,8 @@ On the following list some parallelization paradigms available as APIs are given
 ## OpenMP overview
 ### A: Brief intro to OpenMP
 
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/OpenMP_logo.png)
+
 OpenMP (Open specifications for Multi Processing) is an API for shared-memory parallel computing. It was developed as an open standard for portable and scalable parallel programming, primarly designed for Fortran and C/C++. It is a flexible and easy to implement solution, which offers a specification for a set of compiler directives, library routines and environment variables.
 
 As of 2021, the latest version of OpenMP API is 5.2. The OpenMP API is comprised of three components:
@@ -361,6 +363,8 @@ Explore also the whole Fortran code in the notebook and run it. Are the results 
 
 ## MPI overview
 ### A/V: Brief intro to MPI
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/MPI_logo.png)
 
 Message Passing Interface (MPI) is a specification of message passing libraries for developers and users. MPI mainly addresses the parallel message-passing programming model. Many open-source MPI implementations exist, which are used for the development of portable and scalable large-scale parallel applications. 
 
@@ -600,7 +604,7 @@ Now, compare the CUDA C code to the equivalent in pyCUDA. Can you identify how t
 
 You have probably noticed that in pyCUDA the kernel is wrapped as a string of C code; that what actually the CUDA implementation in Python is: a wrapper of the CUDA C extension.
 
-Note also the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest version of CUDA (11.x).
+Note the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest versions of CUDA (11.x). Note also that the `pycuda` library must be installed in Python, e.g., through `pip`.
 
 ## Resources:
 ### Further reading
