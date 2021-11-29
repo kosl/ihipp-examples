@@ -544,7 +544,7 @@ In this exercise you will run an MPI "Hello World!" example in **C**, **Fortran*
 
 Compare the codes of the different languages in the notebook:
 
-[Hello_world_MPI.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/Hello_world_MPI.ipynb)
+[Hello_world_MPI.ipynb](https://github.com/kosl/ihipp-examples/blob/master/MPI/Hello_world_MPI.ipynb)
 
 How is the MPI library included in the different languages?
 
