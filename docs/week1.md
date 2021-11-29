@@ -568,8 +568,39 @@ Computing acceleration can be achieved with:
 - directive-based methods (like OpenMP and OpenACC)
 - special programming languages or extensions (like CUDA and OpenCL).
 
-### A/V: GPU Hello World
+### E: GPU Hello World
 
+In this exercise you will run a GPU "Hello World!" example in **CUDA C** and **pyCUDA**, CUDA extensions to C and Python, respectively. CUDA is a GPU programming extension developed exclusively for NVIDIA GPUs.
+
+Parallel codes that are off-loaded to GPUs are run in so called kernels.  In CUDA C, we define a kernel with the `__global__` prefix, e.g., for the "Hello World!" we can define the following kernel `hello()`:
+
+~~~c
+__global__ void hello()
+{
+    printf("Hello World!\n");
+}
+
+~~~
+
+We can call this kernel from the CPU side as a regular function with the triple chevron syntax `<<<...>>>`, e.g.:
+
+~~~c
+hello<<<1, 4>>>();
+~~~
+
+In this syntax the first number indicates the number of blocks and the second number the number of threads in a block, i.e., in the above example we defined 1 block with 4 threads to be run in parallel on a GPU.
+
+Run this example in the following notebook:
+
+[Hello_World_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_GPU.ipynb)
+
+Switch the numbers in the triple chevron syntax, i.e., `hello<<<4, 1>>>()` and run the example again. Is the result what you expected?
+
+Now, compare the CUDA C code to the equivalent in pyCUDA. Can you identify how the triple chevron syntax in C maps to that in Python?
+
+You have probably noticed that in pyCUDA the kernel is wrapped as a string of C code; that what actually the CUDA implementation in Python is: a wrapper of the CUDA C extension.
+
+Note also the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest version of CUDA (11.x).
 
 ## Resources:
 ### Further reading
