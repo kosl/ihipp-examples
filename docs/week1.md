@@ -21,7 +21,7 @@ We will introduce you to parallel programming with the use of some programming l
 
 ###  E: Hello World!
 
-As already mentioned, the simplest approach to parallelization is Open Multi-Processing (OpenMP). We will show you this paradigm through a "Hello World!" example in two programming languages: **C and Fortran**.
+As already mentioned, the simplest approach to parallelization is Open Multi-Processing (OpenMP). We will show you this paradigm through a "Hello World!" example in two programming languages: **C** and **Fortran**.
 
 Let's assume, we want to parallelize the "Hello World!" print statement in C:
 
@@ -540,7 +540,7 @@ For example, the executables produced as shown in the previous section can be ru
 
 ### E: MPI Hello World!
 
-In this exercise you will run an MPI "Hello World!" example in **C**, Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no communication between the processes, so that the compiled code is run on many processors independently. You will upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will communicate with the use of MPI calls.
+In this exercise you will run an MPI "Hello World!" example in **C**, **Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no communication between the processes, so that the compiled code is run on many processors independently. You will upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will communicate with the use of MPI calls.
 
 Compare the codes of the different languages in the notebook:
 
