@@ -1628,7 +1628,7 @@ We are interested in your opinion on the Week 5 content:
 
 ## 5.25 Extra content: GPU programming in Python
 
-In the introductory week you have also run the CUDA "Hello World!" example in Python. i.e., in `pyCUDA`. Both Python wrappers of CUDA and OpenCL exist, although not officially suported. As an extra content we give here Riemann sum scripts (with one kernel) in pyCUDA and pyOpenCL.
+In the introductory week you have also run the CUDA "Hello World!" example in Python, i.e., in `pyCUDA`. Both Python wrappers of CUDA and OpenCL exist, although not officially suported. As an extra content we give here Riemann sum scripts (with one kernel) in pyCUDA and pyOpenCL.
 
 The scripts are available in this notebook:
 
@@ -1636,7 +1636,7 @@ The scripts are available in this notebook:
 
 Compare the Python scripts with the appropriate equivalents in C and then run them. How close is their performance to that of the executable C programs?
 
-Notice, that for running the scripts prior installation of the following libraries is needed, for pyCUDA:
+Notice, that for running the scripts prior installation of the following libraries is needed, i.e., for pyCUDA:
 
 ~~~bash
 !pip -q install pycuda
