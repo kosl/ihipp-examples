@@ -1626,4 +1626,26 @@ We are interested in your opinion on the Week 5 content:
 - what were the parts of Week 5 that were the most difficult to understand?
 - do you think GPU computation techniques you learned about will be useful for you?
 
+## 5.25 Extra content: GPU programming in Python
+
+In the introductory week you have also run the CUDA "Hello World!" example in Python. i.e., in `pyCUDA`. Both Python wrappers of CUDA and OpenCL exist, although not officially suported. As an extra content we give here Riemann sum scripts (with one kernel) in pyCUDA and pyOpenCL.
+
+The scripts are available in this notebook:
+
+[Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_GPU_Python.ipynb)
+
+Compare the Python scripts with the appropriate equivalents in C and then run them. How close is their performance to that of the executable C programs?
+
+Notice, that for running the scripts prior installation of the following libraries is needed, for pyCUDA:
+
+~~~bash
+!pip -q install pycuda
+~~~
+
+and for pyOpenCL:
+
+~~~bash
+!pip -q install pyopencl
+~~~
+
 ###### tags: GPU
