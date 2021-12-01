@@ -1632,7 +1632,7 @@ In the introductory week you have also run the CUDA "Hello World!" example in Py
 
 The scripts are available in this notebook:
 
-[Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_GPU_Python.ipynb)
+[Riemann_sum_GPU_Python.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_GPU_Python.ipynb)
 
 Compare the Python scripts with the appropriate equivalents in C and then run them. How close is their performance to that of the executable C programs?
 
