@@ -35,31 +35,25 @@ With this the program will only work with 12 threads.
 
 * To return the current number of threads
 
- ~~~c
-
- omp_get_num_threads()
-
- ~~~
+~~~c
+omp_get_num_threads()
+~~~
 
 With this we set a number of threads and we will return the current number of threads. So, like our previous example, if you specify the number of threads to 12 then calling this function will return the number of threads that are being used in the program. 
 
 * To return the ID of this thread
 
 ~~~c
-
 omp_get_thread_num() 
-
 ~~~
 
 So, calling this function, when you are in a specific thread would return an integer that is unique for every thread that is used in the code to 'parallelise'  your task. 
 
 * To return 'true' if inside parallel region
 
- ~~~c
-
- omp_in_parallel()
-
- ~~~
+~~~c
+omp_in_parallel()
+~~~
 
 This function returns 'true' if it is specified inside a parallel region. If it is not, i.e., if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in OpenMP. 
 
@@ -153,7 +147,6 @@ In 'C' this implicit barrier is specified with:
 Let's observe the following code.
 
 ~~~ c
-
 #include <omp.h>
 #include <stdio.h>
 
@@ -171,17 +164,12 @@ int main ()
 	 nr_threads);
   }
 }
-
 ~~~
 
 Take a moment and try to understand what is happening in the code
 above. Note the usage of the construct and runtime functions defined earlier in the article.
 
-
 [Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
-
-
-
 
 
 ## 1.3 V: Clauses and directive format
@@ -191,12 +179,11 @@ above. Note the usage of the construct and runtime functions defined earlier in 
 So far we have just specified a parallel region and the code was executed in serial. Now we will move ahead to see directives for the openMP. The format for using a directive is as follows
 
 ~~~c
-
 #pragma omp directive_name [clause[clause]...]
-
 ~~~
 
-We have already seen and used 'pragma omp parallel'  that was a directive to execute the region in parallel. In this format we also have 'clauses' in order to specify different parameters.  For example, what is private variable i.e a variable that has access to only one thread whereas a shared variable is one that will be updated anytime a thread gets access to it. We will explore the clauses more in the following subsection. For now we will learn about the  'conditionals'. Similar to any programming language openMP also has conditional statements. So for example we can also specify an 'if' statement in openMP in the following way
+We have already seen and used 'pragma omp parallel' that was a directive to execute the region in parallel. In this format we also have 'clauses' in order to specify different parameters. For example, a 'private' variable is a variable that is private to each thread whereas a 'shared' variable is one that is shared for all threads and any thread can access and modify it. 
+We will explore the clauses more in the following subsection. For now we will learn about the  'conditionals'. Similar to any programming language OpenMP also has conditional statements. So for example we can also specify an 'if' statement in OpenMP in the following way
 
 ~~~c
 
@@ -208,7 +195,7 @@ We have already seen and used 'pragma omp parallel'  that was a directive to exe
 #endif
 
 ~~~
-When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with openMP. In this case if it was compiled with openMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
+When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with OpenMP. In this case if it was compiled with OpenMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
 
 The following example illustrates the use of conditional compilation. With OpenMP compilation, the `_OPENMP` becomes defined. 
 
@@ -260,7 +247,11 @@ The directive format we just learnt:
 Is an important keyword with openMP that we put in the beginning of our code on the line where we want the 'parallel' region to start and then we mention  the 'directive name' and the 'clause'. In this subsection we will learn about 'clauses'.
 
 There are basically two kind of clauses. i.e private or shared. 
-A private variable would be a variable that is private to each thread. So if we execute [image D1P2S18] 
+A private variable would be a variable that is private to each thread. 
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S18.png)
+
+So if we execute
 
 ~~~c
 int A;
@@ -270,18 +261,18 @@ A=omp_get_thread_num();
 }
 ~~~
 
-So, here we define an integer A in C code Then we Define the OMP directive i.e the 'omp parallel' and the 'private A'. So what happens here is that any time we will get a new thread this variable 'A' will be assigned inside of each thread individually. This would imply that the value of 'A' will go to the number of threads. So in the in the first thread it will be '0' in the second thread the value of this variable will be '1' because this would be the 'id' of the thread and in the third the value will be '2' and so on. We can see clearly that these variables are basically private, meaning that they are existing inside each thread.  This implies that the variable 'A' (0) in the first thread can can not be accessed by the variable 'A' (1) in the second thread. 
+So, here we define an integer A in C code Then we Define the OMP directive, i.e., the 'omp parallel' and the 'private A'. So what happens here is that any time we will get a new thread this variable 'A' will be assigned inside of each thread individually. This would imply that the value of 'A' will go to the number of threads. So in the in the first thread it will be '0' in the second thread the value of this variable will be '1' because this would be the 'id' of the thread and in the third the value will be '2' and so on. We can see clearly that these variables are basically private, meaning that they are existing inside each thread.  This implies that the variable 'A' (0) in the first thread can not be accessed by the variable 'A' (1) in the second thread. 
 So this infers that this variable is basically private to each individual thread in our program. 
 And of course the opposite of this is the shared variable. If we specify that a variable is a shared variable this would signify that  the variable will be shared between the threads. If we specify the variable outside of the parallel region, so right before the 
 
 ~~~c
-
 #pragma omp parallel
-
 ~~~
-this variable will be accessed by every thread. To exemplify, let's say if we have a 'for' loop and you we add a number to it  in every iteration we can just specify it to be a shared. In this case whenever any thread that will update the shared variable simultaneously therefore adding numbers to it. This is a adequate way to use the 'for' Loop that we will see soon in the following subsections. 
 
-So, to sum up the distinction between private and shared, the private variable is available only to one thread and cannot be accessed by any other thread whereas a  shared variable can not only be accessed by every thread in the part of the program but it can also be updated, changed and modified by by each thread simultaneously.
+this variable will be accessed by every thread. To exemplify, let's say if we have a 'for' loop and we add a number to it  in every iteration we can just specify it to be a shared variable. In this case,
+whenever any thread will update the shared variable, it will add numbers to it. This is an adequate way to use the 'for' Loop that we will see soon in the following subsections. 
+
+So, to sum up the distinction between private and shared, the private variable is available only to one thread and cannot be accessed by any other thread whereas a  shared variable can not only be accessed by every thread in the part of the program but it can also be updated by each thread simultaneously. 
 
 Let's have a look at the code below
 
