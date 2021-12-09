@@ -6,15 +6,16 @@
 ### Runtime functions
 
 The purpose of runtime functions is the management or modification of the parallel processes that we want to use in our code. They come with the OMP library.  
+
 For C++ and C, you can add the 
 
 ~~~c
 #include <omp.h>  
 ~~~ 
 
-header file to your code in the beginning of the file and then this library includes all the standard runtime functions that you need and you want to use. The functions that we would be using in our tutorial today can be accessed from the link in the transcript or in the resources. So for example, 
+header file to your code in the beginning of the file and then this library includes all the standard runtime functions that you need and you want to use. The functions that we will be using in our tutorial today can be accessed from the link in the transcript or in the resources.
  
- To set the desired number of threads
+* To set the desired number of threads, use
 
  ~~~c
 
@@ -32,7 +33,7 @@ omp_set_num_threads(n)
 
 With this the program will only work with 12 threads. 
 
-To return the current number of threads
+* To return the current number of threads
 
  ~~~c
 
@@ -42,7 +43,7 @@ To return the current number of threads
 
 With this we set a number of threads and we will return the current number of threads. So, like our previous example, if you specify the number of threads to 12 then calling this function will return the number of threads that are being used in the program. 
 
-To return the ID of this thread
+* To return the ID of this thread
 
 ~~~c
 
@@ -52,7 +53,7 @@ omp_get_thread_num()
 
 So, calling this function, when you are in a specific thread would return an integer that is unique for every thread that is used in the code to 'parallelise'  your task. 
 
-– To return 'true' if inside parallel region
+* To return 'true' if inside parallel region
 
  ~~~c
 
@@ -60,11 +61,11 @@ So, calling this function, when you are in a specific thread would return an int
 
  ~~~
 
-This function returns 'true' if it is specified inside a parallel region. If it is not, i.e if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in openMP 
+This function returns 'true' if it is specified inside a parallel region. If it is not, i.e., if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in OpenMP. 
 
 ### Example 
 
-Let's observe the following example
+Let's observe the following example.
 
 ~~~ c
 #pragma cling load("libomp.so")
@@ -107,53 +108,49 @@ The next thing that we have to take a look at are environment variables. Contrar
 To specify the number of threads to use
 
 ~~~sh
-
 export OMP_NUM_THREADS=4
-
 ~~~
 
-With this you can set the environment variable. For example, if you're using the batch terminal you can export this variable and specify a fixed number of threads and the program will only work with this specified number of threads. The same goes if you are using other terminals. For example, TCSH, the usage of the environment variable is achieved through using the word set and the key  word 'setenv' and you can specify the number of threads to be used in the similar way :
+With this you can set the environment variable. For example, if you're using the bash terminal you can export this variable and specify a fixed number of threads and the program will only work with this specified number of threads. The same goes if you are using other terminals. For example, TCSH, the usage of the environment variable is achieved through using the word set and the key word 'setenv' and you can specify the number of threads to be used in the similar way :
 
 ~~~csh
-
 setenv OMP_NUM_THREADS n
-
 ~~~
 
-To  specify on which CPUs the threads should be placed
+To specify on which CPUs the threads should be placed
 
-~~~c
-
- OMP_PLACES 
-
+~~~sh
+OMP_PLACES 
 ~~~
 
 To show OpenMP version and environment
 
-~~~c
-
+~~~sh
 OMP_DISPLAY_ENV  
-
 ~~~
 
-This basically shows the openMP version and that you are in. 
+This basically shows the OpenMP version that you are in. 
 Of course, there are multiple other environmental variables that you can use. 
 For GCC compiler you can check the link and check the environment variables that you want to use yourself along with all the explanation and examples on how to use those environment.
 
 ## Parallel constructs
-Parallel construct is the basic or the fundamental construct using openMP. So every thread basically executes the same statements which are inside the 'parallel region' simultaneously, as you can see on the right image (D1P2S15). So first, we have a master thread that executes the serial portion of the code. Then we come to this 'pragma omp' statement. We can see here that the master first encounters this omp construct and creates multiple, what we call 'slave threads' that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier,  so,  when these barrier is  reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution we go back to master thread that finally resumes the execution of the code. In this step, of course,  the slave threats are gone because they have completed their task.
+
+Parallel construct is the basic or the fundamental construct when using OpenMP. So every thread basically executes the same statements which are inside the 'parallel region' simultaneously, as you can see on this image. 
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S15.png)
+
+So first, we have a master thread that executes the serial portion of the code. Then we come to a 'pragma omp' statement. We can see here that the master first encounters this omp construct and creates multiple, what we call 'slave threads' that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier, so when this barrier is reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution we go back to master thread that finally resumes the execution of the code. In this step, of course, the slave threads are gone because they have completed their task.
+
 In 'C' this implicit barrier is specified with:   
 
 ~~~c
-
 #pragma omp parallel
 {
 ...
-}
-
+ }
 ~~~
 
-Let's observe the following code
+Let's observe the following code.
 
 ~~~ c
 
