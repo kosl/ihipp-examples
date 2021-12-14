@@ -565,7 +565,7 @@ This call makes use of a custom defined error wrapper `CUDA_ERROR()`:
 
 ~~~c
 /* CUDA error wraper */
-static void CUDA_ERROR( cudaError_t err) 
+static void CUDA_ERROR(cudaError_t err) 
 {
     if (err != cudaSuccess) {
         printf("CUDA ERROR: %s, exiting\n", cudaGetErrorString(err));
@@ -1050,7 +1050,21 @@ double riemann(int n)
 }
 ~~~
 
-We just have to add appropriate device constructs to enable off-loading to a GPU:
+To the OpenMP directive:
+
+~~~c
+#pragma omp parallel for reduction(+:sum)
+~~~
+
+we just have to add appropriate device constructs to enable off-loading to a GPU, i.e.:
+
+~~~c
+#pragma omp target teams distribute parallel for simd map(tofrom: sum) map(to: n) reduction(+:sum)
+~~~
+
+Here `map` is used to copy data from the host to the device and vice versa, e.g., `map(tofrom: sum)` copies the variable `sum` to the device (GPU) and after computation back to the host (CPU), while `map(to: n)` just copies the variable `n` to the device.
+
+The complete function for calculating the Riemann sum with OpenMP GPU off-loading is as follows:
 
 ~~~c
 double riemann(int n)
@@ -1070,15 +1084,13 @@ double riemann(int n)
 }
 ~~~
 
-Here `map` is used to copy data from the host to the device and vice versa, e.g., `map(tofrom: sum)` copies the variable `sum` to the device (GPU) and after computation back to the host (CPU), while `map(to: n)` just copies the variable `n` to the device.
-
 Such OpenMP off-loading to the GPU results in speed up greater than in typically many threads OpenMP execution on the host. It is quite close to classical GPU acceleration with CUDA or OpenCL, provided the device (GPU) is supported, and compilers can build programs with OpenMP off-load.
 
 You can have a look at the whole code in this notebook:
 
 [Riemann_sum_OpenMP_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP_GPU.ipynb)
 
-You can see that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflow checks. The latter flag has to be added on Ubuntu systems, while the former is needed with the GCC compiler. On other systems and with other compilers, e.g., with CLANG/LLVM, other flags are used when compiling OpenMP off-loading to GPU codes. One should keep in mind that GPU SDKs, e.g., CUDA SDK for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP or OpenACC.
+You can see that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflow checks. The latter flag has to be added on Ubuntu systems, while the former is needed with the GCC compiler. Note that for GCC on Ubuntu a special offloading compiler to NVPTX, e.g., `gcc-8-offload-nvptx` and a plugin for offloading to NVPTX `libgomp-plugin-nvptx1` must be installed. On other systems and with other compilers, e.g., with CLANG/LLVM, other flags are used when compiling OpenMP off-loading to GPU codes. One should also keep in mind that GPU libraries, e.g., CUDA for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP or OpenACC.
 
 ## 5.18 E: Riemann sum with one GPU kernel
 
