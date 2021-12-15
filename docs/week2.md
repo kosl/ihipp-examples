@@ -1330,8 +1330,7 @@ Which of these parallel programming errors is impossible in the given OpenMP con
 
 ## 4.1. Tasking model
 
-Tasking allows the parallelization of applications where units of work
-are generated dynamically, as in recursive structures or while loops.
+Tasking allows the parallelization of applications where work units are generated dynamically, as in recursive structures or while loops.
 
 In OpenMP an explicit task is defined using the task directive. 
 
@@ -1354,7 +1353,7 @@ from beginning to end. A task is untied if the code can be executed by
 more than one thread, so that different threads execute different
 parts of the code. By default, tasks are tied. 
 
-I also want to mention there are several task scheduling points where a task can be put from living into sleeping and back from sleeping to living state. 
+We also want to mention there are several task scheduling points where a task can be put from living into sleeping and back from sleeping to living state. 
 
 - In the generating task: after the task generates an explicit task, it can be put into a sleeping state. 
 
