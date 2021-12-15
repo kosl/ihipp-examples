@@ -469,7 +469,7 @@ Do you know of possible ways of organizing work in parallel? How can the operati
 ## 2.2 V: OpenMP constructs
 
 ## Worksharing constructs
-The work-sharing constructs divides the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region.
+The work-sharing constructs divide the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region.
 Some examples of the work sharing constructs are:
 
 • sections
@@ -479,58 +479,62 @@ Some examples of the work sharing constructs are:
 
 ### Section construct
 
-We will first see the code for using the sections construct where we can we specify it through directive sections .
+We will first see a code example for using the sections construct where we can we specify it through directive `sections`.
 
 ~~~c
-
 #pragma omp parallel {
-#pragma omp sections {{a=...; b=...;} #pragma omp section
-{ c=...; d=...; }
-}// end of sections }// end of parallel
-
+  #pragma omp sections {{a=...; b=...;}
+    #pragma omp section
+    { c=...; d=...; }
+  } // end of sections
+} // end of parallel
 ~~~
 
-When we use sections construct multiple blocks of code are executed in parallel. (image D1P2S22). When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section that will execute its task in a different thread. In this way we can add these sections inside our 'pragma OMP parallel' code by specifying a section per each thread that will be executed in that each individual thread.
+When we use sections construct, multiple blocks of code are executed in parallel. When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section, it will execute its task in a different thread. This way we can add these sections inside our `pragma OMP parallel` code by specifying a section per each thread that will be executed in that each individual thread.
 
-In the example code above we can see that inside the section we have specified variables 'a' and 'b'. When this code is executed a new thread is generated with these variables and the same follows for the variables 'c' and 'd' which are specified in a different section and hence are in a different thread. 
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S22.png)
 
+In the example code above we can see that inside the section we have specified variables 'a' and 'b'. When this code is executed, a new thread is generated with these variables and the same follows for the variables 'c' and 'd' which are specified in a different section and hence are in a different thread. 
 
 ### For construct
 
-Simply put, a 'for' construct can be seen as  a parallelised 'for' loop. We can specify the for construct as
+In computer science,  for-loop is a control flow statement which specifies iteration. This allows code to be executed repeatedly. Such tasks, similar in action and executed multiple times, can be parallelised as well. In OpenMP, we can use 'for' construct in
+'#pragma omp'. Simply put, a 'for' construct can be seen as a parallelised 'for' loop. We can specify the for construct as
 
 ~~~c
 #pragma omp for [clause[[,]clause]...]
 ~~~
 
-Here also we start with pragma OMP followed by the 'for' keyword and we can use different clauses again i.e private, shared and so on. The corresponding for Loop must have a canonical shape. 
+Here we also start with `pragma OMP` followed by the 'for' keyword and we can use different clauses again, i.e., private, shared and so on. The corresponding fo-loop must have a canonical shape. 
 
 ~~~c
 for (int i=it; i<M; i++)
 ~~~
 
-Since each iterator is by default a private variable and is shared by only one thread; meaning it is not accesed by every thread because otherwise our for Loop would get corrupted therefore, the iterator is not modified inside the loop body.
+Since each iterator is by default a private variable and is shared by only one thread, the iterator is not modified inside the loop body. If it was accessed by every threads, our for-loop would get corrupted. 
 
-We have a few other more clauses than just 'private'. For example, 
+We have a few other clauses than just 'private'. For example:
 
-- schedule : that classifies how the iterations of loops are divided among the threads.
-- collapse (n) : in which the iterations of 'n' loops are collapsed into one larger iteration space.
-
+- schedule : It classifies how the iterations of loops are divided among the threads.
+- collapse (n) : The iterations of 'n' loops are collapsed into one larger iteration space.
 
 We can see an example of the for construct used in the code.
 
 ~~~c
 #pragma omp parallel private(f) {
-f=10;
-#pragma omp for
-for (i=0; i<10; i++)
-a[i] = b[i]*f;
-} /* omp end parallel */
+  f=10;
+  #pragma omp for
+  for (i=0; i<10; i++) {
+    a[i] = b[i]*f;
+  } // end of for
+} // end of parallel
 ~~~
 
-We start with  pragma omp parallel followed by private variable named 'f'. then  we do pragma OMP for construct, so we write a for loop  that will go from 0 to 10 i.e there would be 10 different iterations. The private variable 'f' is then fixed in every thread and the 'a' list is updated in parallel. This is because the index need of each array is individual of each other. So every thread can access only one place of the array allowing us to update this list in parrallel.
-(imageD1P2S24)
-Here we can see that if we are working on two threads, with 10 iterations then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easily. 
+We start with 'pragma omp parallel' followed by private variable named 'f'. Then we use 'pragma OMP for' construct, followed by a for loop that goes from 0 to 10 (10 different iterations). The private variable 'f' is then fixed in every thread and the 'a' list is updated in parallel. This is because the index each array needs is different from each other. So every thread can access only one place of the array allowing us to update this list in parallel.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S24.png)
+
+Here we can see that if we are working on two threads with 10 iterations, then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easily. 
 
 ### Example
 
