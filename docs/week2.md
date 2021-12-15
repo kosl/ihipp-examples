@@ -545,42 +545,45 @@ Go to the provided examples and try to understand what is happening in the code.
 
 ## 2.3 Synchronization
 
-Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. This is achieved with a so called 'barriers'. Synchronization can be acheived through two ways i.e through an Implicit barrier or an Explicit barrier. 
+Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at a time. This is achieved with so called 'barriers'. Synchronization can be achieved by two ways, i.e., through an implicit barrier or an explicit barrier. 
 
 - Implicit barrier
-We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is acheived with curly brackets. As we saw in the previous examples, the '{' is the implicit barrier where we specify the entry into parallel region and the last '}' is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the
-serial execution of the code as well. Implicit synchronization can be removed with 'nowait' clause but we will not discuss it in this section. 
+
+We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is achieved with curly brackets. As we saw in the previous examples, the '{' is the implicit barrier where we specify the entry into parallel region and the last '}' is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the serial execution of the code. Implicit synchronization can be removed with a 'nowait' clause but we will not discuss it in this section. 
 
 - Explicit barrier
-For applying an explicit barrier we use 'critical' clause that basically specifies the presence of the barrier. While using an explicit barrier the code, which is enclosed in critical clause is executed by all threads, but is restricted to only one thread at the time. The critical clause in C/C++ is defined with
+
+For applying an explicit barrier we use a 'critical' clause that basically specifies the presence of the barrier. While using an explicit barrier, the code which is enclosed in critical clause is executed by all threads, but is restricted to only one thread at the time. The critical clause in C/C++ is defined with
 
 ~~~c
 #pragma omp critical [(name)]
 ~~~
-Here in the following example we can see the scheme of the critical clause. (imageD1P2S26) So if we go over this code quickly
+
+Let's go over this code quickly. 
 
 ~~~c
 cnt = 0;
 f=10;
 #pragma omp parallel
 {
-#pragma omp for
+  #pragma omp for
      for (i=0; i<10; i++) {
        if (b[i] == 0) {
           #pragma omp critical
           cnt ++;
        } /* endif */
        a[i] = b[i]*f;
-} /* end for */
+  } /* end for */
 } /*omp end parallel */
 ~~~
 
-We see that we have specified variables 'cnt' and 'f' and in the parallel region, we specified the 'for' construct so we can do the iteration. Inside the 'if' statement we specified the pragma OMP critical for the next line which 'cnt ++'  and then we close it so that the pragma omp critical is valid only for this variable. 
-We can observe what is happening basically in the execution of the threads on the image (imageD1P2S26). Before we enter the pragma OMP parallel region, we were in serial execution so that part was executed serially. Then we entered our pragma parallel region and this is basically divided and one of the parts is the a for loop of two threads. So everything is executed in parallel until the first thread encounters the 'cnt' variable. At this point the 'cnt' variable is
-first executed and during this time the second thread is trying to access it. But of course it cannot do it because cnt is already modified by the first thread. So after the first thread modifies the cnt++ is specified and following that the next thread will get access to it and it will execute or modify in whichever way we specify. After all the threads have modified it, the code begins to execute in parallel as well. It goes further until we reach the implicit barrier that we have specified at the end following which we return to the serial execution. 
-Owing to the critical clause we specified only one thread is executed  at a time for this cnt variable. Therefore when we use the critical clause and we parallelise the program so whenever we will reach the critical clause only one thread will be able to modify or to run the the code that you specified in the critical clause.
+We see that we have specified variables 'cnt' and 'f' and in the parallel region we specified the 'for' construct so we can do the iteration. Inside the 'if' statement we specified the 'pragma OMP critical' for the next line which is 'cnt ++'. We can observe what is happening in the execution of the threads on the image below. 
 
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S26.png)
 
+Before we enter the pragma 'OMP parallel region', we were in serial execution so that part was executed serially. Then we entered our parallel region. Everything is executed in parallel until the first thread encounters the 'cnt++' statement. At this point the 'cnt++' statement is executed by the first thread that encounters it. During this time, the second thread can't access it because cnt is already being modified by the first thread. So after the first thread finishes with the critical operation, the next thread will get access to the 'cnt' variable and modify it. After all the threads have executed the 'cnt++' statement, the code continues to execute in parallel as well. It continues until we reach the implicit barrier that we have specified at the end, following which we return to the serial execution. 
+
+We owe it to the critical clause that only one thread is executed at a time for this cnt variable. Therefore when we use the critical clause in a parallel program, only one thread will be able to execute that part of code that you specified in the critical clause.
 
 ### Example
 
