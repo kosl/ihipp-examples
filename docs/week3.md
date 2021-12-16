@@ -569,31 +569,45 @@ double MPI_Wtime(void);
 
 [Jupyter notebook: Broadcast](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
 
-## 3.3 D: What do you observe? (sequential vs. tree based algorithm)
-Are the times for both of the program i.e our program and the one from the library same?
-(image S5)
+## 3.3 D: What do you observe with broadcast communication?
+
+In the previous exercise you ran a program using the MPI broadcast routine and writing your own my_Bcast function. What did you observe executing the program and comparing the executing times? Are the times for your program and the one from the library the same?
+
+Help yourself to this image, explaining the difference between the two algorithms. 
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S5.png)
 
 ## 3.4 V: Scatter and gather
-### Scatter 
-As we saw in the broadcast function the root process sends the same data to every other process. However, sometimes in many applications, we might have some data, that we  would like, as the word says, to 'scatter' among other processes. This denotes that we need to divide the data into equal parts so each process has the equal part to receive i.e each process in our communicator will just get a fraction of it. So this is the main difference between scatter and broadcast. We will see through the exercises further on where this would be useful.  
-This is the function prototype
-~~~c
 
+### Scatter 
+
+As we saw in the broadcast function, the root process sends the same data to every other process. However, sometimes in many applications, we might have some data, that we would like, as the word says, to 'scatter' among other processes. This denotes that we need to divide the data into equal parts so each process has the equal part to receive, meaning each process in our communicator will just get a fraction of it. So this is the main difference between scatter and broadcast. We will see through the exercises further on where this would be useful.  
+
+This is the function prototype
+
+~~~c
+MPI_Scatter (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Dataype recvtype, int root, MPI_Comm comm)
 ~~~
 
-The function prototype is similar to broadcast, but we will go through the arguments because there are some parts we need to be careful with. The function is, not surprisingly, called MPI scatter. As usual first we have to specify the data, so this is the buffer. In this example, the root processor will be the one with rank '1' that would like to scatter this array of five 'numbers' to all the other processes. To be able to do this it will need to specify this 'sendbuf'. Following that is the number 'sendcount' and a bit later we will see a 'recvcount'. Usually they are the same. This is actually the number that tells you how many elements will be sent to each process and it is important to note that it does nor denote how many elements are sent in total, but only the fraction that each process will get. The next argument is the 'recvbuf' that is the buffer of the the process that will receive the data. Finally, 'root' is the same as in broadcast. It is the process that actually does the scattering and 'comm' indicates the communicator in which the processes reside. 
-The only thing we need to be careful in this function is the 'sendcount' and 'recvount' because this is the number that dictates how many element will be sent to each process and not the number of whole elements.  
-The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends the same piece of data to all processes whereas MPI_Scatter sends chunks of data to different processes. 
-Another important thing to be noted is that when this functions is finished, the sender, i.e the root (in our example the process at rank '1') will not get the information of the whole data. In our example, this would mean that after the communication rank '1' will have only the part to 'B' of the data. 
+The function prototype is similar to broadcast, but we will go through the arguments because there are some parts we need to be careful with. As usual first we have to specify the data, so this is the buffer. In this example, the root processor will be the one with rank '1' that would like to scatter this array of five 'numbers' to all the other processes. To be able to do this, it will need to specify this 'sendbuf'. Following that is the number 'sendcount' and a bit later we will see a 'recvcount'. Usually they are the same. This is actually the number that tells you how many elements will be sent to each process and it is important to note that it does not mean how many elements are sent in total, but only the fraction that each process will get. The next argument is the 'recvbuf' that is the buffer of the the process that will receive the data. Finally, 'root' is the same as in broadcast. It is the process that actually does the scattering and 'comm' indicates the communicator in which the processes reside. The only thing we need to be careful in this function is the 'sendcount' and 'recvount' because this is the number that dictates how many element will be sent to each process and not the number of whole elements. Another important thing to be noted is that when this function is finished, the sender (in our example the process at rank '1') will not get the information of the whole data. In our example, this would mean that after the communication rank '1' will have only the part to 'B' of the data. 
 
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S6.png)
+
+The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends the same piece of data to all processes whereas MPI_Scatter sends chunks of data to different processes. 
 
 ### Gather
+
 After, the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see  the basic idea in many MPI applications, that we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
+
 ~~~c
-
+MPI_Gather(void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Dataype recvtype, int root, MPI_Comm comm)
 ~~~
-The main difference here is that since only one process, i.e the root gathers all the information it is the only one that needs to have a valid receive buffer. All other calling processes can pass 'NULL' for 'recv_data' since they do not receive anything as they just send the data to the roots process. Finally, once again to be noted and remembered that the 'recv_count' parameter is the count of elements received per process and not the total summation of counts from all processes!
 
+The main difference here is that since only one process, i.e., the root gathers all the information it is the only one that needs to have a valid receive buffer. All other calling processes can pass 'NULL'  for 'recvbuf' since they do not receive anything as they just send the data to the roots process. Finally, once again to be noted and remembered that the 'recv_count' parameter is the count of elements received per process and not the total summation of counts from all processes!
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S7.png)
+
+(3m20s)
 
 ## 3.5 E: Scatter and Gather
 
@@ -623,23 +637,46 @@ First, think about how would you solve this exercise without MPI_Scatter and MPI
 ## 4.Advanced Collective operations
 
 ### 4.1 MPI_Reduce
-So far in the 'basic collective communication' we have encountered broadcast, scatter and gather. Now we can move on to more 'advanced collective communication' where we will cover routines MPI_Reduce and MPI_Allreduce. Before we go into these routines, lets revise the concepts of 'reduce' or data reduction in practice. Simply put, data reduction involves reducing a set of numbers into a smaller set of numbers via some function. For example, 
-Let’s say we have a list of numbers (1, 2, 3, 4, 5). Then reducing this list of numbers with the sum function would produce 
-sum(1, 2, 3, 4, 5) = 15
+
+So far in the 'basic collective communication' we have encountered broadcast, scatter and gather. Now we can move on to more 'advanced collective communication' where we will cover routines MPI_Reduce and MPI_Allreduce. 
+
+Before we go into these routines, lets revise the concepts of 'reduce' or data reduction in practice. Simply put, data reduction involves reducing a set of numbers into a smaller set of numbers via some function. For example, let’s say we have a list of numbers (1, 2, 3, 4, 5). Then reducing this list of numbers with the sum function would produce:
+
+    sum(1, 2, 3, 4, 5) = 15
+
 Similiarly if we would to use another function say, multiply, the multiplication reduction would yield
-multiply(1, 2, 3, 4, 5) = 120.
+
+    multiply(1, 2, 3, 4, 5) = 120.
+
 Quite simply, this is what an MPI reduction function does. 
 
 ### MPI_Reduce
-MPI Reduce is basically what we did in the the last excercise of the previous subsection but with one additional functionality. In a way what the reduce routine does is basically similar to scatter/gather, but we also specify an MPI function like MPI sum, some MPU multiplication or MPI max or something similar. We will see later on which functions are available and how we can use those functions. So the MPI library use those functions directly on this data that gives us the reduced result immediately so we don't have to call the gather routine and then manually program to get the sum; instead the library does it for us. Therefore, MPI_Reduce takes an array of input elements on each process and returns an array of output elements to the root process. The output elements contain the reduced result.
 
-Perhaps it would be easier to understand it through an example. (image S11) 
+MPI Reduce is basically what we did in the the last exercise with an additional functionality. In a way what the reduce routine does is basically similar to scatter/gather, but we also specify an MPI function like sum, multiplication, maximum or something similar. We will see later on, which functions are available and how we can use them. So the MPI library uses those functions directly on this data that gives us the reduced result immediately so we don't have to call the gather routine and then manually program to get the sum; but, instead the library does it for us. Therefore, MPI_Reduce takes an array of input elements on each process and returns an array of output elements to the root process. The output elements contain the reduced result. 
+
+Perhaps it would be easier to understand it through an example. 
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S11.png)
+
 Lets assume that we're trying to to compute a sum, but different numbers are scattered across different processes. If we would have our numbers (1, 2, 3, 4, 5) we would call MPI reduce on this data and we will also need to mention say the function that we would like to reduce the data is the sum and then the root process will get the sum as a result. To be able to do this we would need the prototype of the MPI_reduce
+
 ~~~c
 MPI_Reduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm communicator);
 ~~~
+
 The arguments of this routine are pretty similiar to the ones we have seen so far. 
-So, the 'send_data' parameter is an array of elements that each process wants to reduce. Following that, the 'recv_data' that is only relevant on the process with a rank of root as it contains the reduced result. Then we mention the 'count'i.e the number or quantity of the data and the datatype. However, this is where the MPI_reduce function is different. Here we also mention the 'operation' in the op parameter i.e  the operation that we wish to apply to our data. The list of reduction operation in the MPI library are as follows: (image TABLE S12)
+So, the 'send_data' parameter is an array of elements that each process wants to reduce. Following that, the 'recv_data' that is only relevant on the process with a rank of root as it contains the reduced result. Then we mention the 'count', i.e., the number or quantity of the data and the datatype. However, this is where the MPI_reduce function is different. Here we also mention the 'operation' in the op parameter, i.e., the operation that we wish to apply to our data. The list of reduction operation in the MPI library are as follows: 
+
+| Function | MPI_Op |
+| :--------------: | :--------------: |
+| Maximum | MPI_MAX |
+| Minimum | MPI_MIN |
+| Sum | MPI_SUM |
+| Product | MPI_PROD |
+| Logical AND | MPI_LAND |
+| Logical OR | MPI_LOR |
+
+(3m20s)
 
 ## 4.2 E: Computing average with MPI_Reduce
 
@@ -688,15 +725,19 @@ $$Pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 ## 4.4 V/A: MPI_Allreduce
 
-In the MPI_reduce function that we learnt previously, the idea was that one of the processor will take data from different processors to combine them using some MPI operation and use this operation to reduce the data and get the results. The MPI_Allreduce stands out from the MPI_Reduce in a peculiar way that is in 'Allreduce' all of the processes get this result. To understand it simply we reduce the data and somehow broadcast the result at the same time. Of course it is possible to doing it ourself but with MPI_Allreduce the library does it making it not only faster but also easier for us. 
-Many parallel applications require accessing the reduced results across all processes rather than the root process. This is where MPI_Allreduce is mostly used as it reduces the values and distributes the results to all processes. Simply put 'Allreduce' is basically the 'reduce' and the 'broadcast' function combimed. 
-The prototype for MPI_Allreduce is quite similiar to the 'reduce' and it looks like
+In the MPI_reduce function that we learnt previously, the idea was that one of the processor will take data from different processors to combine them using some MPI operation and use this operation to reduce the data and get the results. The MPI_Allreduce stands out from the MPI_Reduce in a peculiar way that is in 'Allreduce' all of the processes get this result. To understand it simply, we reduce the data and somehow broadcast the result at the same time. Of course it is possible of doing this ourselves but with MPI_Allreduce the library does it making it not only faster but also easier for us. 
+
+Many parallel applications require accessing the reduced results across all processes rather than only the root process. This is where MPI_Allreduce is mostly used as it reduces the values and distributes the results to all processes. Simply put, 'Allreduce' is basically the 'reduce' and the 'broadcast' function combined. The prototype for MPI_Allreduce is quite similar to the 'reduce' and it looks like
+
 ~~~c
-MPI_Allreduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op,
-MPI_Comm communicator);
+MPI_Allreduce(void* send_data, void* recv_data, int count, MPI_Datatype datatype, MPI_Op op, MPI_Comm communicator);
 ~~~
-However, a major difference would be that here is no 'root' in the argument because all the processes will get the data. Everything else is pretty much the same. We have two pointers of the send and receive data. We have the number of elements sent by each processor followed by the data type. Then similiar to the reduce function we have the MPI operation that we want to use to reduce the data and of course finally the communicator. 
-Since we are already familiar with the reduce function it would be easier for us to 'learn about the 'Allreduce' through the following excercise.
+
+However, a major difference would be that here is no 'root' in the argument because all the processes will get the data. Everything else is pretty much the same. We have two pointers for the send and receive data. We have the number of elements sent by each processor followed by the data type. Then similiar to the reduce function we have the MPI operation that we want to use to reduce the data and of course finally the communicator. 
+
+Since we are already familiar with the reduce function it would be easier for us to learn about the 'Allreduce' through the following exercise.
+
+(1m50s)
 
 [Jupyter notebook: Allreduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
