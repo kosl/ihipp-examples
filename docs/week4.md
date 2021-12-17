@@ -544,6 +544,9 @@ Here you can see the description of the memory layout and the displacements. For
 ### Contiguous Data
 
 The is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S8.png)
+
 In C we use the following function to define it
 
 ~~~c
@@ -612,51 +615,60 @@ You will use a modified pass-around-the-ring program which already includes a st
 ## 3.3 V/A: Layout of struct data types
 
 ### Vector datatypes
-(image S13)
 
-What we learnt so far in the previous subsection and the exercise were more like continous vectors. Sometimes we would need to communicate vectors with holes that we do not want to be trnasferred. This implies that we would not send each element but just selected elements or sequence of elements. Therefore the blocklength and the offset of each can be used to create a "stride". When we want to communicate just a portion of a contionus chunk of memory the destination and source may not be the same. Usually we have one element to receive the results back from the array of cluster. As we saw in the previous pi example how the integrals were colelcted back so that we could see the complete sums we could such vector datatypes. We suse the following routine for vector datdtypes:
+What we learnt so far in the previous subsection and the exercise were more like continous vectors. Sometimes we would need to communicate vectors with holes that we do not want to be transferred. This implies that we would not send each element but just selected elements or sequence of elements. Therefore the blocklength and the offset of each can be used to create a "stride". When we want to communicate just a portion of a contionus chunk of memory the destination and source may not be the same. Usually we have one element to receive the results back from the array of cluster. As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could use such vector datatypes.
+
+![Vector](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S13.png)
+
+As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could do with such vector datatypes. We use the following routine for vector datatypes:
 
 ~~~c
-int MPI_Type_vector(int count, int blocklength, int stride, MPI_Datatype oldtype, MPI_Datatype *newtype)
+int MPI_Type_vector (int count, int blocklength, int stride, MPI_Datatype oldtype, MPI_Datatype *newtype)
 ~~~
 
 The structure of the routine is similiar to most we have learnt previously. So 
 - 'count' suggests how many elements. 
 - 'blocklength' is the number of elements per block.
 - 'stride' is the offset to the next portion of the result. 
-- the datatype of course we could also have only one type and it could be a derived one. Of course we can strided array of slots and integers and subsequently we will get a * newtype created that can be used in send and recieve routines.
-
+- the datatype, of course we can have only one datatype here and it could be a derived one. Of course we can communicate strided array of slots and integers and subsequently we will get a * newtype created that can be used in send and recieve routines.
 
 ### Struct datatype
 
-So we you could have old types that are of different sizes and then we could combine two old types into a single vector or block that can be also with holes and these holes will not be communicated. It would be quite often the way how to describe out type instead of doing what we saw earlier. The previous method is not optimal for large numbers of such kinds of array. In such cases we use the struct datatypes so that communication is executed in the correct way. 
+So we could have old types that are of different sizes and then we could combine two old types into a single vector or a block that can be also with holes and these holes will not be communicated. This is a more prevalent way to describe the type instead of doing what we saw earlier. The previous method is not optimal for large numbers of such kinds of arrays. In such cases we use the struct datatypes so that communication is executed in the correct way. 
+
 The routine for this datatype looks like  
 
 ~~~c
-int MPI_Type_create_struct(int count, int *array_of_blocklengths, MPI_Aint *array_of_displacements,
-MPI_Datatype *array
+int MPI_Type_create_struct (int count, int *array_of_blocklengths, MPI_Aint *array_of_displacements, MPI_Datatype *array
 ~~~
 
-(image S15)
-This is how memory layout of struct data types could look like with gaps inside that we don't actualy want, but are imposed by the compiler itself or the underlying operating system or hardware processor.
+This is how memory layout of struct datatypes could look like with gaps inside that we don't actualy want, but are imposed by the compiler itself or the underlying operating system or hardware processor.
 
-Let us assume that we have the following parameters. 
-- count = 2
-- array_of_blocklengths = ( 3, 5 )
-- array_of_displacements = ( 0, addr_1 – addr_0 ) 
-- array_of_types = ( MPI_INT, MPI_DOUBLE )
-In this case the, prototype for fixed memory layout of the struct datatype would be as following
+![Memory layout of struct datatypes](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S15.png)
+
+Let us assume that we have the following parameters:
+
+~~~
+count = 2
+array_of_blocklengths = ( 3, 5 )
+array_of_displacements = ( 0, addr_1 – addr_0 ) 
+array_of_types = ( MPI_INT, MPI_DOUBLE )
+~~~
+
+In this case the prototype for fixed memory layout of the struct datatype would be as follows:
+
 ~~~c
-struct buff
-{ int i_val[3];
-double d_val[5];
+struct buff {
+  int i_val[3];
+  double d_val[5];
 }
 ~~~
 
 ## 3.4 Computing displacements
 
 We actually need to compute the displacements. So if we would like to see the size of each structure in bytes, that would need to be prescribed as a buffer the displacement needs to be known.
-In MPI1 before we started with derived types we saw there were some differences with MPI3 and MPI1 similar to kind of problems that fortran had. These issues are now resolved with MPI3.1. Now there is a deprecated way of doing upper and lower bound for the structure. These are the recommended way how to compute the distance from one type to another. The standard procedure for obtaining displacement is 
+In MPI1 before we started with derived types we saw there were some differences with MPI3 and MPI1 similar to kind of problems that fortran had. These issues are now resolved with MPI3.1. Now there is a deprecated way of doing upper and lower bound for the structure. These are the recommended way how to compute the distance from one type to another. 
+The standard procedure for obtaining displacement is 
 
 ~~~c
 array_of_displacements[i] := address(block_i) – address(block_0)
@@ -665,26 +677,29 @@ array_of_displacements[i] := address(block_i) – address(block_0)
 And in order to get the absolute address we would need the routine
 
 ~~~c
-int MPI_Get_address(void* location, MPI_Aint *address)
+int MPI_Get_address (void* location, MPI_Aint *address)
 ~~~
 
-In the MPI3.1 version the relative displacement can be calculated as the diffference between absolute address 1 and absolute address 2  and the new absolute address can be denoted as the sum of the existing absolute address and the relative displacement. So,
+In the MPI3.1 version the relative displacement can be calculated as the diffference between absolute address 1 and absolute address 2 and the new absolute address can be denoted as the sum of the existing absolute address and the relative displacement. So,
 
-- Relative displacement:= absolute address 1 – absolute address 2
+- Relative displacement:= absolute address 1 – absolute address 2,
 with the routine that looks like
+
 ~~~
-MPI_Aint MPI_Aint_diff(MPI_Aint addr1, MPI_Aint addr2)
+MPI_Aint MPI_Aint_diff (MPI_Aint addr1, MPI_Aint addr2)
 ~~~
 
-- New absolute address := existing absolute address + relative displacement \
+- New absolute address := existing absolute address + relative displacement,
 with the routine that looks like
+
 ~~~c
-MPI_Aint MPI_Aint_add(MPI_Aint base, MPI_Aint disp)
+MPI_Aint MPI_Aint_add (MPI_Aint base, MPI_Aint disp)
 ~~~
 
 ### Example
 
-In example we see how we compute the address. 'Aint' address variable or 'disp' displacements could be computed by prescribing the start of the first element. The 'snd_buf.i[0]' isactually the correct way of defining that address. 
+In example we see how we compute the address. 'Aint' address variable or 'disp' displacements could be computed by prescribing the start of the first element. The 'snd_buf.i[0]' is actually the correct way of defining that address. 
+
 ~~~c
 struct buff {
     int i[3];
@@ -695,7 +710,7 @@ MPI_Aint iaddr0, iaddr1, disp;
 
 MPI_Init(NULL, NULL);
 
-// the address value &snd_buf.i[0] is stored into variavle iaddr0
+// the address value &snd_buf.i[0] is stored into variable iaddr0
 MPI_Get_address(&snd_buf.i[0], &iaddr0);
 MPI_Get_address(&snd_buf.d[0], &iaddr1);
 disp = MPI_Aint_diff(iaddr1, iaddr0);
@@ -705,7 +720,9 @@ MPI_Finalize();
 
 ## 3.5 D: Which is the fastest neighbor communication with strided data?
 
-Using derived datatype handles
+What do you think? Which is the fastest neighbor communication with strided data?
+
+- While using derived datatype handles
 
 - Copying the strided data in a contiguous scratch send-buffer, communicating this send-buffer into a contiguous recv-buffer, and copying the rcv-buffer back into the strided application array
 
@@ -763,28 +780,35 @@ You will use a modified pass-around-the-ring program which already includes a st
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
 Before we go further into the Parallel file I/O we need to get some basic knowledge about the terminology of size, extent, true extent etc. and get some background about the alignment rules.  
+
 - Size is the number of bytes that have to be transferred.
 - Extent represents the spans from first to last byte including all the holes.
 - True extent spans from first to last true byte but in this case excluding holes at beginning and the end.
-For most of the basic datatypes the Size = Extent = number of bytes used by the compiler. This can be seen easily in the image (S25)
 
-Extent, alignment and holes can be problems for some compilers or architecture, especially, these are optimized. However, MPI3 has a lot of these problems fixed by introducing new interfaces that solve certain issues and offer a better usable interface. However, in standard these parameters always hold true:
-- There are automatic holes at the end for necessary alignment purpose
-- There can be additional holes at begin and by lb and ub markers: MPI_TYPE_CREATE_RESIZED
+For most of the basic datatypes the Size = Extent = number of bytes used by the compiler. This can be seen easily in this image. 
+
+![Extent](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S25.png)
+
+Extent, alignment and holes can be a problem for some compilers or architectures, especially if these are optimised. However, MPI3 has fixed a lot of these problems by introducing new interfaces that solve certain issues and offer a better usable interface. However, in standard these parameters always hold true:
+
+- There are automatic holes at the end for necessary alignment purpose.
+- There can be additional holes at begin and by lb and ub markers: MPI_TYPE_CREATE_RESIZED. 
 - And as mentioned already, basic datatypes: Size = Extent = number of bytes used by the compiler. 
 
-### Alignment rule, holes and resizing of structures 
-At times, the compiler might add additional alignment holes either within a structure (for example between a float and a double) or at the end of a structure (i.e after elemets different sizes). However, alignment holes are important at the end when using an array of structures!
-To imply this if an array of structures (in C/C++) or derived types (in Fortran) should be communicated then it is recommended that we create a portable datatype handle and additionally MPI_TYPE_CREATE_RESIZED to this datatype handle. 
-(EXAMPLE)
-Quite often, due to the alignment gaps the holws may cause a signigicant loss of bandwidth. Technically, by definition, MPI is not allowed to transfer the holes. There we need to fill holes with dummy elements.
-(EXAMPLE)
+### Alignment rule, holes and resizing of structures
 
-Sometimes certain problems might arise such as the MPI extent of a structure is not the same or equal as the real size of the structure. This could be because the MPI adds n alignment hole at the end a because the MPI library has wrong expectations about compiler rules that is 
+At times, the compiler might add additional alignment holes either within a structure (for example between a float and a double) or at the end of a structure (i.e. after elemets of different sizes). However, alignment holes are important at the end when using an array of structures!
+
+To imply this, if an array of structures (in C/C++) or derived types (in Fortran) should be communicated then it is recommended that we create a portable datatype handle and additionally apply MPI_TYPE_CREATE_RESIZED to this datatype handle. (EXAMPLE)
+
+Quite often, due to the alignment gaps the holes may cause a significant loss of bandwidth. Technically, by definition, MPI is not allowed to transfer the holes. Therefore we need to fill holes with dummy elements. (EXAMPLE)
+
+Sometimes certain problems might arise such as the MPI extent of a structure is not the same or equal as the real size of the structure. This could be because the MPI adds alignment hole at the end because the MPI library has wrong expectations about compiler rules that is 
 - For a basic datatype within the structure
 - For the allowed size of the whole structure (e.g. multiple of 16)
 
 To rectify this problem we can call the 
+
 ~~~c
 MPI_Type_create_resized(...);  //with lb=0 and
 new_extent = sizeof(one structure);
@@ -830,27 +854,29 @@ call MPI_Type_commit(send_recv_resized, error)
 
 ## 4.3 V:Parallel file I/O
 
+Many parallel applications need a coordinated parallel access to a file by a group of processes and at times this could be simultaneous. Frequently all the processes may read/write many (small) non-contiguous pieces of the file, i.e., the data may be distributed amongst the processes according to a partitioning scheme. Writing of the results can be done by all compute nodes at once or even compute cores, writing their own portion of the result and having a huge amount (not by size but by the number) of files is very inefficient in such a way.
 
-Many parallel applications need a coordinated parallel access to a file by a group of processes and at times this could be simultaneous. Frequently all the processes may read/write many (small) non-contiguous pieces of the file i.e. the data may be distributed amongst the processes according to a partitioning scheme. Writing of the results can be done by all compute nodes at once or even compute cores, writing their own portion of the result and having a huge amount (not by size but by the number) of files is very inefficient in such a way.
-In this subsection we are addressing classic File I/O. We will when we will be using such kind of IO and for what purpose and are there any other means to do the same. Although there are some object file systems also being used in HPC that do not have a clasiccal file layout and we would need to address, such objects or chunks of data that are saved into the file system differently but we will not adress these issues here.
+In this subsection we are addressing classic File I/O and figuring out when we will be using such kind of I/O and for what purposes. We will also observe if there are any other means to do the same thing. Although there are some object file systems also being used in HPC that do not have a classical file layout and we would need to address such objects or chunks of data that are saved into the file system differently but we will not address these issues here.
 
-The are quite a lot of problem of file systems with high performance computing. Usually, large codes read large data as input and  write large data as output. Since many computations are done iteratively, meaning that they are convergent or they progress the solution in a stepwise manner the storage can be occupied quite fast. For example if we are  simulating a system of particles in HPC or solving a fluid equations or doing some kind of time evolution simulation we would need to  store large amounts of data . So finding petabytes of disks to be full is not uncommon. A lot of data being saved to the disk should not impact the computation i.e if we would like to store results into disk, it should not impact communication and the overall progress of the code.
+There are quite a lot of problems with file systems in high performance computing. Usually, large codes read large data as input and write large data as output. Since many computations are done iteratively, meaning that they are convergent or they progress the solution in a stepwise manner, the storage can be occupied quite fast. For example, if we are simulating a system of particles in HPC or solving fluid equations or doing some kind of time evolution simulation, we would need to store large amounts of data. So finding petabytes of disks to be full is not uncommon. A lot of data being saved to the disk should not impact the computation, i.e., if we would like to store results into a disk, it should not impact communication and the overall progress of the code.
 
-This is where the Parrallel File I/O comes into play so that we could save results by for example a timestep, or by proccessors that are already combined together at progress or computation time. 
+This is where the Parrallel File I/O comes into play so that we could save results for example by a timestep, or by proccessors that are already combined together at progress or computation time. 
 
-So it is quite difficult if we have a running large code that  would  like to store all the resources or at least the state of current simulation. Since quite often it is not just the results that are being saved, but also intermediate results or steps at selected times.
-So for example, if a simulation crashes, it can be restarted at that point. This is problematic owing to the fact that the usual scheduling on clusters limits the time of how long one code can run and usually that is actually limited to twenty four hours and  for some clusters it could be even smaller number. In an case where we would have code that we would like to run for a month it would be meticulous if it need to stop at some point and we can start from the previous state and continue simulation. This would imply that somehow we need to store the last state into the disk and restart from that so-called check point or saving the current state. 
-This is overcome with  Parallel file I/O that lowers the number of files and performs the  writing in an efficient way. This is acheived  because  the parallel file systems allows us to write to several file servers at the same time through metadata orchestrator. When we open a file the metadata server informs the node (that it's handling network file system) to which of the available data file or targets do they need to send the data. If there are thousands of compute nodes, then there are let's say, at least dozens of file servers that handle hundreds of disks to allow parallel file transfers. 
+It is quite difficult if we have a running large code that would like to store all the resources or at least the state of a current simulation. Since quite often it is not just the results that are being saved, but also intermediate results or steps at selected times. So for example, if a simulation crashes, it can be restarted at that point. This is problematic owing to the fact that the usual scheduling on clusters limits the time of how long one code can run and usually that is actually limited to twenty four hours and for some clusters it could be an even shorter time. In any case where we would have a code that we would like to run for a month it would be meticulous if it needs to stop at some point and we can start from the previous state and continue simulation. This would imply that somehow we need to store the last state into the disk and restart from that so-called check point or saving the current state. 
 
-Thus, at any given time, many of compute nodes are sending network files over through the file server. Therefore in Parallel File I/O we could actually write a chunks of the single file for several of those compute nodes. Reading and writing files are analological to sending and receiving messages respectively that we have learnt earlier. The only exception in that this is a persistent memory, meaning that such kind of writing is done correctly. Additionaly for codes that do computation in parts meaning, that if we have a code  that does domain composition before we start,  then some of the compute nodes or compute cores, already know which portion of the file needs to be read in order to start processing. In this case having a single file for saving timestep is something that it is very useful for large clusters that would like to handle millions of files, with the minimum number of (feets)????. 
+This is overcomed with Parallel file I/O that lowers the number of files and performs the writing in an efficient way. This can be acheived because the parallel file systems allow us to write to several file servers at the same time through metadata orchestrator. When we open a file, the metadata server informs the node (which is handling the network file system) to which of the available data file or targets do they need to send the data. If there are thousands of compute nodes, then there are let's say, at least dozens of file servers that handle hundreds of disks to allow parallel file transfers. 
 
-This allows us to use parallel I/O functions that do not block computation allowing us to to put overlapped computation and reading/writing through it. This is possible through some standard formats that look like a readable file at the end; not just by the code that has written it, but also for general purpose file readers. For example, a prominent format for the file that is Parallel is HDF, i.e hierarchical data format. It is used  quite often by many codes and it provides MPI Parallel I/O. Consequently, instead of learning of what we can do with the Parallel I/O, it would be more efficient if we learn how to do MPI I/O with HDF format in parallel way. The MPI I/O features provided by MPI standards are actually part of hierarchical data formats and other net CDF and similar formats. To summarise the MPI-I/O features are to provide a high-level interface to support:
+Thus, at any given time, many of compute nodes are sending network files over through the file server. Therefore in Parallel File I/O we could actually write chunks of the single file for several of those compute nodes. Reading and writing files is analological to sending and receiving messages respectively which we have learnt earlier. The only exception is that this is a persistent memory, meaning that such kind of writing has to be done correctly. Additionaly, for codes that do computation in parts meaning, that if we have a code that does domain composition before we start, then some of the compute nodes or compute cores already know which portion of the file needs to be read in order to start processing. In this case having a single file for saving the timestep is something that is very useful for large clusters that would like to handle millions of files, with the minimum number of needs. 
+
+This allows us to use parallel I/O functions that do not block computation, allowing us to put overlapped computation and reading/writing through it. This is possible through some standard formats that look like a readable file at the end; not just by the code that has written it, but also for general purpose file readers. For example, a prominent format for the file that is Parallel is HDF, i.e., hierarchical data format. It is used quite often by many codes and it provides MPI Parallel I/O. Consequently, instead of learning what we can do with the Parallel I/O, it would be more efficient if we learn how to do MPI I/O with HDF format in a parallel way. The MPI I/O features provided by MPI standards are actually part of hierarchical data formats and other net CDF or similar formats. To summarise. the MPI I/O features are to provide a high-level interface to support:
+
 -  data file partitioning among processes
 -  transfer global data between memory and files (collective I/O)
 -  asynchronous transfers
 -  strided access
 
-Some basic principles of MPI-I/O are that
+Some basic principles of MPI-I/O are that:
+
 - MPI file contains elements of a single MPI datatype (etype)
 - partitioning the file among processes with an access template (filetype)
 - all file accesses transfer to/from a contiguous or non-contiguous user buffer (MPI datatype)
@@ -860,19 +886,21 @@ Some basic principles of MPI-I/O are that
 - automatic data conversion in heterog. systems
 - file interoperability with external representation
 
-(image S9)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P3S9.png)
 
-So we will learn these principles of MPI I/O to see that we could create a file that perhaps looks like a single file. However in reality there are many of the processes that started work on different nodes actually open the same file and writes the results into one physical file, while a logical way there may be gaps that are not allowed to be used or to be written. This is because the striking from a logical way to physical way is done in such a way that we already know what place we can save our portion of the file. 
+So we will learn these principles of MPI I/O to see that we could create a file that perhaps looks like a single file. However in reality there are many of the processes that start work on different nodes but actually open the same file and write the results into one physical file, while a logical way there may be gaps that are not allowed to be used or to be written. This is because the striking from a logical way to physical way is done in such a way that we already know what place we can save our portion of the file. 
 
-(image S10)
-Simply put, we need to know the size of one chunk and the file system just needs to move the file pointer to the correct place where it writes . This is quite simple because even the  serial file I/O allows us to move backwards and forwards in the file if it is in a binary way so that we know, with what offset we can expect something. In this case we could have a single file that can create many cores writing at the same time to the different servers and in the end it looks like a single file for you. To ease out these terms 
-- A file is an an ordered collection of typed data items
-- etypes refer to the the unit of data access and positioning / offsets that can be any basic or derived datatype. It is usually with non-negative, monotonically non-decreasing, non-absolute displacement and is generally contiguous but it does not need to be typically same at all processes.
-- filetypes are the basis for partitioning a file among processes. They define a template for accessing the file. They are usualy different at each process.
-- Each process has its own "view" that is defined by a displacement, an etype, and a filetype. The file type is repeated,starting at displacement.
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P3S10.png)
+
+Simply put, we need to know the size of one chunk and the file system just needs to move the file pointer to the correct place where it writes. This is quite simple because even the serial file I/O allows us to move backwards and forwards in the file, if it is in a binary way so that we know with what offset we can expect something. In this case we could have a single file that can create many cores writing at the same time to the different servers and in the end it looks like a single file for you. To ease out these terms:
+
+- A file is an an ordered collection of typed data items. 
+- etypes refer to the unit of data access and positioning / offsets that can be any basic or derived datatype. It is usually with non-negative, monotonically non-decreasing, non-absolute displacement and is generally contiguous but it does not need to be typically same for all processes.
+- filetypes are the basis for partitioning a file among processes. They define a template for accessing the file. They are usualy different for each process.
+- Each process has its own "view" that is defined by a displacement, an etype, and a filetype. The file type is repeated, starting at displacement.
 - An "offset is the position relative to current view, in units of etype.
 
-To open and MPI file we use the routine 
+To open an MPI file we use the routine 
 
 ~~~c
 MPI_FILE_OPEN(comm, filename, amode, info, fh)
@@ -887,23 +915,26 @@ and the parameters in this routine are
 - returns a file handle fh
 
 However, the default is:
+
 - displacement = 0
 - etype = MPI_BYTE
 - filetype = MPI_BYTE
 
-We prescribe the way of discplacements that is needed. You can check the PDF in the attachment for the list of all the Access Modes. 
+We prescribe the way of discplacements that is needed. 
 
-Sometimes we might need to close or delete a file. We use the follwing routines for
-- Close: collective
+Sometimes we might need to close or delete a file. We use the following routines:
+
 ~~~c
+//Close: collective
 MPI_FILE_CLOSE(fh)
 ~~~
 
-- Delete 
 ~~~c
+//Delete
 MPI_FILE_DELETE(filename, info)
 ~~~
-However, if access mode "amode=MPI_DELETE_ON_CLOSE" was specified in MPI_FILE_OPEN then the file is obvioudly automatically deleted on close. 
+
+However, if access mode `amode=MPI_DELETE_ON_CLOSE` was specified in MPI_FILE_OPEN then the file is obviously automatically deleted on close. 
 
 We will learn further about the MPI-I/O principles through a simple example. 
 
