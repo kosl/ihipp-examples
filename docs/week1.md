@@ -288,9 +288,9 @@ We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with th
 
 ### V1.9: OpenMP memory, programming and execution model
 
-OpenMP is based on the shared memory model of multi-processor/core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP, programs accomplish parallelism exclusively with the use of threads (thread-based parallelism).
+OpenMP is based on the shared memory model of multi-processor or multi-core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP, programs accomplish parallelism exclusively with the use of threads, so called thread-based parallelism.
 
-A thread is the smallest unit of processing that can be scheduled. Threads can exist only within the resources of a single process. When the process is finished, the threads also vanish. The maximum number of threads is equal to the number of processors/cores available. The actual number of threads used is defined by the user or application used.
+A thread is the smallest unit of processing that can be scheduled. Threads can exist only within the resources of a single process. When the process is finished, the threads also vanish. The maximum number of threads is equal to the number of processor cores available. The actual number of threads used is defined by the user or application used.
 
 In the introduction, we referred to OpenMP as an easy approach for doing "automatic" parallelization. In reality, OpenMP is an explicit *programming model*, which offers the user full control over parallelization. Although not automatic in a strict sense, parallelization is simply achieved by inserting compiler directives in a serial program and hence "automatically" transforming it into a parallel program. Of course, OpenMP also offers complex programming approaches such as inserting subroutines to set multiple levels of parallelism, locks and nested locks, etc.
 
@@ -305,7 +305,7 @@ Let's recap the OpenMP terminology discussed so far with descriptions:
 | OpenMP thread | a running process specified by OpenMP |
 | thread team | a set of threads which cooperate on a task |
 | master thread | main thread which coordinates the threads |
-| thread safety | correct execution of multiple threads |
+| thread safety | specifies correct execution of multiple threads |
 | OpenMP directive | OpenMP line of code for compilers with OpenMP |
 | construct | an OpenMP executable directive |
 | clause | controls the scoping of the variables during execution |
