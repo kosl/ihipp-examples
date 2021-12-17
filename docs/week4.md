@@ -103,7 +103,7 @@ MPI_Finalize();
 
 As we have already learnt in the beginning that in MPI the parallelisation is based on the distributed memory. This means that if we run a program on different cores, each core has its own private memory. Since the memory is private to each process, we send messages to exchange data from one process to another. 
 
-In two-sided (i.e. point to point communication) and collective communication models the problem is that (even with the non blocking) both sender and receiver have to participate in data exchange operations explicitly, which requires synchronisation. 
+In two-sided (i.e. point to point communication) and collective communication models the problem is that (even with the non blocking) both sender and receiver have to participate in data exchange operations explicitly, which requires synchronization. 
 
 ![Idle time](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S24.png)
 
@@ -163,17 +163,17 @@ In the same manner MPI_Get is similar to the put operation, except that data is 
 MPI_Get (void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype_target_datatype, MPI_Win win);
 ~~~
 
-We will understand in depth about the arguments of these functions in the following excercise. But before we get into that, another important thing that we need to discuss is the synchronisation. If you remember we discussed this concept briefly in the second week when we were learning about the concepts of OpenMP.
+We will understand in depth about the arguments of these functions in the following excercise. But before we get into that, another important thing that we need to discuss is the synchronization. If you remember we discussed this concept briefly in the second week when we were learning about the concepts of OpenMP.
 
 ![One-sided communication](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S25.png)
 
-In one sided communication in MPI, the target process calls the function to create the window in order to give access of its memory to other processes. However, in the case of multiple users it is already quite plain to see that if these users try to simultaneously access this data can already lead to some problems. For example, lets say two users access the window to put data using the MPI_Put function this is clealry a race condition that needs to be avoided. This is where synchronisation comes into the play. So in order to avoid this before and after each 'one sided communication' function, i.e., MPI_Get and MPI_Put, we need to use the function
+In one sided communication in MPI, the target process calls the function to create the window in order to give access of its memory to other processes. However, in the case of multiple users it is already quite plain to see that if these users try to simultaneously access this data can already lead to some problems. For example, lets say two users access the window to put data using the MPI_Put function this is clealry a race condition that needs to be avoided. This is where synchronization comes into the play. So in order to avoid this before and after each 'one sided communication' function, i.e., MPI_Get and MPI_Put, we need to use the function
 
 ~~~c
 MPI_Win_fence (0, MPI_Win win);
 ~~~
 
-This function actually helps us to synchronise the data in a way that if multiple processes would like to access the same window it makes sure that they go in an order. So the program will allow different processes to access the window but it will ensure that it is not happening at the same time. So it is important that the one-sided function calls are surrounded by this fence function.
+This function actually helps us to synchronize the data in a way that if multiple processes would like to access the same window it makes sure that they go in an order. So the program will allow different processes to access the window but it will ensure that it is not happening at the same time. So it is important that the one-sided function calls are surrounded by this fence function.
 
 ## 1.4 E: One sided communication in a ring
 
@@ -377,40 +377,39 @@ This program was done in the first way of threading methods (MPI + OpenMP).
 
 * This way of parallelization that we just did in the notebook example fits nicely with most OpenMP models. 
 * Expensive loops are parallelized with OpenMP and that is faster. You can utilize many of the processor cores, so doubling the number of threads, instead of cores. So running programs this way surely has some potential. 
-* Communication and MPI calls between loops
-* Eliminates need for true “thread-safe” MPI
+* Communication and MPI calls between loops.
+* Eliminates need for true “thread-safe” MPI.
+* Parallel scaling efficiency may be limited (Amdahl’s law) by MPI_THREAD_FUNNLED approach.
+* Moving to MPI_THREAD_MULTIPLE does come at a performance price (and programming challenge).
 
 [Jupyter notebook: Compute Pi Funneled](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
 
-## 2.3 D:
-
-- Can the parallel scaling efficiency may be limited (Amdahl’s law) by MPI_THREAD_FUNNLED approach?
-- Does moving to MPI_THREAD_MULTIPLE come at a performance price (and programming challenge)?
-
-## 2.4 V: Hybrid MPI
+## 2.3 V: Hybrid MPI
 
 ### Hybrid MPI+OpenMP Masteronly Style
-We saw in the previous exercise and the discussion that the scaling efficiency may be limited by the Amdahl's law. It means that, of course, even though all of the computation actually is parallelised we still  have large chunks of serial code actually still present. Serial code means the code that follows after "#pragma omp for reduction" in the previous example. So the reduction clause is a serial portion of code even though it utilizes parallel threads. But this is the last command and the following MPI_Reduce is actually collective communication as we have already learnt. 
+
+We saw in the previous exercise that the scaling efficiency may be limited by the Amdahl's law. This means that, of course, even though all of the computation is actually parallelised, we might still have large chunks of serial code present. For example the serial code is the code that follows after "#pragma omp for reduction" in the previous example. So the reduction clause is a serial portion of code even though it utilizes parallel threads. But this is the last command and the following MPI_Reduce is actually collective communication as we have already learnt. 
 
 If we are doing something like this in the loop, you for surely get a definite amount of serial code, meaning that we will anyways be limited by the Ahmdal's law in scaling. This directly implies that we cannot utilize the abundant thousands or more cores (even a million) that are popping out each day on new and recent hardwares. 
 
-An efficient solution to these problems would be an overlap. Some kind of region where we could do  MPI simultaneously with doing OpenMP so that we would overcome these communications issues. This can be achieved by the Hybrid MPI+OpenMP Masteronly Style. There are quite a few advantages of using this Hybrid however the most prominent are that:
+An efficient solution to these problems would be an overlap. Some kind of region where we could do MPI simultaneously with OpenMP in order to overcome these communication issues. This can be achieved by the Hybrid MPI+OpenMP Masteronly Style. There are quite a few advantages of using this Hybrid however the most prominent are that:
 
-- There are no message passing inside of the SMP nodes
-- There are no topology problems
+- there is no message passing inside of the SMP nodes and 
+- there are no topology problems.
 
-An efficient example to explain the need and efficiency of this is lets say if we have do a ray tracing in a room. And the problem of ray tracing is that the volume that we are describing is quite complex. So lets say if we have to do the light tracing and reflections that we see from the lightning and so on, we would need to compute for each ray. This is already several gigabytes of memory and if we have just 60 gigabytes of memory per node, then we are limited by memory to solve the problem. So we cannot do large problems with many cores because each core in MPI actually gets its own problem inside it. There is no sharing of the problem among the empty threads, empty processes or core and this is the problem that we would usually solve quite fine with going to MPI+ OpenMP. 
-So this tracing is one kind of such problems, which is best done with MPI + OpenMP because the description of environment, which is complex, takes a lot of memory. 
+An efficient example to explain the need and efficiency of this is if we are doing a ray tracing in a room for example. The problem of ray tracing is that the volume that we are describing is quite complex. So lets say if we have to do the light tracing and reflections that we see from the lighting and so on, we would need to compute the parameters for each ray. This is already several gigabytes of memory and if we have just 60 gigabytes of memory per node, then we are limited by memory to solve the problem. So we cannot do large problems with many cores because each core in MPI actually gets its own problem inside it. There is no sharing of the problem among the empty threads, empty processes or core. We could usually solve this problem fairly easily by using MPI + OpenMP. 
+These kind of problems which take a lot of memory since they are complex because of the description of environment and so on are best done with MPI + OpenMP. 
 
 ### Calling MPI inside of OMP MASTER
-If we would like to do communication, then it is usually best to do OMP master thread. This ensures that one thread only communicates with the SMPI. However, we will still need to do some synchronization. As we learnt in the previous weeks about synchronisation that sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. Synchronization means that  whenever we do MPI, the old threads will need to stop at some point and do the barrier.
 
-In OpenMP the MPI is called inside of a parallel region, with “OMP MASTER”• It requires MPI_THREAD_FUNNELED, and we saw in the previous subsection this implies that only master thread will make MPI-calls. However we need to take care that there isn’t any synchronization with “OMP MASTER”! There is no implicit barrier in the master workshare construct. Therefore, with the “OMP BARRIER” normally necessary to guarantee, that data or buffer space from/for other threads is available before/after the MPI call!
+If we would like to do communication, then it is usually best to do OMP master thread. This ensures that only one thread communicates with the SMPI. However, we will still need to do some synchronization. As we learnt in the previous weeks about synchronization that sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. Synchronization means that whenever we do MPI, the old threads will need to stop at some point and do the barrier.
+
+In OpenMP the MPI is called inside of a parallel region, with “OMP MASTER”. It requires MPI_THREAD_FUNNELED, and we saw in the previous subsection this implies that only master thread will make MPI calls. However we need to be aware that there isn’t any synchronization with “OMP MASTER”! There is no implicit barrier in the master workshare construct. Therefore, with the “OMP BARRIER” is necessary to guarantee, that data or buffer space from/for other threads is available before/after the MPI call! The barrier is necessary to prevent data races. 
 
 ~~~Fortran
 !$OMP BARRIER
 !$OMP MASTER
-call MPI_Xxx(...)
+  call MPI_Xxx(...)
 !$OMP END MASTER
 !$OMP BARRIER
 ~~~
@@ -424,13 +423,13 @@ call MPI_Xxx(...)
 #pragma omp barrier
 ~~~
 
-We can see above that it implies that all threads are sleeping, and the additional barrier implies the necessary cache flush! The barrier is necessary to prevent data races. 
+We can see above that this implies that all other threads are sleeping, and the additional barrier implies the necessary cache flush! 
 
 Through the following exercise we will see why the barrier is necessary. 
 
 ### Example with MPI_recv
 
-In the example, the master thread will execute a single MPI call within the OMP_MASTER construct, while all the other threads are idle. As illustrated barriers may be required in two places:
+In the example, the master thread will execute a single MPI call within the OMP_MASTER construct, while all the other threads are idle. As illustrated, barriers may be required in two places:
 
 * Before the MPI call, in case the MPI call needs to wait on the results of other threads. 
 * After the MPI call, in case other threads immediately need the results of the MPI call. 
@@ -477,9 +476,7 @@ In the example, the master thread will execute a single MPI call within the OMP_
 }
 ~~~
 
-
-
-## 2.5 Q: Quiz on Hybrid programming with OpenMP and MPI
+## 2.4 Q: Quiz on Hybrid programming with OpenMP and MPI
 
 Do you understand how OpenMP can be included and used with MPI? Test your understanding of this topic with this quiz.
 
@@ -511,50 +508,90 @@ MPI messages can be passed between any two threads, provided each is enclosed in
 * MPI_THREAD_SERIALIZED
 * MPI_THREAD_MULTIPLE
 
-
 ## 3. User defined datatypes
 
 ## 3.1 Derived data type
-So far we have learnt to send messeages that were a continuous sequence of elements and  mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer of any data in memory in one message. We will learn to communicate strided data i.e a chunk of data with holes between the portions and how to communicate various basic datatypes within one message.
 
-So if we have many different types of datatypes such as int, float etc. with gaps how would (image S4)we do that communication in one way with one command. To do this we would first of all need to start by describing the memory layout that we would like to transfer.
-Following this the processor that compiled the derived type layout will then do the transfer for us in the loop in a correct way. This can even be acheived with all kinds of broadcasts.
+So far we have learnt to send messeages that were a continuous sequence of elements and mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer any combination of data in memory in one message. We will learn to communicate strided data, i.e., a chunk of data with holes between the portions, and how to communicate various basic datatypes within one message.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S4.png)
+
+So if we have many different types of datatypes such as int, float etc. with gaps how would we perform communication in one way with one command. To do this we would first of all need to start by describing the memory layout that we would like to transfer. Following this the processor that compiled the derived type layout will then do the transfer for us in the loop in a correct way. This can even be achieved with all kinds of broadcasts.
 
 Since we would not need to copy data into a continuous array, to be transferred as a single chunk of memory, there is no waste of memory bandwidth in such a way. Therefore derived types are usually structures of 
 - vectors
 - subarrays
-- structs etc.
+- structs
+- others
 
-Or they could be simple types that are being combined into one data layout without the need of copying into one piece to be transferred efficiently or in one block of message. It is not uncommon to have a message of sizes over 60 or more kilobytes. So, if you would like to transfer the results of some programs that could be larger files then actually this is the most efficient way to do it. Of course there are other altenatives such as writing the results into file and to open the file. Quite often the codes do not actually return results, but they just write their results into a file, and eventually we'll need to combine the results into one representation. This is quite similar to how we do it in profiler or tracer creating a file for each processor. So it is already quite easy to understand that if we are debugging a code with  two thousand cores (which is not that big) we will easily end up with two thousand files to be read that need to be interpreted that will definitely take some time. We will learn about it more in the following subsections of parallel I/O.
+Or they could be simple types that are being combined into one data layout without the need of copying into one piece to be transferred efficiently or in one block of message. It is not uncommon to have a messages of sizes over 60 or more kilobytes. In cases where we would like to transfer the results of some programs that could be larger files, actually this is the most efficient way to do it. Of course there are other altenatives such as writing the results into a file and later opening and reading the file. Quite often the codes do not actually return results, but they just write their results into a file, and eventually we'll need to combine the results into one representation. This is quite similar to how we do it in profiler or tracer, creating a file for each processor. So it is already quite easy to understand that if we are debugging a code with two thousand cores (which is not that big) we will easily end up with two thousand files to be read that need to be interpreted and that will definitely take some time. We will learn about it more in the following subsections of parallel I/O.
 
 ### Derived Datatypes — Type Maps
 
-A derived datatype is logically a pointer to a list of entries. However, once this data type has been saved somewhere, it is not communicated over the network. When the need comes we just use this type simply as it would be a basic data type. However the only prerequisite is that for each of these data types we need to compute the displacement. (table S6) Quite obviuosly MPI does not communicate these displacements over the network.
+A derived datatype is logically a pointer to a list of entries. However, once this data type has been saved somewhere, it is not communicated over the network. When the need comes we just use this type simply as it would be a basic data type. However the only prerequisite is that for each of these data types we need to compute the displacement. Quite obviuosly MPI does not communicate these displacements over the network.
 
-(table S7) Here you can see the displacement of the basic datatypes such as int, char etc. For e.g MPI_INT can be displaced for four or eight bytes and MPI_doubles can be displaced for sixteen bytes  and so on. A derived datatype describes the memory layout of, e.g. structures, common blocks, subarrays and some variables in the memory etc.
+![Example](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S7.png)
+
+| Basic datatype | Displacement |
+| :-----------------------: | :---------------: |
+| MPI_CHAR | 0 |
+| MPI_INT | 4 |
+| MPI_INT | 8 |
+| MPI_DOUBLE | 16 |
+
+Here you can see the description of the memory layout and the displacements. For example MPI_INT can be displaced for four or eight bytes and MPI_DOUBLE is displaced for sixteen bytes and so on. A derived datatype describes the memory layout of, e.g. structures, common blocks, subarrays and some variables in the memory etc.
 
 ### Contiguous Data
-The is the simplest derived datatype as it consists of a number of contiguous items of the same datatype
+
+The is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
 In C we use the following function to define it
 
 ~~~c
-int MPI_Type_contiguous(int count, MPI_Datatype oldtype, MPI_Datatype *newtype)
+int MPI_Type_contiguous (int count, MPI_Datatype oldtype, MPI_Datatype *newtype)
 ~~~
 
 ### Committing and Freeing a Datatype
 
-Before a dataytype handle is used in message passing communication, it needs to be committed with MPI_TYPE_COMMIT. This need be done only once by each MPI process. So when we commit, this implies that data type recites a description inside that can be used over as we mentioned earlier simliar to a basic datatype. However, if at some point  this changes or we would like to release some memory, or if the usage is over we may call MPI_TYPE_FREE() to free the datatype and its internal resources.
+Before a dataytype handle is used in message passing communication, it needs to be committed with MPI_TYPE_COMMIT. This needs be done only once by each MPI process. When we commit, it implies that data type recites a description inside, that can be used similar to a basic datatype. However, if at some point this changes or we would like to release some memory, or if we will not use it anymore, we may call MPI_TYPE_FREE() to free the datatype and its internal resources. 
 The routine used is as follows
 
 ~~~c
-int MPI_Type_commit(MPI_Datatype *datatype);
+int MPI_Type_commit (MPI_Datatype *datatype);
 ~~~
-
-
 
 ### Example
 
-Here in this example (S5) we can see the real need for derived data types. We have a structure of fixed size integers values and then there are double values. So this is one single data that we would like to describe as data type so that we could then send this structure in one command i.e send or receive. We do not really care whether it is blocking or blocking at this point. So, in order to achieve this we describe the data type called "buf_datatype". This is actually a name that we commit to this type. So we push the type after we create it and compile it to the MPI subsystem. Afterwards, the subsystem refers to that data type inside the system itself and knows how to convert, the integers etc. with the type that we use inside. Of course, there can also be some kind of gaps that we would not actually see if we are using some other languages such as Fortran and sometimes we even have memory alignments for it. So there maybe a gap of one integer (image S5) to start. But this is not an error on our part but it just an adjustment, like some kind of performance adjustment so the next array starts at the multiple of four. So while describing such an array the MPI knows how to do it most efficiently.
+Here in this example we can see the real need for derived data types. 
+
+~~~c
+struct buff_layout {
+  int i_val[3];
+  double d_val[5];
+} buffer;
+~~~
+
+We have a structure of fixed size integer values and also some double values. So this is one single data that we would like to describe in a data type so that we could then send this structure in one command, i.e., send or receive. We do not really care whether it is blocking or non-blocking at this point. So, in order to achieve this we describe the data type called "buff_datatype". This is actually a name that we commit to this type. 
+
+~~~c
+array_of_types[0] = MPI_INT;
+array_of_blocklengths[0] = 3;
+array_of_displacements[0] = 0;
+array_of_types[1] = MPI_DOUBLE;
+array_of_blocklengths[1] = 5;
+array_of_displacements[1] = …;
+MPI_Type_create_struct (2, array_of_blocklengths, array_of_displacements, array_of_types, &buff_datatype);
+MPI_Type_commit(&buff_datatype);
+~~~
+
+So we push the type after we create it and compile it to the MPI subsystem. Afterwards, the subsystem refers to that data type inside the system itself and knows how to convert, the integers etc. with the type that we use inside. 
+
+~~~c
+MPI_Send(&buffer, 1, buff_datatype, …)
+~~~
+
+Of course, there can also be some kind of gaps that we would not actually see if we are using some other languages such as Fortran and sometimes we even have memory alignments for it. So there maybe a gap of one integer at the start. But this is not an error on our part but it just an adjustment, like some kind of performance adjustment so the next array starts at the location that is the multiple of four. So while describing such an array the MPI knows how to do it most efficiently. 
+
+![Adjustment](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S5.png)
 
 ## 3.2 E: Derived data type
 
@@ -573,7 +610,6 @@ You will use a modified pass-around-the-ring program which already includes a st
 [Jupyter notebook: Derived datatypes](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
 
 ## 3.3 V/A: Layout of struct data types
-
 
 ### Vector datatypes
 (image S13)
