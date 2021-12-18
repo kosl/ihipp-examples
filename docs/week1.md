@@ -18,7 +18,26 @@ There are different approaches or programming models that were developed during 
 
 ### D: What team are you on?
 
-We will introduce you to parallel programming with the use of some programming languages. Tell us which programming language(s) you use or know about or what language are you planning to learn.
+We will introduce you to parallel programming with the use of some programming languages. 
+Please introduce yourself in the comments area on this page, saying why you are interested in the parallel programming course and what you hope to gain from it. Are there any specific aspects of the subject that you would like to learn about? Tell us which programming language(s) you use or know about or what language are you planning to learn. 
+
+#### About us
+
+The lead educator, Leon Kos, HPC developer/consultant at University of Ljubljana.
+
+The other educators are:
+
+ - Leon Bogdanović is an GPU consultant at University of Ljubljana
+ - Matic Brank is an OpenMP consultant at University of Ljubljana
+
+Be sure to view their profiles and follow them so you can keep track in the course discussions.
+
+What to expect from us?
+
+We will be monitoring your comments and questions, and try to provide helpful feedback as much as possible. If you find typos or other mistakes, please leave a comment so we can improve the material.
+
+The social aspect of an online course is also very important, so please try to interact with your fellow particapants in a constructive way as well.
+
 
 ###  E: Hello World!
 
