@@ -1,7 +1,7 @@
 # Beyond OpenMP and MPI: GPU parallelisation 
 
 
-## 5.1 V: Introduction
+## 5.1 V: Introduction to week 5
 
 In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general-purpose computing in many fields.
 
