@@ -84,6 +84,8 @@ Run both codes in the notebook:
 
 [Hello_world_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/Hello_world_OpenMP.ipynb)
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Hello_world_OpenMP.ipynb)
+
 Are the outputs as you expected?
 
 ### A->V1.4: Architectures and memory models
