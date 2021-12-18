@@ -1,8 +1,13 @@
-## MPI Continued
+# MPI Continued
+
+## V: Introduction to week 4
+
+In this week we will introduce some advanced MPI topics that you may find useful when asking yourself how to do things better. 
+Better approach to parallelisation is to overlap computing and communication with non-blocking communication. Another question is if we can reduce memory with MPI and OpenMP and gain in speed with hybrid or one-sided approach? When things get large we would like to combine them together with our own derived types that can simplify programming. At the the end of the week we will take a look into parallel writing of files that can be used instead of collecting results over MPI.
 
 ## 1.1 V: Non Blocking communications
 
-We saw in the previous week that the types of communication in MPI can be divided by two arguments, i.e., based on the number of processes involved so
+We saw in the previous week that the types of communication in MPI can be divided by two arguments, based on the number of processes involved so
 - Point-to-Point Communication
 - Collective Communication
 
