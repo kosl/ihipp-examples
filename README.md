@@ -7,7 +7,7 @@ Parallel programming in C language consist of OpenMP and MPI examples such as:
 ~~~c
 #pragma omp parallel
 {
-   printf("Hello, World\");
+   printf("Hello, World\n");
 }
 ~~~
 
