@@ -198,39 +198,48 @@ MPI_Send(void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Com
 ~~~
 
 We will now see what arguments this routine actually needs.
- 
-- 'buf' is the pointer to the data with 'count' elements and each of them described with datatype. So first of all, we have to specify the address of the data that we would like to send. So it's a pointer to the data of the sender and then the second argument is actually the number of the elements we send. For example if we just send 1 integer, the size will be one. If you send an array with 100 integers, this will be 100 and so on. The third argument this function would like to have is the 'datatype'. So if we are sending an integer, we will have to specify here 'MPI_INT' and so on. 
-- 'dest' is the rank of the destination process. In this argument we specify the rank of the receiver. So, for instance, in the previous example, this will be '5'.
-- 'tag' is an additional integer information sent with the message. 'tag' is basically a number by which we identify the message. So usually if we just send only one message, we can just put '0' tag there or maybe any number that we would like. 
-- The last argument is the communicator and as we already discussed we usually use MPI_Comm world.
+
+ - `buf` is the pointer to the data with 'count' elements and each of them described with datatype. So first of all, we have to specify the address of the data that we would like to send. So it's a pointer to the data of the sender and then the second argument is actually the number of the elements we send. For example if we just send 1 integer, the size will be one. If you send an array with 100 integers, this will be 100 and so on. The third argument this function would like to have is the `datatype`. So if we are sending an integer, we will have to specify here `MPI_INT` and so on. 
+
+- `dest` is the rank of the destination process. In this argument we specify the rank of the receiver. So, for instance, in the previous example, this will be `5`.
+
+- `tag` is an additional integer information sent with the message. `tag` is basically a number by which we identify the message. So usually if we just send only one message, we can just put `0` tag there or maybe any number that we would like. 
+
+- The last argument is the communicator and as we already discussed we usually use `MPI_COMM_WORLD`.
 
 So these are the arguments that are the most important information the MPI environment needs in order to know what data is sent and to whom.
 
 ## Receiving paradigms
 
-As we saw that the sender needs a function to send a message, obviously the receiver has to call the receive function. This means that for the communication to work, we need two processes and two ranks. So one will call the MPI_Send function and the other will similarly call MPI_Recv to receive. To be able to receive we use the function
+As we saw that the sender needs a function to send a message, obviously the receiver has to call the receive function. This means that for the communication to work, we need two processes and two ranks. So one will call the `MPI_Send` function and the other will similarly call `MPI_Recv` to receive. To be able to receive we use the function
 
 ~~~c
 MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status);
 ~~~
 
-So the arguments needed by this function are similiar to the MPI_send function.
+So the arguments needed by this function are similiar to the `MPI_Send` function.
 
-- The 'buf/count/datatype' describe the recevied data. In the first argument we specify the address of the data, i.e., the address where we would like to receive the data and similarly, we put the data type here.
--'source' is the rank of the sender process. We have to have the rank of the sender process. In the previous example we would specify number '3', because the rank with number three is trying to send us a message.
-- Similar to MPI_Send, here we also have a tag. It is really important to make sure that we match this number with the sender. So if the sender specifies that the message has tag '0', the receiver also has to specify the same number here. Otherwise, this will be an infinite loop as we will not receive anything because we would not match our receive function call with the send function call. 
-- The next argument is the communicator and again we would just use the MPI_Comm world.
+- The `buf/count/datatype` describe the recevied data. In the first argument we specify the address of the data, i.e., the address where we would like to receive the data and similarly, we put the data type here.
+
+- `source` is the rank of the sender process. We have to have the rank of the sender process. In the previous example we would specify number `3`, because the rank with number three is trying to send us a message.
+
+- Similar to `MPI_Send`, here we also have a tag. It is really important to make sure that we match this number with the sender. So if the sender specifies that the message has tag `0`, the receiver also has to specify the same number here. Otherwise, this will be an infinite loop as we will not receive anything because we would not match our receive function call with the send function call. 
+
+- The next argument is the communicator and again we would just use the `MPI_COMM_WORLD`.
+
 - The last argument is not so important for us at the moment as this is something that we will be learning in the next exercise. For now we will just use
+
 ~~~c
 MPI_STATUS_IGNORE
 ~~~
+
 We will learn more about this status structure in the coming weeks. 
 
 So let's go through an example to understand again the prerequisites for this communication to work efficiently and how this would actually work in code. 
 
 ![Example](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S24.png)
 
-Here, the left is the sender and the right is the receiver. Let's suppose that the sender would like to send this buffer array that has 'n' floats over to some other process. For this, it calls this MPI_Send routine function. As we already know, the first one is the pointer to the data. So this is 'send buffer'. Then it needs to specify the 'number' of data. In this case, it is 'n'. The second routine is MPI_float, and we need to make sure that this data matches with the one mentioned earlier. As we previously discussed this is the MPI data type that the environment defines, but it has to match with this one, otherwise the communication will not work. Another thing we need to keep in mind is that this data type has to match with the receiver. So we have to be careful when we write these functions that all of these have to match. Now, the receiver has to call the receiver function with the same data type. Here it has to first define an array where it would like to receive this data, the receive buffer. The communicator, of course, has to be the same because they are bound in the same program. But we usually use the MPI_Comm World communicator. The next important part is that the tag has to match. And finally the type of the message or type of the data has to match.
+Here, the left is the sender and the right is the receiver. Let's suppose that the sender would like to send this buffer array that has `n` floats over to some other process. For this, it calls the `MPI_Send` routine function. As we already know, the first one is the pointer to the data. So this is send buffer. Then it needs to specify the `number` of data. In this case, it is `n`. The second routine is `MPI_float`, and we need to make sure that this data matches with the one mentioned earlier. As we previously discussed this is the MPI data type that the environment defines, but it has to match with this one, otherwise the communication will not work. Another thing we need to keep in mind is that this data type has to match with the receiver. So we have to be careful when we write these functions that all of these have to match. Now, the receiver has to call the receiver function with the same data type. Here it has to first define an array where it would like to receive this data, the receive buffer. The communicator, of course, has to be the same because they are bound in the same program. But we usually use the `MPI_COMM_WORLD` communicator. The next important part is that the tag has to match. And finally the type of the message or type of the data has to match.
 
 (~5m15s)
 
@@ -292,7 +301,7 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 
 ## 2.4 D: 
 
-Does the program in the previous step work for different number of pings and pongs, i.e. 3 pings and 2 pongs?
+Does the program in the previous step work for different number of pings and pongs, i.e., 3 pings and 2 pongs?
 
 ## 2.4 E: Rotating information around a ring
 
@@ -348,10 +357,11 @@ MPI_Finalize();
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
-In the previous exercise when we have implemented the program where we were sending this array along the ring, it was an example of an application in which we already knew that we would be using an array with 100 values. We were already aware of how long it is going to be or in another words how big that message is going to be? How many elements are actually sent? and so on. 
-This was important because if we look back into the send and receive routines, we need to specify this 'count'. So, not knowing these numbers already accounts as a problem. In this subsection we will learn that there are two ways to handle this situation, i.e., if the size is not known.
+In the previous exercise we implemented the program where we were sending an array along the ring. This was an example of an application in which we already knew that we would be using an array with 100 values. We were already aware of how long it is going to be or in other words how big that message is going to be, how many elements are actually sent and so on. 
+This was important because if we look back into the send and receive routines, we need to specify this 'count'. So, not knowing these numbers already accounts as a problem. In this subsection we will learn that there are two ways to handle this situation, i.e., if the size of the message is not known.
 
 - The first way is to send the size of the data as a separate send/recv operation. Therefore, we would send a seperate message with MPI_Send where we can send for example the number of elements in an array that we're going to send out later. This works, but sometimes it's not very efficient. 
+
 - The second and a more efficient way is what we will learn in this subsection with the help of two functions. We will solve this by using MPI_Probe and MPI_Status to obtain the size of sent data.
 
 In order to learn more about these functions and how to use them we need to grasp some concepts that follow.
@@ -372,8 +382,9 @@ the receiver can just put the source as
 MPI_ANY_SOURCE
 ~~~
 
-and this would imply that it doesn't care from where the message will come allowing to receive from any source. For example, if you all would send me a message and I would just like to read one of the messages I would use this. So, I wouldn't care who was sending me the information and I would just read one from one of the sources.  
+and this would imply that it doesn't care from where the message will come allowing to receive from any source. For example, if you all would send me a message and I would just like to read one of the messages I would use this. So, I wouldn't care who was sending me the information and I would just read it from one of the sources. 
 Similiary we can do this to the tag. In the function where we have to mention the 'number' of the tag we can just use
+
 ~~~c
 MPI_ANY_TAG
 ~~~
@@ -518,7 +529,7 @@ Various pieces of metadata about the received message are stored in the Status s
 
 So far all the different methods we learnt and exercises we practiced actually only involved point to point communication, communication between two processes. Now we will introduce some more advanced communication in which more processes are involved. We have to keep in mind that in these communications involving a group of processes, the routines are called by all processes in a communicator. So, simply put all the processes that are involved in this communication need to call the same routine. 
 
-Examples of these types of cummunication are 
+Examples of these types of communication are 
 
 - Broadcast
 - Scatter
@@ -575,9 +586,9 @@ double MPI_Wtime(void);
 
 ## 3.3 D: What do you observe with broadcast communication?
 
-In the previous exercise you ran a program using the MPI broadcast routine and writing your own my_Bcast function. What did you observe executing the program and comparing the executing times? Are the times for your program and the one from the library the same?
+In the previous exercise you ran a program using the `MPI broadcast` routine and writing your own `my_Bcast` function. What did you observe executing the program and comparing the executing times? Are the times for your program and the one from the library the same?
 
-Help yourself to this image, explaining the difference between the two algorithms. 
+With the help of the following image you can see the difference between the two algorithms. 
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S5.png)
 
@@ -601,7 +612,7 @@ The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends t
 
 ### Gather
 
-After, the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see  the basic idea in many MPI applications, that we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
+After the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see the basic idea in many MPI applications, that we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
 
 ~~~c
 MPI_Gather(void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Dataype recvtype, int root, MPI_Comm comm)
@@ -711,11 +722,11 @@ In this exercise you will get to practice using both broadcast and reduce MPI ro
 
 This exercise is a simple program to calculate the value of pi derived from integral by approximation using Riemann sum. Here is a reminder that we are evaluating this integral
 
-$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx$$
+$$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx$$
 
 and can be approximated numerically using Riemann sum:
 
-$$Pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+$$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 ### Exercise
 

@@ -54,7 +54,7 @@ In this example let us assume that all the processes would like to share some in
 
 Perhaps you can already see it clearly that fundametally it is non blocking in this ring example that helps us, so that every process can start the sending, but at the same time, we can still do something else.
 
-In similiar ways we can initiate the non blocking receive. So in our ring example it would mean that we initiate non-blocking receive from the left neighbour. This would imply that we will receive something, but maybe not not now, maybe later, and we do some work. In this case it would mean sending information to the following receiver so, send the message to the right neighbour. Finally, we would call the MPI_Wait function to wait for non-blocking receive to complete.
+In similiar ways we can initiate the non blocking receive. So in our ring example it would mean that we initiate non-blocking receive from the left neighbour. This would imply that we will receive something, but maybe not now, maybe later, and we do some work. In this case it would mean sending information to the following receiver so, send the message to the right neighbour. Finally, we would call the MPI_Wait function to wait for non-blocking receive to complete.
 
 Let's try to further consolidate these ideas by implementing them in the following exercise!
 
@@ -322,7 +322,7 @@ The safest and the easiest way to use threading is to use `MPI_THREAD_FUNNELED`.
 
 This example notebook shows how to calculate the value of pi by solving this integral approximation. 
 
-$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+$$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous weeks. What we did in this example is use both. The goal is to minimaly use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. This is the complete code shown below. 
 

@@ -684,13 +684,13 @@ In this exercise you will get to practice using worksharing construct for and cr
 
 Pi is a mathematical constant. It is defined as a ratio of a circle's circumference to its diameter. It also appears in many other areas of mathematics. There are also many integrals yielding Pi. One of them is shown below.
 
-$$Pi = \int_{0}^1 \frac{4}{1+x^2} dx$$
+$$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx$$
 
 This integral can be approximated numerically using Riemann sum:
 
-$$Pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+$$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
-Here, n is the number of intervals and $$h = 1/n$$. 
+Here, $$n$$ is the number of intervals and $$h = 1/n$$. 
 
 ~~~c
 #pragma cling load("libomp.so")
@@ -752,7 +752,7 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 
 ## Expected result
 
-* Faster execution of the parallel program that calculates the correct value of pi. 
+* Faster execution of the parallel program that calculates the correct value of Pi.
 
 [Jupyter notebook: Exercise: Compute pi](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi.ipynb)
 
@@ -1179,9 +1179,9 @@ The code above calculates the temperature for a grid of points, the main part of
 
 ## Exercise
 
-1. Go to the exercise and parallelize the code. 
+1\. Go to the exercise and parallelize the code. 
 
-2. Parallelize all of the for loops and use critical section for global maximum. Think about what variables should be in the private clause. 
+2\. Parallelize all of the for loops and use critical section for global maximum. Think about what variables should be in the private clause. 
 
 Then run the example. Run it with 1, 2, 3, 4 threads and look at the execution time. 
 
@@ -1201,7 +1201,7 @@ for (k = 1; k < imax; k++){
 
 The sequence of the nested loops is wrong. In C/C++, the last array index is running the fastest so the `k` loop should be the inner loop. This is not fixed by the OpenMP compiler, so you will need to 
 
-1. Interchange the sequence of the nested loops. 
+3\. Interchange the sequence of the nested loops. 
 
 Run the code again with 1, 2, 3, 4 threads and look at the execution time. 
 
