@@ -173,7 +173,11 @@ We have compared only GPUs of one manufacturer (NVIDIA). Similar characteristics
 
 In this exercise, you will check the information and compute capabilities of the GPU available for you in the current session of Colab.
 
-Login to Colab and first check if your runtime type is set to `GPU` by:
+Create a new notebook on Colab or use the following notebook.
+
+[![GPU_info.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1UkgmYSG2oDUs67VtaEbEmY6p16AxNqyn)
+
+First check if your runtime type is set to `GPU` by:
 
 ```
 Runtime -> Change runtime type
@@ -266,7 +270,7 @@ hello<<<NUM_BLOCKS, BLOCK_SIZE>>>();
 The triple chevron launch syntax `<<<NUM_BLOCKS, BLOCK_SIZE>>>` contains the so-called ''kernel launch parameters'':
 
 - `NUM_BLOCKS`: defines the number of blocks to use (4 in the above example)
-- `BLOCK_WIDTH`: defines the number of threads per block (1 in the above example)
+- `BLOCK_SIZE`: defines the number of threads per block (1 in the above example)
 
 Of course, we can call the same parameters in the following way:
 

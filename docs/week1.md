@@ -3,23 +3,23 @@
 ## A->V:Intro to parallel programming
 ### V1.1: Intro to Week 1, Serial vs Parallel
 
-Welcome to the course Introduction to parallel programming! I will be your guide thought the weeks.
+Welcome to the course Introduction to parallel programming! I will be your guide through the weeks.
 In the first week, we will first introduce the basic principles and paradigms of parallel programming. We will not go deeply into each topic since we will dedicate that to the upcoming weeks, touching even on some advanced topics in parallel programming. We describe the more advanced topics with the purpose of telling you what is important to know and giving you a starting point on where to learn more. We hope that at some point you will be able to do your coding and advance your learning beyond this course. 
 
 Many scientific and engineering challenges can be tackled in the area of computing. In general, we have two views on it. One view is distributed serial computing. This means that you have many problems to solve and you don't care about time. The other is parallel computing, where the problem needs to be divided into many compute cores or nodes, essentially many computers because it is too big to fit into one computer or one computer would be too slow to solve it. The first approach is often called grid computing, while the second is generally referred to as supercomputing, where you need a supercomputer to solve your problem. You have probably also heard of cloud computing or similar, which is a commercial version of grid or supercomputing resources. 
 
-If you are a serious user, you will quickly learn this. If we use an analogy, buying a car is cheaper than renting it in the long term. There will never be a commercial offering that will match individual purchases for the machine which is usually 90 or 100 per cent utilized. So it's not like buying a car for fun and spending a lot on it. Supercomputers are usually very heavily utilized. This means that during their lifetime, the computer operates near peak performance.
+If you are a serious user, you will quickly learn this. If we use an analogy, buying a car is cheaper than renting it in the long term. There will never be a commercial offering that will match individual purchases for the machine which is usually 90 or 100% utilized. So it's not like buying a car for fun and spending a lot on it. Supercomputers are usually very heavily utilized. This means that during their lifetime, the computer operates near peak performance.
 
-The program is usually written and compiled into instructions for serial execution on one processor. You have to divide the problem into separate subproblems that can be executed in parallel on many processors available and achive speedup.
+The program is usually written and compiled into instructions for serial execution on one processor. You have to divide the problem into separate subproblems that can be executed in parallel on many processors available and achieve speedup.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_parallelization.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_parallelization.png
 
-There are different approaches or programming models that were developed during the years and are still being developed. Along with the languages that might help you to resolve some of the issues in the underlying hardware topology, that we usually see as a combination of memory and CPUs that are essential for parallel computing. In the past there was just a single processor per node with memory, and many of those nodes were combined to make a cluster. In recent years a cluster of compute nodes, so-called "Beowulf", is being upgraded with many cores per node and shared memory. The cores share a memory. There can also be many processor sockets, threads per core and GPU accelerators. The programming model for such a hardware architecture is a combination of languages. For example, we have a parallelization called *OpenMP*, that can be easily done on a single computer, whether this is your PC, laptop or a remote computer. OpenMP is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the pragma comment directives. The result is a multi-threaded code that runs faster. We will introduce OpenMP this week, while in Week 2 we will present it in detail.
+There are different approaches or programming models that were developed during the years and are still being developed. These languages might help you to resolve some of the issues in the underlying hardware topology, that we usually see as a combination of memory and CPUs; both is essential for parallel computing. In the past there was just a single processor per node with memory, and many of those nodes were combined to make a cluster. In recent years a cluster of compute nodes, so-called "Beowulf", is being upgraded with many cores per node and shared memory. The cores share a memory. There can also be many processor sockets, threads per core and GPU accelerators. The programming model for such a hardware architecture is a combination of languages. For example, we have a parallelization called *OpenMP*, that can be easily done on a single computer, whether this is your PC, laptop or a remote computer. OpenMP is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the pragma comment directives. The result is a multi-threaded code that runs faster. We will introduce OpenMP this week, while in Week 2 we will present it in detail.
 
 ### D: What team are you on?
 
 We will introduce you to parallel programming with the use of some programming languages. 
-Please introduce yourself in the comments area on this page, saying why you are interested in the parallel programming course and what you hope to gain from it. Are there any specific aspects of the subject that you would like to learn about? Tell us which programming language(s) you use or know about or what language are you planning to learn. 
+Please, introduce yourself in the comments area on this page, saying why are you interested in the parallel programming course and what do you hope to gain from it. Are there any specific aspects of the subject that you would like to learn about? Tell us which programming language(s) you use or know about or what language are you planning to learn. 
 
 #### About us
 
@@ -27,7 +27,7 @@ The lead educator, Leon Kos, HPC developer/consultant at University of Ljubljana
 
 The other educators are:
 
- - Leon Bogdanović is an GPU consultant at University of Ljubljana
+ - Leon Bogdanović is a GPU consultant at University of Ljubljana
  - Matic Brank is an OpenMP consultant at University of Ljubljana
 
 Be sure to view their profiles and follow them so you can keep track in the course discussions.
@@ -115,7 +115,7 @@ Let's also discuss how nodes in a supercomputer are interconnected.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_nodes_interconnect.png)
 
-The figure on the left shows the node's architecture which was typical in the past, while the figure on the right shows the current standard: accelerators can also be attached to memory from the other side. Distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, usually using Infiniband or some kind of similar technology, like Tofu interconnect or ARIES, which are actually dependent on the vendor. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, and that was actually the initial idea to use commodity hardware and interconnect it by a high-speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code. A typical test still used to measure the performance of such machines is the LINPACK test. Usually, the result is given in TFlops or teraFLops. 1 TFlops means the capability of a trillion floating-point operations per second. Currently, the TOP10 supercomputers in the world exceed the 30 thousand TFlops mark with the fastest over 400 thousand TFlops or 400 peta-Flops.
+The figure on the left shows the node's architecture which was typical in the past, while the figure on the right shows the current standard: accelerators can also be attached to memory from the other side. Distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, usually using Infiniband or some kind of similar technology, like Tofu interconnect or ARIES, which are actually dependent on the vendor. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, and that was actually the initial idea to use commodity hardware and interconnect it by a high-speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code. A typical test still used to measure the performance of such machines is the LINPACK test. Usually, the result is given in TFlops or tera-FLops. 1 TFlops means the capability of a trillion floating-point operations per second. Currently, the TOP10 supercomputers in the world exceed the 30 thousand TFlops mark with the fastest over 400 thousand TFlops or 400 peta-Flops.
 
 So, for the development of parallel codes, you need to have quite a good overview of the architecture that you are using. Usually, many computing centres provide different machines, depending on the type of users. General-purpose codes are usually not best suited for parallel computing. You need to understand the bottlenecks or which parts of the code consume most of the time. These parts must be optimized, and that is the usual approach for the parallelization of the code.
 
@@ -135,13 +135,27 @@ When you consider the execution of the code on a number of processors, the speed
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_Amdahl.png)
 
-The speed up depends on the parallel portion of the code. The ideal speed up for a code that has, fo example, a parallel portion of 50% or in other words: 50% of it is serial and 50% is parallel, and is executed on an infinite number of processors, is just equal to 2, not more. So, for 50% of the parallel portion of the code, the maximum that you can obtain is two times faster or half of the time that is usually needed for execution on 1 processor (left figure). The figure on the right shows speed up depending on the number of processors for the parallel portion of the code of 25, 50, 90 and 95%, respectively. For the cyan curve with 95% parallel portion of the code, one can observe the maximum speed up of 20-times for a large number of processors. A nearly 20-times speed up is already achieved with about 500 processors, hence using more than 500 processors will not result in much gain of the speed up.
+The speed up $$S$$ depends on the parallel portion of the code $$p$$
 
-The latter rises the question, why would one invest in one million of processors, if we see that even the best or one of the best programs that are running 95% in parallel, are just going 20-times faster? The answer can be given by Gustafson's law that actually interprets the currently available hardware, that is, if 100, 1000 or a million processors are available to the user. 
+$$S = \frac{1}{1-p}$$
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_Amdahl_vs_Gustafson.png)
+The ideal speed up for a code that has, e.g., a parallel portion of 50% or in other words: 50% of it is serial and 50% is parallel, and is executed on an infinite number of processors, is just equal to 2, not more. So, for 50% of the parallel portion of the code, the maximum that you can obtain is two times faster or half of the time that is usually needed for execution on 1 processor (left figure). The figure on the right shows speed up depending on the number of processors for the parallel portion of the code of 25, 50, 90 and 95%, respectively. The mathematical expression for the speed up curves is the following
 
-Such a user can usually tailor the problem to their expectations and the hardware available. In other words, Gustafson's law fixes the time available to the user. By fixing the time, the problem can be scaled to the size that will give you the most accurate result for a chosen run time. Instead of looking at how the code can get faster, one can look for how to get better results in the available run time. For some codes, the expected time for the results to converge can take a week or a month, so we can tailor a problem size to the currently available hardware and get the job done in the specified run time. 
+$$S = \frac{1}{1-p+p/N}$$
+
+where $$N$$ is the number of processors. You can deduce that for a large value of $$N$$ this expression is approximated by the expression given first. For the cyan curve (95% parallel portion of the code), one can observe the maximum speed up of 20x for a large number of processors. A nearly 20x speed up is already achieved with about 500 processors, hence using more than 500 processors will not result in much gain of the speed up.
+
+The latter raises the question, why would one invest in one million of processors, if we see that even the best or one of the best programs that are running 95% in parallel, are just going 20x faster? The answer can be given by Gustafson's law that actually interprets the currently available hardware, e.g., if 100, 1000 or a million processors are available to the user.
+
+Such a user can usually tailor the problem to their expectations and the hardware available. In other words, Gustafson's law fixes the time available to the user. By fixing the time, the problem can be scaled to the size that will give you the most accurate result for a chosen run time. Instead of looking at how the code can get faster, one can look for how to get better results in the available run time. For some codes, the expected time for the results to converge can take a week or a month, so we can tailor a problem size to the currently available hardware and get the job done in the specified run time.
+
+The expression for speed up according to Gustafson's law is
+
+$$S = 1 + p(N-1)$$
+
+On the figure below speed up curves according to both laws for N = 32 are shown. Amdahl's law is often referred to strong scaling, whereas Gustafson's law to weak scaling.
+
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_Amdahl_vs_Gustafson_color.png)
 
 ### A, D: Languages for parallel programming
 
