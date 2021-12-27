@@ -12,7 +12,7 @@ If you are a serious user, you will quickly learn this. If we use an analogy, bu
 
 The program is usually written and compiled into instructions for serial execution on one processor. You have to divide the problem into separate subproblems that can be executed in parallel on many processors available and achieve speedup.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_parallelization.png
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_parallelization.png)
 
 There are different approaches or programming models that were developed during the years and are still being developed. These languages might help you to resolve some of the issues in the underlying hardware topology, that we usually see as a combination of memory and CPUs; both is essential for parallel computing. In the past there was just a single processor per node with memory, and many of those nodes were combined to make a cluster. In recent years a cluster of compute nodes, so-called "Beowulf", is being upgraded with many cores per node and shared memory. The cores share a memory. There can also be many processor sockets, threads per core and GPU accelerators. The programming model for such a hardware architecture is a combination of languages. For example, we have a parallelization called *OpenMP*, that can be easily done on a single computer, whether this is your PC, laptop or a remote computer. OpenMP is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the pragma comment directives. The result is a multi-threaded code that runs faster. We will introduce OpenMP this week, while in Week 2 we will present it in detail.
 
