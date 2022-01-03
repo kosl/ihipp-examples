@@ -67,33 +67,37 @@ In this exercise you will get to experiment with blocking and non-blocking commu
 This is a continuation of the previous exercise with ring communication and when you used blocking communication to solve it. Now you will repeat the exercise but you are now solving the deadlock in an optimal way using non-blocking communication. 
 
 ~~~c
+#include <stdio.h>
 #include <mpi.h>
 
-int rank, size;
-int snd_buf, rcv_buf;
-int right, left;
-int sum, i;
-MPI_Status status;
-
-MPI_Init(NULL, NULL);
-MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-right = (rank+1)      % size;
-left  = (rank-1+size) % size;
-
-sum = 0;
-snd_buf = rank; //store rank value in send buffer
-for(i = 0; i < size; i++) 
+int main()
 {
-    MPI_Send(&snd_buf, 1, MPI_INT, right, 17, MPI_COMM_WORLD); //send data to the right neighbour
-    MPI_Recv(&rcv_buf, 1, MPI_INT, left,  17, MPI_COMM_WORLD, &status); //receive data from the left neighbour
-    snd_buf = rcv_buf; //prepare send buffer for next iteration
-    sum += rcv_buf; //sum of all received values
-}
-printf ("PE%i:\tSum = %i\n", rank, sum);
+    int rank, size;
+    int snd_buf, rcv_buf;
+    int right, left;
+    int sum, i;
+    MPI_Status status;
 
-MPI_Finalize();
+    MPI_Init(NULL, NULL);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    right = (rank+1)      % size;
+    left  = (rank-1+size) % size;
+
+    sum = 0;
+    snd_buf = rank; //store rank value in send buffer
+    for(i = 0; i < size; i++) 
+    {
+        MPI_Send(&snd_buf, 1, MPI_INT, right, 17, MPI_COMM_WORLD); //send data to the right neighbour
+        MPI_Recv(&rcv_buf, 1, MPI_INT, left,  17, MPI_COMM_WORLD, &status); //receive data from the left neighbour
+        snd_buf = rcv_buf; //prepare send buffer for next iteration
+        sum += rcv_buf; //sum of all received values
+    }
+    printf ("PE%i:\tSum = %i\n", rank, sum);
+
+    MPI_Finalize();
+}
 ~~~
 
 ## Exercise
@@ -103,6 +107,7 @@ MPI_Finalize();
 * Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
 
 [Jupyter notebook: Ring2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
 
 ## 1.3 V: One sided communication
 
@@ -203,6 +208,7 @@ For this exercise, you will use the **1.** option. So what you need to do is cre
 There are two solutions to substituting nonblocking communication with one-sided communication. Do you have any idea, why would we preffer using MPI_Put instead of MPI_Get? What is your preferred way, and why?
 
 [Jupyter notebook: One sided communication](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
 
 ## 1.5 Q: Do you understand advanced communication in MPI?
 
@@ -315,6 +321,7 @@ MPI_THREAD_MULTIPLE
 - Here multiple threads may call MPI, without any restrictions.
 
 [Jupyter notebook: Threading methods](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
 
 ## 2.2 Calculate pi! Using MPI_THREAD_FUNNELED
 
@@ -392,6 +399,7 @@ This program was done in the first way of threading methods (MPI + OpenMP).
 * Moving to MPI_THREAD_MULTIPLE does come at a performance price (and programming challenge).
 
 [Jupyter notebook: Compute Pi Funneled](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
 
 ## 2.3 V: Hybrid MPI
 
@@ -620,6 +628,7 @@ You will use a modified pass-around-the-ring program which already includes a st
 3. Use the new datatype in the send and receive routine calls. Currently, the data is send with the description `snd_buf, 2, MPI_INTEGER` which you must modify by using a derived datatype and with a type map of “two integers”. 
 
 [Jupyter notebook: Derived datatypes](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
 
 ## 3.3 V/A: Layout of struct data types
 
@@ -785,6 +794,7 @@ You will use a modified pass-around-the-ring program which already includes a st
 3. Use the new datatype in the send and receive routine calls. 
 
 [Jupyter notebook: Derived datatypes 2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
 
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
@@ -860,6 +870,7 @@ call MPI_Type_commit(send_recv_resized, error)
 ~~~
 
 [Jupyter notebook: Correcting problem with array of structures](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
 
 ## 4.3 V:Parallel file I/O
 
@@ -968,4 +979,5 @@ When checking if your file is correctly written, you should:
 - use `rm my_file` to remove the file before running the program again because it will rewrite the file
 
 [Jupyter notebook: Write a file in parallel](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
 

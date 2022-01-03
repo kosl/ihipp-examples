@@ -67,20 +67,22 @@ This function returns 'true' if it is specified inside a parallel region. If it 
 Let's observe the following example.
 
 ~~~ c
-#pragma cling load("libomp.so")
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h>
 
-int num_threads = 4;
-omp_set_num_threads(num_threads);
-int rank;
-#pragma omp parallel
+int main()
 {
-    rank = omp_get_thread_num();
-    int nr_threads = omp_get_num_threads();
-    printf("I am thread %i of %i threads\n",
-	 rank,
-	 nr_threads);
+    int num_threads = 4;
+    omp_set_num_threads(num_threads);
+    int rank;
+    #pragma omp parallel
+    {
+        rank = omp_get_thread_num();
+        int nr_threads = omp_get_num_threads();
+        printf("I am thread %i of %i threads\n",
+        rank,
+        nr_threads);
+    }
 }
 ~~~
 
@@ -96,6 +98,7 @@ Now go to the exercise, try it out and check if your answers were correct.
 
 
 [Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Runtime-functions.ipynb)
 
 
 ### 1.2. Variables and constructs
@@ -175,6 +178,7 @@ Take a moment and try to understand what is happening in the code
 above. Note the usage of the construct and runtime functions defined earlier in the article.
 
 [Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Runtime-functions.ipynb)
 
 
 ## 1.3 V: Clauses and directive format
@@ -191,22 +195,21 @@ We have already seen and used 'pragma omp parallel' that was a directive to exec
 We will explore the clauses more in the following subsection. For now we will learn about the  'conditionals'. Similar to any programming language OpenMP also has conditional statements. So for example we can also specify an 'if' statement in OpenMP in the following way
 
 ~~~c
-
- #ifdef _OPENMP
+#ifdef _OPENMP
 //block of code to be executed if code was compiled with OpenMP, for example
-      printf(“Number of threads: %d“, omp_get_num_threads);
-   #else
+    printf("Number of threads: %d", omp_get_num_threads);
+#else
 //block of code to be executed if code was compiled without OpenMP
 #endif
-
 ~~~
+
 When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with OpenMP. In this case if it was compiled with OpenMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
 
 The following example illustrates the use of conditional compilation. With OpenMP compilation, the `_OPENMP` becomes defined. 
 
 ~~~c
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h>
 
 int main () 
 {
@@ -239,16 +242,16 @@ int main ()
 
 
 [Jupyter notebook: Conditionals](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Conditionals.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Conditionals.ipynb)
 
 ## Clauses
 
 The directive format we just learnt:
 
 ~~~c
-
 #pragma omp directive_name [clause[clause]...]
-
 ~~~
+
 Is an important keyword with openMP that we put in the beginning of our code on the line where we want the 'parallel' region to start and then we mention  the 'directive name' and the 'clause'. In this subsection we will learn about 'clauses'.
 
 There are basically two kind of clauses. i.e private or shared. 
@@ -260,9 +263,10 @@ So if we execute
 
 ~~~c
 int A;
-#pragma omp parallel private(A) {
-A=omp_get_thread_num();
-...
+#pragma omp parallel private(A)
+{
+    A = omp_get_thread_num();
+    ...
 }
 ~~~
 
@@ -282,8 +286,8 @@ So, to sum up the distinction between private and shared, the private variable i
 Let's have a look at the code below
 
 ~~~c
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h>
 
 int main () 
 {
@@ -312,30 +316,33 @@ modified by multiple threads? Why?
 
 
 [Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Clauses.ipynb)
 
 ## 1.4. D: Clauses
 
 Let's observe the following example
 
 ~~~c
-#pragma cling load("libomp.so")
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h>
 
-int num_threads = 4;
-omp_set_num_threads(num_threads);
-
-int private_var = 0;
-int shared_var = 0;
-int rank;
-#pragma omp parallel private(private_var) shared(shared_var)
+int main()
 {
-  rank = omp_get_thread_num();
-  printf("Thread ID is: %d\n", rank);  
-  private_var = private_var + num_threads;
-  printf("Value of private_var is: %d\n", private_var);
-  shared_var = shared_var + num_threads;
-  printf("Value of shared_var is: %d\n", shared_var);
+    int num_threads = 4;
+    omp_set_num_threads(num_threads);
+
+    int private_var = 0;
+    int shared_var = 0;
+    int rank;
+    #pragma omp parallel private(private_var) shared(shared_var)
+    {
+        rank = omp_get_thread_num();
+        printf("Thread ID is: %d\n", rank);  
+        private_var = private_var + num_threads;
+        printf("Value of private_var is: %d\n", private_var);
+        shared_var = shared_var + num_threads;
+        printf("Value of shared_var is: %d\n", shared_var);
+    }
 }
 ~~~
 
@@ -350,6 +357,7 @@ Take a moment and try to understand what is happening in the code above.
 Now go to the exercise, try it out and check if your answers were correct. 
 
 [Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Clauses.ipynb)
 
 
 ## 1.5. Exercise: Parallel region
@@ -359,14 +367,16 @@ In this exercise you will get to practice using basic runtime functions, directi
 The code for this exercise is under the following instructions in a Jupyter notebook. You will start from this provided Hello world template. What is the expected output?
 
 ~~~c
-#pragma cling load("libomp.so")
 #include <stdio.h>
 #include <unistd.h>
 #include <omp.h>
 
-int i;
-i = -1;
-printf("hello world %d\n", i );
+int main()
+{
+    int i;
+    i = -1;
+    printf("hello world %d\n", i );
+}
 ~~~
 
 ## Exercise
@@ -401,6 +411,7 @@ Don't worry if you always get a correct output, because a compiler may use a pri
 * If compiled with OpenMP, the program should output »hello world« and the ID of each thread. 
 
 [Jupyter notebook: Exercise: Parallel region](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Parallel-region.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Parallel-region.ipynb)
 
 ## 1.6 Q: Quiz on OpenMP basics
 
@@ -487,12 +498,16 @@ Some examples of the work sharing constructs are:
 We will first see a code example for using the sections construct where we can we specify it through directive `sections`.
 
 ~~~c
-#pragma omp parallel {
-  #pragma omp sections {{a=...; b=...;}
-    #pragma omp section
-    { c=...; d=...; }
-  } // end of sections
-} // end of parallel
+#pragma omp parallel
+{
+    #pragma omp sections
+    {{a=...; b=...;}
+        #pragma omp section
+        {
+            c=...; d=...;
+        }
+    }// end of sections
+}// end of parallel
 ~~~
 
 When we use sections construct, multiple blocks of code are executed in parallel. When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section, it will execute its task in a different thread. This way we can add these sections inside our `pragma OMP parallel` code by specifying a section per each thread that will be executed in that each individual thread.
@@ -526,12 +541,13 @@ We have a few other clauses than just 'private'. For example:
 We can see an example of the for construct used in the code.
 
 ~~~c
-#pragma omp parallel private(f) {
-  f=10;
-  #pragma omp for
-  for (i=0; i<10; i++) {
-    a[i] = b[i]*f;
-  } // end of for
+#pragma omp parallel private(f)
+{
+    f=10;
+    #pragma omp for
+    for (i=0; i<10; i++) {
+        a[i] = b[i]*f;
+    } // end of for
 } // end of parallel
 ~~~
 
@@ -546,6 +562,7 @@ Here we can see that if we are working on two threads with 10 iterations, then t
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
 
 [Jupyter notebook: Worksharing constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Worksharing-Constructs.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Worksharing-Constructs.ipynb)
 
 
 ## 2.3 Synchronization
@@ -595,7 +612,7 @@ We owe it to the critical clause that only one thread is executed at a time for 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
 
 [Jupyter notebook: Synchronization constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Synchronization-Constructs.ipynb)
-
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Synchronization-Constructs.ipynb)
 
 ## 2.4 Nesting and binding
 
@@ -693,7 +710,6 @@ $$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 Here, $$n$$ is the number of intervals and $$h = 1/n$$. 
 
 ~~~c
-#pragma cling load("libomp.so")
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
@@ -701,39 +717,42 @@ Here, $$n$$ is the number of intervals and $$h = 1/n$$.
 
 #define f(A) (4.0/(1.0+A*A))
 
-int num_threads = 4;
-omp_set_num_threads(num_threads);
-
-//declarations
-const int n = 10000000;
-int i;
-double w, x, sum, pi;
-clock_t t1, t2;
-struct timeval tv1, tv2;
-struct timezone tz;
-double wt1, wt2;
-
-gettimeofday(&tv1, &tz);
-wt1 = omp_get_wtime();
-t1 = clock();
-
-/* calculate pi = integral [0..1] 4/(1+x**2) dx */
-w = 1.0/n;
-sum = 0.0;
-for (i = 1; i <= n; i++)
+int main()
 {
-    x = w*((double)i-0.5);
-    sum = sum+f(x);
+    int num_threads = 4;
+    omp_set_num_threads(num_threads);
+
+    //declarations
+    const int n = 10000000;
+    int i;
+    double w, x, sum, pi;
+    clock_t t1, t2;
+    struct timeval tv1, tv2;
+    struct timezone tz;
+    double wt1, wt2;
+
+    gettimeofday(&tv1, &tz);
+    wt1 = omp_get_wtime();
+    t1 = clock();
+
+    /* calculate pi = integral [0..1] 4/(1+x**2) dx */
+    w = 1.0/n;
+    sum = 0.0;
+    for (i = 1; i <= n; i++)
+    {
+        x = w*((double)i-0.5);
+        sum = sum+f(x);
+    }
+    pi = w*sum;
+    
+    t2 = clock();
+    wt2 = omp_get_wtime();
+    gettimeofday(&tv2, &tz);
+    printf( "computed pi = %24.16g\n", pi );
+    printf( "CPU time (clock)                = %12.4g sec\n", (t2-t1)/1000000.0 );
+    printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
+    printf( "wall clock time (gettimeofday)  = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
 }
-pi = w*sum;
- 
-t2 = clock();
-wt2 = omp_get_wtime();
-gettimeofday(&tv2, &tz);
-printf( "computed pi = %24.16g\n", pi );
-printf( "CPU time (clock)                = %12.4g sec\n", (t2-t1)/1000000.0 );
-printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
-printf( "wall clock time (gettimeofday)  = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
 ~~~
 
 The code above calculates the solution of integral in serial. This template should be a starting point for this exercise. The heavy part of computation is performed in the for loop, so this is the part that needs parallelization.
@@ -755,6 +774,7 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 * Faster execution of the parallel program that calculates the correct value of Pi.
 
 [Jupyter notebook: Exercise: Compute pi](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Compute-Pi.ipynb)
 
 ## 2.6 Q: Do you understand worksharing directives?
 
@@ -880,32 +900,34 @@ Nested `private(var)` with same variable name allocate new private storage again
 Let's explain by observing the following code
 
 ~~~ c
-#pragma cling load("libomp.so")
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h>
 
-int num_threads = 4;
-omp_set_num_threads(num_threads);
-
-int var_shared = -777;
-int var_private = -777;
-int var_firstprivate = -777;
-int var_lastprivate = -777;
-
-#pragma omp parallel shared(var_shared) private(var_private) firstprivate(var_firstprivate)
+int main()
 {
-    #pragma omp for lastprivate(var_lastprivate)
-    for (int i = 0; i < 1000; i++)
-    {
-        var_shared = i;
-        var_private = i;
-        var_firstprivate = i;
-        var_lastprivate = i;
-    }
-}
+    int num_threads = 4;
+    omp_set_num_threads(num_threads);
 
-printf("after parallel region: %d %d %d %d", 
-       var_shared, var_private, var_firstprivate, var_lastprivate);
+    int var_shared = -777;
+    int var_private = -777;
+    int var_firstprivate = -777;
+    int var_lastprivate = -777;
+
+    #pragma omp parallel shared(var_shared) private(var_private) firstprivate(var_firstprivate)
+    {
+        #pragma omp for lastprivate(var_lastprivate)
+        for (int i = 0; i < 1000; i++)
+        {
+            var_shared = i;
+            var_private = i;
+            var_firstprivate = i;
+            var_lastprivate = i;
+        }
+    }
+
+    printf("after parallel region: %d %d %d %d", 
+        var_shared, var_private, var_firstprivate, var_lastprivate);
+}
 ~~~
 
 Take a moment and try to guess the values of variables after the parallel region. Note the usage of the data scope clauses. 
@@ -919,6 +941,7 @@ Take a moment and try to guess the values of variables after the parallel region
 `var_lastprivate` is updated in the last iteration of the foor loop to use after the parallel region. 
 
 [Jupyter notebook: Data scope](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Data-scope.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Data-scope.ipynb)
 
 ## 3.2 Reduction clause
 
@@ -950,21 +973,25 @@ After the end of the region, the original list item is updated with the values o
 Let's observe the following example:
 
 ~~~c
-#pragma cling load("libomp.so")
+#include <stdio.h>
 #include <omp.h>
 
-int sum = 0;
-#pragma omp parallel for reduction(+:sum)
-for (int i = 0; i<20; i++)
+int main()
 {
-    sum = sum + i;
+    int sum = 0;
+    #pragma omp parallel for reduction(+:sum)
+    for (int i = 0; i<20; i++)
+    {
+        sum = sum + i;
+    }
+    printf("sum: %d", sum);
 }
-printf("sum: %d", sum);
 ~~~
 
 The reduction variable is `sum` and the reduction operation is `+`.  The reduction does the operation automatically. It produces a private variable `sum` inside the loop and in the end it sums up the private partial sum to the global variable. 
 
 [Jupyter notebook: Combined Constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Combined-Constructs.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Combined-Constructs.ipynb)
 
 ## 3.3 Exercise: Sum and substract
 
@@ -973,31 +1000,34 @@ In this exercise you will get to practice a sum and substract reduction within a
 In the exercise we are generating a number of people and these people are substracting our value of apples. What you need to do is parallelize the code. 
 
 ~~~c
-#pragma cling load("libomp.so")
-#import <omp.h>
+#include <stdio.h>
+#include <omp.h>
 
 double generate_people(int i, int j)
 {
     return (2 * i + 3 * j); // some dummy return value
 }
 
-int num_threads = 4;
-omp_set_num_threads(num_threads);
+int main()
+{
+    int num_threads = 4;
+    omp_set_num_threads(num_threads);
 
-int num = 10;
-int people = 0;
-int apples = 5000;
+    int num = 10;
+    int people = 0;
+    int apples = 5000;
 
-for (int i = 0; i < num; i++) {
-    for (int j = i+1; j < num; j++) {
-        int ppl = generate_people(i, j);
-        people += ppl;
-        apples -= ppl;
+    for (int i = 0; i < num; i++) {
+        for (int j = i+1; j < num; j++) {
+            int ppl = generate_people(i, j);
+            people += ppl;
+            apples -= ppl;
+        }
     }
-}
 
-printf("people = %d\n", people);
-printf("apples = %d", apples);
+    printf("people = %d\n", people);
+    printf("apples = %d", apples);
+}
 ~~~
 
 ## Exercise
@@ -1009,6 +1039,7 @@ Then answer this:
 * What happens when we try to make people "shared"? Why can't you?
 
 [Jupyter notebook: Reduction](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Reduction.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Reduction.ipynb)
 
 ## 3.4 Combined parallel worksharing directives
 
@@ -1049,6 +1080,7 @@ Go to the exercise and remove the critical directive and the additional partial 
 Now change the parallel region so you use the combined construct parallel for and compile.
 
 [Jupyter notebook: Exercise: Compute pi again](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi-again.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Compute-Pi-again.ipynb)
 
 ## 3.6. Exercise: Heat transfer
 
@@ -1069,7 +1101,6 @@ The source code is at times hard coded for the purpose of faster loop iterations
 *  use different parallelization methods with respect to their effect on execution times
 
 ~~~c
-#pragma cling load("libomp.so")
 #include <stdio.h>
 #include <sys/time.h>
 #include <omp.h>
@@ -1101,78 +1132,81 @@ void heatpr(double phi[imax+1][kmax+1]){
     return;
 }
 
-// define variables
-double eps = 1.0e-08;
-double phi[imax+1][kmax+1], phin[imax][kmax];
-double dx, dy, dx2, dy2, dx2i, dy2i, dt, dphi, dphimax, dphimax0;
-int i, k, it;
-struct timeval tv1, tv2; struct timezone tz;
-double wt1, wt2;
+int main()
+{
+    // define variables
+    double eps = 1.0e-08;
+    double phi[imax+1][kmax+1], phin[imax][kmax];
+    double dx, dy, dx2, dy2, dx2i, dy2i, dt, dphi, dphimax, dphimax0;
+    int i, k, it;
+    struct timeval tv1, tv2; struct timezone tz;
+    double wt1, wt2;
 
-printf("OpenMP-parallel with %1d threads\n", omp_get_num_threads());
+    printf("OpenMP-parallel with %1d threads\n", omp_get_num_threads());
 
-dx = 1.0/kmax; dy = 1.0/imax;
-dx2 = dx*dx; dy2 = dy*dy;
-dx2i = 1.0/dx2; dy2i = 1.0/dy2;
-dt = min(dx2,dy2)/4.0;
+    dx = 1.0/kmax; dy = 1.0/imax;
+    dx2 = dx*dx; dy2 = dy*dy;
+    dx2i = 1.0/dx2; dy2i = 1.0/dy2;
+    dt = min(dx2,dy2)/4.0;
 
-// setting initial conditions
-/* start values 0.d0 */
-for (i = 1; i < imax; i++){
-    for (k = 0; k < kmax; k++){
-        phi[i][k] = 0.0;
-    }
-}
-/* start values 1.d0 */
-for (i = 0;i <= imax; i++){
-    phi[i][kmax] = 1.0;
-}
-/* start values dx */
-phi[0][0] = 0.0;
-phi[imax][0] = 0.0;
-for (k = 1; k < kmax; k++){
-    phi[0][k] = phi[0][k-1]+dx;
-    phi[imax][k] = phi[imax][k-1]+dx;
-}
-// print starting values
-printf("\nHeat Conduction 2d\n");
-printf("\ndx = %12.4g, dy = %12.4g, dt = %12.4g, eps = %12.4g\n",
-dx, dy, dt, eps);
-printf("\nstart values\n");
-heatpr(phi);
-
-gettimeofday(&tv1, &tz);
-wt1 = omp_get_wtime();
-/* time step iteration */
-for (it = 1; it <= itmax; it++){
-    dphimax = 0.;
-    dphimax0 = dphimax;
-    for (k = 1; k < imax; k++){
-        for (i = 0; i < kmax; i++){
-            dphi = (phi[i+1][k]+phi[i-1][k]-2.*phi[i][k])*dy2i
-                +(phi[i][k+1]+phi[i][k-1]-2.*phi[i][k])*dx2i;
-            dphi = dphi*dt;
-            dphimax0 = max(dphimax0,dphi);
-            phin[i][k] = phi[i][k]+dphi;
-        }
-    }
-    dphimax = max(dphimax,dphimax0);
-    /* save values */
+    // setting initial conditions
+    /* start values 0.d0 */
     for (i = 1; i < imax; i++){
         for (k = 0; k < kmax; k++){
-            phi[i][k] = phin[i][k];
+            phi[i][k] = 0.0;
         }
     }
-    if(dphimax < eps) break;
-}
-wt2 = omp_get_wtime();
-gettimeofday(&tv2, &tz);
+    /* start values 1.d0 */
+    for (i = 0;i <= imax; i++){
+        phi[i][kmax] = 1.0;
+    }
+    /* start values dx */
+    phi[0][0] = 0.0;
+    phi[imax][0] = 0.0;
+    for (k = 1; k < kmax; k++){
+        phi[0][k] = phi[0][k-1]+dx;
+        phi[imax][k] = phi[imax][k-1]+dx;
+    }
+    // print starting values
+    printf("\nHeat Conduction 2d\n");
+    printf("\ndx = %12.4g, dy = %12.4g, dt = %12.4g, eps = %12.4g\n",
+    dx, dy, dt, eps);
+    printf("\nstart values\n");
+    heatpr(phi);
 
-// print resulting grid and execution time
-printf("\nphi after %d iterations\n", it);
-heatpr(phi);
-printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
-printf( "wall clock time (gettimeofday) = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
+    gettimeofday(&tv1, &tz);
+    wt1 = omp_get_wtime();
+    /* time step iteration */
+    for (it = 1; it <= itmax; it++){
+        dphimax = 0.;
+        dphimax0 = dphimax;
+        for (k = 1; k < imax; k++){
+            for (i = 0; i < kmax; i++){
+                dphi = (phi[i+1][k]+phi[i-1][k]-2.*phi[i][k])*dy2i
+                    +(phi[i][k+1]+phi[i][k-1]-2.*phi[i][k])*dx2i;
+                dphi = dphi*dt;
+                dphimax0 = max(dphimax0,dphi);
+                phin[i][k] = phi[i][k]+dphi;
+            }
+        }
+        dphimax = max(dphimax,dphimax0);
+        /* save values */
+        for (i = 1; i < imax; i++){
+            for (k = 0; k < kmax; k++){
+                phi[i][k] = phin[i][k];
+            }
+        }
+        if(dphimax < eps) break;
+    }
+    wt2 = omp_get_wtime();
+    gettimeofday(&tv2, &tz);
+
+    // print resulting grid and execution time
+    printf("\nphi after %d iterations\n", it);
+    heatpr(phi);
+    printf( "wall clock time (omp_get_wtime) = %12.4g sec\n", wt2-wt1 );
+    printf( "wall clock time (gettimeofday) = %12.4g sec\n", (tv2.tv_sec-tv1.tv_sec) + (tv2.tv_usec-tv1.tv_usec)*1e-6 );
+}
 ~~~
 
 The code above calculates the temperature for a grid of points, the main part of code being the time step iteration. `dphi` is the difference of temperature and `phi` is the temperature. Then we add the `dphi` to the `phi` array and we save the new `phin` array. Then in the next for loop we exchange the role of the old and the new array (restoring the data). 
@@ -1209,6 +1243,7 @@ Now the parallel version should be a little bit faster. The reason for only a sl
 
 
 [Jupyter notebook: Exercise: Heat](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Heat.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Heat.ipynb)
 
 ## 3.7 Q: Do you understand combined constructs?
 
@@ -1415,10 +1450,9 @@ Only if the scalar expression is true will the task be started, otherwise a norm
 
 In the following example, the tasking concept is used to compute Fibonacci numbers recursively.
 
-~~~ c
-#pragma cling load("libomp.so")
-#include <stdlib.h>
+~~~c
 #include <stdio.h>
+#include <stdlib.h>
 #include <omp.h>
 
 int fib(int n) {
@@ -1436,12 +1470,15 @@ int fib(int n) {
     return x+y;
 }
 
-omp_set_num_threads(4);
-int n = 8;
-#pragma omp parallel shared(n)
+int main()
 {
-    #pragma omp single // Only one thread executes single, we only need to print once
-    printf ("fib(%d) = %d\n", n, fib(n));
+    omp_set_num_threads(4);
+    int n = 8;
+    #pragma omp parallel shared(n)
+    {
+        #pragma omp single // Only one thread executes single, we only need to print once
+        printf ("fib(%d) = %d\n", n, fib(n));
+    }
 }
 ~~~
 
@@ -1458,6 +1495,7 @@ recursive computation.
 Go to the example to see it being done step by step and try it out for yourself. 
 
 [Jupyter notebook: Example: Fibonacci](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Fibonacci.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Fibonacci.ipynb)
 
 ## 4.4. Exercise: Traversing of a tree
 
@@ -1478,6 +1516,7 @@ Parallelize the provided program using parallel region, tasks and other directiv
 Did the parallelization give faster results?
 
 [Jupyter notebook: Exercise: Traversing of a tree](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Traversing-tree.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Traversing-tree.ipynb)
 
 ## 4.5 Q: Quiz on OpenMP tasking
 
@@ -1661,5 +1700,3 @@ f=10;
 
 In the example above, due to critical clause, only one thread is
 executed at a time for cnt variable.
-
-

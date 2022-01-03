@@ -62,6 +62,7 @@ Is it possible for the output of all MPI processes to be in the sequence of the 
 What do you observe when you run the program multiple times? Tell us your answer and thoughts in the comments. 
 
 [Jupyter notebook: Hello world](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
 
 ## 1.3. V: Messages and communications
 
@@ -264,6 +265,7 @@ else if (rank == 1) { ... }
 > >      I am 0 before send ping
 
 [Jupyter notebook: Ping](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
 
 ## 2.3 E: Ping pong
 
@@ -298,6 +300,7 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 > >      I am 1 before send pong 
 
 [Jupyter notebook: Ping pong](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
 
 ## 2.4 D: 
 
@@ -312,33 +315,37 @@ This is a small example of ring communications, which is a halo communication wi
 You are starting with the provided source code which is wrong because it uses `MPI_Send` and `MPI_Recv` in a naive way. If `MPI_Send` is implemented with a synchronous communication protocol then this program will deadlock. But we are expecting this wrong program to work because we are sending only a small 1 integer message instead of huge double percision arrays. The below program sends the rank values around the ring in a loop with #process iterations and sums up all the values that are coming along (sum of all ranks). The calculation of the neighbour ranks is done with the modulo operation. We use 2 different buffers for send and receive, which is normally used when we are doing non-blocking communication. 
 
 ~~~c
+#include <stdio.h>
 #include <mpi.h>
 
-int rank, size;
-int snd_buf, rcv_buf;
-int right, left;
-int sum, i;
-MPI_Status status;
-
-MPI_Init(NULL, NULL);
-MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-right = (rank+1)      % size;
-left  = (rank-1+size) % size;
-
-sum = 0;
-snd_buf = rank; //store rank value in send buffer
-for(i = 0; i < size; i++) 
+int main()
 {
-    MPI_Send(&snd_buf, 1, MPI_INT, right, 17, MPI_COMM_WORLD); //send data to the right neighbour
-    MPI_Recv(&rcv_buf, 1, MPI_INT, left,  17, MPI_COMM_WORLD, &status); //receive data from the left neighbour
-    snd_buf = rcv_buf; //prepare send buffer for next iteration
-    sum += rcv_buf; //sum of all received values
-}
-printf ("PE%i:\tSum = %i\n", rank, sum);
+    int rank, size;
+    int snd_buf, rcv_buf;
+    int right, left;
+    int sum, i;
+    MPI_Status status;
 
-MPI_Finalize();
+    MPI_Init(NULL, NULL);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    right = (rank+1)      % size;
+    left  = (rank-1+size) % size;
+
+    sum = 0;
+    snd_buf = rank; //store rank value in send buffer
+    for(i = 0; i < size; i++) 
+    {
+        MPI_Send(&snd_buf, 1, MPI_INT, right, 17, MPI_COMM_WORLD); //send data to the right neighbour
+        MPI_Recv(&rcv_buf, 1, MPI_INT, left,  17, MPI_COMM_WORLD, &status); //receive data from the left neighbour
+        snd_buf = rcv_buf; //prepare send buffer for next iteration
+        sum += rcv_buf; //sum of all received values
+    }
+    printf ("PE%i:\tSum = %i\n", rank, sum);
+
+    MPI_Finalize();
+}
 ~~~
 
 ## Exercise
@@ -354,6 +361,7 @@ MPI_Finalize();
 * Why does the serialized solution still deadlock when running with 1 process?
 
 [Jupyter notebook: Ring](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
@@ -428,6 +436,7 @@ We can understand these functions better by the following optional exercise.
 (2m0s)
 
 [Jupyter notebook: Dynamic receiving](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
 
 ## 2.6 E: (perhaps optional) Dynamic receiving
 
@@ -583,6 +592,7 @@ double MPI_Wtime(void);
 ~~~
 
 [Jupyter notebook: Broadcast](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
 
 ## 3.3 D: What do you observe with broadcast communication?
 
@@ -647,7 +657,7 @@ First, think about how would you solve this exercise without MPI_Scatter and MPI
 * Go to the exercise and look at the provided skeleton. Use `MPI_Scatter` and `MPI_Gather` routines and compute missing final average result to solve the exercise. 
 
 [Jupyter notebook: Scatter and gather](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
-
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
 
 ## 4.Advanced Collective operations
 
@@ -714,7 +724,7 @@ The program takes the following steps:
 * Go to the exercise and rewrite progam using `MPI_Reduce` to compute a global average. 
 
 [Jupyter notebook: Reduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
-
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
 
 ## 4.3 E: Calculate Pi!
 
@@ -737,6 +747,7 @@ $$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 3. Finally, the sums computed are added together using reduction.
 
 [Jupyter notebook: Compute PI!](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
 
 ## 4.4 V/A: MPI_Allreduce
 
@@ -755,6 +766,7 @@ Since we are already familiar with the reduce function it would be easier for us
 (1m50s)
 
 [Jupyter notebook: Allreduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
 ## 4.5 E: Computing standard deviation
 
@@ -786,6 +798,7 @@ Go to the exercise and rewrite progam using MPI_Reduce and MPI_Allreduce to comp
 We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). Hence we know that `mean = (a+b)/2 = 1/2` and `stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887`. 
 
 [Jupyter notebook: Standard deviation](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
 
 ## 4.6 Q: Do you understand collective communication?
 
@@ -858,10 +871,10 @@ What is the output of this MPI code on 8 processes, i.e. on running ranks 0, 1, 
 ~~~c
 if (rank % 2 == 0) { //even processes
 	MPI_Allreduce(&rank, &evensum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-	if (rank == 0) printf('evensum = %d\n', evensum);
+	if (rank == 0) printf("evensum = %d\n", evensum);
 } else { //odd processes
 	MPI_Allreduce(&rank, &oddsum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-	if (rank == 1) printf('oddsum = %d\n', oddsum);
+	if (rank == 1) printf("oddsum = %d\n", oddsum);
 }
 ~~~
 
