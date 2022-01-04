@@ -28,7 +28,7 @@ Note that the term "GPU core" is more or less a marketing term. The equivalent o
 
 Desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how do such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
-First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #18 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/06/) of supercomputers in the world). By invoking the diagnostic utilities `deviceQuery` and `bandwidthTest` in the terminal of the login node we can get:
+First, let's have a look at the GPUs that are installed on the *Marconi-100* cluster (currently #18 on the [Top500 list](https://www.top500.org/lists/top500/list/2021/11/) of supercomputers in the world). By invoking the diagnostic utilities `deviceQuery` and `bandwidthTest` in the terminal of the login node we can get:
 
 Output (excerpt) from `deviceQuery`:
 
