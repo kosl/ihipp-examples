@@ -561,7 +561,7 @@ Here you can see the description of the memory layout and the displacements. For
 
 ### Contiguous Data
 
-The is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
+This is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S8.png)
 
