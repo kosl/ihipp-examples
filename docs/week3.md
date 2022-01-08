@@ -622,7 +622,7 @@ The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends t
 
 ### Gather
 
-After the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see the basic idea in many MPI applications, that we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
+After the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see the basic idea in many MPI applications, where we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
 
 ~~~c
 MPI_Gather(void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Dataype recvtype, int root, MPI_Comm comm)
