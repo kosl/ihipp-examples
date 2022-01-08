@@ -415,8 +415,8 @@ An efficient solution to these problems would be an overlap. Some kind of region
 - there is no message passing inside of the SMP nodes and 
 - there are no topology problems.
 
-An efficient example to explain the need and efficiency of this is if we are doing a ray tracing in a room for example. The problem of ray tracing is that the volume that we are describing is quite complex. So lets say if we have to do the light tracing and reflections that we see from the lighting and so on, we would need to compute the parameters for each ray. This is already several gigabytes of memory and if we have just 60 gigabytes of memory per node, then we are limited by memory to solve the problem. So we cannot do large problems with many cores because each core in MPI actually gets its own problem inside it. There is no sharing of the problem among the empty threads, empty processes or core. We could usually solve this problem fairly easily by using MPI + OpenMP. 
-These kind of problems which take a lot of memory since they are complex because of the description of environment and so on are best done with MPI + OpenMP. 
+An efficient example to explain the need and efficiency of this is if we are doing a ray tracing in a room for example. The problem of ray tracing is that the volume that we are describing is quite complex. So lets say if we have to do the light tracing and reflections that we see from the lighting and so on, we would need to compute the parameters for each ray. This is already several gigabytes of memory and if we have just 60 gigabytes of memory per node, then we are limited by memory to solve the problem. So we cannot do large problems with many cores because each core in MPI actually gets its own problem inside it. There is no sharing of the problem among the threads, processes or cores. We could usually solve this problem fairly easily by using MPI + OpenMP. 
+These kind of problems, which take a lot of memory since they are complex because of the description of environment and so on are best done with MPI + OpenMP. 
 
 ### Calling MPI inside of OMP MASTER
 
