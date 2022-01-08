@@ -281,11 +281,11 @@ This is our introduction to parallel programming, meaning that we will just buil
 
 To exemplify, let us compare IBM Power eight processors with Intel or AMD, i.e., the classical X-64 architecture. We see that Power processor has much more threads per core. So instead of the usual hyper threading, that we find on our laptops, where we usually have one thread in addition to the core; on Power 8 processor we have, for example eight process cores on one socket, then we may have additional eight threads to be run per core, so that they share cache. Runing with many threads raises the performance if we are running an OpenMP program. This implies that the programs and threads share the variables, memory and so on. Hopefully, in the initial OpenMP course that we had in the first two weeks it was quite simple to do. 
 
-The two main threading paradigms we will try are:
+### MPI + OpenMP
+
+The two main threading paradigms we can try are:
 - MPI + OpenMP
 - MPI + MPI-3 shared memory
-
-### MPI + OpenMP
 
 MPI+OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets, i.e., cache coherent non-uniform memory. It can be optimised in such a way that we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous week we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. The OpenMP or rather the threading model for it was introduced with MPI-2 so that we can use some threading within the MPI-2. From that library, we are usually using OpenMPI, but there are also some other vendor specific MPI libraries, especially if you buy from prominent vendors. There are tuned MPI libraries that work best on the cluster that you buy, meaning that it takes into account the topology, the latencies and all architectural differences within the MPI library itself.
 
