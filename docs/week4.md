@@ -279,8 +279,9 @@ Finally, we will also ask ourselves whether the MPI approach is the best approac
 
 This is our introduction to parallel programming, meaning that we will just build up on the simple MPI plus threading methods. 
 
-To exemplify, let us compare IBM Power eight processors with Intel or AMD, i.e., the classical X-64 architecture. We see that it has much more threads per core. So instead of the usual hyper threading that we find on our laptops where we usually have one thread into the addition to the core; meaning that if we have, for example eight process cores on one circuit, then we may get additional eight threads to be run so that the share cache and so on doubles the performance if we are running an OpenMP program. This implies that the programs and threads share the variables, memory and so on. Hopefully in the initial OpenMP course that we had in the first two weeks it was quite simple to do. 
-The two main threading paradigms we will share are:
+To exemplify, let us compare IBM Power eight processors with Intel or AMD, i.e., the classical X-64 architecture. We see that Power processor has much more threads per core. So instead of the usual hyper threading, that we find on our laptops, where we usually have one thread in addition to the core; on Power 8 processor we have, for example eight process cores on one socket, then we may have additional eight threads to be run per core, so that they share cache. Runing with many threads raises the performance if we are running an OpenMP program. This implies that the programs and threads share the variables, memory and so on. Hopefully, in the initial OpenMP course that we had in the first two weeks it was quite simple to do. 
+
+The two main threading paradigms we will try are:
 - MPI + OpenMP
 - MPI + MPI-3 shared memory
 
