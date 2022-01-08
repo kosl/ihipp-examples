@@ -649,7 +649,7 @@ The structure of the routine is similiar to most we have learnt previously. So
 - 'count' suggests how many elements. 
 - 'blocklength' is the number of elements per block.
 - 'stride' is the offset to the next portion of the result. 
-- the datatype, of course we can have only one datatype here and it could be a derived one. Of course we can communicate strided array of slots and integers and subsequently we will get a * newtype created that can be used in send and recieve routines.
+- the datatype, of course we can have only one datatype here and it could be a derived one. Of course we can communicate strided array of floats and integers and subsequently we will get a * newtype created that can be used in send and recieve routines.
 
 ### Struct datatype
 
