@@ -637,6 +637,16 @@ You have probably noticed that in pyCUDA, the kernel is wrapped as a string of C
 
 Note the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest versions of CUDA (11.x). Note also that the `pycuda` library must be installed in Python, e.g., through `pip`.
 
+### Week 1 roundup
+
+In this introductory week we have tried to present you the paradigms of parallel programming by giving the essentials along with simple code examples in interactive Jupyter notebooks. The primary objective of Week 1 is to align you for the next weeks, which you can already preview.
+
+Please discuss the interactive Jupyter notebooks experience and the potentials we are looking forward. 
+While this week was just a preparation for more advanced topics and hands on examples in the next weeks, we can still discuss how parallel programming techniques could be useful for your applications.
+
+Therefore, we are interested in whether you found the Week 1 content useful?
+
+
 ## Resources:
 ### Further reading
 ### List of top 500
