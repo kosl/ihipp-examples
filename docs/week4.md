@@ -982,3 +982,10 @@ When checking if your file is correctly written, you should:
 [Jupyter notebook: Write a file in parallel](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
 
+## Week 4 wrap-up
+
+In Week 4 we tried to present advanced communication types in MPI and how to combine OpenMP and MPI in a hybrid programming paradigm. Also some advanced approaches, such as user derived datatypes and parallel file I/O principles were discussed. As before, the hands on examples served to show how to use this techniques as efficiently as possible.
+
+Please, discuss the advanced principles shown in this week and try to summarize their potential in general or maybe specifically for your applications.
+
+Have you found the advanced content of Week 4 interesting and useful?

@@ -1626,14 +1626,9 @@ The latter observation should be clarified in some detail. In CUDA all operation
 
 Similarly, multiple OpenCL kernels enqueued in the same command queue are executed consequently one after another. Concurrent execution of multiple kernels is achieved by creating multiple command queues.
 
-## 5.24 D: Week 5 wrap up
+## 5.24 D: Week 5 wrap-up
 
-In this week we:
-
-- gave an introduction to Graphical Processing Units (GPUs) as a means to accelerate computing
-- introduced you to GPU architectures and GPU execution models
-- gave step-by-step introductions to the most widely used GPU programming extensions: CUDA and OpenCL
-- briefly introduced you to OpenMP as a means to off-load computation to GPUs
+In this week we gave an introduction to Graphical Processing Units (GPUs) as a means to accelerate computing and introduced you to GPU architectures and GPU execution models. Step-by-step examples to the most widely used GPU programming extensions (CUDA and OpenCL), a brief introduction to OpenMP as a means to off-load computation to GPUs and a GPU numerical example should have prepared you to use accelerated programming approaches in your own codes.
 
 We are interested in your opinion on the Week 5 content:
 

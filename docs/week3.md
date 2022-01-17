@@ -885,3 +885,11 @@ Options:
 * evensum = 8, oddsum = 7
 
 It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a proces stook before calling any MPI function. Here, since they are all operating in COMM_WORLD, all processes participate in the same global collective. 
+
+## Week 3 wrap-up
+
+In Week 3 we presented the concepts, programming and execution model of MPI in detail. As with OpenMP in the previous week, the hands on examples served to show how to use this paradigm as efficiently as possible.
+
+Please, discuss the MPI parallel programming paradigm and try to summarize its potential in general or maybe specifically for your applications.
+
+We would also like to know if you found Week 3 content useful as well?

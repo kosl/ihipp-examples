@@ -1701,7 +1701,7 @@ f=10;
 In the example above, due to critical clause, only one thread is
 executed at a time for cnt variable.
 
-## Week 2 roundup
+## Week 2 wrap-up
 
 In Week 2 we presented the concepts, programming and execution model of OpenMP in detail. With hands on examples we have tried to show how to use this paradigm as efficiently as possible.
 
