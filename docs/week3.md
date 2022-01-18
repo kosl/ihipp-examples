@@ -3,7 +3,7 @@
 
 ## V:Introduction to week 3
 
-Message Passing Interface presented in this week will introduce communicators and how processes communicate messages. Sending and receiving messages can be used in one-to-one communication. One-to-many broadcast and scatter messages can be distributed and collected back with reduce and gather operations. All these collective operations, that are frequently used. are privided with the MPI library. We will present differences of those MPI functions though many examples and execises that you may explore further.
+Message Passing Interface (MPI) presented in this week will introduce communicators and how processes communicate messages. Sending and receiving messages can be used in one-to-one communication. One-to-many broadcast and scatter messages can be distributed and collected back with reduce and gather operations. All these collective operations, that are frequently used, are provided with the MPI library. We will present differences of those MPI functions through many examples and execises that you may explore further.
 
 ## 1.1 V: Communicator in MPI
 

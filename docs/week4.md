@@ -2,8 +2,9 @@
 
 ## V: Introduction to week 4
 
-In this week we will introduce some advanced MPI topics that you may find useful when asking yourself how to do things better. 
-Better approach to parallelisation is to overlap computing and communication with non-blocking communication. Another question is if we can reduce memory with MPI and OpenMP and gain in speed with hybrid or one-sided approach? When things get large we would like to combine them together with our own derived types that can simplify programming. At the the end of the week we will take a look into parallel writing of files that can be used instead of collecting results over MPI. There are also some advanced MPI topics which we will not cover here in detail and are part of other PRACE courses.
+In this week we will introduce some advanced MPI topics that you may find useful when asking yourself how to do things better.
+
+A better approach to parallelisation is to overlap computing and communication with non-blocking communication. Another question is if we can reduce memory with MPI and OpenMP gaining in speed with hybrid or one-sided approach? When things get large we would like to combine them together with our own derived types that can simplify programming. At the the end of the week we will take a look into parallel writing of files that can be used instead of collecting results over MPI. There are also some advanced MPI topics which we will not cover here in detail and are part of other PRACE courses.
 
 ## 1.1 V: Non Blocking communications
 

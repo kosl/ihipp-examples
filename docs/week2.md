@@ -4,7 +4,8 @@
 ## V: Introduction to Week 2
 
 OpenMP is a shared memory threaded programming model that can be used to incrementally upgrade existing code for parallel execution. Upgraded code can still be compiled serially. This is a great feature of OpenMP that gives you opportunity to check if parallel execution provides the same results as a serial version. To understand the automatic parallelisation better we will initially take a look into runtime functions. They are usually not needed in simple OpenMP programs. Some basic compiler or pragma directives and scope of variables will be introduced to understand the logic of threaded access to the memory.
-Worksharing directives and synchronisation of threads will be discussed within few examples. How to collect results from threads will be shown with common reduction clauses. At the end of this week we will present interesting task based paralelism approach approach. Don’t forget to experiment with exercises because those are your main learning opportunity. Let's dive in.
+
+Work sharing directives and synchronisation of threads will be discussed within few examples. How to collect results from threads will be shown with common reduction clauses. At the end of this week we will present interesting task based parallelism approach. Don’t forget to experiment with exercises because those are your main learning opportunity. Let's dive in.
 
 ## V: Runtime functions
 

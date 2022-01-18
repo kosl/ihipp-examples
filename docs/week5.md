@@ -13,7 +13,7 @@ To better understand the capabilities of GPUs in terms of computing acceleration
 
 As we already pointed out, GPUs were originally designed to accelerate graphics. They excel at operations (such as shading and rendering) on graphical primitives which constitute a 3D graphical object. The main characteristic of these primitives is that they are independent or, in other words, they can be processed independently in a parallel fashion. Thus, GPU acceleration of graphics was designed for the execution of inherently parallel tasks. On the other hand, CPUs are designed to execute the workflow of any general-purpose program, where many parallel tasks may not be involved. These different design principles reflect the fact that GPUs have many more processing units and higher memory bandwidth, while CPUs are characterized by more specialized processing of instructions and faster clock speed rates.
 
-In the figure below (source: nvidia.com) you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
+In the image below you can observe schematics of both CPU and GPU hardware architectures. From the schematics it is evident that:
 
 - a GPU has many more arithmetic logic units or ALUs (green rectangles) than a CPU;
 - a GPU can control simple, highly parallel workloads well (there's a yellow rectangle for every row of green rectangles), contrary to a CPU which can control more complex workloads;
@@ -21,6 +21,7 @@ In the figure below (source: nvidia.com) you can observe schematics of both CPU 
 - a CPU has more cache memory than a GPU.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/CPU_vs_GPU_architecture.png)
+**Source of image: nvidia.com**
 
 Note that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores" (typically more than 100). Each SM has a lot of (L1 cache) registers (32-64 KB), instruction scheduler dispatchers and a very fast shared memory. In the next step we will put everything explained so far into perspective by showing some numbers.
 
@@ -344,9 +345,10 @@ Similarly, modify the Hello world OpenCL example from the previous step to compl
 
 After exploring the GPU architecture and getting to know the principles of GPU programming, we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL. We will present the equivalent OpenCL terminology at the end.
 
-The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the many SMs, and each block contains many threads, mapping onto the cores in an SM. We can see this concept in the picture below (source: nvidia.com).
+The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the many SMs, and each block contains many threads, mapping onto the cores in an SM. We can see this concept in the image below.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/Execution_Model.png)
+**Source of image: nvidia.com**
 
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. We often refer a scalar processor to a GPU "core".
 
@@ -365,9 +367,10 @@ Let's recap everything in terms of the GPU CUDA thread hierarchy with some detai
     - `blockDim`: block dimension in thread units
     - `gridDim`: grid dimension in block units
 
-The picture below (source: nvidia.com) shows an example of a CUDA thread hierarchy with 2D blocks.
+The image below shows an example of a CUDA thread hierarchy with 2D blocks.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//grid-of-thread-blocks.png)
+**Source of image: nvidia.com**
 
 Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index `idx` in the following way:
 
@@ -446,9 +449,10 @@ The GPU OpenCL work-item hierarchy is equivalent to the CUDA thread hierarchy ex
     - `get_local_size`, equivalent to `blockDim`
     - `get_global_id`, equivalent to `blockIdx * blockDim + threadIdx`
 
-The picture below (source: khronos.org) shows an example of an OpenCL work-item hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
+The image below shows an example of an OpenCL work-item hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//ndrange-work-items.png)
+**Source of image: khronos.org**
 
 Like CUDA, we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index `idx` in the following way:
 
@@ -1018,9 +1022,10 @@ The main OpenMP device constructs are:
 - `target`
 - `teams`
 
-By defining a `target` construct, a new target task is generated. When the latter starts, the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not, all target regions associated with the device are executed on the host. The `teams` construct generates a league of thread teams where the master thread of each team executes the region sequentially, as shown on the picture below (source: OpenMP Accelerator Model, IWOMP 2016).
+By defining a `target` construct, a new target task is generated. When the latter starts, the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not, all target regions associated with the device are executed on the host. The `teams` construct generates a league of thread teams where the master thread of each team executes the region sequentially, as shown on the image below.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/OpenMP_execution_model.png)
+**Source of image: OpenMP Accelerator Model, IWOMP 2016**
 
 Some important OpenMP 4.x device constructs are listed in the following table:
 
@@ -1229,9 +1234,10 @@ In the exercise of the previous step, you have profiled the GPU Riemann sum code
 
 The profiling results of the first version (with one kernel) of the GPU Riemann sum codes give you the idea of what should be avoided in GPU programming: time-consuming memory transfers from host (CPU) to device (GPU) and vice versa. The transfer of the array of trapezium medians to the host took 5 seconds, more than half of the total execution time of the code! This is hardly a surprise since an array of 1 billion double-precision float elements occupies more than 8 GB in host or device memory.  It should be noted that the manipulation of such big arrays is not a good approach in GPU programming: first, the GPU global memory is limited, and second, access to this memory even by the GPU itself is quite slow. We used such a big array only for demonstration purposes.
 
-But how can we get rid of the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved, this is not the case in CUDA or OpenCL since they have to be done programmatically. One approach or a variant of sum reduction is shown in the picture below (source: nvidia.com).
+But how can we get rid of the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved, this is not the case in CUDA or OpenCL since they have to be done programmatically. One approach or a variant of sum reduction is shown in the image below.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/sum_reduction.png)
+**Source of image: nvidia.com**
 
 Let’s assume we have an array of 16 elements in shared memory. How can we add these elements in terms of sum reduction?
 
