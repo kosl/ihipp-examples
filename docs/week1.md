@@ -83,8 +83,8 @@ First, have a look at the notebook with both the C and Fortran codes. Notice the
 Run both codes in the notebook:
 
 [Hello_world_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/Hello_world_OpenMP.ipynb)
-
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Hello_world_OpenMP.ipynb)
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gNK53eCnhFteBtzexMCf5wj7DKvawu2k)
 
 Are the outputs as you expected?
 
@@ -391,6 +391,8 @@ Now, compare the OpenMP code in Fortran with the code in C and identify the diff
 Explore the whole Fortran code in the notebook and run it. Are the results the same as in C?
 
 [for_DO_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/for_DO_OpenMP.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/for_DO_OpenMP.ipynb)
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/17Db1nJXnuVDKfcPIQtQn8011gkuxyO7n)
 
 ## MPI overview
 ### A/V: Brief intro to MPI
@@ -580,6 +582,8 @@ In this exercise, you will be able to run an MPI "Hello World!" example in **C**
 Compare the codes of the different languages in the notebook:
 
 [Hello_world_MPI.ipynb](https://github.com/kosl/ihipp-examples/blob/master/MPI/Hello_world_MPI.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=MPI/Hello_world_MPI.ipynb)
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1nLztxfsw11_1O-t3622-TxD2b_9C83rK)
 
 How is the MPI library included in the different languages?
 
@@ -628,6 +632,8 @@ In this syntax, the first number indicates the number of blocks and the second n
 Run this example in the following notebook:
 
 [Hello_World_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_GPU.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=GPU/Hello_World_GPU.ipynb)
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1FYIsnTXbvmPcXtZvS2HVimDVSsqSKOE9)
 
 Switch the numbers in the triple chevron syntax, i.e., `hello<<<4, 1>>>()` and run the example again. Is the result what you expected?
 
