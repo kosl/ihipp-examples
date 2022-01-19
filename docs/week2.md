@@ -99,7 +99,10 @@ Now go to the exercise, try it out and check if your answers were correct.
 
 
 [Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Runtime-functions.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/158oODa_ZJFLhynei0jZBQkxPNUcbLlaN)
 
 
 ### 1.2. Variables and constructs
@@ -179,8 +182,10 @@ Take a moment and try to understand what is happening in the code
 above. Note the usage of the construct and runtime functions defined earlier in the article.
 
 [Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Runtime-functions.ipynb)
 
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/158oODa_ZJFLhynei0jZBQkxPNUcbLlaN)
 
 ## 1.3 V: Clauses and directive format
 
@@ -243,7 +248,10 @@ int main ()
 
 
 [Jupyter notebook: Conditionals](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Conditionals.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Conditionals.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/16bmVcGqPCfqTgFdAMVsiPkiwKqilLAam)
 
 ## Clauses
 
@@ -317,7 +325,10 @@ modified by multiple threads? Why?
 
 
 [Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Clauses.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1s-lhP8bCBmZW1UDyN76Zuu8jAK4NRyxk)
 
 ## 1.4. D: Clauses
 
@@ -358,8 +369,10 @@ Take a moment and try to understand what is happening in the code above.
 Now go to the exercise, try it out and check if your answers were correct. 
 
 [Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Clauses.ipynb)
 
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1s-lhP8bCBmZW1UDyN76Zuu8jAK4NRyxk)
 
 ## 1.5. Exercise: Parallel region
 
@@ -412,7 +425,10 @@ Don't worry if you always get a correct output, because a compiler may use a pri
 * If compiled with OpenMP, the program should output »hello world« and the ID of each thread. 
 
 [Jupyter notebook: Exercise: Parallel region](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Parallel-region.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Parallel-region.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1IePNYHd7q_BYSsR-1qnoBHBzOTjYSx7q)
 
 ## 1.6 Q: Quiz on OpenMP basics
 
@@ -563,8 +579,10 @@ Here we can see that if we are working on two threads with 10 iterations, then t
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
 
 [Jupyter notebook: Worksharing constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Worksharing-Constructs.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Worksharing-Constructs.ipynb)
 
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Wk-pDfxDRnQHWqXtw-Oa8BcAnwxN1P4D)
 
 ## 2.3 Synchronization
 
@@ -613,7 +631,10 @@ We owe it to the critical clause that only one thread is executed at a time for 
 Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
 
 [Jupyter notebook: Synchronization constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Synchronization-Constructs.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Synchronization-Constructs.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/15V3_fsdzBRIEW0X5t3v-ZrttxLxU_00c)
 
 ## 2.4 Nesting and binding
 
@@ -775,7 +796,10 @@ Compare the CPU time for the template program and CPU time for our solution. Hav
 * Faster execution of the parallel program that calculates the correct value of Pi.
 
 [Jupyter notebook: Exercise: Compute pi](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Compute-Pi.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/14BgCGwH-SYoCfz14s61gjhDNZY-xHI2E)
 
 ## 2.6 Q: Do you understand worksharing directives?
 
@@ -942,7 +966,10 @@ Take a moment and try to guess the values of variables after the parallel region
 `var_lastprivate` is updated in the last iteration of the foor loop to use after the parallel region. 
 
 [Jupyter notebook: Data scope](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Data-scope.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Data-scope.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1kpuE27zbDh6hWl34udxwYLUqbktZ2Zrq)
 
 ## 3.2 Reduction clause
 
@@ -992,7 +1019,10 @@ int main()
 The reduction variable is `sum` and the reduction operation is `+`.  The reduction does the operation automatically. It produces a private variable `sum` inside the loop and in the end it sums up the private partial sum to the global variable. 
 
 [Jupyter notebook: Combined Constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Combined-Constructs.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Combined-Constructs.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1VoLZWplaXTsHTS_BVT1dKTC915CUmEG_)
 
 ## 3.3 Exercise: Sum and substract
 
@@ -1040,7 +1070,10 @@ Then answer this:
 * What happens when we try to make people "shared"? Why can't you?
 
 [Jupyter notebook: Reduction](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Reduction.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Reduction.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Dbl9FSZUWN5UGbHKYfyVnqCseHOF4ldH)
 
 ## 3.4 Combined parallel worksharing directives
 
@@ -1081,7 +1114,10 @@ Go to the exercise and remove the critical directive and the additional partial 
 Now change the parallel region so you use the combined construct parallel for and compile.
 
 [Jupyter notebook: Exercise: Compute pi again](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi-again.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Compute-Pi-again.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1nMgkNspADemJA1aeYeJH1mL1ic-duEwW)
 
 ## 3.6. Exercise: Heat transfer
 
@@ -1244,7 +1280,10 @@ Now the parallel version should be a little bit faster. The reason for only a sl
 
 
 [Jupyter notebook: Exercise: Heat](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Heat.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Heat.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Pmrkef-YyYN6MhYEJYzSPjGoJ5H1oxbD)
 
 ## 3.7 Q: Do you understand combined constructs?
 
@@ -1496,7 +1535,10 @@ recursive computation.
 Go to the example to see it being done step by step and try it out for yourself. 
 
 [Jupyter notebook: Example: Fibonacci](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Fibonacci.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Fibonacci.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1mpZzd1bNWMm2yCzzRrM7XgPN_AhyvBuw)
 
 ## 4.4. Exercise: Traversing of a tree
 
@@ -1517,7 +1559,10 @@ Parallelize the provided program using parallel region, tasks and other directiv
 Did the parallelization give faster results?
 
 [Jupyter notebook: Exercise: Traversing of a tree](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Traversing-tree.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Traversing-tree.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1UZR_WXqV8BWOKOOZaugeIXxAeVlU4rMJ)
 
 ## 4.5 Q: Quiz on OpenMP tasking
 
