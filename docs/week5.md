@@ -697,7 +697,7 @@ The executable can be run with:
 !./vector_add_cuda
 ```
 
-Hardware design, number of cores, cache size, and supported arithmetic instructions are different for different GPU models. Every NVIDIA GPU supports a compute capability according to its microarchitecture, e.g., the Tesla V100 (Volta microarchitecture) supports CUDA compute capabilities up to 7.0 (see the output in Step 5.3). The above code can be compiled specifically for the V100 in the following way:
+Hardware design, number of cores, cache size, and supported arithmetic instructions are different for different GPU models. Every NVIDIA GPU supports a compute capability according to its microarchitecture, e.g., the Tesla V100 (Volta microarchitecture) supports CUDA compute capabilities up to 7.0 (see the output in GPUs by numbers). The above code can be compiled specifically for the V100 in the following way:
 
 ```
 !nvcc -arch=sm_70 -gencode=arch=compute_70,code=sm_70 -o vector_add_cuda vector_add_cuda.cu
@@ -785,7 +785,7 @@ source_size = fread( source_str, 1, MAX_SOURCE_SIZE, fp);
 fclose( fp );
 ~~~
 
-These lines basically load the OpenCL kernel `vector_add` for vector addition (shown in Step 5.10)
+These lines basically load the OpenCL kernel `vector_add` for vector addition (shown in Vector addition on GPU)
 
 ~~~c
 __kernel void vector_add(__global double *a, __global double *b, __global double *out, int n) {
@@ -1269,7 +1269,7 @@ for (int size = block_size/2; size>0; size/=2) {
 
 The variable `block_size` is the initial size of the array on which sum reduction is performed. On every next iteration, striding is reduced by half (`size/=2`). Every thread `idx` adds up two elements in the array strided by the current `size` to an element `r[idx]` of the array `r` in shared memory. For synchronization of threads in the block, `__syncthreads()` is used.
 
-Because the block size on the GPU is limited (maximum number of threads per block) to 1024 (see Step 5.3), we can use an array of maximum 1024 elements to perform parallel reduction. If we have to sum up an array of more than 1024 elements, we must use more than one block or reduce the array in global memory to an array in shared memory. The latter can be done, e.g., by:
+Because the block size on the GPU is limited (maximum number of threads per block) to 1024 (see GPUs by numbers), we can use an array of maximum 1024 elements to perform parallel reduction. If we have to sum up an array of more than 1024 elements, we must use more than one block or reduce the array in global memory to an array in shared memory. The latter can be done, e.g., by:
 
 ~~~c
 int idx = threadIdx.x;
@@ -1447,7 +1447,7 @@ You already know how to use the profiling tool `nvprof`, e.g., for the CUDA Riem
 $ nvprof ./riemann_cuda_double_reduce
 ```
 
-you obtained the following output in command line (exercise in Step 5.19 ):
+you obtained the following output in command line (see the previous step Profiling of the Riemann sum codes with two GPU kernels):
 
 ```
 
