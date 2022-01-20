@@ -25,6 +25,10 @@ In the image below you can observe schematics of both CPU and GPU hardware archi
 
 Note that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores" (typically more than 100). Each SM has a lot of (L1 cache) registers (32-64 KB), instruction scheduler dispatchers and a very fast shared memory. In the next step we will put everything explained so far into perspective by showing some numbers.
 
+See also:
+
+[GPU architecture description](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html)
+
 ## 5.3 E: GPUs by numbers
 
 Desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how do such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
@@ -170,6 +174,11 @@ To conclude, both cards share the same technology but consumer-grade ones are qu
 
 We have compared only GPUs of one manufacturer (NVIDIA). Similar characteristics also apply to consumer-grade and professional cards of other manufacturers, e.g., AMD.
 
+See also:
+
+[TOP 500 list](https://www.top500.org/)
+[MARCONI100 cluster](https://www.hpc.cineca.it/hardware/marconi100)
+
 ## 5.4 Exer.: Information and compute capabilities of a GPU
 
 In this exercise, you will check the information and compute capabilities of the GPU available for you in the current session of Colab.
@@ -226,6 +235,10 @@ Many solutions exist for programming GPUs and we will talk about the two most us
 Another solution is OpenCL (Open Computing Language) which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA) and is now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming/execution model is similar to CUDA, it is more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and in reality oriented to heterogeneous computing. In principle, that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's latest standard is currently at 3.0. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is still offered only for OpenCL 1.2.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/CUDA_OpenCL.png)
+
+See also:
+
+[CUDA Toolkit Documentation ](https://docs.nvidia.com/cuda/index.html)
 
 ## 5.7 E: Hello world on GPU
 
@@ -1462,16 +1475,16 @@ CUDA:
 
 - **nvprof**: command line profiling tool from CUDA toolkit (deprecated in CUDA 11)
 - **nvvp**: visual profiler (GUI) tool from CUDA toolkit (deprecated in CUDA 11)
-- **Nvidia Nsight Systems**
-- **TAU** (Tuning and Analysis Utilities): open source tool for profiling and tracing
-- other tools: **vampir**, **SCALASCA** (for large scale applications)...
+- [**Nvidia Nsight Systems**](https://developer.nvidia.com/nsight-systems)
+- [**TAU** (Tuning and Analysis Utilities)](http://www.cs.uoregon.edu/research/tau/home.php): open source tool for profiling and tracing
+- other tools: [**Vampir**](https://vampir.eu/), [**Scalasca**](https://www.scalasca.org/) (for large scale applications)...
 
 OpenCL:
 
 - on NVIDIA cards: **OpenCL profiling not supported since CUDA 8**
-- on AMD cards: OpenCL profiling with **Radeon GPU profiler**
+- on AMD cards: OpenCL profiling with [**Radeon GPU profiler**](https://gpuopen.com/rgp/)
 - **TAU** (Tuning and Analysis Utilities): open source tool for profiling and tracing
-- other tools: **vampir**, **Intel VTune Amplifier**...
+- other tools: **Vampir**, [**Intel VTune Profiler**](https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html#gs.mgnxel)...
 
 ### Profiling and tracing of CUDA codes
 
@@ -1527,7 +1540,7 @@ One can observe from the traces that the kernel `reducerSum` is executed after t
 
 86000005646/172.91868*1000/10^9 = 497.34 GFlops
 
-You can then compare this performance to the theoretical FP64 (double) performance of 1371 GFlops for the Tesla K80 GPU (on which the CUDA program was executed) and conclude the efficacy of the code.
+You can then compare this performance to the theoretical FP64 (double) performance of 1371 GFlops for the Tesla K80 GPU (on which the CUDA program was executed) and determine the efficacy of the code.
 
 As already pointed out, the tools `nvprof` and `nvvp` are already deprecated in CUDA 11 and will be discontinued. They are replaced by Nvidia Nsight Systems. The equivalent of `nvprof` in the command line is `nsys`. One can profile the CUDA Riemann sum code with two kernels in the following way:
 
@@ -1564,7 +1577,7 @@ The equivalent of `nvvp` is `nsys-ui`. By typing in the command line
 $ nsys-ui
 ```
 
-the Nsight Systems GUI will be invoked. One can then load the previously generated report `report1.qdrep` or run the CUDA executable to visualize traces. The picture below shows the traces for the Riemann sum code with two kernels visualized by the Nsight Systems GUI.
+the Nsight Systems GUI will be invoked. One can then load the previously generated report `report1.qdrep` to visualize traces. The picture below shows the traces for the Riemann sum code with two kernels visualized by the Nsight Systems GUI.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/nsys-ui_trace.png)
 
