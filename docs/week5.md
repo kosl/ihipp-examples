@@ -1593,39 +1593,39 @@ NODE 0;CONTEXT 0;THREAD 1:
 %Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
               msec   total msec                          usec/call
 ---------------------------------------------------------------------------------------
-100.0      0.00825            8           1           3       8643 .TAU application
- 77.5            6            6           1           0       6697 reducerSum
- 22.4            1            1           1           0       1935 medianTrapezium
-  0.0        0.003        0.003           1           0          3 ReadBuffer
+100.0       0.0165          767           1           3     767448 .TAU application
+ 75.3          577          577           1           0     577820 reducerSum
+ 24.7          189          189           1           0     189608 medianTrapezium
+  0.0      0.00275      0.00275           1           0          3 ReadBuffer
 
-FUNCTION SUMMARY (mean):
+FUNCTION SUMMARY (total):
 ---------------------------------------------------------------------------------------
 %Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
               msec   total msec                          usec/call
 ---------------------------------------------------------------------------------------
-100.0            4          578           1          17     578860 .TAU application
- 78.9          456          456         0.5           0     913667 cl_int clBuildProgram(cl_program, cl_uint, const cl_device_id *, const char *, void (*)(cl_program, void *), void *) C
- 15.6           90           90         0.5           0     180796 cl_context clCreateContext(const cl_context_properties *, cl_uint, const cl_device_id *, void (*)(const char *, const void *, size_t, void *), void *, cl_int *) C
-  3.2           18           18         0.5           0      37437 cl_int clGetPlatformIDs(cl_uint, cl_platform_id *, cl_uint *) C
-  0.7            4            4         0.5           0       8359 cl_int clEnqueueReadBuffer(cl_command_queue, cl_mem, cl_bool, size_t, size_t, void *, cl_uint, const cl_event *, cl_event *) C
-  0.6            3            3         0.5           0       6697 reducerSum
-  0.2        0.968        0.968         0.5           0       1935 medianTrapezium
-  0.1        0.294        0.294           1           0        294 cl_int clEnqueueNDRangeKernel(cl_command_queue, cl_kernel, cl_uint, const size_t *, const size_t *, const size_t *, cl_uint, const cl_event *, cl_event *) C
-  0.0       0.0175       0.0175         0.5           0         35 cl_int clReleaseProgram(cl_program) C
-  0.0        0.013        0.013         0.5           0         26 cl_command_queue clCreateCommandQueue(cl_context, cl_device_id, cl_command_queue_properties, cl_int *) C
-  0.0        0.009        0.009           1           0          9 cl_kernel clCreateKernel(cl_program, const char *, cl_int *) C
-  0.0       0.0055       0.0055           1           0          6 cl_mem clCreateBuffer(cl_context, cl_mem_flags, size_t, void *, cl_int *) C
-  0.0        0.005        0.005         0.5           0         10 cl_program clCreateProgramWithSource(cl_context, cl_uint, const char **, const size_t *, cl_int *) C
-  0.0       0.0035       0.0035         0.5           0          7 cl_int clFlush(cl_command_queue) C
-  0.0        0.003        0.003         0.5           0          6 cl_int clFinish(cl_command_queue) C
-  0.0        0.002        0.002         0.5           0          4 cl_int clGetDeviceIDs(cl_platform_id, cl_device_type, cl_uint, cl_device_id *, cl_uint *) C
-  0.0        0.002        0.002         0.5           0          4 cl_int clReleaseContext(cl_context) C
-  0.0        0.002        0.002         3.5           0          1 cl_int clSetKernelArg(cl_kernel, cl_uint, size_t, const void *) C
-  0.0       0.0015       0.0015         0.5           0          3 ReadBuffer
-  0.0       0.0015       0.0015           1           0          2 cl_int clReleaseKernel(cl_kernel) C
-  0.0        0.001        0.001           1           0          1 cl_int clGetCommandQueueInfo(cl_command_queue, cl_command_queue_info, size_t, void *, size_t *) C
-  0.0        0.001        0.001         0.5           0          2 cl_int clReleaseCommandQueue(cl_command_queue) C
-  0.0       0.0005       0.0005           1           0          0 cl_int clGetKernelInfo(cl_kernel, cl_kernel_info, size_t, void *, size_t *) C
+100.0           20        2,035           2          34    1017668 .TAU application
+ 37.6          766          766           1           0     766036 cl_int clEnqueueReadBuffer(cl_command_queue, cl_mem, cl_bool, size_t, size_t, void *, cl_uint, const cl_event *, cl_event *) C
+ 28.4          577          577           1           0     577820 reducerSum
+ 12.7          258          258           1           0     258078 cl_int clBuildProgram(cl_program, cl_uint, const cl_device_id *, const char *, void (*)(cl_program, void *), void *) C
+  9.3          189          189           1           0     189608 medianTrapezium
+  7.9          160          160           1           0     160755 cl_context clCreateContext(const cl_context_properties *, cl_uint, const cl_device_id *, void (*)(const char *, const void *, size_t, void *), void *, cl_int *) C
+  2.0           41           41           1           0      41175 cl_int clGetPlatformIDs(cl_uint, cl_platform_id *, cl_uint *) C
+  1.0           21           21           2           0      10596 cl_int clEnqueueNDRangeKernel(cl_command_queue, cl_kernel, cl_uint, const size_t *, const size_t *, const size_t *, cl_uint, const cl_event *, cl_event *) C
+  0.0        0.279        0.279           1           0        279 cl_int clReleaseProgram(cl_program) C
+  0.0        0.025        0.025           2           0         12 cl_kernel clCreateKernel(cl_program, const char *, cl_int *) C
+  0.0        0.024        0.024           1           0         24 cl_command_queue clCreateCommandQueue(cl_context, cl_device_id, cl_command_queue_properties, cl_int *) C
+  0.0        0.011        0.011           2           0          6 cl_int clReleaseKernel(cl_kernel) C
+  0.0        0.011        0.011           2           0          6 cl_mem clCreateBuffer(cl_context, cl_mem_flags, size_t, void *, cl_int *) C
+  0.0         0.01         0.01           1           0         10 cl_int clFlush(cl_command_queue) C
+  0.0        0.009        0.009           1           0          9 cl_program clCreateProgramWithSource(cl_context, cl_uint, const char **, const size_t *, cl_int *) C
+  0.0        0.006        0.006           1           0          6 cl_int clReleaseCommandQueue(cl_command_queue) C
+  0.0        0.006        0.006           7           0          1 cl_int clSetKernelArg(cl_kernel, cl_uint, size_t, const void *) C
+  0.0        0.004        0.004           1           0          4 cl_int clFinish(cl_command_queue) C
+  0.0        0.004        0.004           2           0          2 cl_int clGetKernelInfo(cl_kernel, cl_kernel_info, size_t, void *, size_t *) C
+  0.0        0.003        0.003           1           0          3 cl_int clReleaseContext(cl_context) C
+  0.0      0.00275      0.00275           1           0          3 ReadBuffer
+  0.0        0.002        0.002           1           0          2 cl_int clGetDeviceIDs(cl_platform_id, cl_device_type, cl_uint, cl_device_id *, cl_uint *) C
+  0.0        0.001        0.001           2           0          0 cl_int clGetCommandQueueInfo(cl_command_queue, cl_command_queue_info, size_t, void *, size_t *) C
 ```
 
 The GUI profiling utility can be invoked with:
@@ -1636,9 +1636,9 @@ $ paraprof
 
 The visualisation of profiles (threads), i.e., one profile for OpenCL API calls and the other for OpenCL kernels, can be seen on the pictures below.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_opencl_1.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_opencl_01_new.png)
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_opencl_2.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_opencl_02_new.png)
 
 Tracing of the OpenCL Riemann sum code with two kernels can be done with TAU in the following way. Again, we first generate traces (`tautrace.0.0.0.trc` and `tautrace.0.0.1.trc`) with:
 
@@ -1656,9 +1656,9 @@ $ jumpshot tau.slog2
 
 On the pictures below you can see the traces with the description legend.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/jumpshot_riemann_opencl_double_reduce_traces.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_jumpshot_trace_new.png)
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/jumpshot_riemann_opencl_double_reduce_legend_wo-values.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/tau_jumpshot_legend_new.png)
 
 The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case of the trace showing CUDA kernels.
 
