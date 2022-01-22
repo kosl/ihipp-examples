@@ -21,6 +21,7 @@ In the image below you can observe schematics of both CPU and GPU hardware archi
 - a CPU has more cache memory than a GPU.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/CPU_vs_GPU_architecture.png)
+
 **Source of image: nvidia.com**
 
 Note that the term "GPU core" is more or less a marketing term. The equivalent of a CPU core in a GPU is a streaming multiprocessor (SM) with many ALUs or "cores" (typically more than 100). Each SM has a lot of (L1 cache) registers (32-64 KB), instruction scheduler dispatchers and a very fast shared memory. In the next step we will put everything explained so far into perspective by showing some numbers.
@@ -371,6 +372,7 @@ After exploring the GPU architecture and getting to know the principles of GPU p
 The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the many SMs, and each block contains many threads, mapping onto the cores in an SM. We can see this concept in the image below.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/Execution_Model.png)
+
 **Source of image: nvidia.com**
 
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. We often refer a scalar processor to a GPU "core".
@@ -393,6 +395,7 @@ Let's recap everything in terms of the GPU CUDA thread hierarchy with some detai
 The image below shows an example of a CUDA thread hierarchy with 2D blocks.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//grid-of-thread-blocks.png)
+
 **Source of image: nvidia.com**
 
 Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index `idx` in the following way:
@@ -475,6 +478,7 @@ The GPU OpenCL work-item hierarchy is equivalent to the CUDA thread hierarchy ex
 The image below shows an example of an OpenCL work-item hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images//ndrange-work-items.png)
+
 **Source of image: khronos.org**
 
 Like CUDA, we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index `idx` in the following way:
@@ -1062,6 +1066,7 @@ The main OpenMP device constructs are:
 By defining a `target` construct, a new target task is generated. When the latter starts, the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not, all target regions associated with the device are executed on the host. The `teams` construct generates a league of thread teams where the master thread of each team executes the region sequentially, as shown on the image below.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/OpenMP_execution_model.png)
+
 **Source of image: OpenMP Accelerator Model, IWOMP 2016**
 
 Some important OpenMP 4.x device constructs are listed in the following table:
@@ -1280,6 +1285,7 @@ The profiling results of the first version (with one kernel) of the GPU Riemann 
 But how can we get rid of the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved, this is not the case in CUDA or OpenCL since they have to be done programmatically. One approach or a variant of sum reduction is shown in the image below.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/sum_reduction.png)
+
 **Source of image: nvidia.com**
 
 Let’s assume we have an array of 16 elements in shared memory. How can we add these elements in terms of sum reduction?
