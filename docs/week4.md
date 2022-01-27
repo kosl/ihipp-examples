@@ -8,38 +8,43 @@ A better approach to parallelisation is to overlap computing and communication w
 
 ## 1.1 V: Non Blocking communications
 
-We saw in the previous week that the types of communication in MPI can be divided by two arguments, based on the number of processes involved so
+We saw in the previous week that the types of communication in MPI can be divided by two arguments, based on the number of processes involved:
+
 - Point-to-Point Communication
 - Collective Communication
 
-And another way of dividing would be relating to the completion of an operation, i.e.,
+And another way of dividing would be relating to the completion of an operation, i.e.:
+
 - Blocking Operations
 - Non-Blocking Operations
 
-We have seen some problems in the previous modes of communication we have learnt until now. For instance, in the Ring example, where we have a cyclic distribution of processes that we would like to send messages along the ring, we realised that  blocking routines are somehow not suitable for this. The problem is that for the second or third process in order to actually receive something, it would have to wait for the message to be sent to the first one and so on. So evidently we are losing time and not producing a good parallel application. 
+We have seen some problems in the previous modes of communication we have learnt until now. For instance, in the Ring example, where we have a cyclic distribution of processes that we would like to send messages along the ring, we realised that blocking routines are somehow not suitable for this. The problem is that for the second or third process in order to actually receive something, it would have to wait for the message to be sent to the first one and so on. So, evidently we are losing time and not producing a good parallel application.
 
 ![Cyclic distribution](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S18_1.png)
 
-While using blocking routines, when we profile the code it happens quite often that we either have some problem with the deadlocks that we discussed previously, i.e., either there is some 'sent' data that we just never received or vice versa. Even though this situation can be solved, however, there is another more complex problem that can arise. Suppose in the previous example, if we would do it using blocking communication. In that case we would basically 'serialize' our code (see image below) and as we can see some of the processes would need to wait; our resources are wasted. This clarifies the need for some other clever way to send messages via this ring without so much waiting time and this is where the non blocking communication comes into play. 
+While using blocking routines, when we profile the code it happens quite often that we either have some problem with the deadlocks, that we discussed previously, i.e., either there is some *sent* data that we just never received or vice versa. Even though this situation can be solved, however, there is another more complex problem that can arise. Suppose in the previous example, if we would do it using blocking communication. In that case we would basically *serialize* our code (see image below) and as we can see some of the processes would need to wait; our resources are wasted. This clarifies the need for some other clever way to send messages via this ring without so much waiting time and this is where the non-blocking communication comes into play. 
 
 ![Serialization](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S18_2.png)
 
-As we already saw in the previous week that non-blocking routine returns immediately and allows the sub-program to perform other work so we can do some work between and this is useful because, for instance, we can send a message, do some operations, and then we can receive the message. So these three parts are essential in the Non Blocking communications. 
+As we already saw in the previous week, that non-blocking routine returns immediately and allows the sub-program to perform other work so we can do some work between and this is useful because, for instance, we can send a message, do some operations, and then we can receive the message. So, these three parts are essential in the non-blocking communications.
 
-So Non Blocking communication is divided into three phases.
+So, non-blocking communication is divided into three phases:
 
-- First phase is obviously to initiate non-blocking communication. We will distinguish all imperative which are non blocking with the capital "I", which means immediately. So immediately after MPI and underscore there will be the capital 'I' so MPI_Isend and MPI_Irecv. So the protocols will look like
+- First phase is obviously to initiate non-blocking communication. We will distinguish all imperative which are non-blocking with the capital `I`, which means immediately. So, immediately after MPI and underscore there will be the capital `I`: `MPI_Isend` and `MPI_Irecv`. The protocols will look like:
 
 ~~~c
 MPI_Isend (void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm, MPI_Request *request);
+~~~
 
-//and
+and
 
+~~~c
 MPI_Irecv (void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Request *request);
 ~~~
 
 - Then we can do some other work because when we use this routine, it does not block us, so we can do some operations after this. However, later on we actually have to check whether the message has been received.
-- To do this final phase we need to wait for nonblocking communication to complete and we do this by calling the MPI_Wait function. This completes the whole process. This request is just another struct in MPI similar to 'status', so we just define it as similar to status and then put on the pointer there. The prototype of this function looks like
+
+- To do this final phase we need to wait for non-blocking communication to complete and we do this by calling the `MPI_Wait` function. This completes the whole process. This request is just another struct in MPI similar to *status*, so we just define it as similar to status and then put on the pointer there. The prototype of this function looks like:
 
 ~~~c
 MPI_Wait (MPI_Request *request, MPI_Status *status);
@@ -51,11 +56,11 @@ We will understand this more clearly with the help of the following two examples
 
 ![Example](https://ugc.futurelearn.com/uploads/assets/90/47/9047bd18-8486-4259-b346-7a890e8d9b81.png) *would be ideal as an animation*
 
-In this example let us assume that all the processes would like to share some information along the ring. As the picture shows, process zero would like to send something to one, six would like something to zero and so on. The idea here is that first we initialize the non blocking send and we send the message. So, primarily we initiate non-blocking send to the right neighbour. As we know in non blocking communication after we have done that, we can do some work. In our case we will receive the message via the classical receive function. So, in this ring example, receive the message from the left neighbour. And finally at the end, we have to call the MPI_Wait function in order to check if everything was done and for the non-blocking send to complete. 
+In this example let us assume that all the processes would like to share some information along the ring. As the picture shows, process `0` would like to send something to `1`, `6` would like something to `0` and so on. The idea here is that first we initialize the non-blocking send and we send the message. So, primarily we initiate non-blocking send to the right neighbour. As we know in non-blocking communication after we have done that, we can do some work. In our case we will receive the message via the classical receive function. So, in this ring example, receive the message from the left neighbour. And finally at the end, we have to call the `MPI_Wait` function in order to check if everything was done and for the non-blocking send to complete. 
 
-Perhaps you can already see it clearly that fundametally it is non blocking in this ring example that helps us, so that every process can start the sending, but at the same time, we can still do something else.
+Perhaps you can already see it clearly that fundamentally it is non-blocking in this ring example that helps us, so that every process can start the sending, but at the same time, we can still do something else.
 
-In similiar ways we can initiate the non blocking receive. So in our ring example it would mean that we initiate non-blocking receive from the left neighbour. This would imply that we will receive something, but maybe not now, maybe later, and we do some work. In this case it would mean sending information to the following receiver so, send the message to the right neighbour. Finally, we would call the MPI_Wait function to wait for non-blocking receive to complete.
+In similar ways we can initiate the non-blocking receive. So in our ring example it would mean that we initiate non-blocking receive from the left neighbour. This would imply that we will receive something, but maybe not now, maybe later, and we do some work. In this case it would mean sending information to the following receiver so, send the message to the right neighbour. Finally, we would call the `MPI_Wait` function to wait for non-blocking receive to complete.
 
 Let's try to further consolidate these ideas by implementing them in the following exercise!
 

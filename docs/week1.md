@@ -609,7 +609,7 @@ For example, the executables produced as shown in the previous section can be ru
 
 ### E: MPI Hello World!
 
-In this exercise, you will be able to run an MPI "Hello World!" example in **C**, **Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no communication between the processes, so that the compiled code is run on many processors independently. You will upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will communicate with the use of MPI calls.
+In this exercise, you will be able to run an MPI "Hello World!" example in **C**, **Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no communication between the processes, so that the compiled code is run on many processors independently. You will later upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will communicate with the use of MPI calls.
 
 Compare the codes of the different languages in the notebook:
 
@@ -621,7 +621,7 @@ Compare the codes of the different languages in the notebook:
 
 How is the MPI library included in the different languages?
 
-Compile and run the codes. Are the results as you expected? Also run the code(s) with the number of processors equal 128. What is the result?
+Compile and run the codes. Are the results as you expected? Also run the code(s) with the number of processors equal to 128. What is the result?
 
 ## Accelerators overview
 ### A: Graphics accelerators
@@ -645,9 +645,9 @@ Computing acceleration can be achieved with:
 
 ### E: GPU Hello World
 
-In this exercise, you will run a GPU "Hello World!" example in **CUDA C** and **pyCUDA**, CUDA extensions to C and Python, respectively. CUDA is a GPU programming extension developed exclusively for NVIDIA GPUs.
+In this exercise, you will run a GPU "Hello World!" example in **CUDA C** and **PyCUDA**, CUDA extensions to C and Python, respectively. CUDA is a GPU programming extension developed exclusively for NVIDIA GPUs.
 
-Parallel codes that are off-loaded to GPUs are run in so-called kernels.  In CUDA C, we define a kernel with the `__global__` prefix, e.g., for the "Hello World!" we can define the following kernel `hello()`:
+Parallel codes that are off-loaded to GPUs are run in so-called kernels.  In CUDA C, we define a kernel with the `__global__` prefix, e.g., for the "Hello World!" example we can define the following kernel `hello()`:
 
 ~~~c
 __global__ void hello()
@@ -673,11 +673,17 @@ Run this example in the following notebook:
 
 [![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1FYIsnTXbvmPcXtZvS2HVimDVSsqSKOE9)
 
-Switch the numbers in the triple chevron syntax, i.e., `hello<<<4, 1>>>()` and run the example again. Is the result what you expected?
+Switch the numbers in the triple chevron syntax, i.e.:
 
-Now, compare the CUDA C code to the equivalent in pyCUDA. Can you identify how the triple chevron syntax in C maps to that in Python?
+~~~c
+hello<<<4, 1>>>()
+~~~
 
-You have probably noticed that in pyCUDA, the kernel is wrapped as a string of C code; that is what the CUDA implementation in Python actually is: a wrapper of the CUDA C extension.
+and run the example again. Is the result what you expected?
+
+Now, compare the CUDA C code to the equivalent in PyCUDA. Can you identify how the triple chevron syntax in C maps to that in Python?
+
+You have probably noticed that in PyCUDA, the kernel is wrapped as a string of C code; that is what the CUDA implementation in Python actually is: a wrapper of the CUDA C extension.
 
 Note the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest versions of CUDA (11.x). Note also that the `pycuda` library must be installed in Python, e.g., through `pip`.
 

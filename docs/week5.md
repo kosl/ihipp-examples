@@ -28,7 +28,7 @@ Note that the term "GPU core" is more or less a marketing term. The equivalent o
 
 See also:
 
-[GPU architecture description](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html)
+[GPU architecture](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#from-graphics-processing-to-general-purpose-parallel-computing__gpu-devotes-more-transistors-to-data-processing)
 
 ## 5.3 E: GPUs by numbers
 
@@ -178,6 +178,7 @@ We have compared only GPUs of one manufacturer (NVIDIA). Similar characteristics
 See also:
 
 [TOP 500 list](https://www.top500.org/)
+
 [MARCONI100 cluster](https://www.hpc.cineca.it/hardware/marconi100)
 
 ## 5.4 Exer.: Information and compute capabilities of a GPU
@@ -231,7 +232,7 @@ How does the information you've gotten compare to the GPU characteristics in the
 
 As already mentioned, GPUs serve as accelerators to CPUs, i.e., computationally intensive tasks are off-loaded from CPUs to GPUs. Standard programming languages such as Fortran and C/C++ do not permit such off-loading because they lack addressing distinct memory spaces and don't know the GPU architecture. For that purpose, we need special language extensions that allow GPU programming.
 
-Many solutions exist for programming GPUs and we will talk about the two most used, i.e., CUDA and OpenCL. CUDA (Compute Unified Device Architecture) is a set of extensions for higher-level programming languages (C, C++ and Fortran) developed by NVIDIA for its GPUs. CUDA comes with a developer toolkit for compiling, debugging and profiling programs. It's the first solution for GPU programming (the latest version is 11.4), but unfortunately only GPUs manufactured by NVIDIA support it. 
+Many solutions exist for programming GPUs and we will talk about the two most used, i.e., CUDA and OpenCL. CUDA (Compute Unified Device Architecture) is a set of extensions for higher-level programming languages (C, C++ and Fortran) developed by NVIDIA for its GPUs. CUDA comes with a developer toolkit for compiling, debugging and profiling programs. It's the first solution for GPU programming (the latest version is 11.6), but unfortunately only GPUs manufactured by NVIDIA support it. 
 
 Another solution is OpenCL (Open Computing Language) which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA) and is now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming/execution model is similar to CUDA, it is more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and in reality oriented to heterogeneous computing. In principle, that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's latest standard is currently at 3.0. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is still offered only for OpenCL 1.2.
 
@@ -239,7 +240,9 @@ Another solution is OpenCL (Open Computing Language) which is a standard open-so
 
 See also:
 
-[CUDA Toolkit Documentation ](https://docs.nvidia.com/cuda/index.html)
+[CUDA Toolkit Documentation v11.6.0](https://docs.nvidia.com/cuda/index.html)
+
+[Khronos OpenCL Registry](https://www.khronos.org/registry/OpenCL/)
 
 ## 5.7 E: Hello world on GPU
 
@@ -511,6 +514,12 @@ Can you once again define global work-item indices for a 3D kernel?
 
 Like in CUDA, these indices are defined in a kernel as internal variables and can be used for work-item related computing in OpenCL. You can modify the Hello World OpenCL example to print the global work-item index and experiment with launch parameters along with an `if` clause in the kernel to limit the printout of indices.
 
+See also:
+
+[CUDA Programming Model](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#programming-model)
+
+[OpenCL 1.2 API and C Language Specification ](https://www.khronos.org/registry/OpenCL/specs/opencl-1.2.pdf)
+
 ## 5.10 E: Vector addition on GPU
 
 A standard introductory example for GPU computing is vector addition. We will first show how it is done on a CPU and then on a GPU. In the next two steps, we will use this example to present a step-by-step approach to GPU programming, both in CUDA and OpenCL.
@@ -740,6 +749,8 @@ Hardware design, number of cores, cache size, and supported arithmetic instructi
 
 You can compile and run the CUDA vector addition code in the notebook. Check the output to see if the GPU calculates the vector sum correctly.
 
+[CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html)
+
 ## 5.12 OpenCL step-by-step
 
 In this step, we will look at vector addition in OpenCL in detail. A typical OpenCL program flow basically consists of the same steps as a CUDA program flow, but you will notice that OpenCL is a more low-level programming extension with many calls to the OpenCL API. OpenCL, like CUDA, can also offer shared memory (Shared Virtual Memory) for host and device kernels, thus eliminating costly data transfers between host and device (supported only in OpenCL 2.0 and above). Unfortunately, the NVIDIA GPUs support only OpenCL 1.2 and the before-mentioned features are not available. For that reason, we will follow this standard to explain GPU accelerated programming in OpenCL.
@@ -938,6 +949,14 @@ Of course, OpenCL drivers for the hardware must be installed, generally, as impl
 
 As before, you can compile and run the OpenCL vector addition code in the notebook. Check the output to see if the GPU calculates the vector sum correctly.
 
+[OpenCL 1.2 Reference Pages](https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/man/xhtml/)
+
+[OpenCL 1.2 API and C Language Specification ](https://www.khronos.org/registry/OpenCL/specs/opencl-1.2.pdf)
+
+[OpenCL 1.2 Extensions Specification](https://www.khronos.org/registry/OpenCL/specs/opencl-1.2-extensions.pdf)
+
+[OpenCL 1.2 Quick Reference Card](https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/OpenCL-1.2-refcard.pdf)
+
 ## 5.13 CUDA and OpenCL comparison
 
 To sum up, we will give a side by side comparison of both the GPU programming models discussed so far. We haven't looked at everything that you will find in the comparison tables. Some things we will discuss later in the upcoming steps, for others you can have a look at the documentation for CUDA and OpenCL.
@@ -1036,6 +1055,14 @@ If you compile the code for `N` equal to 1 billion, i.e.
 without optimization the calculation of the Riemann sum will take about 90 seconds. With the `-O3` optimization level flag the calculation with the compiled code will take less than half of the time, about 40 seconds.
 
 But can we do better, e.g., with some parallelization approach like OpenMP? We shall see the answer in the next step.
+
+See also:
+
+[Riemann Sum](https://mathworld.wolfram.com/RiemannSum.html)
+
+[Trapezoidal (Trapezium) Rule](https://mathworld.wolfram.com/TrapezoidalRule.html)
+
+[Normal Distribution Function](https://mathworld.wolfram.com/NormalDistributionFunction.html)
 
 ## 5.16 Exer: Riemann sum with OpenMP
 
@@ -1144,6 +1171,12 @@ You can have a look at the whole code in this notebook:
 [![Riemann_sum_OpenMP_GPU.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Zbum3NETtjJvwzFfOIk3puaf_yMvNWjU)
 
 You can see that the code is compiled with the `-fopenmp` flag as with normal OpenMP codes, but two other flags are added: `-foffload=-lm` for using a specific math library on the GPU and `-fno-stack-protector` to disable buffer overflow checks. The latter flag has to be added on Ubuntu systems, while the former is needed with the GCC compiler. Note that for GCC on Ubuntu a special offloading compiler to NVPTX, e.g., `gcc-8-offload-nvptx` and a plugin for offloading to NVPTX `libgomp-plugin-nvptx1` must be installed. On other systems and with other compilers, e.g., with CLANG/LLVM, other flags are used when compiling OpenMP off-loading to GPU codes. One should also keep in mind that GPU libraries, e.g., CUDA for NVIDIA cards, must be installed for successful off-loading to GPUs with OpenMP or OpenACC.
+
+[IWOMP 2016 Tutorial: OpenMP Accelerator Model](https://iwomp2016.riken.jp/wp-content/uploads/2016/10/tutorial-accelerator.pdf)
+
+[Webinar: Intro to GPU Programming with the OpenMP API](https://www.openmp.org/events/intro-to-gpu-programming-with-the-openmp-api/)
+
+[Offloading Support in GCC](https://gcc.gnu.org/wiki/Offloading)
 
 ## 5.18 E: Riemann sum with one GPU kernel
 
@@ -1299,6 +1332,8 @@ Let’s assume we have an array of 16 elements in shared memory. How can we add 
 - Step 4: In the last iteration, we have Stride = 1 since we have just 2 elements in the array. We just add the values of these elements with IDs 0 and 1 to get the final sum.
 
 This kind of parallel reduction is called sequential addressing. If we have an array of N elements, we can do a parallel reduction in log<sub>2</sub>N steps. Programmatically we can do this kind of reduction with a reversed loop and strided threadID-based indexing. We will show in the next step how this is done in CUDA and OpenCL. We must also explain why reduction should be done with striding in shared memory. As you probably noticed in the comparison tables, the GPUs have different types of memories. Global memory is the slowest, and therefore access to it should be reduced to a minimum. Instead, shared memory (CUDA) or local memory (OpenCL) should be used. This type of memory is much faster than global memory but can be used only in a block of threads (or work-group of work-items). In it, threads or work-items can be synchronized. Striding access to memory is used to achieve coalescing, i.e., combining multiple memory accesses into a single transaction.
+
+[Optimizing Parallel Reduction in CUDA](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf)
 
 ## 5.21 E: Riemann sum with parallel reduction on GPU
 
@@ -1698,7 +1733,7 @@ We are interested in your opinion on the Week 5 content:
 
 ## 5.25 Extra content: GPU programming in Python
 
-In the introductory week you have also run the CUDA "Hello World!" example in Python, i.e., in `pyCUDA`. Both Python wrappers of CUDA and OpenCL exist, although not officially suported. As an extra content we give here Riemann sum scripts (with one kernel) in pyCUDA and pyOpenCL.
+In the introductory week you have also run the CUDA "Hello World!" example in Python, i.e., in PyCUDA. Both Python wrappers of CUDA and OpenCL exist, although not officially suported. As an extra content we give here Riemann sum scripts (with one kernel) in PyCUDA and PyOpenCL.
 
 The scripts are available in this notebook:
 
@@ -1708,16 +1743,22 @@ The scripts are available in this notebook:
 
 Compare the Python scripts with the appropriate equivalents in C and then run them. How close is their performance to that of the executable C programs?
 
-Notice, that for running the scripts prior installation of the following libraries is needed, i.e., for pyCUDA:
+Notice, that for running the scripts prior installation of the following libraries is needed, i.e., for PyCUDA:
 
 ~~~bash
 !pip -q install pycuda
 ~~~
 
-and for pyOpenCL:
+and for PyOpenCL:
 
 ~~~bash
 !pip -q install pyopencl
 ~~~
+
+See also:
+
+[PyCUDA’s documentation](https://documen.tician.de/pycuda/)
+
+[PyOpenCL’s documentation](https://documen.tician.de/pyopencl/)
 
 ###### tags: GPU
