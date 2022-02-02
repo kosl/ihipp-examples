@@ -1,6 +1,8 @@
 # ihipp-examples
 
-This repository is for Interactive Hands-on Introduction to Parallel Programming using Xeus-Cling notebooks.
+This repository is for Interactive Hands-on Introduction to Parallel Programming
+using OpenMP, MPI, CUDA, OpenCL within "plain" Python 3 notebooks 
+and some Xeus-Cling notebooks for OpenMP and MPI.
 
 Parallel programming in C language consist of OpenMP and MPI examples such as:
 
