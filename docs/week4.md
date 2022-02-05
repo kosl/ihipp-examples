@@ -113,7 +113,10 @@ int main()
 * Do you already have any experience with preventing deadlocks? Which methods have you used in the past? Have you ever thought about serialization?
 
 [Jupyter notebook: Ring2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gwkAnySSUYXafSEfKClISKBsMVKtrNJr)
 
 ## 1.3 V: One sided communication
 
@@ -214,7 +217,10 @@ For this exercise, you will use the **1.** option. So what you need to do is cre
 There are two solutions to substituting nonblocking communication with one-sided communication. Do you have any idea, why would we preffer using MPI_Put instead of MPI_Get? What is your preferred way, and why?
 
 [Jupyter notebook: One sided communication](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1ZT45DqKWiocEHwjDi0ixG7BK1xAhknY1)
 
 ## 1.5 Q: Do you understand advanced communication in MPI?
 
@@ -328,7 +334,10 @@ MPI_THREAD_MULTIPLE
 - Here multiple threads may call MPI, without any restrictions.
 
 [Jupyter notebook: Threading methods](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1EN8Z7EoGvqMFqX_n-46w9iozudNIlIWm)
 
 ## 2.2 Calculate pi! Using MPI_THREAD_FUNNELED
 
@@ -406,7 +415,10 @@ This program was done in the first way of threading methods (MPI + OpenMP).
 * Moving to MPI_THREAD_MULTIPLE does come at a performance price (and programming challenge).
 
 [Jupyter notebook: Compute Pi Funneled](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1CvsmJmEEUMuEC609xneBvgsY5xuioTlF)
 
 ## 2.3 V: Hybrid MPI
 
@@ -635,7 +647,10 @@ You will use a modified pass-around-the-ring program which already includes a st
 3. Use the new datatype in the send and receive routine calls. Currently, the data is send with the description `snd_buf, 2, MPI_INTEGER` which you must modify by using a derived datatype and with a type map of “two integers”. 
 
 [Jupyter notebook: Derived datatypes](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gLUk3OPO01kvWxQ_LpaPI220crE7zZzx)
 
 ## 3.3 V/A: Layout of struct data types
 
@@ -801,7 +816,10 @@ You will use a modified pass-around-the-ring program which already includes a st
 3. Use the new datatype in the send and receive routine calls. 
 
 [Jupyter notebook: Derived datatypes 2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1ZelmLf5ls947WirRkrBMRt2eOmNarmAP)
 
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
@@ -877,7 +895,10 @@ call MPI_Type_commit(send_recv_resized, error)
 ~~~
 
 [Jupyter notebook: Correcting problem with array of structures](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/18vR8NGQuEpwdJcNm6XFOb47U334JUH41)
 
 ## 4.3 V:Parallel file I/O
 
@@ -986,7 +1007,10 @@ When checking if your file is correctly written, you should:
 - use `rm my_file` to remove the file before running the program again because it will rewrite the file
 
 [Jupyter notebook: Write a file in parallel](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/114xdCs1UIvMQefkdaWlP2Ss-U5AfJO2B)
 
 ## Week 4 wrap-up
 
