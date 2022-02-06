@@ -62,7 +62,10 @@ Is it possible for the output of all MPI processes to be in the sequence of the 
 What do you observe when you run the program multiple times? Tell us your answer and thoughts in the comments. 
 
 [Jupyter notebook: Hello world](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1k0QN89_baTmtuejGIz6NYEhLu4EkPa2-)
 
 ## 1.3. V: Messages and communications
 
@@ -265,7 +268,10 @@ else if (rank == 1) { ... }
 > >      I am 0 before send ping
 
 [Jupyter notebook: Ping](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1NmkUmC6Xac1oxsnFoqZHTXxZaLcNP_g7)
 
 ## 2.3 E: Ping pong
 
@@ -300,7 +306,10 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 > >      I am 1 before send pong 
 
 [Jupyter notebook: Ping pong](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/120Ss8Zi2LUfMIY4ikx5TNCFsDB9aBl9R)
 
 ## 2.4 D: 
 
@@ -361,7 +370,10 @@ int main()
 * Why does the serialized solution still deadlock when running with 1 process?
 
 [Jupyter notebook: Ring](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1A1EIOYXizVh1EMzHmvD3vTMyyc4pcz9x)
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
@@ -436,7 +448,10 @@ We can understand these functions better by the following optional exercise.
 (2m0s)
 
 [Jupyter notebook: Dynamic receiving](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1pwiYqvBCmmroZ77vGZJUBEeErUrUjG5W)
 
 ## 2.6 E: (perhaps optional) Dynamic receiving
 
@@ -592,7 +607,10 @@ double MPI_Wtime(void);
 ~~~
 
 [Jupyter notebook: Broadcast](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/19qQY6KoxBSDo7p_g49TIHn6yrrsbTq5B)
 
 ## 3.3 D: What do you observe with broadcast communication?
 
@@ -657,7 +675,10 @@ First, think about how would you solve this exercise without MPI_Scatter and MPI
 * Go to the exercise and look at the provided skeleton. Use `MPI_Scatter` and `MPI_Gather` routines and compute missing final average result to solve the exercise. 
 
 [Jupyter notebook: Scatter and gather](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1LAckEVY0O5xM5lp15nLsTarkg5eIjQTx)
 
 ## 4.Advanced Collective operations
 
@@ -724,7 +745,10 @@ The program takes the following steps:
 * Go to the exercise and rewrite progam using `MPI_Reduce` to compute a global average. 
 
 [Jupyter notebook: Reduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Eth82ImK84qe2OYsWbSlIB_h3igukCi_)
 
 ## 4.3 E: Calculate Pi!
 
@@ -747,7 +771,10 @@ $$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 3. Finally, the sums computed are added together using reduction.
 
 [Jupyter notebook: Compute PI!](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1PQEMtJVwoXkwvFeCZci5oIpbhlTA2TSD)
 
 ## 4.4 V/A: MPI_Allreduce
 
@@ -766,7 +793,10 @@ Since we are already familiar with the reduce function it would be easier for us
 (1m50s)
 
 [Jupyter notebook: Allreduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1-H4kNQde9LmWQ7nv2uAv1G_k9YOsD0uL)
 
 ## 4.5 E: Computing standard deviation
 
@@ -798,7 +828,10 @@ Go to the exercise and rewrite progam using MPI_Reduce and MPI_Allreduce to comp
 We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). Hence we know that `mean = (a+b)/2 = 1/2` and `stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887`. 
 
 [Jupyter notebook: Standard deviation](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
+
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1vv9zplj7y0aeU_2Gz8JsNVXjHiC2EoT0)
 
 ## 4.6 Q: Do you understand collective communication?
 
