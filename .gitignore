@@ -30,5 +30,23 @@ MPI/hello_world
 OpenMP/exercise
 OpenMP/solution
 OpenMP/vector_add
+GPU/riemann_cpu_double
+GPU/riemann_cpu_double_o3
+OpenMP/clauses
+OpenMP/example1
+OpenMP/example2
+OpenMP/fibonacci
+OpenMP/forloop
+OpenMP/reduction
+OpenMP/scope
+OpenMP/sections
+OpenMP/single
+OpenMP/task
+OpenMP/traverse
+hello_world
+test_Q1
+test_Q4
+test_Q5
+w2_test_Q1
 
 
