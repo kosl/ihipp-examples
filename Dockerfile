@@ -13,6 +13,7 @@ ENV HOME /home/${NB_USER}
 # Add a "USER root" statement followed by RUN statements to install system packages using apt-get,
 # change file permissions, etc.
 USER root
+RUN rm -f /opt/conda/lib/libtinfo.so.6 # use system provided terminfo
 # Make sure the contents of our repo are in ${HOME}
 RUN ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 /lib64
 RUN ln -s /opt/conda/x86_64-conda-linux-gnu/sysroot/usr/lib64/libc_nonshared.a /usr/lib64
