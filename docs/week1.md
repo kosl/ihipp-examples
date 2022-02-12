@@ -29,8 +29,9 @@ The lead educator, Leon Kos, HPC developer/consultant at University of Ljubljana
 
 The other educators are:
 
- - Leon Bogdanović is a GPU consultant at University of Ljubljana
  - Matic Brank is an OpenMP consultant at University of Ljubljana
+ - Leon Bogdanović is a GPU consultant at University of Ljubljana
+ - Kim Badovinac is a MSc student in Computer Science at University of Ljubljana
 
 Be sure to view their profiles and follow them so you can keep track in the course discussions.
 
@@ -40,6 +41,25 @@ We will be monitoring your comments and questions, and try to provide helpful fe
 
 The social aspect of an online course is also very important, so please try to interact with your fellow particapants in a constructive way as well.
 
+###  E: Interactive notebook use
+
+In this exercise you will learn how to use Jupyter notebooks interactively. All the examples and exercises in this course will be available in such notebooks. We prepared a platform on which you can run notebooks and experiment with them. Alternatively, the notebooks are also available on Google Colaboratory and some of them on Binder.
+
+Click on the *Launch* button below. You will be taken to a page with the Jupyter notebook on our platform. For every exercise in the course you will be directed to a notebook in such a way. In other type of steps, like articles and videos, notebooks will be embedded at the bottom of every step page.
+
+Follow the guide in the notebook to get acquainted with the platform.
+
+You can also repeat the exercise on Google Colaboratory. There are some slight differences in using Jupyter notebooks on Colab. You must create a Google account to run and use them. You should also save copies of the notebooks in Google Drive by `File -> Save a copy in Drive` and then you can run or modify your local copies at will.
+
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gNK53eCnhFteBtzexMCf5wj7DKvawu2k)
+
+You can also access the exercise on Binder. Note that the Binder service can take some time to start, but after that you will be able to use all the other notebooks immediately.
+
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Hello_world_OpenMP.ipynb)
+
+**TERMS OF USE**
+
+**The Jupyter notebooks platform on our server can be used solely for the purpose of this course. Any other type of use can result in a connection denial to our server.**
 
 ###  E: Hello World!
 
@@ -594,7 +614,7 @@ for compiling MPI codes in Fortran.
 To run an MPI program `prg` with `num` processes (processors) one should use the following command:
 
 ~~~bash
-mpirun -n num ./prg
+mpirun -np num ./prg
 ~~~
 
 For example, the executables produced as shown in the previous section can be run with 4 processes (processors) with:
