@@ -49,5 +49,12 @@ test_Q4
 test_Q5
 w2_test_Q1
 MPI/hello-world
+MPI/bcast
+MPI/gather
+MPI/hello
+MPI/pi
+MPI/ping
+MPI/reduce
+MPI/ring
 
 
