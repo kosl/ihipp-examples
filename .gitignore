@@ -56,5 +56,10 @@ MPI/pi
 MPI/ping
 MPI/reduce
 MPI/ring
+MPI/IO/my_file
+MPI/__pycache__/
+MPI/core
+MPI/recv
+
 
 
