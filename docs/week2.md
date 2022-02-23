@@ -221,7 +221,7 @@ int main ()
 {
   int rank;
   #ifdef _OPENMP
-  #pragma omp parallel
+  #pragma omp parallel num_threads(4) private(rank)
   {
     rank = omp_get_thread_num();
     int nr_threads = omp_get_num_threads();
@@ -303,10 +303,10 @@ int main ()
   int num_threads = 4;
   omp_set_num_threads(num_threads);
 
-  int private_var = 0;
-  int shared_var = 0;
+  int private_var = 1000;
+  int shared_var = 5000;
   int rank;
-  #pragma omp parallel private(private_var) shared(shared_var)
+  #pragma omp parallel private(private_var, rank) shared(shared_var)
   {
     rank = omp_get_thread_num();
     printf("Thread ID is: %d\n", rank);  
@@ -323,6 +323,7 @@ private and shared variable changes when accessed by different
 threads. Does the value of shared variable increase when being
 modified by multiple threads? Why? 
 
+There might also be a race condition here. The write and immediate read of the variable inside the parallel region is a write-read race condition. Two or more threads access the same shared variable and modify it and these accesses are unsynchronized. We will see a more clear example of a race condition in Parallel region exercise. 
 
 [Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
 
@@ -482,8 +483,12 @@ How many iterations are executed if 4 threads execute the below program?
 
 ~~~c
 #pragma omp parallel private(i)
-for (int i = 0; i < 100; i++) {
-    a[i] = i;
+{
+    #pragma omp for
+    for (int i = 0; i < 100; i++)
+    {
+        a[i] = i;
+    }
 }
 ~~~
 
