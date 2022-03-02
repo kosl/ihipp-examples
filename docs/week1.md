@@ -59,7 +59,10 @@ You can also access the exercise on Binder. Note that the Binder service can tak
 
 **TERMS OF USE**
 
-**The Jupyter notebooks platform on our server can be used solely for the purpose of this course. Any other type of use can result in a connection denial to our server.**
+**The Jupyter notebooks platform on our server can be used solely for the purpose of this course. Any other type of use can result in a connection denial to our server.** 
+
+The notebooks require cross-site cookie tracking to be enabled beacuse course exercise pages are composed from two distinct servers. If you experience "Forbidden" or cookie related messages then try different browser or disable cross-site prevention. For example, in Safari browser choose Safari > Preferences > Privacy and uncheck "Prevent cross-site tracking". 
+
 
 ###  E: Hello World!
 
