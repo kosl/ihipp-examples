@@ -1,7 +1,8 @@
 # Introduction to parallel programming
 
-## A->V:Intro to parallel programming
-### V1.1: Intro to Week 1, Serial vs Parallel
+## Intro to parallel programming
+
+### 1.1 Welcome to Week 1
 
 Welcome to the course Introduction to parallel programming! I will be your guide through the weeks.
 In the first week, we will first introduce the basic principles and paradigms of parallel programming. We will not go deeply into each topic since we will dedicate that to the upcoming weeks, touching even on some advanced topics in parallel programming. We describe the more advanced topics with the purpose of telling you what is important to know and giving you a starting point on where to learn more. We hope that at some point you will be able to do your coding and advance your learning beyond this course. 
@@ -18,14 +19,14 @@ The program is usually written and compiled into instructions for serial executi
 
 There are different approaches or programming models that were developed during the years and are still being developed. These languages might help you to resolve some of the issues in the underlying hardware topology, that we usually see as a combination of memory and CPUs; both is essential for parallel computing. In the past there was just a single processor per node with memory, and many of those nodes were combined to make a cluster. In recent years a cluster of compute nodes, so-called ["Beowulf"](http://ibiblio.org/pub/Linux/docs/HOWTO/archive/Beowulf-HOWTO.html#ss2.2), is being upgraded with many cores per node and shared memory. The cores share a memory. There can also be many processor sockets, threads per core and GPU accelerators. The programming model for such a hardware architecture is a combination of languages. For example, we have a parallelization called *OpenMP*, that can be easily done on a single computer, whether this is your PC, laptop or a remote computer. OpenMP is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the pragma comment directives. The result is a multi-threaded code that runs faster. We will introduce OpenMP this week, while in Week 2 we will present it in detail.
 
-### D: What team are you on?
+### 1.2 What team are you on?
 
 We will introduce you to parallel programming with the use of some programming languages. 
 Please, introduce yourself in the comments area on this page, saying why are you interested in the parallel programming course and what do you hope to gain from it. Are there any specific aspects of the subject that you would like to learn about? Tell us which programming language(s) you use or know about or what language are you planning to learn. 
 
 #### About us
 
-The lead educator, Leon Kos, HPC developer/consultant at University of Ljubljana.
+The lead educator is Leon Kos, HPC developer/consultant at University of Ljubljana.
 
 The other educators are:
 
@@ -39,9 +40,9 @@ What to expect from us?
 
 We will be monitoring your comments and questions, and try to provide helpful feedback as much as possible. If you find typos or other mistakes, please leave a comment so we can improve the material.
 
-The social aspect of an online course is also very important, so please try to interact with your fellow particapants in a constructive way as well.
+The social aspect of an online course is also very important, so please try to interact with your fellow participants in a constructive way as well.
 
-###  E: Interactive notebook use
+### 1.3 Interactive notebook use
 
 In this exercise you will learn how to use Jupyter notebooks interactively. All the examples and exercises in this course will be available in such notebooks. We prepared a platform on which you can run notebooks and experiment with them. Alternatively, the notebooks are also available on Google Colaboratory and some of them on Binder.
 
@@ -51,20 +52,22 @@ Follow the guide in the notebook to get acquainted with the platform.
 
 You can also repeat the exercise on Google Colaboratory. There are some slight differences in using Jupyter notebooks on Colab. You must create a Google account to run and use them. You should also save copies of the notebooks in Google Drive by `File -> Save a copy in Drive` and then you can run or modify your local copies at will.
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gNK53eCnhFteBtzexMCf5wj7DKvawu2k)
+[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1eHmWppgs9lA7lDuV0afop08qMLgWD2jB)
 
 You can also access the exercise on Binder. Note that the Binder service can take some time to start, but after that you will be able to use all the other notebooks immediately.
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Hello_world_OpenMP.ipynb)
+[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=Interactive_notebook_use_binder.ipynb)
+
+Note also that clicking on the badge "Open in Colab" or "launch binder" will not open a new window or tab in your browser. Therefore you should manually open the link in a new window or tab, if you want to keep the current page in FutureLearn.
 
 **TERMS OF USE**
 
-**The Jupyter notebooks platform on our server can be used solely for the purpose of this course. Any other type of use can result in a connection denial to our server.** 
+**The Jupyter notebooks platform on our server can be used solely for the purpose of this course. Any other type of use can result in a connection denial to our server.**
 
-The notebooks require cross-site cookie tracking to be enabled beacuse course exercise pages are composed from two distinct servers. If you experience "Forbidden" or cookie related messages then try different browser or disable cross-site prevention. For example, in Safari browser choose Safari > Preferences > Privacy and uncheck "Prevent cross-site tracking". 
+The notebooks require cross-site cookie tracking to be enabled because course exercise pages are composed from two distinct servers. If you experience "Forbidden" or cookie related messages then try a different browser or disable cross-site prevention. For example, in Safari browser choose Safari > Preferences > Privacy and uncheck "Prevent cross-site tracking".
 
 
-###  E: Hello World!
+### 1.4 Hello World!
 
 As already mentioned, the simplest approach to parallelization is Open Multi-Processing (OpenMP). We will show you this paradigm through a "Hello World!" example in two programming languages: **C** and **Fortran**.
 
@@ -105,9 +108,7 @@ Similarly to C, `!$OMP` indicates the OpenMP executable directive, `PARALLEL` th
 
 First, have a look at the notebook with both the C and Fortran codes. Notice the C headers that must be included and the `USE OMP_LIB` line of code in Fortran to provide OpenMP functionality. We will explain the compilation of the code later, so don't worry about this detail for now.
 
-Run both codes in the notebook:
-
-[Hello_world_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/Hello_world_OpenMP.ipynb)
+Run both codes in the notebooks:
 
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Hello_world_OpenMP.ipynb)
 
@@ -115,7 +116,9 @@ Run both codes in the notebook:
 
 Are the outputs as you expected?
 
-### A->V1.4: Architectures and memory models
+As a bonus example also the OpenMP "Hello World!" in C using [Cling](https://root.cern/cling/) (an interactive C++ interpreter) is given in the notebook below.
+
+### 1.5 Architectures and memory models
 
 Over the years, there have been different multi-node approaches to parallelization. The only really interesting approach is Message Passing Interface (MPI), which we will introduce this week and present in detail in Week 3. Contrary to "automatic" parallelization in OpenMP, we need manual parallelization in MPI.
 
@@ -131,7 +134,9 @@ The parallel computing approach tends to use as many computing cores as possible
 
 **Source of image: hpc.llnl.gov**
 
-Such kind of computing is actually not considered High Performance Computing (HPC). You have many other solutions, for example, grid computing that is usually distributed or cloud computing that you can rent. Such problems that are being solved are not actually interdependent, so the parallelization here is 100% and no communication is needed among the processes. Running such a problem on HPC would mean the underutilization of a supercomputer since the main point of HPC is having closely coupled compute cores on multiple nodes. In such non-dependent cases, you have quite a good scaling, that is, your program can run equally well on one core as on one million cores because there is no interdependence. An example of such embarassingly-simple problems is searching for an optimum of some function for which you do not know its optimum location, so you greedily search the domain. There can also be some "intelligence" behind using a genetic algorithm, but this actually complicates the problem since there can be an overlap of the search domains. And such algorithms are maybe just empirically describing the theory behind. That's what supercomputing actually is not, although we are very content with such kinds of computing problems. Other problems that can be highly parallel are, for example, some kind of direct numerical computing of fundamental equations or kinetic simulations, which could be very close to how embarrassingly simple computing is.
+Such kind of computing is actually not considered High Performance Computing (HPC). You have many other solutions, for example, grid computing that is usually distributed or cloud computing that you can rent. Such problems that are being solved are not actually interdependent, so the parallelization here is 100% and no communication is needed among the processes. Running such a problem on HPC would mean the under-utilisation of a supercomputer since the main point of HPC is having closely coupled compute cores on multiple nodes. In such non-dependent cases, you have quite a good scaling, that is, your program can run equally well on one core as on one million cores because there is no interdependence. An example of such embarrassingly simple problems is searching for an optimum of some function for which you do not know its optimum location, so you greedily search the domain.
+
+There can also be some "intelligence" behind using a genetic algorithm, but this actually complicates the problem since there can be an overlap of the search domains. And such algorithms are maybe just empirically describing the theory behind. That's what supercomputing actually is not, although we are very content with such kinds of computing problems. Other problems that can be highly parallel are, for example, some kind of direct numerical computing of fundamental equations or kinetic simulations, which could be very close to how embarrassingly simple computing is.
 
 For efficient parallelization, you need to know the computer architecture on which programs will run. Let's have a look at a computing node found in modern supercomputers. In the picture below, you can observe that the compute node is a standalone "Von Neumann" computer.
 
@@ -143,8 +148,9 @@ The schematic below shows the logical view of a compute node:
 
 **Source of image: hpc.llnl.gov**
 
-We have two or maybe four CPU sockets with shared memory that are interconnected by a bus or fast bus. The nodes are also connected with fast internet or Infiniband, a network that has small latency. Such architecture was a standard for computers ten years ago. In recent years, mainstream computers besides CPU sockets also have accelerators, that are general-purpose graphical processing units (GPU) for speed up of computing. Therefore, the non-uniform memory is even more non-uniform. Coding or porting old codes with MPI and accelerating parts of it has become increasingly difficult to achieve. We will introduce you to accelerated programming with CUDA and OpenCL in Week 5, that is, how to off-load parts of the code to the accelerators. Combining everything to run on a large cluster requires quite a lot of experience, with the trial and error approach to identify the bottlenecks. 
-To resolve interconnection problems of nodes in the Infiniband network and among the processor sockets and accelerators (GPUs) in the node, some newer languages or upgrades to the existing programming languages were developed. To utilize these new paradigms, we need to use some new tricks with the old code, although rethinking or rewriting the code is usually the best approach. The new code approaches can be used even without the intervention of a programmer or any thinking, for example, Coarray Fortran has some intelligence behind how to do non-uniform memory operations on matrices and so on, but we actually need to understand a few things.
+We have two or maybe four CPU sockets with shared memory that are interconnected by a bus or fast bus. The nodes are also connected with fast internet or Infiniband, a network that has small latency. Such architecture was a standard for computers ten years ago. In recent years, mainstream computers besides CPU sockets also have accelerators, that are general-purpose graphical processing units (GPU) for speed up of computing. Therefore, the non-uniform memory is even more non-uniform. Coding or porting old codes with MPI and accelerating parts of it has become increasingly difficult to achieve. We will introduce you to accelerated programming with CUDA and OpenCL in Week 5, that is, how to off-load parts of the code to the accelerators.
+
+Combining everything to run on a large cluster requires quite a lot of experience, with the trial and error approach to identify the bottlenecks. To resolve interconnection problems of nodes in the Infiniband network and among the processor sockets and accelerators (GPUs) in the node, some newer languages or upgrades to the existing programming languages were developed. To utilize these new paradigms, we need to use some new tricks with the old code, although rethinking or rewriting the code is usually the best approach. The new code approaches can be used even without the intervention of a programmer or any thinking, for example, Coarray Fortran has some intelligence behind how to do non-uniform memory operations on matrices and so on, but we actually need to understand a few things.
 
 Let's also discuss how nodes in a supercomputer are interconnected.
 
@@ -152,11 +158,15 @@ Let's also discuss how nodes in a supercomputer are interconnected.
 
 **Source of image: hpc.llnl.gov**
 
-The figure on the left shows the node's architecture which was typical in the past, while the figure on the right shows the current standard: accelerators can also be attached to memory from the other side. Distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, usually using Infiniband or some kind of similar technology, like Tofu interconnect or ARIES, which are actually dependent on the vendor. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, and that was actually the initial idea to use commodity hardware and interconnect it by a high-speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code. A typical test still used to measure the performance of such machines is the [LINPACK test](https://www.top500.org/project/linpack/). Usually, the result is given in TFlops or tera-FLops. 1 TFlops means the capability of a trillion floating-point operations per second. Currently, the [TOP10](https://www.top500.org/lists/top500/2021/11/) supercomputers in the world exceed the 30 thousand TFlops mark with the fastest over 400 thousand TFlops or 400 peta-Flops.
+The figure on the left shows the node's architecture which was typical in the past, while the figure on the right shows the current standard: accelerators can also be attached to memory from the other side. Distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, usually using Infiniband or some kind of similar technology, like Tofu interconnect or ARIES, which are actually dependent on the vendor. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, and that was actually the initial idea to use commodity hardware and interconnect it by a high-speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code.
+
+A typical test still used to measure the performance of such machines is the [LINPACK test](https://www.top500.org/project/linpack/). Usually, the result is given in TFlops or tera-FLops. 1 TFlops means the capability of a trillion floating-point operations per second. Currently, the [TOP10](https://www.top500.org/lists/top500/2021/11/) supercomputers in the world exceed the 30 thousand TFlops mark with the fastest over 400 thousand TFlops or 400 peta-Flops.
 
 So, for the development of parallel codes, you need to have quite a good overview of the architecture that you are using. Usually, many computing centres provide different machines, depending on the type of users. General-purpose codes are usually not best suited for parallel computing. You need to understand the bottlenecks or which parts of the code consume most of the time. These parts must be optimized, and that is the usual approach for the parallelization of the code.
 
-On HPC, optimal communication is crucial for overcoming the bottlenecks. The main reason for bottlenecks can be generally found in communication among many parts of the code(s). To understand communication, one should generally do a profiling of the codes. Based on the profiling results, one could, for example, distribute the overhead of communication evenly to get rid of its peaks. Of course, this depends on the specific problem. Communication overall is important to be understood, but for embarrassingly simple programs or those that do not have, have little or infrequent communication, any communication network could be just fine, even the plain old ethernet. On the other hand, for solving large problems with coupled systems of equations, it's important not having large delays among coupled parts. The main difference between plain internet/ethernet and Infiniband is in the latency time or how much time is needed to establish communication from one processor to another and to transfer the data between them, whether the data is small or large. Networks like Infiniband offer low-latency transfer among hardware resources connected to it. If you have such kind of problems with communication, you probably would like to group a bunch of messages into a single message in order to have some useful workload.
+On HPC, optimal communication is crucial for overcoming the bottlenecks. The main reason for bottlenecks can be generally found in communication among many parts of the code(s). To understand communication, one should generally do a profiling of the codes. Based on the profiling results, one could, for example, distribute the overhead of communication evenly to get rid of its peaks. Of course, this depends on the specific problem. Communication overall is important to be understood, but for embarrassingly simple programs or those that do not have, have little or infrequent communication, any communication network could be just fine, even the plain old ethernet.
+
+On the other hand, for solving large problems with coupled systems of equations, it's important not having large delays among coupled parts. The main difference between plain internet/ethernet and Infiniband is in the latency time or how much time is needed to establish communication from one processor to another and to transfer the data between them, whether the data is small or large. Networks like Infiniband offer low-latency transfer among hardware resources connected to it. If you have such kind of problems with communication, you probably would like to group a bunch of messages into a single message in order to have some useful workload.
 
 We can recap what we said regarding the development of parallel codes with the following points:
 
@@ -166,7 +176,7 @@ We can recap what we said regarding the development of parallel codes with the f
 - optimization and parallelization of parts that consume most of the computing time
 - the problem needs to be dissected into parts functionally and logically
 
-### A->V1.5: Amdahl's and Gustafson's laws explained
+### 1.6 Amdahl's and Gustafson's laws explained
 
 When you consider the execution of the code on a number of processors, the speed up achieved with such scaling is typically described by Amdahl's law.
 
@@ -196,7 +206,7 @@ On the figure below speed up curves according to both laws for N = 32 are shown.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_Amdahl_vs_Gustafson_color.png)
 
-### A, D: Languages for parallel programming
+### 1.7 Languages for parallel programming
 
 When speaking of languages for parallel programming, we actually mean parallelization paradigms in host languages. Such paradigms are generally available in the form of Application Programming Interfaces (APIs) that are installed on the user system and can be used as directives or extensions for compiling the parallelized code into executables.
 
@@ -234,10 +244,11 @@ In the following list, we give you some parallelization paradigms available as A
   - programming standard for heterogeneous computing
   - based on a set of compiler directives, a programming model designed to handle hardware accelerators without the complexity associated with GPU programming
 
-### Q: Performance, Easy to use
+### 1.8 Quiz: Intro to parallel programming
 
 ## OpenMP overview
-### A: Brief intro to OpenMP
+
+### 1.9 Brief intro to OpenMP
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/OpenMP_logo.png)
 
@@ -360,7 +371,7 @@ We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with th
 |     | `pgf77` |       |
 |     | `pgf90` |       |
 
-### V1.9: OpenMP memory, programming and execution model
+### 1.10 OpenMP memory, programming and execution model
 
 OpenMP is based on the shared memory model of multi-processor or multi-core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP, programs accomplish parallelism exclusively with the use of threads, so called thread-based parallelism.
 
@@ -384,7 +395,7 @@ Let's recap the OpenMP terminology discussed so far with descriptions:
 | construct | an OpenMP executable directive |
 | clause | controls the scoping of the variables during execution |
 
-### E: For loop
+### 1.11 For loop
 
 In this example, you will learn how to use a `for` OpenMP construct (directive-name) in C and a `DO` OpenMP construct (directive-name) in Fortran for vector addition.
 
@@ -429,14 +440,15 @@ Now, compare the OpenMP code in Fortran with the code in C and identify the diff
 
 Explore the whole Fortran code in the notebook and run it. Are the results the same as in C?
 
-[for_DO_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/OpenMP/for_DO_OpenMP.ipynb)
-
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/for_DO_OpenMP.ipynb)
 
 [![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/17Db1nJXnuVDKfcPIQtQn8011gkuxyO7n)
 
+### 1.12 Quiz: Intro to OpenMP
+
 ## MPI overview
-### A/V: Brief intro to MPI
+
+### 1.13 Brief intro to MPI
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/MPI_logo.png)
 
@@ -471,13 +483,13 @@ The Message-Passing programming paradigm can be described with the following poi
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_MPI_programming_paradigm.png)
 
-**Source of image: Rolf Rabenseifner (HLRS)**
+**Image courtesy: Rolf Rabenseifner (HLRS)**
 
 Each processor (core) in an MPI program runs a sub-program, which is typically the same on each processor (core). The variables of each sub-program have the same name but different locations and data (distributed memory), i.e., all variables are private. Processors (cores) communicate via special send and receive routines (message passing).
 
 MPI offers point-to-point as well as collective communications. We will present them in the following step.
 
-### A: Messages and communication
+### 1.14 Messages and communication
 
 The type of communication in MPI is generally related to the number of processes involved. The simplest form of message passing is *point-to-point communication*, in which one process sends a message to another process. In *collective communication*, several processes are involved at a time. There are 3 classes of such communication: synchronization, data movement and collective computation. Concerning the completion of operations, two types exist: blocking and non-blocking operations. We will briefly describe all the types of communication, you can find details with descriptions of relevant MPI routines in Week 3.
 
@@ -487,7 +499,7 @@ Messages are packets of data moving between sub-programs.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_messages.png)
 
-**Source of image: Rolf Rabenseifner (HLRS)**
+**Image courtesy: Rolf Rabenseifner (HLRS)**
 
 The necessary information for a message-passing system is the following:
 
@@ -503,7 +515,7 @@ This type relates to communication between two processes. The source process sen
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_point-to-point.png)
 
-**Source of image: Rolf Rabenseifner (HLRS)**
+**Image courtesy: Rolf Rabenseifner (HLRS)**
 
 Blocking routines (return only after completion of operations) for send and receive messages:
 
@@ -512,8 +524,8 @@ Blocking routines (return only after completion of operations) for send and rece
 
 Non-blocking routines (return immediately and allow sub-programs to perform other work) for send and receive messages:
 
-- `MPI_ISend(...)`
-- `MPI_IRecv(...)`
+- `MPI_Isend(...)`
+- `MPI_Irecv(...)`
 
 **Collective communication**
 
@@ -525,7 +537,7 @@ Collective operations are of the following type:
 
 Let's describe some examples of collective communication:
 
-1. *Broadcast*
+1\. *Broadcast*
 
 Broadcasting can be accomplished by using `MPI_Bcast(...)`. One process sends the same data to all processes in a communicator.
 It can be used to send out user input or parameters to all processes. The communication pattern of a broadcast is depicted in the figure below.
@@ -534,7 +546,7 @@ It can be used to send out user input or parameters to all processes. The commun
 
 **Source of image: hpc.llnl.gov**
 
-2. *Scatter*
+2\. *Scatter*
 
 Scatter can be accomplished by using `MPI_Scatter(...)`. This operation involves a root process sending data to all processes in a communicator. The difference between `MPI_Bcast` and `MPI_Scatter` is the following:
 
@@ -545,7 +557,7 @@ Scatter can be accomplished by using `MPI_Scatter(...)`. This operation involves
 
 **Source of image: hpc.llnl.gov**
 
-3. *Gather*
+3\. *Gather*
 
 Gather can be accomplished by using `MPI_Gather(...)`. This operation is the inverse of Scatter: it takes elements from many processes and gathers them to one single process.
 
@@ -553,7 +565,7 @@ Gather can be accomplished by using `MPI_Gather(...)`. This operation is the inv
 
 **Source of image: hpc.llnl.gov**
 
-4. *Reduce*
+4\. *Reduce*
 
 Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns an array of output elements to the root process. The output elements contain the reduced result. The image below depicts sum reduction, i.e., an array with four elements of integer type is reduced to an aray with one element containing the sum of the elements of the source array.
 
@@ -561,7 +573,7 @@ Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes a
 
 **Source of image: hpc.llnl.gov**
 
-### A: Programming point of view
+### 1.15 Programming point of view
 
 In this step, we will present how MPI programs are structured, how to compile them and finally, how to run them. The description is pertinent to C/C++, but you can see the differences for other host languages from examples in Week 3.
 
@@ -630,13 +642,11 @@ For example, the executables produced as shown in the previous section can be ru
 !mpirun -np 4 ./hello_world.exe
 ~~~
 
-### E: MPI Hello World!
+### 1.16 MPI Hello World!
 
-In this exercise, you will be able to run an MPI "Hello World!" example in **C**, **Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no communication between the processes, so that the compiled code is run on many processors independently. You will later upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will communicate with the use of MPI calls.
+In this exercise, you will be able to run an MPI "Hello World!" example in **C**, **Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no identification of processes or communication among the processes, so that the compiled code is run on many processors independently with no identification. You will later upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will be identified with the use of MPI calls.
 
 Compare the codes of the different languages in the notebook:
-
-[Hello_world_MPI.ipynb](https://github.com/kosl/ihipp-examples/blob/master/MPI/Hello_world_MPI.ipynb)
 
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=MPI/Hello_world_MPI.ipynb)
 
@@ -646,8 +656,11 @@ How is the MPI library included in the different languages?
 
 Compile and run the codes. Are the results as you expected? Also run the code(s) with the number of processors equal to 128. What is the result?
 
+### 1.17 Quiz: Intro to MPI
+
 ## Accelerators overview
-### A: Graphics accelerators
+
+### 1.18 Graphics accelerators
 
 Graphics accelerators or graphics processing units (GPUs) are devices with many highly parallel processing units (also called streaming multiprocessors) and very high bandwidth memory. With these two characteristics, they differ from classic processors (CPUs). Apart from their originally intended use, i.e., for intensive 3D graphical rendering (graphics applications), another use is for GPGPU (General Purpose GPU) computing (scientific and engineering applications).
 
@@ -666,7 +679,7 @@ Computing acceleration can be achieved with:
 - directive-based methods (like OpenMP and OpenACC)
 - special programming languages or extensions (like CUDA and OpenCL).
 
-### E: GPU Hello World
+### 1.19 GPU Hello World
 
 In this exercise, you will run a GPU "Hello World!" example in **CUDA C** and **PyCUDA**, CUDA extensions to C and Python, respectively. CUDA is a GPU programming extension developed exclusively for NVIDIA GPUs.
 
@@ -688,11 +701,9 @@ hello<<<1, 4>>>();
 
 In this syntax, the first number indicates the number of blocks and the second number the number of threads in a block, i.e., in the above example we defined 1 block with 4 threads to be run in parallel on a GPU.
 
-Run this example in the following notebook:
+## Exercise
 
-[Hello_World_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_GPU.ipynb)
-
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=GPU/Hello_World_GPU.ipynb)
+Run this example in the following notebook.
 
 [![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1FYIsnTXbvmPcXtZvS2HVimDVSsqSKOE9)
 
@@ -710,7 +721,7 @@ You have probably noticed that in PyCUDA, the kernel is wrapped as a string of C
 
 Note the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest versions of CUDA (11.x). Note also that the `pycuda` library must be installed in Python, e.g., through `pip`.
 
-### Week 1 wrap-up
+### 1.20 Week 1 wrap-up
 
 In this introductory week we have tried to present you the paradigms of parallel programming by giving the essentials along with simple code examples in interactive Jupyter notebooks. The primary objective of Week 1 is to align you for the next weeks, which you can already preview.
 
@@ -718,13 +729,5 @@ Please discuss the interactive Jupyter notebooks experience and the potentials w
 While this week was just a preparation for more advanced topics and hands on examples in the next weeks, we can still discuss how parallel programming techniques could be useful for your applications.
 
 Therefore, we are interested in whether you found the Week 1 content useful?
-
-
-## Resources:
-### Further reading
-### List of top 500
-### Where to search for a help
-
-## Test:
 
 ###### tags: ipp, HPCFS
