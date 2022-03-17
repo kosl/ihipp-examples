@@ -251,7 +251,9 @@ This quiz tests your knowledge of basic parallel programming principles and para
 1. What are typical advantages of using parallel codes?
 
 ( ) Faster execution than for serial codes
+
 ( ) Large amounts of required memory can be distributed
+
 (x) All of the above
 
 Correct.
@@ -259,6 +261,7 @@ Correct.
 2. What is a necessary condition for the successful parallelization of the code?
 
 (x) Work can be divided into relatively independent tasks with little communication.
+
 ( ) Work can be divided into totally independent tasks with no communication.
 
 Correct.
@@ -266,8 +269,11 @@ Correct.
 3. OpenMP is a good choice for code parallelization if (multiple choice answer):
 
 [x] It can be run on a shared memory machine
+
 [ ] It can be run on a distributed memory machine
+
 [ ] The data of the problem can't be partitioned
+
 [x] The data of the problem can be divided into chunks
 
 Correct.
@@ -275,9 +281,13 @@ Correct.
 4. What limits the scaling of parallel codes, i.e., their speed up? (multiple choice answer)
 
 [x] Communication bottlenecks
+
 [ ] Memory resources
+
 [x] Synchronization overhead
+
 [x] Serial portion of the code
+
 [ ] Number of processors/cores
 
 Correct.
@@ -285,8 +295,11 @@ Correct.
 5. What is the ideal speed up (according to Amdahl's law) for a code that has a parallel portion of 75%?
 
 ( ) 2
+
 ( ) 3
+
 (x) 4
+
 ( ) 5
 
 Correct. For an infinite number of processors the speed up can be calculated by the formula 1/(1-p) or in this case 1/(1-0.75)=4.
@@ -494,9 +507,13 @@ This quiz tests your knowledge of the basic principles and programming/execution
 1. Which of the following about OpenMP is incorrect?
 
 ( ) OpenMP is an API that enables explicit multi-threaded parallelism
+
 ( ) The primary components of OpenMP are compiler directives, runtime library, and environment variables
+
 ( ) OpenMP implementations exist for the Microsoft Windows platform
+
 (x) OpenMP is designed for distributed memory parallel systems and guarantees efficient use of memory
+
 ( ) OpenMP supports UMA and NUMA architectures
 
 Correct. OpenMP is not designed for distributed memory parallel systems.
@@ -504,6 +521,7 @@ Correct. OpenMP is not designed for distributed memory parallel systems.
 2. OpenMP’s execution model is the *fork-join model* of parallel execution.
 
 (x) True
+
 ( ) False
 
 Correct.
@@ -511,10 +529,15 @@ Correct.
 3. What statements about the OpenMP execution model are correct? (multiple choice answer)
 
 [x] threads can exist only within the resources of a single process
+
 [ ] threads can exist within the resources of multiple processes
+
 [x] the maximum number of threads is equal to the number of processor cores times threads per core available
+
 [ ] the number of threads to use can't be defined by the user
+
 [ ] a master thread is executed in parallel until the first sequential region construct is encountered
+
 [x] a master thread is executed sequentially until the first parallel region construct is encountered
 
 Correct.
@@ -522,9 +545,13 @@ Correct.
 4. Which flag has to be used to tell the `gcc` compiler to take OpenMP directives into account?
 
 ( ) `#pragma omp parallel`
+
 ( ) `./openmp`
+
 ( ) `-openmp`
+
 (x) `-fopenmp`
+
 ( ) None of the above
 
 Correct.
@@ -532,8 +559,11 @@ Correct.
 5. Which of these is a correct way to set the number of available threads for an OpenMP program to 4?
 
 ( ) In an OpenMP program, use the library function `omp_get_num_threads(4)` to set the number of threads to 4 at the beginning of the main function.
+
 ( ) In an OpenMP program, use the library function `num_threads(4)` to set the number of threads to 4 at the beginning of the main function.
+
 (x) In bash, `export OMP_NUM_THREADS=4`
+
 ( ) In an OpenMP program, use the library function `omp_max_threads(4)` to set the number of threads to 4 at the beginning of the main function.
 
 Correct. All the above library functions can't be used at the beginning of the main function to set the number of available threads.
@@ -753,7 +783,9 @@ This quiz tests your knowledge of the basic principles and programming/execution
 1. What is Message Passing Interface (MPI) in principle?
 
 ( ) a language for message passing 
-( ) a library for message passing 
+
+( ) a library for message passing
+
 (x) a specification a library for message passing
 
 Correct. MPI is in principle a standard or specification for message passing libraries.
@@ -761,8 +793,11 @@ Correct. MPI is in principle a standard or specification for message passing lib
 2. What statements about point to point communication and collective communication in MPI are correct? (multiple choice answer)
 
 [x] in point to point communication only two processors take part
+
 [ ] in point to point communication many processors can take part
+
 [ ] collective communication can be from one to one, one to many, many to one, or many to many processors
+
 [x] collective communication can be from one to many, many to one, or many to many processors
 
 Correct.
@@ -770,6 +805,7 @@ Correct.
 3. In a blocking MPI routine the call returns only after completion of operations.
 
 (x) True
+
 ( ) False
 
 Correct. In blocking routines the call returns only after the data is sent out from user buffer to the system buffer in case of `MPI_Send` (or received by the user buffer from the system buffer in case of `MPI_Recv`).
@@ -777,7 +813,9 @@ Correct. In blocking routines the call returns only after the data is sent out f
 4. What is the difference between `MPI_Bcast` and `MPI_Scatter` routines?
 
 ( ) `MPI_Scatter` sends the same piece of data to all processes, `MPI_Bcast` sends chunks of data to different processes
+
 (x) `MPI_Bcast` sends the same piece of data to all processes, `MPI_Scatter` sends chunks of data to different processes
+
 ( ) There is no difference, the result of both routines is the same
 
 Correct.
@@ -785,8 +823,11 @@ Correct.
 5. What is the correct syntax to run an MPI program `prg` with (on) 4 processes (processors)?
 
 ( ) `./prg -np 4`
+
 (x) `mpirun -np 4 ./prg`
+
 ( ) `OMP_NUM_THREADS=4 mpirun ./prg`
+
 ( ) `OMP_NUM_THREADS=4 ./prg`
 
 Correct. MPI programs are typically run with the `mpirun` command followed by the flag `-np` to specify the number of processes (processors).
