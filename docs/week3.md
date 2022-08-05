@@ -1,13 +1,13 @@
 
 ### MPI
 
-## V:Introduction to week 3
+## V:Introduction to Chapter 3
 
-Message Passing Interface (MPI) presented in this week will introduce communicators and how processes communicate messages. Sending and receiving messages can be used in one-to-one communication. One-to-many broadcast and scatter messages can be distributed and collected back with reduce and gather operations. All these collective operations, that are frequently used, are provided with the MPI library. We will present differences of those MPI functions through many examples and execises that you may explore further.
+Message Passing Interface (MPI) presented in this Chapter will introduce communicators and how processes communicate messages. Sending and receiving messages can be used in one-to-one communication. One-to-many broadcast and scatter messages can be distributed and collected back with reduce and gather operations. All these collective operations, that are frequently used, are provided with the MPI library. We will present differences of those MPI functions through many examples and execises that you may explore further.
 
 ## 1.1 V: Communicator in MPI
 
-In the introduction to MPI in the first week we already saw the simple exercise of 'Hello world'. Yet, in order to actually write some useful applications, we will need to learn some basic routines. 
+In the introduction to MPI in the first Chapter we already saw the simple exercise of 'Hello world'. Yet, in order to actually write some useful applications, we will need to learn some basic routines. 
 
 To start we need to understand what is a communicator in MPI. As we launch MPI, the entire environment puts all the processes and the cores that are involved in this application and binds them together in what is referred to as a 'communicator'. A communicator is like a set that binds all the processes together and corroborates that only the processes that are together in an application can communicate with each other. The default communicator that we will use most often is the 
 
@@ -19,7 +19,7 @@ that is already predefined in the header file
 mpi.h
 ~~~
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S12.png)
+![](images/D2P1S12.png)
 
 (0m40s)
 
@@ -40,7 +40,7 @@ and for the 'size'
 MPI_Comm_size(MPI_Comm comm, int *size);
 ~~~
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S13.png)
+![](images/D2P1S13.png)
 
 (2m2s)
  
@@ -63,9 +63,9 @@ What do you observe when you run the program multiple times? Tell us your answer
 
 [Jupyter notebook: Hello world](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Hello-world.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1k0QN89_baTmtuejGIz6NYEhLu4EkPa2-)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1k0QN89_baTmtuejGIz6NYEhLu4EkPa2-)
 
 ## 1.3. V: Messages and communications
 
@@ -73,7 +73,7 @@ Until now, we have introduced the MPI and we have used some simple routines such
 
 When we are developing different advanced applications, at some point we will need to exchange information from one process to another. Usually, this information could be some integer, some other values or even arrays etc. This is where messages are used. Messages are packets of data moving between sub-programs. So, as previously described, if we pack the information to be shared between processes into some message, we can send them over communication network so the other process can receive them as a message. This is how the data and information is shared between the processes. And of course there is some important information that we will always need to specify in order for the messages to be sent and received efficiently. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S16.png)
+![](images/D2P1S16.png)
 
 As we can see in this example, we are trying to send a message from a process with rank '0' to process with rank '2', and in order for this to work, we have to specify some information. 
 
@@ -117,7 +117,7 @@ So simply put, if you're trying to send an integer, then the type is
 MPI_INT
 ~~~
 
-However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we can define that struct as a new MPI data type. This proves to be very useful because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming weeks. For today's section we're only using simple data types. 
+However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we can define that struct as a new MPI data type. This proves to be very useful because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming Chapters. For today's section we're only using simple data types. 
 
 (50s)
 
@@ -179,11 +179,11 @@ First way to define types of communication is to divide it according to the numb
 
 The second criteria and perhaps more complex is by defining the type of communication into blocking and non blocking types. A blocking routine returns only when the operation has completed. This means that blocking implies that if we send a message, we can't proceed to the next steps until the receiver actually returns us information that it has received the message. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S19_1.png)
+![](images/D2P1S19_1.png)
 
 The non blocking communication is more complicated than the simpler blocking counterpart. In this case it returns immediately and allows the sub-program to perform other work. It differs from the blocking communication in a way that if we send something to the receiver, we can execute some other tasks in between and after some time, we can check if the receiver has actually returned the information, i.e., it has received the message, or everything is OK. Many real applications, usually employ this type of communication. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S19_2.png)
+![](images/D2P1S19_2.png)
 
 (1m46s)
 
@@ -191,7 +191,7 @@ The non blocking communication is more complicated than the simpler blocking cou
 
 As we already saw in the previous section, Point-to-Point Communication is the simplest communication as it involves only two processes. One of the processes acts as a sender and the other one as the receiver. Here, the source or the sender sends a message via the communicator to the receiver. In order to do so, the environment has to know who is the sender and who is the receiver and this is taken care of by specifying the 'ranks' of the processes. 
 
-![Point to point communication](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_point-to-point.png)
+![Point to point communication](images/W1_point-to-point.png)
 
 ### Sending paradigms
 
@@ -237,11 +237,11 @@ So the arguments needed by this function are similiar to the `MPI_Send` function
 MPI_STATUS_IGNORE
 ~~~
 
-We will learn more about this status structure in the coming weeks. 
+We will learn more about this status structure in the coming Chapters. 
 
 So let's go through an example to understand again the prerequisites for this communication to work efficiently and how this would actually work in code. 
 
-![Example](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P1S24.png)
+![Example](images/D2P1S24.png)
 
 Here, the left is the sender and the right is the receiver. Let's suppose that the sender would like to send this buffer array that has `n` floats over to some other process. For this, it calls the `MPI_Send` routine function. As we already know, the first one is the pointer to the data. So this is send buffer. Then it needs to specify the `number` of data. In this case, it is `n`. The second routine is `MPI_float`, and we need to make sure that this data matches with the one mentioned earlier. As we previously discussed this is the MPI data type that the environment defines, but it has to match with this one, otherwise the communication will not work. Another thing we need to keep in mind is that this data type has to match with the receiver. So we have to be careful when we write these functions that all of these have to match. Now, the receiver has to call the receiver function with the same data type. Here it has to first define an array where it would like to receive this data, the receive buffer. The communicator, of course, has to be the same because they are bound in the same program. But we usually use the `MPI_COMM_WORLD` communicator. The next important part is that the tag has to match. And finally the type of the message or type of the data has to match.
 
@@ -269,9 +269,9 @@ else if (rank == 1) { ... }
 
 [Jupyter notebook: Ping](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1NmkUmC6Xac1oxsnFoqZHTXxZaLcNP_g7)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1NmkUmC6Xac1oxsnFoqZHTXxZaLcNP_g7)
 
 ## 2.3 E: Ping pong
 
@@ -307,9 +307,9 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 
 [Jupyter notebook: Ping pong](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Ping-pong.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/120Ss8Zi2LUfMIY4ikx5TNCFsDB9aBl9R)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/120Ss8Zi2LUfMIY4ikx5TNCFsDB9aBl9R)
 
 ## 2.4 D: 
 
@@ -361,7 +361,7 @@ int main()
 
 1. Go to the exercise and run with processes 3,4,5 and check for correct sums. 
 
-2. Then substitute `MPI_Send` with `MPI_Ssend` (explicit synchronous send). Run the program. You will see a deadlock and you will need to kill the program (with interrupt button &#9724;). 
+2. Then substitute `MPI_Send` with `MPI_Ssend` (explicit synchronous send). Run the program. You will see a deadlock and you will need to kill the program. 
 
 3. Resolve the deadlock with a serialization. Use the trick: `if rank == `, then do first receive and then send for example. Run the program with 3,4,5 processes, you have resolved the deadlock. Now run the program with 1 process. It will still deadlock. The program is still wrong due to bad performance and it will still deadlock when running with only 1 process. 
 
@@ -371,9 +371,9 @@ int main()
 
 [Jupyter notebook: Ring](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring1.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1A1EIOYXizVh1EMzHmvD3vTMyyc4pcz9x)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1A1EIOYXizVh1EMzHmvD3vTMyyc4pcz9x)
 
 ## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
 
@@ -449,9 +449,9 @@ We can understand these functions better by the following optional exercise.
 
 [Jupyter notebook: Dynamic receiving](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1pwiYqvBCmmroZ77vGZJUBEeErUrUjG5W)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1pwiYqvBCmmroZ77vGZJUBEeErUrUjG5W)
 
 ## 2.6 E: (perhaps optional) Dynamic receiving
 
@@ -460,7 +460,7 @@ Write a program that sends a random amount of numbers from a random sender to pr
 
 ## 2.7 Q: Do you understand point-to-point communication?
 
-This quiz covers various aspects of point-to-point communication that have been discussed so far this week.
+This quiz covers various aspects of point-to-point communication that have been discussed so far this Chapter.
 
 ### Question 1
 You must specify the rank for both source and destination processes, when sending a message using MPI_Send:
@@ -574,7 +574,7 @@ Similar to most functions we have learnt so far, in the arguments of the broadca
 
 For example, suppose we have initialized the MPI application with five processors, which implies ranks zero to four. Now we would like the rank '1' to send a string, a character array that contains the letters 'r-e-d' to all other processes. As mentioned already in order for this to work, the rank '1', as well as all other processes that we would like to be involved in this communication have to call the same function and the prototype of this function. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S3.png)
+![](images/D2P2S3.png)
 
 So, here suppose the 'red' is contained in array called 'buf'. There are three elements we would like to distribute among all other processes. Their data type is character, so we use MPI_char. The root is '1', so the process that is sending or broadcasting the data has rank '1', followed by the communicator MPI_Comm_world. So the function for this image above would be
 
@@ -608,9 +608,9 @@ double MPI_Wtime(void);
 
 [Jupyter notebook: Broadcast](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Broadcast.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/19qQY6KoxBSDo7p_g49TIHn6yrrsbTq5B)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/19qQY6KoxBSDo7p_g49TIHn6yrrsbTq5B)
 
 ## 3.3 D: What do you observe with broadcast communication?
 
@@ -618,7 +618,7 @@ In the previous exercise you ran a program using the `MPI broadcast` routine and
 
 With the help of the following image you can see the difference between the two algorithms. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S5.png)
+![](images/D2P2S5.png)
 
 ## 3.4 V: Scatter and gather
 
@@ -634,7 +634,7 @@ MPI_Scatter (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf,
 
 The function prototype is similar to broadcast, but we will go through the arguments because there are some parts we need to be careful with. As usual first we have to specify the data, so this is the buffer. In this example, the root processor will be the one with rank '1' that would like to scatter this array of five 'numbers' to all the other processes. To be able to do this, it will need to specify this 'sendbuf'. Following that is the number 'sendcount' and a bit later we will see a 'recvcount'. Usually they are the same. This is actually the number that tells you how many elements will be sent to each process and it is important to note that it does not mean how many elements are sent in total, but only the fraction that each process will get. The next argument is the 'recvbuf' that is the buffer of the the process that will receive the data. Finally, 'root' is the same as in broadcast. It is the process that actually does the scattering and 'comm' indicates the communicator in which the processes reside. The only thing we need to be careful in this function is the 'sendcount' and 'recvount' because this is the number that dictates how many element will be sent to each process and not the number of whole elements. Another important thing to be noted is that when this function is finished, the sender (in our example the process at rank '1') will not get the information of the whole data. In our example, this would mean that after the communication rank '1' will have only the part to 'B' of the data. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S6.png)
+![](images/D2P2S6.png)
 
 The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends the same piece of data to all processes whereas MPI_Scatter sends chunks of data to different processes. 
 
@@ -648,7 +648,7 @@ MPI_Gather(void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, i
 
 The main difference here is that since only one process, i.e., the root gathers all the information it is the only one that needs to have a valid receive buffer. All other calling processes can pass 'NULL'  for 'recvbuf' since they do not receive anything as they just send the data to the roots process. Finally, once again to be noted and remembered that the 'recv_count' parameter is the count of elements received per process and not the total summation of counts from all processes!
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S7.png)
+![](images/D2P2S7.png)
 
 (3m20s)
 
@@ -676,9 +676,9 @@ First, think about how would you solve this exercise without MPI_Scatter and MPI
 
 [Jupyter notebook: Scatter and gather](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Scatter-Gather.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1LAckEVY0O5xM5lp15nLsTarkg5eIjQTx)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1LAckEVY0O5xM5lp15nLsTarkg5eIjQTx)
 
 ## 4.Advanced Collective operations
 
@@ -702,7 +702,7 @@ MPI Reduce is basically what we did in the the last exercise with an additional 
 
 Perhaps it would be easier to understand it through an example. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S11.png)
+![](images/D2P2S11.png)
 
 Lets assume that we're trying to to compute a sum, but different numbers are scattered across different processes. If we would have our numbers (1, 2, 3, 4, 5) we would call MPI reduce on this data and we will also need to mention say the function that we would like to reduce the data is the sum and then the root process will get the sum as a result. To be able to do this we would need the prototype of the MPI_reduce
 
@@ -746,9 +746,9 @@ The program takes the following steps:
 
 [Jupyter notebook: Reduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Reduce.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Eth82ImK84qe2OYsWbSlIB_h3igukCi_)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1Eth82ImK84qe2OYsWbSlIB_h3igukCi_)
 
 ## 4.3 E: Calculate Pi!
 
@@ -772,9 +772,9 @@ $$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 [Jupyter notebook: Compute PI!](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-MPI.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1PQEMtJVwoXkwvFeCZci5oIpbhlTA2TSD)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1PQEMtJVwoXkwvFeCZci5oIpbhlTA2TSD)
 
 ## 4.4 V/A: MPI_Allreduce
 
@@ -794,9 +794,9 @@ Since we are already familiar with the reduce function it would be easier for us
 
 [Jupyter notebook: Allreduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1-H4kNQde9LmWQ7nv2uAv1G_k9YOsD0uL)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1-H4kNQde9LmWQ7nv2uAv1G_k9YOsD0uL)
 
 ## 4.5 E: Computing standard deviation
 
@@ -829,13 +829,13 @@ We are using rand() to generate random numbers which are uniformly distributed o
 
 [Jupyter notebook: Standard deviation](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1vv9zplj7y0aeU_2Gz8JsNVXjHiC2EoT0)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1vv9zplj7y0aeU_2Gz8JsNVXjHiC2EoT0)
 
 ## 4.6 Q: Do you understand collective communication?
 
-This quiz covers various aspects of collective communication that have been discussed this week.
+This quiz covers various aspects of collective communication that have been discussed this Chapter.
 
 ### Question 1
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
@@ -919,10 +919,10 @@ Options:
 
 It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a proces stook before calling any MPI function. Here, since they are all operating in COMM_WORLD, all processes participate in the same global collective. 
 
-## Week 3 wrap-up
+## Chapter 3 wrap-up
 
-In Week 3 we presented the concepts, programming and execution model of MPI in detail. As with OpenMP in the previous week, the hands on examples served to show how to use this paradigm as efficiently as possible.
+In Chapter 3 we presented the concepts, programming and execution model of MPI in detail. As with OpenMP in the previous Chapter, the hands on examples served to show how to use this paradigm as efficiently as possible.
 
 Please, discuss the MPI parallel programming paradigm and try to summarize its potential in general or maybe specifically for your applications.
 
-We would also like to know if you found Week 3 content useful as well?
+We would also like to know if you found Chapter 3 content useful as well?

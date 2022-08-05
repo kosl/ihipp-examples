@@ -1,14 +1,14 @@
 # MPI Continued
 
-## V: Introduction to week 4
+## V: Introduction to Chapter 4
 
-In this week we will introduce some advanced MPI topics that you may find useful when asking yourself how to do things better.
+In this Chapter we will introduce some advanced MPI topics that you may find useful when asking yourself how to do things better.
 
-A better approach to parallelisation is to overlap computing and communication with non-blocking communication. Another question is if we can reduce memory with MPI and OpenMP gaining in speed with hybrid or one-sided approach? When things get large we would like to combine them together with our own derived types that can simplify programming. At the the end of the week we will take a look into parallel writing of files that can be used instead of collecting results over MPI. There are also some advanced MPI topics which we will not cover here in detail and are part of other PRACE courses.
+A better approach to parallelisation is to overlap computing and communication with non-blocking communication. Another question is if we can reduce memory with MPI and OpenMP gaining in speed with hybrid or one-sided approach? When things get large we would like to combine them together with our own derived types that can simplify programming. At the the end of the Chapter we will take a look into parallel writing of files that can be used instead of collecting results over MPI. There are also some advanced MPI topics which we will not cover here in detail and are part of other PRACE courses.
 
 ## 1.1 V: Non Blocking communications
 
-We saw in the previous week that the types of communication in MPI can be divided by two arguments, based on the number of processes involved:
+We saw in the previous Chapter that the types of communication in MPI can be divided by two arguments, based on the number of processes involved:
 
 - Point-to-Point Communication
 - Collective Communication
@@ -20,13 +20,13 @@ And another way of dividing would be relating to the completion of an operation,
 
 We have seen some problems in the previous modes of communication we have learnt until now. For instance, in the Ring example, where we have a cyclic distribution of processes that we would like to send messages along the ring, we realised that blocking routines are somehow not suitable for this. The problem is that for the second or third process in order to actually receive something, it would have to wait for the message to be sent to the first one and so on. So, evidently we are losing time and not producing a good parallel application.
 
-![Cyclic distribution](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S18_1.png)
+![Cyclic distribution](images/D2P2S18_1.png)
 
 While using blocking routines, when we profile the code it happens quite often that we either have some problem with the deadlocks, that we discussed previously, i.e., either there is some *sent* data that we just never received or vice versa. Even though this situation can be solved, however, there is another more complex problem that can arise. Suppose in the previous example, if we would do it using blocking communication. In that case we would basically *serialize* our code (see image below) and as we can see some of the processes would need to wait; our resources are wasted. This clarifies the need for some other clever way to send messages via this ring without so much waiting time and this is where the non-blocking communication comes into play. 
 
-![Serialization](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S18_2.png)
+![Serialization](images/D2P2S18_2.png)
 
-As we already saw in the previous week, that non-blocking routine returns immediately and allows the sub-program to perform other work so we can do some work between and this is useful because, for instance, we can send a message, do some operations, and then we can receive the message. So, these three parts are essential in the non-blocking communications.
+As we already saw in the previous Chapter, that non-blocking routine returns immediately and allows the sub-program to perform other work so we can do some work between and this is useful because, for instance, we can send a message, do some operations, and then we can receive the message. So, these three parts are essential in the non-blocking communications.
 
 So, non-blocking communication is divided into three phases:
 
@@ -114,9 +114,9 @@ int main()
 
 [Jupyter notebook: Ring2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Exercise-Ring2.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gwkAnySSUYXafSEfKClISKBsMVKtrNJr)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1gwkAnySSUYXafSEfKClISKBsMVKtrNJr)
 
 ## 1.3 V: One sided communication
 
@@ -124,13 +124,13 @@ As we have already learnt in the beginning that in MPI the parallelisation is ba
 
 In two-sided (i.e. point to point communication) and collective communication models the problem is that (even with the non blocking) both sender and receiver have to participate in data exchange operations explicitly, which requires synchronization. 
 
-![Idle time](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S24.png)
+![Idle time](images/D2P2S24.png)
 
 In this example we can see when we have the non blocking routine but the problem is that when we call the MPI_Send and until the message has been recieved by the MPI_Recv, there is this time in which both the processes have to wait and they can not do anything. Therefore a significant drawback of this approach is that the sender has to wait for the receiver to be ready to receive the data before it can send the data, or vice versa. This causes idle time. To avoid this we use the one sided communication. 
 
 Although MPI is using a distributed memory approach, the MPI standard introduced Remote Memory Access (RMA) routines also called one-sided communication because it requires only one process to transfer data. Simply put, it enables a process to access some data from the memory of the other processes. The idea is that a process can have direct access to the memory address space of a remote process without intervention of that remote process.
 
-![Idea](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S25.png)
+![Idea](images/D2P2S25.png)
 
 So we do not have to explicitly call the 'send' and 'receive' routines from both processes involved in the communication. One process can just 'put' and 'get' the data from the memory of another process. This is helpful because the target process can continue executing its tasks, doing its work without waiting for anything. So the most important benefit of one sided communication is that while a process puts or gets data from remote process, the remote process can continue to compute instead of waiting for the data. This reduces communication time and can resolve some problems with scalability of the programs (i.e. on thousands of MPI processes). 
 
@@ -182,9 +182,9 @@ In the same manner MPI_Get is similar to the put operation, except that data is 
 MPI_Get (void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_disp, int target_count, MPI_Datatype_target_datatype, MPI_Win win);
 ~~~
 
-We will understand in depth about the arguments of these functions in the following excercise. But before we get into that, another important thing that we need to discuss is the synchronization. If you remember we discussed this concept briefly in the second week when we were learning about the concepts of OpenMP.
+We will understand in depth about the arguments of these functions in the following excercise. But before we get into that, another important thing that we need to discuss is the synchronization. If you remember we discussed this concept briefly in the second Chapter when we were learning about the concepts of OpenMP.
 
-![One-sided communication](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S25.png)
+![One-sided communication](images/D2P2S25.png)
 
 In one sided communication in MPI, the target process calls the function to create the window in order to give access of its memory to other processes. However, in the case of multiple users it is already quite plain to see that if these users try to simultaneously access this data can already lead to some problems. For example, lets say two users access the window to put data using the MPI_Put function this is clealry a race condition that needs to be avoided. This is where synchronization comes into the play. So in order to avoid this before and after each 'one sided communication' function, i.e., MPI_Get and MPI_Put, we need to use the function
 
@@ -218,9 +218,9 @@ There are two solutions to substituting nonblocking communication with one-sided
 
 [Jupyter notebook: One sided communication](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/One-sided-ring.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1ZT45DqKWiocEHwjDi0ixG7BK1xAhknY1)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1ZT45DqKWiocEHwjDi0ixG7BK1xAhknY1)
 
 ## 1.5 Q: Do you understand advanced communication in MPI?
 
@@ -284,14 +284,14 @@ MPI_Win_ __ ?
 
 ## 2.1 MPI + threading methods
 
-In this subsection we will build up upon the introduction of OpenMP we did in the first two weeks and we will see how to include it into MPI. There are numerous reasons we need to dwell into this, however the most important is that in High-performance computing (HPC) the computer systems feature a hierarchical hardware design. So we need to discuss how the multi-core nodes that are connected via a network can be orchestrated efficiently. We will also see where the bottlenecks of each approach lie. 
+In this subsection we will build up upon the introduction of OpenMP we did in the first two Chapters and we will see how to include it into MPI. There are numerous reasons we need to dwell into this, however the most important is that in High-performance computing (HPC) the computer systems feature a hierarchical hardware design. So we need to discuss how the multi-core nodes that are connected via a network can be orchestrated efficiently. We will also see where the bottlenecks of each approach lie. 
 
 During this subsection we will also discuss or try to find out whether the hybrid code performs better than MPI code and see how it co-relates to whether the communication advantage outcomes the thread overhead, etc. or not. 
 Finally, we will also ask ourselves whether the MPI approach is the best approach and whether there are any other approaches that may offer different speeds or hierarchy within the nodes more efficiently. We will see how the other approaches can provide work load balancing that becomes operative when we are dealing with the large programs that are running on many cores. In the interest of knowing how much effort we will need to make sure that all CPUs are being utilized at maximum efficiency (100%?), i.e., there are no sleeping processors, or sleeping GPU, or sleeping threads that are available so that everything is utilized. This would provide us with the opportunity to explore if there is some other possible approaches to solving these problems more easily and getting the job done in a more efficient way for example with some other language etc. 
 
 This is our introduction to parallel programming, meaning that we will just build up on the simple MPI plus threading methods. 
 
-To exemplify, let us compare IBM Power eight processors with Intel or AMD, i.e., the classical X-64 architecture. We see that Power processor has much more threads per core. So instead of the usual hyper threading, that we find on our laptops, where we usually have one thread in addition to the core; on Power 8 processor we have, for example eight process cores on one socket, then we may have additional eight threads to be run per core, so that they share cache. Runing with many threads raises the performance if we are running an OpenMP program. This implies that the programs and threads share the variables, memory and so on. Hopefully, in the initial OpenMP course that we had in the first two weeks it was quite simple to do. 
+To exemplify, let us compare IBM Power eight processors with Intel or AMD, i.e., the classical X-64 architecture. We see that Power processor has much more threads per core. So instead of the usual hyper threading, that we find on our laptops, where we usually have one thread in addition to the core; on Power 8 processor we have, for example eight process cores on one socket, then we may have additional eight threads to be run per core, so that they share cache. Runing with many threads raises the performance if we are running an OpenMP program. This implies that the programs and threads share the variables, memory and so on. Hopefully, in the initial OpenMP course that we had in the first two Chapters it was quite simple to do. 
 
 ### MPI + OpenMP
 
@@ -299,7 +299,7 @@ The two main threading paradigms we can try are:
 - MPI + OpenMP
 - MPI + MPI-3 shared memory
 
-MPI+OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets, i.e., cache coherent non-uniform memory. It can be optimised in such a way that we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous week we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. The OpenMP or rather the threading model for it was introduced with MPI-2 so that we can use some threading within the MPI-2. From that library, we are usually using OpenMPI, but there are also some other vendor specific MPI libraries, especially if you buy from prominent vendors. There are tuned MPI libraries that work best on the cluster that you buy, meaning that it takes into account the topology, the latencies and all architectural differences within the MPI library itself.
+MPI+OpenMP is usually a better approach for non uniform memory architectures and also in cases where we have the many sockets, i.e., cache coherent non-uniform memory. It can be optimised in such a way that we utilize just a smaller amount of MPI threads and the rest are OpenMP. As usual, the pre-requisite is that libraries must be thread safe for C, which is not that complicated because C itself utilizes a lot of internal variables that are allocated near by the compute, so the stack or the nearby heap. In the previous Chapter we have been introduced to MPI and we have seen that MPI has a lot of different message passing routines. So the approach of MPI is to provide all means of communicating from simple to extended ways. The OpenMP or rather the threading model for it was introduced with MPI-2 so that we can use some threading within the MPI-2. From that library, we are usually using OpenMPI, but there are also some other vendor specific MPI libraries, especially if you buy from prominent vendors. There are tuned MPI libraries that work best on the cluster that you buy, meaning that it takes into account the topology, the latencies and all architectural differences within the MPI library itself.
 
 So there are three libraries in C that we can initially query
 
@@ -335,9 +335,9 @@ MPI_THREAD_MULTIPLE
 
 [Jupyter notebook: Threading methods](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Threading-methods.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1EN8Z7EoGvqMFqX_n-46w9iozudNIlIWm)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1EN8Z7EoGvqMFqX_n-46w9iozudNIlIWm)
 
 ## 2.2 Calculate pi! Using MPI_THREAD_FUNNELED
 
@@ -347,7 +347,7 @@ This example notebook shows how to calculate the value of pi by solving this int
 
 $$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
-You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous weeks. What we did in this example is use both. The goal is to minimaly use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. This is the complete code shown below. 
+You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous Chapters. What we did in this example is use both. The goal is to minimaly use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. This is the complete code shown below. 
 
 ~~~c
 #include <omp.h>
@@ -416,9 +416,9 @@ This program was done in the first way of threading methods (MPI + OpenMP).
 
 [Jupyter notebook: Compute Pi Funneled](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Compute-Pi-Funneled.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1CvsmJmEEUMuEC609xneBvgsY5xuioTlF)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1CvsmJmEEUMuEC609xneBvgsY5xuioTlF)
 
 ## 2.3 V: Hybrid MPI
 
@@ -438,7 +438,7 @@ These kind of problems, which take a lot of memory since they are complex becaus
 
 ### Calling MPI inside of OMP MASTER
 
-If we would like to do communication, then it is usually best to do OMP master thread. This ensures that only one thread communicates with the MPI. However, we will still need to do some synchronization. As we learnt in the previous weeks about synchronization that sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. Synchronization means that whenever we do MPI, all threads will need to stop at some point and do the barrier.
+If we would like to do communication, then it is usually best to do OMP master thread. This ensures that only one thread communicates with the MPI. However, we will still need to do some synchronization. As we learnt in the previous Chapters about synchronization that sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. Synchronization means that whenever we do MPI, all threads will need to stop at some point and do the barrier.
 
 In OpenMP the MPI is called inside of a parallel region, with “OMP MASTER”. It requires MPI_THREAD_FUNNELED, and we saw in the previous subsection this implies that only master thread will make MPI calls. However we need to be aware that there isn’t any synchronization with “OMP MASTER”! There is no implicit barrier in the master workshare construct. Therefore, with the “OMP BARRIER” is necessary to guarantee, that data or buffer space from/for other threads is available before/after the MPI call! The barrier is necessary to prevent data races. 
 
@@ -550,7 +550,7 @@ MPI messages can be passed between any two threads, provided each is enclosed in
 
 So far we have learnt to send messeages that were a continuous sequence of elements and mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer any combination of data in memory in one message. We will learn to communicate strided data, i.e., a chunk of data with holes between the portions, and how to communicate various basic datatypes within one message.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S4.png)
+![](images/D3P2S4.png)
 
 So if we have many different types of datatypes such as int, float etc. with gaps how would we perform communication in one way with one command. To do this we would first of all need to start by describing the memory layout that we would like to transfer. Following this the processor that compiled the derived type layout will then do the transfer for us in the loop in a correct way. This can even be achieved with all kinds of broadcasts.
 
@@ -566,7 +566,7 @@ Or they could be simple types that are being combined into one data layout witho
 
 A derived datatype is logically a pointer to a list of entries. However, once this data type has been saved somewhere, it is not communicated over the network. When the need comes we just use this type simply as it would be a basic data type. However the only prerequisite is that for each of these data types we need to compute the displacement. Quite obviuosly MPI does not communicate these displacements over the network.
 
-![Example](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S7.png)
+![Example](images/D3P2S7.png)
 
 | Basic datatype | Displacement |
 | :-----------------------: | :---------------: |
@@ -581,7 +581,7 @@ Here you can see the description of the memory layout and the displacements. For
 
 This is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S8.png)
+![](images/D3P2S8.png)
 
 In C we use the following function to define it
 
@@ -630,7 +630,7 @@ MPI_Send(&buffer, 1, buff_datatype, …)
 
 Of course, there can also be some kind of gaps that we would not actually see if we are using some other languages such as Fortran and sometimes we even have memory alignments for it. So there maybe a gap of one integer at the start. But this is not an error on our part but it just an adjustment, like some kind of performance adjustment so the next array starts at the location that is the multiple of four. So while describing such an array the MPI knows how to do it most efficiently. 
 
-![Adjustment](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S5.png)
+![Adjustment](images/D3P2S5.png)
 
 ## 3.2 E: Derived data type
 
@@ -648,9 +648,9 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 [Jupyter notebook: Derived datatypes](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1gLUk3OPO01kvWxQ_LpaPI220crE7zZzx)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1gLUk3OPO01kvWxQ_LpaPI220crE7zZzx)
 
 ## 3.3 V/A: Layout of struct data types
 
@@ -658,7 +658,7 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 What we learnt so far in the previous subsection and the exercise were more like continous vectors. Sometimes we would need to communicate vectors with holes that we do not want to be transferred. This implies that we would not send each element but just selected elements or sequence of elements. Therefore the blocklength and the offset of each can be used to create a "stride". When we want to communicate just a portion of a contionus chunk of memory the destination and source may not be the same. Usually we have one element to receive the results back from the array of cluster. As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could use such vector datatypes.
 
-![Vector](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S13.png)
+![Vector](images/D3P2S13.png)
 
 As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could do with such vector datatypes. We use the following routine for vector datatypes:
 
@@ -684,7 +684,7 @@ int MPI_Type_create_struct (int count, int *array_of_blocklengths, MPI_Aint *arr
 
 This is how memory layout of struct datatypes could look like with gaps inside that we don't actualy want, but are imposed by the compiler itself or the underlying operating system or hardware processor.
 
-![Memory layout of struct datatypes](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S15.png)
+![Memory layout of struct datatypes](images/D3P2S15.png)
 
 Let us assume that we have the following parameters:
 
@@ -817,9 +817,9 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 [Jupyter notebook: Derived datatypes 2](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Derived-datatypes-2.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1ZelmLf5ls947WirRkrBMRt2eOmNarmAP)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1ZelmLf5ls947WirRkrBMRt2eOmNarmAP)
 
 ## 4.2 A: Brief explanation of size, extent and alignment rules
 
@@ -831,7 +831,7 @@ Before we go further into the Parallel file I/O we need to get some basic knowle
 
 For most of the basic datatypes the Size = Extent = number of bytes used by the compiler. This can be seen easily in this image. 
 
-![Extent](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P2S25.png)
+![Extent](images/D3P2S25.png)
 
 Extent, alignment and holes can be a problem for some compilers or architectures, especially if these are optimised. However, MPI3 has fixed a lot of these problems by introducing new interfaces that solve certain issues and offer a better usable interface. However, in standard these parameters always hold true:
 
@@ -896,9 +896,9 @@ call MPI_Type_commit(send_recv_resized, error)
 
 [Jupyter notebook: Correcting problem with array of structures](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Correcting-array-of-structures.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/18vR8NGQuEpwdJcNm6XFOb47U334JUH41)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/18vR8NGQuEpwdJcNm6XFOb47U334JUH41)
 
 ## 4.3 V:Parallel file I/O
 
@@ -934,11 +934,11 @@ Some basic principles of MPI-I/O are that:
 - automatic data conversion in heterog. systems
 - file interoperability with external representation
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P3S9.png)
+![](images/D3P3S9.png)
 
 So we will learn these principles of MPI I/O to see that we could create a file that perhaps looks like a single file. However in reality there are many of the processes that start work on different nodes but actually open the same file and write the results into one physical file, while a logical way there may be gaps that are not allowed to be used or to be written. This is because the striking from a logical way to physical way is done in such a way that we already know what place we can save our portion of the file. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D3P3S10.png)
+![](images/D3P3S10.png)
 
 Simply put, we need to know the size of one chunk and the file system just needs to move the file pointer to the correct place where it writes. This is quite simple because even the serial file I/O allows us to move backwards and forwards in the file, if it is in a binary way so that we know with what offset we can expect something. In this case we could have a single file that can create many cores writing at the same time to the different servers and in the end it looks like a single file for you. To ease out these terms:
 
@@ -1008,14 +1008,14 @@ When checking if your file is correctly written, you should:
 
 [Jupyter notebook: Write a file in parallel](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
 
-[![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
+[![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/IO/Write-file-parallel.ipynb)
 
-[![Colab](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/114xdCs1UIvMQefkdaWlP2Ss-U5AfJO2B)
+[![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/114xdCs1UIvMQefkdaWlP2Ss-U5AfJO2B)
 
-## Week 4 wrap-up
+## Chapter 4 wrap-up
 
-In Week 4 we tried to present advanced communication types in MPI and how to combine OpenMP and MPI in a hybrid programming paradigm. Also some advanced approaches, such as user derived datatypes and parallel file I/O principles were discussed. As before, the hands on examples served to show how to use this techniques as efficiently as possible.
+In Chapter 4 we tried to present advanced communication types in MPI and how to combine OpenMP and MPI in a hybrid programming paradigm. Also some advanced approaches, such as user derived datatypes and parallel file I/O principles were discussed. As before, the hands on examples served to show how to use this techniques as efficiently as possible.
 
-Please, discuss the advanced principles shown in this week and try to summarize their potential in general or maybe specifically for your applications.
+Please, discuss the advanced principles shown in this Chapter and try to summarize their potential in general or maybe specifically for your applications.
 
-Have you found the advanced content of Week 4 interesting and useful?
+Have you found the advanced content of Chapter 4 interesting and useful?
