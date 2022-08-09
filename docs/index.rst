@@ -21,4 +21,4 @@ Introduction to parallel programming
 
 .. * :ref:`genindex`
 .. * :ref:`modindex`
-* :ref:`search`
+.. * :ref:`search`

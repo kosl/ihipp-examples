@@ -1,11 +1,14 @@
+# MPI
 
-### MPI
+## Communicators and communication in MPI
 
-## V:Introduction to Chapter 3
+### Introduction to Chapter 3
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/mESN-4RpkBs)
 
 Message Passing Interface (MPI) presented in this Chapter will introduce communicators and how processes communicate messages. Sending and receiving messages can be used in one-to-one communication. One-to-many broadcast and scatter messages can be distributed and collected back with reduce and gather operations. All these collective operations, that are frequently used, are provided with the MPI library. We will present differences of those MPI functions through many examples and execises that you may explore further.
 
-## 1.1 V: Communicator in MPI
+### Communicator in MPI
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/kpJvYr0Z18A)
 
 In the introduction to MPI in the first Chapter we already saw the simple exercise of 'Hello world'. Yet, in order to actually write some useful applications, we will need to learn some basic routines. 
 
@@ -21,9 +24,7 @@ mpi.h
 
 ![](images/D2P1S12.png)
 
-(0m40s)
-
-### Ranks and Size
+#### Ranks and Size
 
 Frequently, we use the MPI com world when we will need to use a communicator. Once we actually initialize the MPI environment, all the processes would then be in the communicator. As we can predict it would be nice to be able to distinguish between different processes and this is where the 'ranks' come in. When we initialize the environment, MPI communicator will dedicate a number to each process. This is known as the 'rank'. It is a number that is starting from zero and ends with the size minus one. In this example, as you can see, we have launched the application with seven cores and each of them is given a rank. So this application we have different processes that have been given ranks from zero to six.
 
@@ -41,13 +42,11 @@ MPI_Comm_size(MPI_Comm comm, int *size);
 ~~~
 
 ![](images/D2P1S13.png)
-
-(2m2s)
  
-## 1.2.E: Hello World 2.0
+### Exercise: Hello World 2.0
 In this exercise you will create your first MPI program from the provided skeletons for C, Python and Fortran. 
 
-### Exercise
+#### Exercise
 
 Go to the exercise and modify the "Hello world" skeleton so that
 
@@ -67,7 +66,8 @@ What do you observe when you run the program multiple times? Tell us your answer
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1k0QN89_baTmtuejGIz6NYEhLu4EkPa2-)
 
-## 1.3. V: Messages and communications
+### Messages and communications
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/GcXcFznpldM)
 
 Until now, we have introduced the MPI and we have used some simple routines such as rank and size to distinguish between different processes and to actually assign them some numbers that we can recognise and use later. But so far we haven't done anything useful with this knowledge, i.e., we haven't sent any information between the processes. This is where we need to gain an understanding of messages in MPI. 
 
@@ -97,10 +97,8 @@ The next information we will need to specify is the 'tag' of the message. A tag 
 
 The last argument we will need to specify is what is the communicator in which we are sending the messages. In our case here it would be the MPI_COMM_WORLD, but we would eventually learn better about the functions as we will do more excercises and hands on practice. 
 
-(2m30s)
+#### MPI Datatypes
 
-### MPI Datatypes
-(table S17)
 The MPI environment defines its own basic data types. However, if you're familiar with 'C' they're really simple because what you have to do is just put MPI in capital letters before the variable and change everything to capital case. 
 
 | C Datatype | MPI Datatype |
@@ -119,13 +117,11 @@ MPI_INT
 
 However, as we will get more involved with MPI, we will explore that there is also a way for the user to define its own derived data type. For instance if we're using 'struct' in C, then we can define that struct as a new MPI data type. This proves to be very useful because we can just send everything in one message. So this would not require us to send portions of the struct with different messages. But we will dwell deeper into the derived data types in the coming Chapters. For today's section we're only using simple data types. 
 
-(50s)
-
-## 1.4 Q: Quiz on MPI basics
+### Quiz on MPI basics
 
 We just covered the basics of MPI, communicators and messages. This quiz tests your knowledge of MPI basics and terminology. 
 
-### Question 1
+#### Question 1
 Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
  
 * MPI_COMM_DEFAULT
@@ -133,7 +129,7 @@ Which is the predefined communicator that can be used to exchange a message from
 * MPI_COMM_WORLD
 * MPI_COMM_NULL
 
-### Question 2
+#### Question 2
 What does `MPI_Comm_rank()` return?
 
 * Number of processes in an MPI program
@@ -141,7 +137,7 @@ What does `MPI_Comm_rank()` return?
 * Numerical identifier of the current process within the MPI communicator
 * Linux process ID
 
-### Question 3
+#### Question 3
 What purpose does a communicator serve?
 
 * It prevents your main program’s MPI calls from being confused with a library’s MPI calls
@@ -149,13 +145,13 @@ What purpose does a communicator serve?
 * If equal to MPI_COMM_WORLD, it shows that the communication involves all processes
 * All of the above
 
-### Question 4
+#### Question 4
 A rank number from 0 to N-1 is assigned to each process in an MPI process group, and the higher rank processes are given higher resource priority.
 
 * True
 * False
 
-### Question 5
+#### Question 5
 Which of the following is not required for a message passing call:
 
 * The starting memory address of your message
@@ -163,7 +159,7 @@ Which of the following is not required for a message passing call:
 * Size of the message in number of bytes
 * Number of elements of data in the message
 
-### Question 6
+#### Question 6
 What does the parameter tag mean in a message passing call:
 
 * The message type of the incoming message
@@ -171,7 +167,10 @@ What does the parameter tag mean in a message passing call:
 * A user-assigned number that must match on both sender and receiver
 * The type of the process group
 
-## 2.1 Types of communication in MPI
+## Advanced Collective operations
+
+### MPI_Reduce
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/EyIp1HLnOqE)
 
 There are two criteria by which we can divide the types of communication in MPI.
 
@@ -185,15 +184,13 @@ The non blocking communication is more complicated than the simpler blocking cou
 
 ![](images/D2P1S19_2.png)
 
-(1m46s)
-
-### Point-to-Point Communication
+#### Point-to-Point Communication
 
 As we already saw in the previous section, Point-to-Point Communication is the simplest communication as it involves only two processes. One of the processes acts as a sender and the other one as the receiver. Here, the source or the sender sends a message via the communicator to the receiver. In order to do so, the environment has to know who is the sender and who is the receiver and this is taken care of by specifying the 'ranks' of the processes. 
 
 ![Point to point communication](images/W1_point-to-point.png)
 
-### Sending paradigms
+#### Sending paradigms
 
 In order to send a message with Point-to-Point Communication, we use the function
 
@@ -213,7 +210,7 @@ We will now see what arguments this routine actually needs.
 
 So these are the arguments that are the most important information the MPI environment needs in order to know what data is sent and to whom.
 
-## Receiving paradigms
+#### Receiving paradigms
 
 As we saw that the sender needs a function to send a message, obviously the receiver has to call the receive function. This means that for the communication to work, we need two processes and two ranks. So one will call the `MPI_Send` function and the other will similarly call `MPI_Recv` to receive. To be able to receive we use the function
 
@@ -245,19 +242,17 @@ So let's go through an example to understand again the prerequisites for this co
 
 Here, the left is the sender and the right is the receiver. Let's suppose that the sender would like to send this buffer array that has `n` floats over to some other process. For this, it calls the `MPI_Send` routine function. As we already know, the first one is the pointer to the data. So this is send buffer. Then it needs to specify the `number` of data. In this case, it is `n`. The second routine is `MPI_float`, and we need to make sure that this data matches with the one mentioned earlier. As we previously discussed this is the MPI data type that the environment defines, but it has to match with this one, otherwise the communication will not work. Another thing we need to keep in mind is that this data type has to match with the receiver. So we have to be careful when we write these functions that all of these have to match. Now, the receiver has to call the receiver function with the same data type. Here it has to first define an array where it would like to receive this data, the receive buffer. The communicator, of course, has to be the same because they are bound in the same program. But we usually use the `MPI_COMM_WORLD` communicator. The next important part is that the tag has to match. And finally the type of the message or type of the data has to match.
 
-(~5m15s)
-
-## 2.2 E: Send and receive
+### Exercise: Send and receive
 
 In this exercise you will write a basic MPI program which uses MPI_Send and MPI_Recv routines to send number -1 from process 0 to process 1 (ping). 
 
-### Hint
+#### Hint
 ~~~c
 if (rank == 0) { ... }
 else if (rank == 1) { ... }
 ~~~
 
-### Expected output
+#### Expected output
 
 > >      I am 0 before send ping
 > >      I am 1 after recv ping
@@ -273,13 +268,13 @@ else if (rank == 1) { ... }
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1NmkUmC6Xac1oxsnFoqZHTXxZaLcNP_g7)
 
-## 2.3 E: Ping pong
+### Exercise: Ping pong
 
 In this exercise you will get to practice using MPI_Send and MPI_Recv routines. 
 
 This is a continuation of the previous exercise when we send one ping from process 0 to process 1. Now you will send and receive multiple messages. 
 
-### Exercise
+#### Exercise
 
 Two processes ping pong a token back and forth, incrementing it until it reaches a given value.
 
@@ -291,14 +286,14 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 
 4. Repeat this ping pong until the value of token reaches 6, i.e. 3 pings and 3 pongs.
 
-### Sequence of the output that reads well
+#### Sequence of the output that reads well
 
 > >      I am 0 before send ping
 > >      I am 1 after recv ping
 > >      I am 1 before send pong
 > >      I am 0 after recv pong
 
-### Sequence of the output that reads badly
+#### Sequence of the output that reads badly
 
 > >      I am 0 before send ping 
 > >      I am 0 after recv pong 
@@ -311,11 +306,11 @@ Two processes ping pong a token back and forth, incrementing it until it reaches
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/120Ss8Zi2LUfMIY4ikx5TNCFsDB9aBl9R)
 
-## 2.4 D: 
+### What happens with a different number of pings and pongs?
 
 Does the program in the previous step work for different number of pings and pongs, i.e., 3 pings and 2 pongs?
 
-## 2.4 E: Rotating information around a ring
+### Exercise: Rotating information around a ring
 
 In this exercise you will get to experiment with blocking and non-blocking communication. With use of non-blocking communications we want to avoid idle time, deadlocks and serializations. This is the first part of a two part exercise. 
 
@@ -357,7 +352,7 @@ int main()
 }
 ~~~
 
-## Exercise
+#### Exercise
 
 1. Go to the exercise and run with processes 3,4,5 and check for correct sums. 
 
@@ -375,7 +370,8 @@ int main()
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1A1EIOYXizVh1EMzHmvD3vTMyyc4pcz9x)
 
-## 2.5 V: Dynamic Receiving with MPI PROBE and MPI STATUS
+### Dynamic Receiving with MPI PROBE and MPI STATUS
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/4xgwDH2gz6o)
 
 In the previous exercise we implemented the program where we were sending an array along the ring. This was an example of an application in which we already knew that we would be using an array with 100 values. We were already aware of how long it is going to be or in other words how big that message is going to be, how many elements are actually sent and so on. 
 This was important because if we look back into the send and receive routines, we need to specify this 'count'. So, not knowing these numbers already accounts as a problem. In this subsection we will learn that there are two ways to handle this situation, i.e., if the size of the message is not known.
@@ -386,9 +382,7 @@ This was important because if we look back into the send and receive routines, w
 
 In order to learn more about these functions and how to use them we need to grasp some concepts that follow.
 
-(1m10s)
-
-### Wildcards
+#### Wildcards
 
 Until now, when we have been calling the MPI_Sent and MPI_Recv functions, we have been specifying some information. In these cases the receiver can use 'wildcards' in some of those arguments. This means in the function
 
@@ -410,9 +404,7 @@ MPI_ANY_TAG
 ~~~
 allowing us to receive a message having any tag. 
 
-(0m50s)
-
-### MPI_Status and MPI_Probe
+#### MPI_Status and MPI_Probe
 MPI_Status is a struct that contains important information such as the following:
 
 - The rank of the sender as 
@@ -445,30 +437,23 @@ It can be thought of as an MPI_Recv that does everything but receive the message
 
 We can understand these functions better by the following optional exercise.
 
-(2m0s)
-
 [Jupyter notebook: Dynamic receiving](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Dynamic-receiving.ipynb)
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1pwiYqvBCmmroZ77vGZJUBEeErUrUjG5W)
 
-## 2.6 E: (perhaps optional) Dynamic receiving
-
-### Goal
-Write a program that sends a random amount of numbers from a random sender to process 0. The receiver then uses MPI_Probe and MPI_Status to find out how many numbers were sent and who was the sender.
-
-## 2.7 Q: Do you understand point-to-point communication?
+### Quiz: Do you understand point-to-point communication?
 
 This quiz covers various aspects of point-to-point communication that have been discussed so far this Chapter.
 
-### Question 1
+#### Question 1
 You must specify the rank for both source and destination processes, when sending a message using MPI_Send:
  
 * True
 * False
 
-### Question 2
+#### Question 2
 In the following function call, a message is sent to which process?
 
 ~~~c
@@ -478,7 +463,7 @@ MPI_Send(message, 4, MPI_CHAR, 5, tag, MPI_COMM_WORLD)
 * Process 4
 * Process 5
 
-### Question 3
+#### Question 3
 If you call MPI_Recv and there is no incoming message, what happens?
 
 * the Recv fails with an error
@@ -486,7 +471,7 @@ If you call MPI_Recv and there is no incoming message, what happens?
 * the Recv waits until a message arrives (potentially waiting forever)
 * the Recv times out after some system-specified delay
 
-### Question 4
+#### Question 4
 The MPI receive routine has a parameter 'count' – what does this mean?
 
 * The size of the incoming message (in bytes)
@@ -496,7 +481,7 @@ The MPI receive routine has a parameter 'count' – what does this mean?
 
 MPI tries to avoid talking about bytes – counting is almost always done in number of items. For the receive, count is the size of the local receive buffer, not of the incoming send buffer, although of course in some programs they may be the same. 
 
-### Question 5
+#### Question 5
 What happens if the incoming message is larger than 'count'?
 
 * The receive fails with an error
@@ -506,7 +491,7 @@ What happens if the incoming message is larger than 'count'?
 
 MPI checks that the incoming message will fit into the supplied storage before receiving it. The standard behaviour on error is for the whole MPI program to exit immediately with a fatal error. 
 
-### Question 6
+#### Question 6
 What happens if the incoming message (of size 'n') is smaller than 'count'?
 
 * The receive fails with an error
@@ -515,14 +500,14 @@ What happens if the incoming message (of size 'n') is smaller than 'count'?
 
 In some situations you may not know how many items are being sent so you must ensure that you have enough storage locally and you may have more than enough.
 
-### Question 7
+#### Question 7
 You want to send a buffer that is an array buf with 5 double precision values. How do you describe your message in the call to MPI_Send in C and Fortran?
 
 in C: buf, __, MPI_ __
 
 in Fortran: buf, __, MPI_ __
 
-### Question 8
+#### Question 8
 You want to receive a buffer that is an array buf with 5 double precision values. When calling MPI_Recv to receive this message which count values would be correct?
 
 * 1
@@ -530,14 +515,14 @@ You want to receive a buffer that is an array buf with 5 double precision values
 * 5
 * 6
 
-### Question 9
+#### Question 9
 When using one of the MPI send routines, how many messages do you send?
 
 * 1
 * 2
 * 4
 
-### Question 10
+#### Question 10
 How is the actual size of the incoming message reported?
 
 * The value of 'count' in the receive is updated
@@ -547,9 +532,10 @@ How is the actual size of the incoming message reported?
 
 Various pieces of metadata about the received message are stored in the Status such as the origin, tag and its size. 
 
-## 3. Collective communications
+## Collective communications
 
-## 3.1 V: Basic collective communications
+### Basic collective communications
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/VPA2APfKaDQ)
 
 So far all the different methods we learnt and exercises we practiced actually only involved point to point communication, communication between two processes. Now we will introduce some more advanced communication in which more processes are involved. We have to keep in mind that in these communications involving a group of processes, the routines are called by all processes in a communicator. So, simply put all the processes that are involved in this communication need to call the same routine. 
 
@@ -560,7 +546,7 @@ Examples of these types of communication are
 - Gather
 - Reduction
 
-### Broadcast
+#### Broadcast
 
 Broadcast is the simplest one of all the forms of collective communication and it is used to send out user input or parameters to all processes. The essential idea of the broadcast is that we select one process to send the same data to all other processes in the communicator. Usually we use broadcast at the beginning of the algorithm in cases where we would like to distribute the user input or some parameters of the algorithm. For instance, if we don't use parallel input-output, the usual case is that we read a file with one processor and then we distribute the contents with the broadcast.
 
@@ -584,13 +570,11 @@ MPI_Bcast(buf, 3, MPI_CHAR, 1, MPI_COMM_WORLD);
 
 So we can see that it's a pretty simple but very useful routine. Remember only that this exact function call has to be called by every process involved, the root and all of the receiving processes. 
 
-(3m20s)
-
-## 3.2 E: Broadcast
+### Exercise: Broadcast
 
 In this exercise you will get to use MPI_Bcast and write your own broadcast function. You will compare the time efficiency of the MPI and your function. 
 
-### Exercise
+#### Exercise
 
 1. Go to the exercise and complete the program that uses `MPI_Bcast` routine to broadcast an array with 10.000.000 numbers from process with rank 0. 
 
@@ -612,7 +596,7 @@ double MPI_Wtime(void);
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/19qQY6KoxBSDo7p_g49TIHn6yrrsbTq5B)
 
-## 3.3 D: What do you observe with broadcast communication?
+### What do you observe with broadcast communication?
 
 In the previous exercise you ran a program using the `MPI broadcast` routine and writing your own `my_Bcast` function. What did you observe executing the program and comparing the executing times? Are the times for your program and the one from the library the same?
 
@@ -620,9 +604,10 @@ With the help of the following image you can see the difference between the two 
 
 ![](images/D2P2S5.png)
 
-## 3.4 V: Scatter and gather
+### Scatter and gather
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/sjNZkCWvlPY)
 
-### Scatter 
+#### Scatter
 
 As we saw in the broadcast function, the root process sends the same data to every other process. However, sometimes in many applications, we might have some data, that we would like, as the word says, to 'scatter' among other processes. This denotes that we need to divide the data into equal parts so each process has the equal part to receive, meaning each process in our communicator will just get a fraction of it. So this is the main difference between scatter and broadcast. We will see through the exercises further on where this would be useful.  
 
@@ -638,7 +623,7 @@ The function prototype is similar to broadcast, but we will go through the argum
 
 The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends the same piece of data to all processes whereas MPI_Scatter sends chunks of data to different processes. 
 
-### Gather
+#### Gather
 
 After the data or the information is scattered, quite obviously, the information would need to be as this function suggests 'gathered'. Gather is the inverse of Scatter. The gather function quite literally gathers all the information back to the original root process. As we will see the basic idea in many MPI applications, where we have some data, we scatter it, so that every process computes something and then we gather back the information together in one process. The function is quite similar to 'scatter'
 
@@ -650,9 +635,7 @@ The main difference here is that since only one process, i.e., the root gathers 
 
 ![](images/D2P2S7.png)
 
-(3m20s)
-
-## 3.5 E: Scatter and Gather
+### Exercise: Scatter and Gather
 
 In this exercise you write an MPI program that computes the average of an array of elements using MPI_Scatter and MPI_Gather. 
 
@@ -668,7 +651,7 @@ The program takes the following steps:
 
 4. The root process gathers each individual average and it computes the total average on now a much smaller array of numbers. 
 
-### Exercise
+#### Exercise
 
 First, think about how would you solve this exercise without MPI_Scatter and MPI_Gather routines. 
 
@@ -680,9 +663,9 @@ First, think about how would you solve this exercise without MPI_Scatter and MPI
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1LAckEVY0O5xM5lp15nLsTarkg5eIjQTx)
 
-## 4.Advanced Collective operations
+## Advanced Collective operations
 
-### 4.1 MPI_Reduce
+### MPI_Reduce
 
 So far in the 'basic collective communication' we have encountered broadcast, scatter and gather. Now we can move on to more 'advanced collective communication' where we will cover routines MPI_Reduce and MPI_Allreduce. 
 
@@ -696,7 +679,7 @@ Similiarly if we would to use another function say, multiply, the multiplication
 
 Quite simply, this is what an MPI reduction function does. 
 
-### MPI_Reduce
+#### MPI_Reduce
 
 MPI Reduce is basically what we did in the the last exercise with an additional functionality. In a way what the reduce routine does is basically similar to scatter/gather, but we also specify an MPI function like sum, multiplication, maximum or something similar. We will see later on, which functions are available and how we can use them. So the MPI library uses those functions directly on this data that gives us the reduced result immediately so we don't have to call the gather routine and then manually program to get the sum; but, instead the library does it for us. Therefore, MPI_Reduce takes an array of input elements on each process and returns an array of output elements to the root process. The output elements contain the reduced result. 
 
@@ -722,9 +705,7 @@ So, the 'send_data' parameter is an array of elements that each process wants to
 | Logical AND | MPI_LAND |
 | Logical OR | MPI_LOR |
 
-(3m20s)
-
-## 4.2 E: Computing average with MPI_Reduce
+### Exercise: Computing average with MPI_Reduce
 
 In this exercise you write an MPI program that computes the average of an array of elements using MPI_Reduce. 
 
@@ -740,7 +721,7 @@ The program takes the following steps:
 
 4. The root process calculates final average. 
 
-### Exercise
+#### Exercise
 
 * Go to the exercise and rewrite progam using `MPI_Reduce` to compute a global average. 
 
@@ -750,19 +731,19 @@ The program takes the following steps:
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1Eth82ImK84qe2OYsWbSlIB_h3igukCi_)
 
-## 4.3 E: Calculate Pi!
+### Exercise: Calculate Pi!
 
 In this exercise you will get to practice using both broadcast and reduce MPI routines. 
 
 This exercise is a simple program to calculate the value of pi derived from integral by approximation using Riemann sum. Here is a reminder that we are evaluating this integral
 
-$$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx$$
+$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx$
 
 and can be approximated numerically using Riemann sum:
 
-$$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$
 
-### Exercise
+#### Exercise
 
 1. Root process (process 0) asks the user for the number of integral intervals (for interactive notebooks we have hardcoded this number) and then broadcasts this number to all of the other processes. 
 
@@ -776,7 +757,8 @@ $$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1PQEMtJVwoXkwvFeCZci5oIpbhlTA2TSD)
 
-## 4.4 V/A: MPI_Allreduce
+### MPI_Allreduce
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/pjTuaWdsMIY)
 
 In the MPI_reduce function that we learnt previously, the idea was that one of the processor will take data from different processors to combine them using some MPI operation and use this operation to reduce the data and get the results. The MPI_Allreduce stands out from the MPI_Reduce in a peculiar way that is in 'Allreduce' all of the processes get this result. To understand it simply, we reduce the data and somehow broadcast the result at the same time. Of course it is possible of doing this ourselves but with MPI_Allreduce the library does it making it not only faster but also easier for us. 
 
@@ -790,21 +772,19 @@ However, a major difference would be that here is no 'root' in the argument beca
 
 Since we are already familiar with the reduce function it would be easier for us to learn about the 'Allreduce' through the following exercise.
 
-(1m50s)
-
 [Jupyter notebook: Allreduce](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Allreduce.ipynb)
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1-H4kNQde9LmWQ7nv2uAv1G_k9YOsD0uL)
 
-## 4.5 E: Computing standard deviation
+### Exercise: Computing standard deviation
 
 In this exercise you will write a MPI program that computes the standard deviation of an array of numbers in parallel using MPI_Reduce and MPI_Allreduce. 
 
 Standard deviation is a measure of the dispersion of numbers from their mean. A lower standard deviation indicates that the values are closer together (close to the mean), while a high standard deviation indicates that the values are spread out over a wider range. 
 
-$$\sigma = \sqrt{ \frac{\sum |x-\bar{x}|^2}{n}  }$$
+$\sigma = \sqrt{ \frac{\sum |x-\bar{x}|^2}{n}  }$
 
 Standard deviation is one of the problems that requires doing multiple reductions. First you must compute the average of all numbers. After the average, the sums of the squared difference from the mean are computed. The square root of the average of the sums is the final result. After this description, we know there will be at least two sums of all numbers, which means two reductions. 
 
@@ -820,11 +800,11 @@ The program takes the following steps:
 
 5. The root process calculates the standard deviation by taking the square root of the mean of the global squared differences. 
 
-### Exercise
+#### Exercise
 
 Go to the exercise and rewrite progam using MPI_Reduce and MPI_Allreduce to compute the standard deviation. 
 
-### Note
+#### Note
 We are using rand() to generate random numbers which are uniformly distributed on interval [a,b] (in our case [0,1]). Hence we know that `mean = (a+b)/2 = 1/2` and `stddev = (a+b)/sqrt(12) = 1/sqrt(12) = 0.2887`. 
 
 [Jupyter notebook: Standard deviation](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/MPI/Standard-deviation.ipynb)
@@ -833,11 +813,11 @@ We are using rand() to generate random numbers which are uniformly distributed o
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1vv9zplj7y0aeU_2Gz8JsNVXjHiC2EoT0)
 
-## 4.6 Q: Do you understand collective communication?
+### Quiz: Do you understand collective communication?
 
 This quiz covers various aspects of collective communication that have been discussed this Chapter.
 
-### Question 1
+#### Question 1
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
 Choose the one true statement.
@@ -846,7 +826,7 @@ Choose the one true statement.
 * The destination provess of a communicator must call this routine.
 * All processes of a communicator must call this routine.
 
-### Question 2
+#### Question 2
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
 Choose the one true statement.
@@ -855,7 +835,7 @@ Choose the one true statement.
 * The message size argument on the receive side must match the message size argument on the sender side. 
 * The message size argument on the receive side must be smaller than the message size argument on the sender side.
 
-### Question 3
+#### Question 3
 Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
 
 Choose the one true statement.
@@ -863,7 +843,7 @@ Choose the one true statement.
 * Nonblocking collectives match with blocking collectives.
 * Nonblocking collectives do not match with blocking collectives.
 
-### Question 4
+#### Question 4
 Which operation may be though of as the ‘inverse’ of the MPI_SCATTER function?
 
 * MPI_GATHER
@@ -871,7 +851,7 @@ Which operation may be though of as the ‘inverse’ of the MPI_SCATTER functio
 * MPI_BROADCAST
 * MPI_REDUCE
 
-### Question 5
+#### Question 5
 Some MPI collective calls specify both a send type and a receive type, e.g. MPI_Scatter(sendbuf, sendcount, sendtype, recvbuf, recvcount,  recvtype, …). 
 
 However, most times when you see this call used in practice we have sendtype = recvtype. 
@@ -885,20 +865,20 @@ Why does MPI make you specify both types?
 
 The MPI datatypes do not have to be the same, they just have to be compatible. For example, if you create a datatype containing three integers then a send with this type will match a receive of 3 x MPI_INTEGER.
 
-### Question 6
+#### Question 6
 In a scatter operation, what is the best way to use the sending and receiving buffers:
 
 * It is generally OK for the sendbuf and recvbuf to be the same buffer
 * Allocate the senbuf only on the root process and recvbuf on all other processes
 
-### Question 7
+#### Question 7
 Which collective communication call should be used when simple synchronization across a communicator is required?
 
 * MPI_REDUCE
 * MPI_BARRIER
 * MPI_BROADCAST
 
-### Question 8
+#### Question 8
 What is the output of this MPI code on 8 processes, i.e. on running ranks 0, 1, 2, 3, 4, 5, 6 and 7?
 
 ~~~c
@@ -919,7 +899,7 @@ Options:
 
 It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a proces stook before calling any MPI function. Here, since they are all operating in COMM_WORLD, all processes participate in the same global collective. 
 
-## Chapter 3 wrap-up
+### Chapter 3 wrap-up
 
 In Chapter 3 we presented the concepts, programming and execution model of MPI in detail. As with OpenMP in the previous Chapter, the hands on examples served to show how to use this paradigm as efficiently as possible.
 

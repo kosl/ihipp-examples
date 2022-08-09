@@ -2,9 +2,10 @@
 
 ## Intro to parallel programming
 
-### 1.1  Chapter 1
+### Chapter 1
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/0eD3fmSFf84)
 
- the course Introduction to parallel programming! I will be your guide through the Chapters.
+Welcome to the course Introduction to parallel programming! I will be your guide through the Chapters.
 In the first Chapter, we will first introduce the basic principles and paradigms of parallel programming. We will not go deeply into each topic since we will dedicate that to the upcoming Chapters, touching even on some advanced topics in parallel programming. We describe the more advanced topics with the purpose of telling you what is important to know and giving you a starting point on where to learn more. We hope that at some point you will be able to do your coding and advance your learning beyond this course. 
 
 Many scientific and engineering challenges can be tackled in the area of computing. In general, we have two views on it. One view is distributed serial computing. This means that you have many problems to solve and you don't care about time. The other is parallel computing, where the problem needs to be divided into many compute cores or nodes, essentially many computers because it is too big to fit into one computer or one computer would be too slow to solve it. The first approach is often called grid computing, while the second is generally referred to as supercomputing, where you need a supercomputer to solve your problem. You have probably also heard of cloud computing or similar, which is a commercial version of grid or supercomputing resources. 
@@ -19,7 +20,7 @@ The program is usually written and compiled into instructions for serial executi
 
 There are different approaches or programming models that were developed during the years and are still being developed. These languages might help you to resolve some of the issues in the underlying hardware topology, that we usually see as a combination of memory and CPUs; both is essential for parallel computing. In the past there was just a single processor per node with memory, and many of those nodes were combined to make a cluster. In recent years a cluster of compute nodes, so-called ["Beowulf"](http://ibiblio.org/pub/Linux/docs/HOWTO/archive/Beowulf-HOWTO.html#ss2.2), is being upgraded with many cores per node and shared memory. The cores share a memory. There can also be many processor sockets, threads per core and GPU accelerators. The programming model for such a hardware architecture is a combination of languages. For example, we have a parallelization called *OpenMP*, that can be easily done on a single computer, whether this is your PC, laptop or a remote computer. OpenMP is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the pragma comment directives. The result is a multi-threaded code that runs faster. We will introduce OpenMP this Chapter, while in Chapter 2 we will present it in detail.
 
-### 1.2 What team are you on?
+### What team are you on?
 
 We will introduce you to parallel programming with the use of some programming languages. 
 Please, introduce yourself in the comments area on this page, saying why are you interested in the parallel programming course and what do you hope to gain from it. Are there any specific aspects of the subject that you would like to learn about? Tell us which programming language(s) you use or know about or what language are you planning to learn. 
@@ -42,7 +43,7 @@ We will be monitoring your comments and questions, and try to provide helpful fe
 
 The social aspect of an online course is also very important, so please try to interact with your fellow participants in a constructive way as well.
 
-### 1.3 Interactive notebook use
+### Interactive notebook use
 
 In this exercise you will learn how to use Jupyter notebooks interactively. All the examples and exercises in this course will be available in such notebooks. We prepared a platform on which you can run notebooks and experiment with them. Alternatively, the notebooks are also available on Google Colaboratory and some of them on Binder.
 
@@ -67,7 +68,7 @@ Note also that clicking on the badge "Open in Colab" or "launch binder" will not
 The notebooks require cross-site cookie tracking to be enabled because course exercise pages are composed from two distinct servers. If you experience "Forbidden" or cookie related messages then try a different browser or disable cross-site prevention. For example, in Safari browser choose Safari > Preferences > Privacy and uncheck "Prevent cross-site tracking".
 
 
-### 1.4 Hello World!
+### Hello World!
 
 As already mentioned, the simplest approach to parallelization is Open Multi-Processing (OpenMP). We will show you this paradigm through a "Hello World!" example in two programming languages: **C** and **Fortran**.
 
@@ -118,7 +119,8 @@ Are the outputs as you expected?
 
 As a bonus example also the OpenMP "Hello World!" in C using [Cling](https://root.cern/cling/) (an interactive C++ interpreter) is given in the notebook below.
 
-### 1.5 Architectures and memory models
+### Architectures and memory models
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/w3HI7zdbV_g)
 
 Over the years, there have been different multi-node approaches to parallelization. The only really interesting approach is Message Passing Interface (MPI), which we will introduce this Chapter and present in detail in Chapter 3. Contrary to "automatic" parallelization in OpenMP, we need manual parallelization in MPI.
 
@@ -176,7 +178,8 @@ We can recap what we said regarding the development of parallel codes with the f
 - optimization and parallelization of parts that consume most of the computing time
 - the problem needs to be dissected into parts functionally and logically
 
-### 1.6 Amdahl's and Gustafson's laws explained
+### Amdahl's and Gustafson's laws explained
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/JkmHPW_jst4)
 
 When you consider the execution of the code on a number of processors, the speed up achieved with such scaling is typically described by Amdahl's law.
 
@@ -184,15 +187,15 @@ When you consider the execution of the code on a number of processors, the speed
 
 **Source of image: hpc.llnl.gov**
 
-The speed up $$S$$ depends on the parallel portion of the code $$p$$
+The speed up $S$ depends on the parallel portion of the code $p$
 
-$$S = \frac{1}{1-p}$$
+$S = \frac{1}{1-p}$
 
 The ideal speed up for a code that has, e.g., a parallel portion of 50% or in other words: 50% of it is serial and 50% is parallel, and is executed on an infinite number of processors, is just equal to 2, not more. So, for 50% of the parallel portion of the code, the maximum that you can obtain is two times faster or half of the time that is usually needed for execution on 1 processor (left figure). The figure on the right shows speed up depending on the number of processors for the parallel portion of the code of 25, 50, 90 and 95%, respectively. The mathematical expression for the speed up curves is the following
 
-$$S = \frac{1}{1-p+p/N}$$
+$S = \frac{1}{1-p+p/N}$
 
-where $$N$$ is the number of processors. You can deduce that for a large value of $$N$$ this expression is approximated by the expression given first. For the cyan curve (95% parallel portion of the code), one can observe the maximum speed up of 20x for a large number of processors. A nearly 20x speed up is already achieved with about 500 processors, hence using more than 500 processors will not result in much gain of the speed up.
+where $N$ is the number of processors. You can deduce that for a large value of $N$ this expression is approximated by the expression given first. For the cyan curve (95% parallel portion of the code), one can observe the maximum speed up of 20x for a large number of processors. A nearly 20x speed up is already achieved with about 500 processors, hence using more than 500 processors will not result in much gain of the speed up.
 
 The latter raises the question, why would one invest in one million of processors, if we see that even the best or one of the best programs that are running 95% in parallel, are just going 20x faster? The answer can be given by Gustafson's law that actually interprets the currently available hardware, e.g., if 100, 1000 or a million processors are available to the user.
 
@@ -200,13 +203,13 @@ Such a user can usually tailor the problem to their expectations and the hardwar
 
 The expression for speed up according to Gustafson's law is
 
-$$S = 1 + p(N-1)$$
+$S = 1 + p(N-1)$
 
 On the figure below speed up curves according to both laws for N = 32 are shown. Amdahl's law is often referred to strong scaling, whereas Gustafson's law to weak scaling.
 
 ![](images/W1_Amdahl_vs_Gustafson_color.png)
 
-### 1.7 Languages for parallel programming
+### Languages for parallel programming
 
 When speaking of languages for parallel programming, we actually mean parallelization paradigms in host languages. Such paradigms are generally available in the form of Application Programming Interfaces (APIs) that are installed on the user system and can be used as directives or extensions for compiling the parallelized code into executables.
 
@@ -244,69 +247,51 @@ In the following list, we give you some parallelization paradigms available as A
   - programming standard for heterogeneous computing
   - based on a set of compiler directives, a programming model designed to handle hardware accelerators without the complexity associated with GPU programming
 
-### 1.8 Quiz: Intro to parallel programming
+### Quiz: Intro to parallel programming
 
 This quiz tests your knowledge of basic parallel programming principles and paradigms.
 
-1. What are typical advantages of using parallel codes?
+#### Question 1
+What are typical advantages of using parallel codes?
 
-( ) Faster execution than for serial codes
+* Faster execution than for serial codes
+* Large amounts of required memory can be distributed
+* All of the above
 
-( ) Large amounts of required memory can be distributed
+#### Question 2
+What is a necessary condition for the successful parallelization of the code?
 
-(x) All of the above
+* Work can be divided into relatively independent tasks with little communication.
+* Work can be divided into totally independent tasks with no communication.
 
-Correct.
+#### Question 3
+OpenMP is a good choice for code parallelization if (multiple choice answer):
 
-2. What is a necessary condition for the successful parallelization of the code?
+* It can be run on a shared memory machine
+* It can be run on a distributed memory machine
+* The data of the problem can't be partitioned
+* The data of the problem can be divided into chunks
 
-(x) Work can be divided into relatively independent tasks with little communication.
+#### Question 4
+What limits the scaling of parallel codes, i.e., their speed up? (multiple choice answer)
 
-( ) Work can be divided into totally independent tasks with no communication.
+* Communication bottlenecks
+* Memory resources
+* Synchronization overhead
+* Serial portion of the code
+* Number of processors/cores
 
-Correct.
+#### Question 5
+What is the ideal speed up (according to Amdahl's law) for a code that has a parallel portion of 75%?
 
-3. OpenMP is a good choice for code parallelization if (multiple choice answer):
-
-[x] It can be run on a shared memory machine
-
-[ ] It can be run on a distributed memory machine
-
-[ ] The data of the problem can't be partitioned
-
-[x] The data of the problem can be divided into chunks
-
-Correct.
-
-4. What limits the scaling of parallel codes, i.e., their speed up? (multiple choice answer)
-
-[x] Communication bottlenecks
-
-[ ] Memory resources
-
-[x] Synchronization overhead
-
-[x] Serial portion of the code
-
-[ ] Number of processors/cores
-
-Correct.
-
-5. What is the ideal speed up (according to Amdahl's law) for a code that has a parallel portion of 75%?
-
-( ) 2
-
-( ) 3
-
-(x) 4
-
-( ) 5
-
-Correct. For an infinite number of processors the speed up can be calculated by the formula 1/(1-p) or in this case 1/(1-0.75)=4.
+* 2
+* 3
+* 4
+* 5
 
 ## OpenMP overview
 
-### 1.9 Brief intro to OpenMP
+### Brief intro to OpenMP
 
 OpenMP (Open specifications for Multi Processing) is an API for shared-memory parallel computing. It was developed as an open standard for portable and scalable parallel programming, primarily designed for Fortran and C/C++. It is a flexible and easy to implement solution, which offers a specification for a set of compiler directives, library routines and environment variables.
 
@@ -427,7 +412,8 @@ We used GNU C and Fortran compilers, `gcc` and `gfortran`, respectively, with th
 |     | `pgf77` |       |
 |     | `pgf90` |       |
 
-### 1.10 OpenMP memory, programming and execution model
+### OpenMP memory, programming and execution model
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/pj713mbAx78)
 
 OpenMP is based on the shared memory model of multi-processor or multi-core machines. The shared memory type can be either Uniform Memory Access (UMA) or Non-Uniform Memory Access (NUMA). In OpenMP, programs accomplish parallelism exclusively with the use of threads, so called thread-based parallelism.
 
@@ -451,7 +437,7 @@ Let's recap the OpenMP terminology discussed so far with descriptions:
 | construct | an OpenMP executable directive |
 | clause | controls the scoping of the variables during execution |
 
-### 1.11 For loop
+### For loop
 
 In this example, you will learn how to use a `for` OpenMP construct (directive-name) in C and a `DO` OpenMP construct (directive-name) in Fortran for vector addition.
 
@@ -500,77 +486,56 @@ Explore the whole Fortran code in the notebook and run it. Are the results the s
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/17Db1nJXnuVDKfcPIQtQn8011gkuxyO7n)
 
-### 1.12 Quiz: Intro to OpenMP
+### Quiz: Intro to OpenMP
 
 This quiz tests your knowledge of the basic principles and programming/execution model of OpenMP.
 
-1. Which of the following about OpenMP is incorrect?
+#### Question 1
+Which of the following about OpenMP is incorrect?
 
-( ) OpenMP is an API that enables explicit multi-threaded parallelism
+* OpenMP is an API that enables explicit multi-threaded parallelism
+* The primary components of OpenMP are compiler directives, runtime library, and environment variables
+* OpenMP implementations exist for the Microsoft Windows platform
+* OpenMP is designed for distributed memory parallel systems and guarantees efficient use of memory
+* OpenMP supports UMA and NUMA architectures
 
-( ) The primary components of OpenMP are compiler directives, runtime library, and environment variables
+#### Question 2
+OpenMP’s execution model is the *fork-join model* of parallel execution.
 
-( ) OpenMP implementations exist for the Microsoft Windows platform
+* True
+* False
 
-(x) OpenMP is designed for distributed memory parallel systems and guarantees efficient use of memory
+#### Question 3
+What statements about the OpenMP execution model are correct? (multiple choice answer)
 
-( ) OpenMP supports UMA and NUMA architectures
+* threads can exist only within the resources of a single process
+* threads can exist within the resources of multiple processes
+* the maximum number of threads is equal to the number of processor cores times threads per core available
+* the number of threads to use can't be defined by the user
+* a master thread is executed in parallel until the first sequential region construct is encountered
+* a master thread is executed sequentially until the first parallel region construct is encountered
 
-Correct. OpenMP is not designed for distributed memory parallel systems.
+#### Question 4
+Which flag has to be used to tell the `gcc` compiler to take OpenMP directives into account?
 
-2. OpenMP’s execution model is the *fork-join model* of parallel execution.
+* `#pragma omp parallel`
+* `./openmp`
+* `-openmp`
+* `-fopenmp`
+* None of the above
 
-(x) True
+#### Question 5
+Which of these is a correct way to set the number of available threads for an OpenMP program to 4?
 
-( ) False
-
-Correct.
-
-3. What statements about the OpenMP execution model are correct? (multiple choice answer)
-
-[x] threads can exist only within the resources of a single process
-
-[ ] threads can exist within the resources of multiple processes
-
-[x] the maximum number of threads is equal to the number of processor cores times threads per core available
-
-[ ] the number of threads to use can't be defined by the user
-
-[ ] a master thread is executed in parallel until the first sequential region construct is encountered
-
-[x] a master thread is executed sequentially until the first parallel region construct is encountered
-
-Correct.
-
-4. Which flag has to be used to tell the `gcc` compiler to take OpenMP directives into account?
-
-( ) `#pragma omp parallel`
-
-( ) `./openmp`
-
-( ) `-openmp`
-
-(x) `-fopenmp`
-
-( ) None of the above
-
-Correct.
-
-5. Which of these is a correct way to set the number of available threads for an OpenMP program to 4?
-
-( ) In an OpenMP program, use the library function `omp_get_num_threads(4)` to set the number of threads to 4 at the beginning of the main function.
-
-( ) In an OpenMP program, use the library function `num_threads(4)` to set the number of threads to 4 at the beginning of the main function.
-
-(x) In bash, `export OMP_NUM_THREADS=4`
-
-( ) In an OpenMP program, use the library function `omp_max_threads(4)` to set the number of threads to 4 at the beginning of the main function.
-
-Correct. All the above library functions can't be used at the beginning of the main function to set the number of available threads.
+* In an OpenMP program, use the library function `omp_get_num_threads(4)` to set the number of threads to 4 at the beginning of the main function.
+* In an OpenMP program, use the library function `num_threads(4)` to set the number of threads to 4 at the beginning of the main function.
+* In bash, `export OMP_NUM_THREADS=4`
+* In an OpenMP program, use the library function `omp_max_threads(4)` to set the number of threads to 4 at the beginning of the main function.
 
 ## MPI overview
 
-### 1.13 Brief intro to MPI
+### Brief intro to MPI
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/DlXRPllcBaI)
 
 Message Passing Interface (MPI) is a specification of message passing libraries for developers and users. MPI mainly addresses the parallel message-passing programming model. Many open-source MPI implementations exist, which are used for the development of portable and scalable large-scale parallel applications. 
 
@@ -609,7 +574,7 @@ Each processor (core) in an MPI program runs a sub-program, which is typically t
 
 MPI offers point-to-point as well as collective communications. We will present them in the following step.
 
-### 1.14 Messages and communication
+### Messages and communication
 
 The type of communication in MPI is generally related to the number of processes involved. The simplest form of message passing is *point-to-point communication*, in which one process sends a message to another process. In *collective communication*, several processes are involved at a time. There are 3 classes of such communication: synchronization, data movement and collective computation. Concerning the completion of operations, two types exist: blocking and non-blocking operations. We will briefly describe all the types of communication, you can find details with descriptions of relevant MPI routines in Chapter 3.
 
@@ -693,7 +658,7 @@ Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes a
 
 **Source of image: hpc.llnl.gov**
 
-### 1.15 Programming point of view
+### Programming point of view
 
 In this step, we will present how MPI programs are structured, how to compile them and finally, how to run them. The description is pertinent to C/C++, but you can see the differences for other host languages from examples in Chapter 3.
 
@@ -762,7 +727,7 @@ For example, the executables produced as shown in the previous section can be ru
 !mpirun -np 4 ./hello_world.exe
 ~~~
 
-### 1.16 MPI Hello World!
+### MPI Hello World!
 
 In this exercise, you will be able to run an MPI "Hello World!" example in **C**, **Fortran** and **Python**. This example doesn't make use of any MPI routines, i.e., there is no identification of processes or communication among the processes, so that the compiled code is run on many processors independently with no identification. You will later upgrade this example into an MPI "Hello World!" 2.0 example in which the processes will be identified with the use of MPI calls.
 
@@ -776,65 +741,49 @@ How is the MPI library included in the different languages?
 
 Compile and run the codes. Are the results as you expected? Also run the code(s) with the number of processors equal to 128. What is the result?
 
-### 1.17 Quiz: Intro to MPI
+### Quiz: Intro to MPI
 
 This quiz tests your knowledge of the basic principles and programming/execution model of MPI.
 
-1. What is Message Passing Interface (MPI) in principle?
+#### Question 1
+What is Message Passing Interface (MPI) in principle?
 
-( ) a language for message passing 
+* a language for message passing 
+* a library for message passing
+* a specification a library for message passing
 
-( ) a library for message passing
+#### Question 2
+What statements about point to point communication and collective communication in MPI are correct? (multiple choice answer)
 
-(x) a specification a library for message passing
+* in point to point communication only two processors take part
+* in point to point communication many processors can take part
+* collective communication can be from one to one, one to many, many to one, or many to many processors
+* collective communication can be from one to many, many to one, or many to many processors
 
-Correct. MPI is in principle a standard or specification for message passing libraries.
+#### Question 3
+In a blocking MPI routine the call returns only after completion of operations.
 
-2. What statements about point to point communication and collective communication in MPI are correct? (multiple choice answer)
+* True
+* False
 
-[x] in point to point communication only two processors take part
+#### Question 4
+What is the difference between `MPI_Bcast` and `MPI_Scatter` routines?
 
-[ ] in point to point communication many processors can take part
+* `MPI_Scatter` sends the same piece of data to all processes, `MPI_Bcast` sends chunks of data to different processes
+* `MPI_Bcast` sends the same piece of data to all processes, `MPI_Scatter` sends chunks of data to different processes
+* There is no difference, the result of both routines is the same
 
-[ ] collective communication can be from one to one, one to many, many to one, or many to many processors
+#### Question 5
+What is the correct syntax to run an MPI program `prg` with (on) 4 processes (processors)?
 
-[x] collective communication can be from one to many, many to one, or many to many processors
-
-Correct.
-
-3. In a blocking MPI routine the call returns only after completion of operations.
-
-(x) True
-
-( ) False
-
-Correct. In blocking routines the call returns only after the data is sent out from user buffer to the system buffer in case of `MPI_Send` (or received by the user buffer from the system buffer in case of `MPI_Recv`).
-
-4. What is the difference between `MPI_Bcast` and `MPI_Scatter` routines?
-
-( ) `MPI_Scatter` sends the same piece of data to all processes, `MPI_Bcast` sends chunks of data to different processes
-
-(x) `MPI_Bcast` sends the same piece of data to all processes, `MPI_Scatter` sends chunks of data to different processes
-
-( ) There is no difference, the result of both routines is the same
-
-Correct.
-
-5. What is the correct syntax to run an MPI program `prg` with (on) 4 processes (processors)?
-
-( ) `./prg -np 4`
-
-(x) `mpirun -np 4 ./prg`
-
-( ) `OMP_NUM_THREADS=4 mpirun ./prg`
-
-( ) `OMP_NUM_THREADS=4 ./prg`
-
-Correct. MPI programs are typically run with the `mpirun` command followed by the flag `-np` to specify the number of processes (processors).
+* `./prg -np 4`
+* `mpirun -np 4 ./prg`
+* `OMP_NUM_THREADS=4 mpirun ./prg`
+* `OMP_NUM_THREADS=4 ./prg`
 
 ## Accelerators overview
 
-### 1.18 Graphics accelerators
+### Graphics accelerators
 
 Graphics accelerators or graphics processing units (GPUs) are devices with many highly parallel processing units (also called streaming multiprocessors) and very high bandwidth memory. With these two characteristics, they differ from classic processors (CPUs). Apart from their originally intended use, i.e., for intensive 3D graphical rendering (graphics applications), another use is for GPGPU (General Purpose GPU) computing (scientific and engineering applications).
 
@@ -853,7 +802,7 @@ Computing acceleration can be achieved with:
 - directive-based methods (like OpenMP and OpenACC)
 - special programming languages or extensions (like CUDA and OpenCL).
 
-### 1.19 GPU Hello World
+### GPU Hello World
 
 In this exercise, you will run a GPU "Hello World!" example in **CUDA C** and **PyCUDA**, CUDA extensions to C and Python, respectively. CUDA is a GPU programming extension developed exclusively for NVIDIA GPUs.
 
@@ -875,7 +824,7 @@ hello<<<1, 4>>>();
 
 In this syntax, the first number indicates the number of blocks and the second number the number of threads in a block, i.e., in the above example we defined 1 block with 4 threads to be run in parallel on a GPU.
 
-## Exercise
+#### Exercise
 
 Run this example in the following notebook.
 
@@ -895,13 +844,9 @@ You have probably noticed that in PyCUDA, the kernel is wrapped as a string of C
 
 Note the use of `PATH=/usr/local/cuda-10.1/bin:${PATH}` before the compiler call `nvcc` or the `python` interpreter call: this is needed for older GPUs, e.g., Tesla K80, which are deprecated in the latest versions of CUDA (11.x). Note also that the `pycuda` library must be installed in Python, e.g., through `pip`.
 
-### 1.20 Chapter 1 wrap-up
+### Chapter 1 wrap-up
 
 In this introductory Chapter we have tried to present you the paradigms of parallel programming by giving the essentials along with simple code examples in interactive Jupyter notebooks. The primary objective of Chapter 1 is to align you for the next Chapters, which you can already preview.
 
 Please discuss the interactive Jupyter notebooks experience and the potentials we are looking forward. 
 While this Chapter was just a preparation for more advanced topics and hands on examples in the next Chapters, we can still discuss how parallel programming techniques could be useful for your applications.
-
-Therefore, we are interested in whether you found the Chapter 1 content useful?
-
-###### tags: ipp, HPCFS

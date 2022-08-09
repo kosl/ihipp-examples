@@ -15,7 +15,11 @@ release = '1.0.9'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 # https://www.sphinx-doc.org/en/master/usage/markdown.html
 
-extensions = ['myst_parser']
+extensions = ['myst_parser',]
+
+myst_enable_extensions = [
+    "dollarmath",
+]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

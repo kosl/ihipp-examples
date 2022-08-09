@@ -1,12 +1,16 @@
 # MPI Continued
 
-## V: Introduction to Chapter 4
+## Advanced communication in MPI
+
+### Introduction to Chapter 4
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/wpg3qLsfVKA)
 
 In this Chapter we will introduce some advanced MPI topics that you may find useful when asking yourself how to do things better.
 
 A better approach to parallelisation is to overlap computing and communication with non-blocking communication. Another question is if we can reduce memory with MPI and OpenMP gaining in speed with hybrid or one-sided approach? When things get large we would like to combine them together with our own derived types that can simplify programming. At the the end of the Chapter we will take a look into parallel writing of files that can be used instead of collecting results over MPI. There are also some advanced MPI topics which we will not cover here in detail and are part of other PRACE courses.
 
-## 1.1 V: Non Blocking communications
+### Non Blocking communications
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/muCKn1xSODs)
 
 We saw in the previous Chapter that the types of communication in MPI can be divided by two arguments, based on the number of processes involved:
 
@@ -52,7 +56,7 @@ MPI_Wait (MPI_Request *request, MPI_Status *status);
 
 We will understand this more clearly with the help of the following two examples.
 
-### Non-blocking send and receive
+#### Non-blocking send and receive
 
 ![Example](https://ugc.futurelearn.com/uploads/assets/90/47/9047bd18-8486-4259-b346-7a890e8d9b81.png) *would be ideal as an animation*
 
@@ -64,9 +68,7 @@ In similar ways we can initiate the non-blocking receive. So in our ring example
 
 Let's try to further consolidate these ideas by implementing them in the following exercise!
 
-(4m40s)
-
-## 1.2 E: Rotating information around a ring (non-blocking)
+### Exercise: Rotating information around a ring (non-blocking)
 
 In this exercise you will get to experiment with blocking and non-blocking communication. With use of non-blocking communications we want to avoid idle time, deadlocks and serializations. This is the second part of a two part exercise. 
 
@@ -106,7 +108,7 @@ int main()
 }
 ~~~
 
-## Exercise
+#### Exercise
 
 1. Substitute `MPI_Send` with `MPI_Issend` (non-blocking synchronous send) and put the wait statement at the correct place. Keep the normal blocking `MPI_Recv`. Run the program. 
 
@@ -118,7 +120,8 @@ int main()
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1gwkAnySSUYXafSEfKClISKBsMVKtrNJr)
 
-## 1.3 V: One sided communication
+### One sided communication
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/ZXWxUNo_eAs)
 
 As we have already learnt in the beginning that in MPI the parallelisation is based on the distributed memory. This means that if we run a program on different cores, each core has its own private memory. Since the memory is private to each process, we send messages to exchange data from one process to another. 
 
@@ -168,7 +171,7 @@ MPI_Win_free(&win);
 
 So here we define an MPI struct variable 'win'. Then we define some data or storage through either dynamic allocation or something similiar. Using this buffer we actually then create the window. So in the MPI_Win_create you can see that we would like to share this 'shared_buffer' buffer. The size here is the '{NUM_ELEMENTS}'. Since each data type is 'int', the discplacement becomes lets say probably 4 bytes wide. The information argument is usually 'NULL' and the communicator as always is the 'comm_world'. Once this is called, this shared buffer can be shared by all the processes by calling the MPI_Put and MPI_Get routines. Of course at the end of the application we free the 'win' window. 
 
-### MPI_Put and MPI_Get
+#### MPI_Put and MPI_Get
 
 To access the data we need the two routines we talked about earlier, the MPI_Put and MPI_Get. MPI_Put operation is equivalent to a send by origin process and a matching receive by the target process. Let's look at the prototype of these functions which have quite many arguments. 
 
@@ -194,7 +197,7 @@ MPI_Win_fence (0, MPI_Win win);
 
 This function actually helps us to synchronize the data in a way that if multiple processes would like to access the same window it makes sure that they go in an order. So the program will allow different processes to access the window but it will ensure that it is not happening at the same time. So it is important that the one-sided function calls are surrounded by this fence function.
 
-## 1.4 E: One sided communication in a ring
+### Exercise: One sided communication in a ring
 
 You are already familiar with communication in a ring. In this exercise the goal is to substitute nonblocking communication with one sided communication. 
 
@@ -206,13 +209,13 @@ We want to substitute calls to send and receive routines by using MPI_Put or MPI
 
 For this exercise, you will use the **1.** option. So what you need to do is create a window for the receive buffer and substitute the sending and receiving by calling MPI_Put on the process that previously called MPI_Send. Also don't forget to do synchronization with MPI_Win_fence. 
 
-### Exercise
+#### Exercise
 
 1. Go to the exercise and fill out the skeleton to create all `rcv_buf` as windows in their processes. 
 
 2. Substitute the Issend/Recv/Wait with Win_fence/Put/Win_fence sequence. 
 
-### Discussion
+#### Discussion
 
 There are two solutions to substituting nonblocking communication with one-sided communication. Do you have any idea, why would we preffer using MPI_Put instead of MPI_Get? What is your preferred way, and why?
 
@@ -222,11 +225,11 @@ There are two solutions to substituting nonblocking communication with one-sided
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1ZT45DqKWiocEHwjDi0ixG7BK1xAhknY1)
 
-## 1.5 Q: Do you understand advanced communication in MPI?
+### Quiz: Do you understand advanced communication in MPI?
 
 This quiz will test your knowledge on MPI’s advanced communication. 
 
-### Question 1
+#### Question 1
 Which of the following MPI communication types suspends execution of the calling program until the current communication is completed?
  
 * Blocking
@@ -234,13 +237,13 @@ Which of the following MPI communication types suspends execution of the calling
 * Asynchronous
 * None of the above
 
-### Question 2
+#### Question 2
 A message from a non-blocking send MPI_Isend is safe to be accessed immediately after the MPI_Irecv command.
  
 * True
 * False
 
-### Question 3
+#### Question 3
 What is a valid reason for wanting to use one-sided communication in MPI?
  
 * Less synchronization overhead
@@ -248,7 +251,7 @@ What is a valid reason for wanting to use one-sided communication in MPI?
 * Easier programming of irregular communication events
 * All of the above
 
-### Question 4
+#### Question 4
 Which of the following steps comes first in setting up MPI one-sided communication?
  
 * Starting a communication interval using MPI_Win_fence
@@ -256,33 +259,34 @@ Which of the following steps comes first in setting up MPI one-sided communicati
 * Initializing a window
 * The order doesn’t matter
 
-### Question 5
+#### Question 5
 If you execute an MPI_Put, where is the send and where is the receive buffer?
  
 * The sendbuf is a local buffer and the rcvbuf must be a window.
 * The sendbuf is a window and the rcvbuf is a local buffer.
 
-### Question 6
+#### Question 6
 What units are used to define the size of a window in a call to MPI_Win_create?
  
 * Bytes
 * The units specified by the MPI_Datatype argument
 * Words
 
-### Question 7
+#### Question 7
 Immediately after returning from a MPI_Put call, it is safe to overwrite the buffer containing the data that was sent.
  
 * True
 * False
 
-### Question 8
+#### Question 8
 What is the simplest way to end a one-sided communication interval and re-synchronize, in just one step?
 
 MPI_Win_ __ ?
 
-## 2. MPI + OpenMP
+## MPI + OpenMP
 
-## 2.1 MPI + threading methods
+### MPI + threading methods
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/2gIEjKLFA5g)
 
 In this subsection we will build up upon the introduction of OpenMP we did in the first two Chapters and we will see how to include it into MPI. There are numerous reasons we need to dwell into this, however the most important is that in High-performance computing (HPC) the computer systems feature a hierarchical hardware design. So we need to discuss how the multi-core nodes that are connected via a network can be orchestrated efficiently. We will also see where the bottlenecks of each approach lie. 
 
@@ -293,7 +297,7 @@ This is our introduction to parallel programming, meaning that we will just buil
 
 To exemplify, let us compare IBM Power eight processors with Intel or AMD, i.e., the classical X-64 architecture. We see that Power processor has much more threads per core. So instead of the usual hyper threading, that we find on our laptops, where we usually have one thread in addition to the core; on Power 8 processor we have, for example eight process cores on one socket, then we may have additional eight threads to be run per core, so that they share cache. Runing with many threads raises the performance if we are running an OpenMP program. This implies that the programs and threads share the variables, memory and so on. Hopefully, in the initial OpenMP course that we had in the first two Chapters it was quite simple to do. 
 
-### MPI + OpenMP
+#### MPI + OpenMP
 
 The two main threading paradigms we can try are:
 - MPI + OpenMP
@@ -339,13 +343,13 @@ MPI_THREAD_MULTIPLE
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1EN8Z7EoGvqMFqX_n-46w9iozudNIlIWm)
 
-## 2.2 Calculate pi! Using MPI_THREAD_FUNNELED
+### Calculate pi! Using MPI_THREAD_FUNNELED
 
 The safest and the easiest way to use threading is to use `MPI_THREAD_FUNNELED`. This level of thread safety assures multithreading, but only the main thread makes the MPI calls (the one that called MPI_Init_thread). All MPI calls are made by the master thread, outside the OpenMP parallel regions or in OpenMP master regions. 
 
 This example notebook shows how to calculate the value of pi by solving this integral approximation. 
 
-$$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
+$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$
 
 You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous Chapters. What we did in this example is use both. The goal is to minimaly use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. This is the complete code shown below. 
 
@@ -403,7 +407,7 @@ mpicc -fopenmp pi-hybrid.c && mpirun -n 3 –allow-run-as-root a.out
 
 Look and run the code in the notebook at the end of this article. 
 
-### Learning outcomes for the exercise
+#### Learning outcomes for the exercise
 
 This program was done in the first way of threading methods (MPI + OpenMP). 
 
@@ -420,9 +424,10 @@ This program was done in the first way of threading methods (MPI + OpenMP).
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1CvsmJmEEUMuEC609xneBvgsY5xuioTlF)
 
-## 2.3 V: Hybrid MPI
+### Hybrid MPI
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/oaZyqqa_Ptc)
 
-### Hybrid MPI+OpenMP Masteronly Style
+#### Hybrid MPI+OpenMP Masteronly Style
 
 We saw in the previous exercise that the scaling efficiency may be limited by the Amdahl's law. This means that, of course, even though all of the computation is actually parallelised, we might still have large chunks of serial code present. For example the serial code is the code that follows after "#pragma omp for reduction" in the previous example. So the reduction clause is a serial portion of code even though it utilizes parallel threads. But this is the last command and the following MPI_Reduce is actually collective communication as we have already learnt. 
 
@@ -436,7 +441,7 @@ An efficient solution to these problems would be an overlap. Some kind of region
 An efficient example to explain the need and efficiency of this is if we are doing a ray tracing in a room for example. The problem of ray tracing is that the volume that we are describing is quite complex. So lets say if we have to do the light tracing and reflections that we see from the lighting and so on, we would need to compute the parameters for each ray. This is already several gigabytes of memory and if we have just 60 gigabytes of memory per node, then we are limited by memory to solve the problem. So we cannot do large problems with many cores because each core in MPI actually gets its own problem inside it. There is no sharing of the problem among the threads, processes or cores. We could usually solve this problem fairly easily by using MPI + OpenMP. 
 These kind of problems, which take a lot of memory since they are complex because of the description of environment and so on are best done with MPI + OpenMP. 
 
-### Calling MPI inside of OMP MASTER
+#### Calling MPI inside of OMP MASTER
 
 If we would like to do communication, then it is usually best to do OMP master thread. This ensures that only one thread communicates with the MPI. However, we will still need to do some synchronization. As we learnt in the previous Chapters about synchronization that sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at the time. Synchronization means that whenever we do MPI, all threads will need to stop at some point and do the barrier.
 
@@ -463,7 +468,7 @@ We can see above that this implies that all other threads are sleeping, and the 
 
 Through the following exercise we will see why the barrier is necessary. 
 
-### Example with MPI_recv
+#### Example with MPI_recv
 
 In the example, the master thread will execute a single MPI call within the OMP_MASTER construct, while all the other threads are idle. As illustrated, barriers may be required in two places:
 
@@ -512,23 +517,23 @@ In the example, the master thread will execute a single MPI call within the OMP_
 }
 ~~~
 
-## 2.4 Q: Quiz on Hybrid programming with OpenMP and MPI
+### Quiz on Hybrid programming with OpenMP and MPI
 
 Do you understand how OpenMP can be included and used with MPI? Test your understanding of this topic with this quiz.
 
-### Question 1
+#### Question 1
 An MPI process is generally single-threaded unless the code has been augmented with multithreading directives or library calls.
 
 * True
 * False
 
-### Question 2
+#### Question 2
 If MPI_Init_thread returns MPI_THREAD_FUNNELED, MPI messages can only be passed between main threads.
 
 * True
 * False
 
-### Question 3
+#### Question 3
 Which argument to MPI_Send my be used to identify the destination thread?
 
 * rank
@@ -536,7 +541,7 @@ Which argument to MPI_Send my be used to identify the destination thread?
 * tag
 * communicator
 
-### Question 4
+#### Question 4
 MPI messages can be passed between any two threads, provided each is enclosed in an omp single construct, when MPI_Init_thread returns what value?
 
 * MPI_THREAD_SINGLE
@@ -544,9 +549,10 @@ MPI messages can be passed between any two threads, provided each is enclosed in
 * MPI_THREAD_SERIALIZED
 * MPI_THREAD_MULTIPLE
 
-## 3. User defined datatypes
+## User defined datatypes
 
-## 3.1 Derived data type
+### Derived data type
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/om0E_xX0-Os)
 
 So far we have learnt to send messeages that were a continuous sequence of elements and mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer any combination of data in memory in one message. We will learn to communicate strided data, i.e., a chunk of data with holes between the portions, and how to communicate various basic datatypes within one message.
 
@@ -562,7 +568,7 @@ Since we would not need to copy data into a continuous array, to be transferred 
 
 Or they could be simple types that are being combined into one data layout without the need of copying into one piece to be transferred efficiently or in one block of message. It is not uncommon to have a messages of sizes over 60 or more kilobytes. In cases where we would like to transfer the results of some programs that could be larger files, actually this is the most efficient way to do it. Of course there are other altenatives such as writing the results into a file and later opening and reading the file. Quite often the codes do not actually return results, but they just write their results into a file, and eventually we'll need to combine the results into one representation. This is quite similar to how we do it in profiler or tracer, creating a file for each processor. So it is already quite easy to understand that if we are debugging a code with two thousand cores (which is not that big) we will easily end up with two thousand files to be read that need to be interpreted and that will definitely take some time. We will learn about it more in the following subsections of parallel I/O.
 
-### Derived Datatypes — Type Maps
+#### Derived Datatypes — Type Maps
 
 A derived datatype is logically a pointer to a list of entries. However, once this data type has been saved somewhere, it is not communicated over the network. When the need comes we just use this type simply as it would be a basic data type. However the only prerequisite is that for each of these data types we need to compute the displacement. Quite obviuosly MPI does not communicate these displacements over the network.
 
@@ -577,7 +583,7 @@ A derived datatype is logically a pointer to a list of entries. However, once th
 
 Here you can see the description of the memory layout and the displacements. For example MPI_INT can be displaced for four or eight bytes and MPI_DOUBLE is displaced for sixteen bytes and so on. A derived datatype describes the memory layout of, e.g. structures, common blocks, subarrays and some variables in the memory etc.
 
-### Contiguous Data
+#### Contiguous Data
 
 This is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
 
@@ -589,7 +595,7 @@ In C we use the following function to define it
 int MPI_Type_contiguous (int count, MPI_Datatype oldtype, MPI_Datatype *newtype)
 ~~~
 
-### Committing and Freeing a Datatype
+#### Committing and Freeing a Datatype
 
 Before a dataytype handle is used in message passing communication, it needs to be committed with MPI_TYPE_COMMIT. This needs be done only once by each MPI process. When we commit, it implies that data type recites a description inside, that can be used similar to a basic datatype. However, if at some point this changes or we would like to release some memory, or if we will not use it anymore, we may call MPI_TYPE_FREE() to free the datatype and its internal resources. 
 The routine used is as follows
@@ -598,7 +604,7 @@ The routine used is as follows
 int MPI_Type_commit (MPI_Datatype *datatype);
 ~~~
 
-### Example
+#### Example
 
 Here in this example we can see the real need for derived data types. 
 
@@ -632,11 +638,11 @@ Of course, there can also be some kind of gaps that we would not actually see if
 
 ![Adjustment](images/D3P2S5.png)
 
-## 3.2 E: Derived data type
+### Exercise: Derived data type
 
 In this exercise you will pass data around a ring with a derived datatype instead of an integer or an array like we did so far. You send and receive buffer will be a struct with two integers. 
 
-### Exercise
+#### Exercise
 
 You will use a modified pass-around-the-ring program which already includes a struct with two integers. In the exercise you will:
 
@@ -652,9 +658,10 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1gLUk3OPO01kvWxQ_LpaPI220crE7zZzx)
 
-## 3.3 V/A: Layout of struct data types
+### Layout of struct data types
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/ZKzidmk-7FY)
 
-### Vector datatypes
+#### Vector datatypes
 
 What we learnt so far in the previous subsection and the exercise were more like continous vectors. Sometimes we would need to communicate vectors with holes that we do not want to be transferred. This implies that we would not send each element but just selected elements or sequence of elements. Therefore the blocklength and the offset of each can be used to create a "stride". When we want to communicate just a portion of a contionus chunk of memory the destination and source may not be the same. Usually we have one element to receive the results back from the array of cluster. As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could use such vector datatypes.
 
@@ -672,7 +679,7 @@ The structure of the routine is similiar to most we have learnt previously. So
 - 'stride' is the offset to the next portion of the result. 
 - the datatype, of course we can have only one datatype here and it could be a derived one. Of course we can communicate strided array of floats and integers and subsequently we will get a * newtype created that can be used in send and recieve routines.
 
-### Struct datatype
+#### Struct datatype
 
 So we could have old types that are of different sizes and then we could combine two old types into a single vector or a block that can be also with holes and these holes will not be communicated. This is a more prevalent way to describe the type instead of doing what we saw earlier. The previous method is not optimal for large numbers of such kinds of arrays. In such cases we use the struct datatypes so that communication is executed in the correct way. 
 
@@ -704,7 +711,7 @@ struct buff {
 }
 ~~~
 
-## 3.4 Computing displacements
+### Computing displacements
 
 We actually need to compute the displacements. So if we would like to see the size of each structure in bytes, that would need to be prescribed as a buffer the displacement needs to be known.
 In MPI1 before we started with derived types we saw there were some differences with MPI3 and MPI1 similar to kind of problems that fortran had. These issues are now resolved with MPI3.1. Now there is a deprecated way of doing upper and lower bound for the structure. These are the recommended way how to compute the distance from one type to another. 
@@ -736,7 +743,7 @@ with the routine that looks like
 MPI_Aint MPI_Aint_add (MPI_Aint base, MPI_Aint disp)
 ~~~
 
-### Example
+#### Example
 
 In example we see how we compute the address. 'Aint' address variable or 'disp' displacements could be computed by prescribing the start of the first element. The 'snd_buf.i[0]' is actually the correct way of defining that address. 
 
@@ -758,7 +765,7 @@ disp = MPI_Aint_diff(iaddr1, iaddr0);
 MPI_Finalize();
 ~~~
 
-## 3.5 D: Which is the fastest neighbor communication with strided data?
+### Which is the fastest neighbor communication with strided data?
 
 What do you think? Which is the fastest neighbor communication with strided data?
 
@@ -768,30 +775,30 @@ What do you think? Which is the fastest neighbor communication with strided data
 
 - And which of the communication routines should be used?
 
-## 3.6 Q: Quiz on derived datatypes
+### Quiz on derived datatypes
 
 This quiz tests your knowledge of user derived datatypes.
 
-### Question 1
+#### Question 1
 Which of the following general datatypes assumes that the stride is equal to 1?
  
 * Contiguous
 * Vector
 * Struct
 
-### Question 2
+#### Question 2
 Which of the following general datatypes may constist of more than one basic datatype?
  
 * Contiguous
 * Vector
 * Struct
 
-### Question 3
+#### Question 3
 If you have an array of a structure in your memory, how would you describe this?
  
 Using function MPI_ __ for the structure and the  __  argument in the MPI communication procedure for the size of the array.
 
-### Question 4
+#### Question 4
 Which additional MPI procedure call is required, before a newly generated datatype handle can be used in message passing communication?
 
 * MPI_Type_contiguous
@@ -799,13 +806,13 @@ Which additional MPI procedure call is required, before a newly generated dataty
 * MPI_Type_commit
 * MPI_Type_free
 
-## 4. Parallel File I/O
+## Parallel File I/O
 
-## 4.1 E: Pass-around-the-ring exercise
+### Pass-around-the-ring exercise
 
 In this exercise you will pass data around a ring with a derived datatype instead of an integer or an array like we did so far. Your send and receive buffer will be a struct with one integer and one floating point. 
 
-### Exercise
+#### Exercise
 
 You will use a modified pass-around-the-ring program which already includes a struct with one integer and one floting point. In the exercise you will fill out the blank spaces and modify the call routines to use the new datatype. 
 
@@ -821,7 +828,7 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1ZelmLf5ls947WirRkrBMRt2eOmNarmAP)
 
-## 4.2 A: Brief explanation of size, extent and alignment rules
+### Brief explanation of size, extent and alignment rules
 
 Before we go further into the Parallel file I/O we need to get some basic knowledge about the terminology of size, extent, true extent etc. and get some background about the alignment rules.  
 
@@ -839,7 +846,7 @@ Extent, alignment and holes can be a problem for some compilers or architectures
 - There can be additional holes at begin and by lb and ub markers: MPI_TYPE_CREATE_RESIZED. 
 - And as mentioned already, basic datatypes: Size = Extent = number of bytes used by the compiler. 
 
-### Alignment rule, holes and resizing of structures
+#### Alignment rule, holes and resizing of structures
 
 At times, the compiler might add additional alignment holes either within a structure (for example between a float and a double) or at the end of a structure (i.e. after elemets of different sizes). However, alignment holes are important at the end when using an array of structures!
 
@@ -867,7 +874,7 @@ lb = 0
 call MPI_Type_create_resized(&old_struct_type, lb, new_extent, correct_struct_type, ierror)
 ~~~
 
-### Example: Correcting problem with array of structures
+#### Example: Correcting problem with array of structures
 
 This is a example program where we have an array of structures containing a double and an integer. A new datatype handle is implemented by resizing the old one and doing the commit. We use the new resized datatype handle in the send and receive call routines. 
 
@@ -900,7 +907,8 @@ call MPI_Type_commit(send_recv_resized, error)
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/18vR8NGQuEpwdJcNm6XFOb47U334JUH41)
 
-## 4.3 V:Parallel file I/O
+### Parallel file I/O
+[![(Video)](images/video-badge-fp.png)](https://youtu.be/uBMFyntTAFI)
 
 Many parallel applications need a coordinated parallel access to a file by a group of processes and at times this could be simultaneous. Frequently all the processes may read/write many (small) non-contiguous pieces of the file, i.e., the data may be distributed amongst the processes according to a partitioning scheme. Writing of the results can be done by all compute nodes at once or even compute cores, writing their own portion of the result and having a huge amount (not by size but by the number) of files is very inefficient in such a way.
 
@@ -986,17 +994,17 @@ However, if access mode `amode=MPI_DELETE_ON_CLOSE` was specified in MPI_FILE_OP
 
 We will learn further about the MPI-I/O principles through a simple example. 
 
-## 4.4 E: Four processes write a file in parallel
+### Exercise: Four processes write a file in parallel
 
 In this exercise your program should write a file in parallel using four processes. 
 
-### Exercise
+#### Exercise
 
 1. Each process should write its rank (as one character) ten times to the offsets = `rank + i * size`, where `i=0..9`. 
 
 2. Each process uses the default view. 
 
-### Tip
+#### Tip
 
 When checking if your file is correctly written, you should:
 
@@ -1012,7 +1020,7 @@ When checking if your file is correctly written, you should:
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/114xdCs1UIvMQefkdaWlP2Ss-U5AfJO2B)
 
-## Chapter 4 wrap-up
+### Chapter 4 wrap-up
 
 In Chapter 4 we tried to present advanced communication types in MPI and how to combine OpenMP and MPI in a hybrid programming paradigm. Also some advanced approaches, such as user derived datatypes and parallel file I/O principles were discussed. As before, the hands on examples served to show how to use this techniques as efficiently as possible.
 
