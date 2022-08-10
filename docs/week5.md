@@ -22,7 +22,12 @@ In the image below you can observe schematics of both CPU and GPU hardware archi
 - a core (green rectangle) in a CPU is different than a "core" or ALU (green rectangle) in a GPU: the former is comprised of ALUs and FPUs which are more specialized than ALUs in a GPU;
 - a CPU has more cache memory than a GPU.
 
+:::{figure-md}
+
 ![](images/CPU_vs_GPU_architecture.png)
+
+CPU vs. GPU architecture. 
+:::
 
 **Source of image: nvidia.com**
 
@@ -282,7 +287,12 @@ Many solutions exist for programming GPUs and we will talk about the two most us
 
 Another solution is OpenCL (Open Computing Language) which is a standard open-source programming model initially developed by major manufacturers (Apple, Intel, ATI/AMD, NVIDIA) and is now maintained by Khronos. It also provides extensions to C, while C++ is supported in SYCL (a similar but independent solution by Khronos). Although its programming/execution model is similar to CUDA, it is more low-level. It can also come with a developer toolkit, depending on the hardware, but its main advantage over CUDA is that it's supported by many types of Processing Units (CPUs, GPUs, FPGAs, MICs...) and in reality oriented to heterogeneous computing. In principle, that means an OpenCL program can run either on a GPU (not depending on the manufacturer) or on a CPU (or any other PU). OpenCL's latest standard is currently at 3.0. Unfortunately, the NVIDIA GPUs does not support it (contrary to Intel and AMD GPUs), the support is still offered only for OpenCL 1.2.
 
+:::{figure-md}
+
 ![](images/CUDA_OpenCL.png)
+
+CUDA and OpenCL. 
+:::
 
 See also:
 
@@ -420,9 +430,12 @@ After exploring the GPU architecture and getting to know the principles of GPU p
 
 The GPU execution model uses the concept of a grid of thread blocks, where the multiple blocks in a grid map onto the many SMs, and each block contains many threads, mapping onto the cores in an SM. We can see this concept in the image below.
 
+:::{figure-md}
+
 ![](images/Execution_Model.png)
 
-**Source of image: nvidia.com**
+Execution model. (Source of image: nvidia.com)
+:::
 
 The term "device" is a general reference to the GPU, whereas the term "host" is reserved for the CPU. We often refer a scalar processor to a GPU "core".
 
@@ -443,9 +456,12 @@ Let's recap everything in terms of the GPU CUDA thread hierarchy with some detai
 
 The image below shows an example of a CUDA thread hierarchy with 2D blocks.
 
+:::{figure-md}
+
 ![](images//grid-of-thread-blocks.png)
 
-**Source of image: nvidia.com**
+Grid of thread blocks. (Source of image: nvidia.com)
+:::
 
 Using built-in variables we can define global thread indices that run in a kernel. For a 1D kernel we can define a global thread index `idx` in the following way:
 
@@ -526,9 +542,12 @@ The GPU OpenCL work-item hierarchy is equivalent to the CUDA thread hierarchy ex
 
 The image below shows an example of an OpenCL work-item hierarchy with 2D work-groups (note that the equivalent of "grid" in OpenCL is called NDRange).
 
+:::{figure-md}
+
 ![](images//ndrange-work-items.png)
 
-**Source of image: khronos.org**
+NDRange work items. (Source of image: khronos.org)
+:::
 
 Like CUDA, we can use built-in variables in OpenCL to define global work-item indices that run in a kernel. For a 1D kernel we can define a global work-item index `idx` in the following way:
 
@@ -1141,7 +1160,12 @@ We are ready for a more complex example in numerical computation to show some ex
 
 A definite integral of a function can be approximated using the trapezium rule. The area under the function on the interval from a to b, which represents the definite integral, is divided into N trapeziums. The area of each trapezium is equal to the median of the trapezium `(f(x+h)+f(x))/2` multiplied with the sub-interval width `(b-a)/N`. The sum of all trapezium areas is an approximation of the definite integral of the function from a to b. For simplicity, we choose `a = 0` and `b = 1` to calculate the normal distribution function from 0 to 1, which is equal to 0.3413447460685429 (see picture below).
 
+:::{figure-md}
+
 ![](images//riemann_sum.png)
+
+Riemann sum. 
+:::
 
 How can we do this example on the CPU? The simplest approach is to use a `for` loop to calculate trapezium medians and trapezium sums:
 
@@ -1216,9 +1240,12 @@ The main OpenMP device constructs are:
 
 By defining a `target` construct, a new target task is generated. When the latter starts, the enclosed target region is executed by an initial thread running sequentially on a target device if it's available and supported. If not, all target regions associated with the device are executed on the host. The `teams` construct generates a league of thread teams where the master thread of each team executes the region sequentially, as shown on the image below.
 
+:::{figure-md}
+
 ![](images/OpenMP_execution_model.png)
 
-**Source of image: OpenMP Accelerator Model, IWOMP 2016**
+OpenMP execution model. (Source of image: OpenMP Accelerator Model, IWOMP 2016) 
+:::
 
 Some important OpenMP 4.x device constructs are listed in the following table:
 
@@ -1444,9 +1471,12 @@ The profiling results of the first version (with one kernel) of the GPU Riemann 
 
 But how can we get rid of the bottlenecks of memory transfer and sum calculation on the host? A hint to a solution was already given in the OpenMP codes: sum reduction. While parallel reductions in OpenMP are quite easily achieved, this is not the case in CUDA or OpenCL since they have to be done programmatically. One approach or a variant of sum reduction is shown in the image below.
 
+:::{figure-md}
+
 ![](images/sum_reduction.png)
 
-**Source of image: nvidia.com**
+Sum reduction. (Source of image: nvidia.com) 
+:::
 
 Let’s assume we have an array of 16 elements in shared memory. How can we add these elements in terms of sum reduction?
 
@@ -1702,7 +1732,12 @@ $ nvvp ./riemann_cuda_double_reduce
 
 Visual profiling can be invoked with many options for analysis of the CUDA code. The picture below shows the traces for the Riemann sum code with two kernels and the summary of both kernels execution (average duration, FLOP, multiprocessor occupancy...).
 
+:::{figure-md}
+
 ![](images/nvvp_riemann_cuda_double_reduce_flops.png)
+
+Traces for the Riemann sum code with two kernels. 
+:::
 
 One can observe from the traces that the kernel `reducerSum` is executed after the kernel `medianTrapezium` and that for the latter 91.1% Streaming Multiprocessor (SM) occupancy was achieved with 86000005646 Double Precision Floating Point Operations (Flop) in 172.91868 milliseconds. For the kernels, the parameters can be shown graphically, e.g., the performance in Flops. You can calculate the latter yourself from data in the summary, e.g., for the kernel `medianTrapezium`:
 
@@ -1747,7 +1782,12 @@ $ nsys-ui
 
 the Nsight Systems GUI will be invoked. One can then load the previously generated report `report1.qdrep` to visualize traces. The picture below shows the traces for the Riemann sum code with two kernels visualized by the Nsight Systems GUI.
 
+:::{figure-md}
+
 ![](images/nsys-ui_trace.png)
+
+Traces for the Riemann sum code with two kernels by Nsight Systems GUI. 
+:::
 
 #### Profiling and tracing of OpenCL codes
 
@@ -1817,9 +1857,19 @@ $ paraprof
 
 The visualisation of profiles (threads), i.e., one profile for OpenCL API calls and the other for OpenCL kernels, can be seen on the pictures below.
 
+:::{figure-md}
+
 ![](images/tau_opencl_01_new.png)
 
+Profile for OpenCL API calls.
+:::
+
+:::{figure-md}
+
 ![](images/tau_opencl_02_new.png)
+
+Profile for OpenCL kernels. 
+:::
 
 Tracing of the OpenCL Riemann sum code with two kernels can be done with TAU in the following way. Again, we first generate traces (`tautrace.0.0.0.trc` and `tautrace.0.0.1.trc`) with:
 
@@ -1837,9 +1887,19 @@ $ jumpshot tau.slog2
 
 On the pictures below you can see the traces with the description legend.
 
+:::{figure-md}
+
 ![](images/tau_jumpshot_trace_new.png)
 
+TAU jumpshot trace.
+:::
+
+:::{figure-md}
+
 ![](images/tau_jumpshot_legend_new.png)
+
+TAU jumpshot legend.
+:::
 
 The second trace (thread 1) shows the OpenCL kernels on a timeline: it is evident that the `reducerSum` kernel is executed after the `medianTrapezium` kernel, as is the case of the trace showing CUDA kernels.
 

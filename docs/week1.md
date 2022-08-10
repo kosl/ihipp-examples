@@ -14,9 +14,12 @@ If you are a serious user, you will quickly learn this. If we use an analogy, bu
 
 The program is usually written and compiled into instructions for serial execution on one processor (see image below). You have to divide the problem into separate subproblems that can be executed in parallel on many processors available and achieve speedup.
 
+:::{figure-md}
+
 ![](images/W1_parallelization.png)
 
-**Source of image: hpc.llnl.gov**
+Parallelization. (Source of image: hpc.llnl.gov)
+:::
 
 There are different approaches or programming models that were developed during the years and are still being developed. These languages might help you to resolve some of the issues in the underlying hardware topology, that we usually see as a combination of memory and CPUs; both is essential for parallel computing. In the past there was just a single processor per node with memory, and many of those nodes were combined to make a cluster. In recent years a cluster of compute nodes, so-called ["Beowulf"](http://ibiblio.org/pub/Linux/docs/HOWTO/archive/Beowulf-HOWTO.html#ss2.2), is being upgraded with many cores per node and shared memory. The cores share a memory. There can also be many processor sockets, threads per core and GPU accelerators. The programming model for such a hardware architecture is a combination of languages. For example, we have a parallelization called *OpenMP*, that can be easily done on a single computer, whether this is your PC, laptop or a remote computer. OpenMP is quite an easy approach to do "automatic" parallelization. It means that you will start with a serial program and upgrade it with the pragma comment directives. The result is a multi-threaded code that runs faster. We will introduce OpenMP this Chapter, while in Chapter 2 we will present it in detail.
 
@@ -126,15 +129,21 @@ Over the years, there have been different multi-node approaches to parallelizati
 
 A combination of both approaches, so called hybrid model with OpenMP and MPI can be also done in a very simple way to gain a bit of performance regarding memory or CPU utilisation (see image below). Latest hardware architectures have non-uniform memory access called NUMA, hence memory regarding the cores is not symmetric but mostly asymmetric.
 
+:::{figure-md}
+
 ![](images/W1_hybrid_OpenMP_MPI.png)
 
-**Source of image: hpc.llnl.gov**
+Hybrid OpenMPI+MPI. (Source of image: hpc.llnl.gov)
+:::
 
 The parallel computing approach tends to use as many computing cores as possible for parallel code execution. The ideal is 100% parallel utilisation, which can be achieved only for embarrassingly simple parallel problems, that is parallel processing of the same subproblems on multiple processors.
 
+:::{figure-md}
+
 ![](images/W1_embarassingly_simple.png)
 
-**Source of image: hpc.llnl.gov**
+Embarassingly simple. (Source of image: hpc.llnl.gov)
+:::
 
 Such kind of computing is actually not considered High Performance Computing (HPC). You have many other solutions, for example, grid computing that is usually distributed or cloud computing that you can rent. Such problems that are being solved are not actually interdependent, so the parallelization here is 100% and no communication is needed among the processes. Running such a problem on HPC would mean the under-utilisation of a supercomputer since the main point of HPC is having closely coupled compute cores on multiple nodes. In such non-dependent cases, you have quite a good scaling, that is, your program can run equally well on one core as on one million cores because there is no interdependence. An example of such embarrassingly simple problems is searching for an optimum of some function for which you do not know its optimum location, so you greedily search the domain.
 
@@ -142,13 +151,21 @@ There can also be some "intelligence" behind using a genetic algorithm, but this
 
 For efficient parallelization, you need to know the computer architecture on which programs will run. Let's have a look at a computing node found in modern supercomputers. In the picture below, you can observe that the compute node is a standalone "Von Neumann" computer.
 
+:::{figure-md}
+
 ![](images/compute_node.png)
+
+Compute node.
+:::
 
 The schematic below shows the logical view of a compute node:
 
+:::{figure-md}
+
 ![](images/W1_logical_view_compute_node.png)
 
-**Source of image: hpc.llnl.gov**
+Logical view on compute node. (Source of image: hpc.llnl.gov)
+:::
 
 We have two or maybe four CPU sockets with shared memory that are interconnected by a bus or fast bus. The nodes are also connected with fast internet or Infiniband, a network that has small latency. Such architecture was a standard for computers ten years ago. In recent years, mainstream computers besides CPU sockets also have accelerators, that are general-purpose graphical processing units (GPU) for speed up of computing. Therefore, the non-uniform memory is even more non-uniform. Coding or porting old codes with MPI and accelerating parts of it has become increasingly difficult to achieve. We will introduce you to accelerated programming with CUDA and OpenCL in Chapter 5, that is, how to off-load parts of the code to the accelerators.
 
@@ -156,9 +173,12 @@ Combining everything to run on a large cluster requires quite a lot of experienc
 
 Let's also discuss how nodes in a supercomputer are interconnected.
 
+:::{figure-md}
+
 ![](images/W1_nodes_interconnect.png)
 
-**Source of image: hpc.llnl.gov**
+Nodes interconnect. (Source of image: hpc.llnl.gov)
+:::
 
 The figure on the left shows the node's architecture which was typical in the past, while the figure on the right shows the current standard: accelerators can also be attached to memory from the other side. Distributed computing in such a sense means that the nodes are interconnected with some kind of topology. The many nodes message exchange, with message passing interface (MPI), is done through a high speed and low latency network, usually using Infiniband or some kind of similar technology, like Tofu interconnect or ARIES, which are actually dependent on the vendor. Infiniband is quite common and a de facto standard among many vendors. That means you can build a cluster with different vendors, which will still work for you, and that was actually the initial idea to use commodity hardware and interconnect it by a high-speed network. This is the basic idea of a supercomputer: a single fast machine that shares memory and processors, which can act well with any code.
 
@@ -183,9 +203,12 @@ We can recap what we said regarding the development of parallel codes with the f
 
 When you consider the execution of the code on a number of processors, the speed up achieved with such scaling is typically described by Amdahl's law.
 
+:::{figure-md}
+
 ![](images/W1_Amdahl.png)
 
-**Source of image: hpc.llnl.gov**
+Amdahl's law. (Source of image: hpc.llnl.gov)
+:::
 
 The speed up $S$ depends on the parallel portion of the code $p$
 
@@ -207,7 +230,12 @@ $S = 1 + p(N-1)$
 
 On the figure below speed up curves according to both laws for N = 32 are shown. Amdahl's law is often referred to strong scaling, whereas Gustafson's law to weak scaling.
 
+:::{figure-md}
+
 ![](images/W1_Amdahl_vs_Gustafson_color.png)
+
+Amdahl vs Gustafson law.
+:::
 
 ### Languages for parallel programming
 
@@ -423,7 +451,12 @@ In the introduction, we referred to OpenMP as an easy approach for doing "automa
 
 The basis of OpenMP's *execution model* is the **fork-join model** of parallel execution. OpenMP programs begin as a *master thread* that is executed sequentially until the first parallel region construct is encountered. The master thread then creates a team of parallel threads - a *fork*. The executable statements that are inside the parallel region construct are executed in parallel by the team threads. After the team threads finish execution of the statements in the parallel region construct, synchronization among them occurs and finally their termination results in a *join*, with the master thread as the only thread left.
 
+:::{figure-md}
+
 ![](images/W1_OpenMP_fork-join.png)
+
+OpenMP fork-join.
+:::
 
 Let's recap the OpenMP terminology discussed so far with descriptions:
 
@@ -566,9 +599,12 @@ The Message-Passing programming paradigm can be described with the following poi
 - each processor (core) simultaneously performs operations with different data
 - processores (cores) may need to interact with each other
 
+:::{figure-md}
+
 ![](images/W1_MPI_programming_paradigm.png)
 
-**Image courtesy: Rolf Rabenseifner (HLRS)**
+MPI programming paradigm. (Image courtesy: Rolf Rabenseifner (HLRS))
+:::
 
 Each processor (core) in an MPI program runs a sub-program, which is typically the same on each processor (core). The variables of each sub-program have the same name but different locations and data (distributed memory), i.e., all variables are private. Processors (cores) communicate via special send and receive routines (message passing).
 
@@ -582,9 +618,12 @@ The type of communication in MPI is generally related to the number of processes
 
 Messages are packets of data moving between sub-programs.
 
+:::{figure-md}
+
 ![](images/W1_messages.png)
 
-**Image courtesy: Rolf Rabenseifner (HLRS)**
+Messages. (Image courtesy: Rolf Rabenseifner (HLRS))
+:::
 
 The necessary information for a message-passing system is the following:
 
@@ -598,9 +637,12 @@ The necessary information for a message-passing system is the following:
 
 This type relates to communication between two processes. The source process sends a message to the destination process. Processes are identified by their ranks in the communicator.
 
+:::{figure-md}
+
 ![](images/W1_point-to-point.png)
 
-**Image courtesy: Rolf Rabenseifner (HLRS)**
+Point-to-point communication. (Image courtesy: Rolf Rabenseifner (HLRS))
+:::
 
 Blocking routines (return only after completion of operations) for send and receive messages:
 
@@ -627,9 +669,12 @@ Let's describe some examples of collective communication:
 Broadcasting can be accomplished by using `MPI_Bcast(...)`. One process sends the same data to all processes in a communicator.
 It can be used to send out user input or parameters to all processes. The communication pattern of a broadcast is depicted in the figure below.
 
+:::{figure-md}
+
 ![](images/W1_broadcast.png)
 
-**Source of image: hpc.llnl.gov**
+Broadcast. (Source of image: hpc.llnl.gov)
+:::
 
 2\. *Scatter*
 
@@ -638,25 +683,34 @@ Scatter can be accomplished by using `MPI_Scatter(...)`. This operation involves
 - `MPI_Bcast` sends the same piece of data to all processes
 - `MPI_Scatter` sends chunks of data to different processes: after the call the sender has only part of original data available
 
+:::{figure-md}
+
 ![](images/W1_scatter.png)
 
-**Source of image: hpc.llnl.gov**
+Scatter. (Source of image: hpc.llnl.gov)
+:::
 
 3\. *Gather*
 
 Gather can be accomplished by using `MPI_Gather(...)`. This operation is the inverse of Scatter: it takes elements from many processes and gathers them to one single process.
 
+:::{figure-md}
+
 ![](images/W1_gather.png)
 
-**Source of image: hpc.llnl.gov**
+Gather. (Source of image: hpc.llnl.gov)
+:::
 
 4\. *Reduce*
 
 Reduction can be accomplished by using `MPI_Reduce(...)`. This operation takes an array of input elements on each process and returns an array of output elements to the root process. The output elements contain the reduced result. The image below depicts sum reduction, i.e., an array with four elements of integer type is reduced to an aray with one element containing the sum of the elements of the source array.
 
+:::{figure-md}
+
 ![](images/W1_reduction.png)
 
-**Source of image: hpc.llnl.gov**
+Reduction. (Source of image: hpc.llnl.gov)
+:::
 
 ### Programming point of view
 
@@ -672,7 +726,12 @@ A typical MPI program in C/C++ has the following structure (see figure below):
   - serial code
   - parallel code: initialization of MPI environment, MPI code (work, calls etc.), termination of MPI environment
 
+:::{figure-md}
+
 ![](images/W1_MPI_program_structure.png)
+
+MPI program structure.
+:::
 
 An MPI program in C is something like:
 
@@ -791,9 +850,12 @@ GPUs are more and more used in the area of High-Performance Computing (HPC) beca
 
 In the context of general-purpose computing, GPUs are referred to as accelerators for intensive computational tasks. The main advantage of GPUs over CPUs is a greater computational capability and high-bandwidth memory, but on the other hand, GPUs are known for latency problems. Thus, efficient computing algorithms make use of the "best of both worlds" approach: GPUs are used for parallel tasks and to achieve throughput performance, while CPUs are used for serial tasks and low-latency access. Therefore, a GPU can be seen as a coprocessor to a CPU, as illustrated in the figure below.
 
+:::{figure-md}
+
 ![](images/W1_GPGPU_model.png)
 
-**Source of image: nvidia.com**
+GPGPU model. (Source of image: nvidia.com)
+:::
 
 Computing acceleration can be achieved with:
 

@@ -22,7 +22,12 @@ that is already predefined in the header file
 mpi.h
 ~~~
 
+:::{figure-md}
+
 ![](images/D2P1S12.png)
+
+Communicator in MPI.
+:::
 
 #### Ranks and Size
 
@@ -41,7 +46,12 @@ and for the 'size'
 MPI_Comm_size(MPI_Comm comm, int *size);
 ~~~
 
+:::{figure-md}
+
 ![](images/D2P1S13.png)
+
+Subprograms in MPI.
+:::
  
 ### Exercise: Hello World 2.0
 In this exercise you will create your first MPI program from the provided skeletons for C, Python and Fortran. 
@@ -73,7 +83,12 @@ Until now, we have introduced the MPI and we have used some simple routines such
 
 When we are developing different advanced applications, at some point we will need to exchange information from one process to another. Usually, this information could be some integer, some other values or even arrays etc. This is where messages are used. Messages are packets of data moving between sub-programs. So, as previously described, if we pack the information to be shared between processes into some message, we can send them over communication network so the other process can receive them as a message. This is how the data and information is shared between the processes. And of course there is some important information that we will always need to specify in order for the messages to be sent and received efficiently. 
 
+:::{figure-md}
+
 ![](images/D2P1S16.png)
+
+MPI messages. 
+:::
 
 As we can see in this example, we are trying to send a message from a process with rank '0' to process with rank '2', and in order for this to work, we have to specify some information. 
 
@@ -178,17 +193,32 @@ First way to define types of communication is to divide it according to the numb
 
 The second criteria and perhaps more complex is by defining the type of communication into blocking and non blocking types. A blocking routine returns only when the operation has completed. This means that blocking implies that if we send a message, we can't proceed to the next steps until the receiver actually returns us information that it has received the message. 
 
+:::{figure-md}
+
 ![](images/D2P1S19_1.png)
+
+Blocking communication. 
+:::
 
 The non blocking communication is more complicated than the simpler blocking counterpart. In this case it returns immediately and allows the sub-program to perform other work. It differs from the blocking communication in a way that if we send something to the receiver, we can execute some other tasks in between and after some time, we can check if the receiver has actually returned the information, i.e., it has received the message, or everything is OK. Many real applications, usually employ this type of communication. 
 
+:::{figure-md}
+
 ![](images/D2P1S19_2.png)
+
+Non-blocking communication.
+:::
 
 #### Point-to-Point Communication
 
 As we already saw in the previous section, Point-to-Point Communication is the simplest communication as it involves only two processes. One of the processes acts as a sender and the other one as the receiver. Here, the source or the sender sends a message via the communicator to the receiver. In order to do so, the environment has to know who is the sender and who is the receiver and this is taken care of by specifying the 'ranks' of the processes. 
 
-![Point to point communication](images/W1_point-to-point.png)
+:::{figure-md}
+
+![](images/W1_point-to-point.png)
+
+Point to point communication.
+:::
 
 #### Sending paradigms
 
@@ -238,7 +268,12 @@ We will learn more about this status structure in the coming Chapters.
 
 So let's go through an example to understand again the prerequisites for this communication to work efficiently and how this would actually work in code. 
 
-![Example](images/D2P1S24.png)
+:::{figure-md}
+
+![](images/D2P1S24.png)
+
+Example.
+:::
 
 Here, the left is the sender and the right is the receiver. Let's suppose that the sender would like to send this buffer array that has `n` floats over to some other process. For this, it calls the `MPI_Send` routine function. As we already know, the first one is the pointer to the data. So this is send buffer. Then it needs to specify the `number` of data. In this case, it is `n`. The second routine is `MPI_float`, and we need to make sure that this data matches with the one mentioned earlier. As we previously discussed this is the MPI data type that the environment defines, but it has to match with this one, otherwise the communication will not work. Another thing we need to keep in mind is that this data type has to match with the receiver. So we have to be careful when we write these functions that all of these have to match. Now, the receiver has to call the receiver function with the same data type. Here it has to first define an array where it would like to receive this data, the receive buffer. The communicator, of course, has to be the same because they are bound in the same program. But we usually use the `MPI_COMM_WORLD` communicator. The next important part is that the tag has to match. And finally the type of the message or type of the data has to match.
 
@@ -560,7 +595,12 @@ Similar to most functions we have learnt so far, in the arguments of the broadca
 
 For example, suppose we have initialized the MPI application with five processors, which implies ranks zero to four. Now we would like the rank '1' to send a string, a character array that contains the letters 'r-e-d' to all other processes. As mentioned already in order for this to work, the rank '1', as well as all other processes that we would like to be involved in this communication have to call the same function and the prototype of this function. 
 
+:::{figure-md}
+
 ![](images/D2P2S3.png)
+
+Broadcast communication.
+:::
 
 So, here suppose the 'red' is contained in array called 'buf'. There are three elements we would like to distribute among all other processes. Their data type is character, so we use MPI_char. The root is '1', so the process that is sending or broadcasting the data has rank '1', followed by the communicator MPI_Comm_world. So the function for this image above would be
 
@@ -602,7 +642,12 @@ In the previous exercise you ran a program using the `MPI broadcast` routine and
 
 With the help of the following image you can see the difference between the two algorithms. 
 
+:::{figure-md}
+
 ![](images/D2P2S5.png)
+
+Comparison of two broadcast algorithms. 
+:::
 
 ### Scatter and gather
 [![(Video)](images/video-badge-fp.png)](https://youtu.be/sjNZkCWvlPY)
@@ -619,7 +664,12 @@ MPI_Scatter (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf,
 
 The function prototype is similar to broadcast, but we will go through the arguments because there are some parts we need to be careful with. As usual first we have to specify the data, so this is the buffer. In this example, the root processor will be the one with rank '1' that would like to scatter this array of five 'numbers' to all the other processes. To be able to do this, it will need to specify this 'sendbuf'. Following that is the number 'sendcount' and a bit later we will see a 'recvcount'. Usually they are the same. This is actually the number that tells you how many elements will be sent to each process and it is important to note that it does not mean how many elements are sent in total, but only the fraction that each process will get. The next argument is the 'recvbuf' that is the buffer of the the process that will receive the data. Finally, 'root' is the same as in broadcast. It is the process that actually does the scattering and 'comm' indicates the communicator in which the processes reside. The only thing we need to be careful in this function is the 'sendcount' and 'recvount' because this is the number that dictates how many element will be sent to each process and not the number of whole elements. Another important thing to be noted is that when this function is finished, the sender (in our example the process at rank '1') will not get the information of the whole data. In our example, this would mean that after the communication rank '1' will have only the part to 'B' of the data. 
 
+:::{figure-md}
+
 ![](images/D2P2S6.png)
+
+Scatter function. 
+:::
 
 The difference between MPI_Bcast and MPI_Scatter is that while MPI_Bcast sends the same piece of data to all processes whereas MPI_Scatter sends chunks of data to different processes. 
 
@@ -633,7 +683,12 @@ MPI_Gather(void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, i
 
 The main difference here is that since only one process, i.e., the root gathers all the information it is the only one that needs to have a valid receive buffer. All other calling processes can pass 'NULL'  for 'recvbuf' since they do not receive anything as they just send the data to the roots process. Finally, once again to be noted and remembered that the 'recv_count' parameter is the count of elements received per process and not the total summation of counts from all processes!
 
+:::{figure-md}
+
 ![](images/D2P2S7.png)
+
+Gather function. 
+:::
 
 ### Exercise: Scatter and Gather
 
@@ -685,7 +740,12 @@ MPI Reduce is basically what we did in the the last exercise with an additional 
 
 Perhaps it would be easier to understand it through an example. 
 
+:::{figure-md}
+
 ![](images/D2P2S11.png)
+
+Reduce function.
+:::
 
 Lets assume that we're trying to to compute a sum, but different numbers are scattered across different processes. If we would have our numbers (1, 2, 3, 4, 5) we would call MPI reduce on this data and we will also need to mention say the function that we would like to reduce the data is the sum and then the root process will get the sum as a result. To be able to do this we would need the prototype of the MPI_reduce
 

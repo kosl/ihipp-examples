@@ -19,6 +19,7 @@ extensions = ['myst_parser',]
 
 myst_enable_extensions = [
     "dollarmath",
+    "colon_fence",
 ]
 
 templates_path = ['_templates']
@@ -44,7 +45,7 @@ latex_elements = {
 
 # Additional stuff for the LaTeX preamble.
 # See http://tex.stackexchange.com/questions/83020/set-standard-default-scaling-of-includegraphics
-#'preamble': b'\usepackage{graphicx}\setkeys{Gin}{width=.60\csname Gin@nat@width\endcsname,keepaspectratio}',
+'preamble': r'\usepackage{graphicx}\setkeys{Gin}{width=.60\csname Gin@nat@width\endcsname,keepaspectratio}',
 
 # Latex figure (float) alignment
 'figure_align': 'htbp',
@@ -55,7 +56,9 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'ipp.tex', u' Documentation',
+  ('index', 'ipp.tex', u'Documentation',
    u'Leon Kos', 'book'),
 ]
 
+# Number the Figures, Tables and Listings
+numfig = True

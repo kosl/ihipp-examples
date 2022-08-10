@@ -1,6 +1,6 @@
 # OpenMP
 
-## Getting started with OpenMP 
+## Getting started with OpenMP
 
 ### Introduction to Chapter 2
 [![(Video)](images/video-badge-fp.png)](https://youtu.be/-V3o24PcIco)
@@ -147,7 +147,12 @@ For GCC compiler you can check the link and check the environment variables that
 
 Parallel construct is the basic or the fundamental construct when using OpenMP. So every thread basically executes the same statements which are inside the 'parallel region' simultaneously, as you can see on this image. 
 
+:::{figure-md}
+
 ![](images/D1P2S15.png)
+
+Parallel construct.
+:::
 
 So first, we have a master thread that executes the serial portion of the code. Then we come to a 'pragma omp' statement. We can see here that the master first encounters this omp construct and creates multiple, what we call 'slave threads' that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier, so when this barrier is reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution we go back to master thread that finally resumes the execution of the code. In this step, of course, the slave threads are gone because they have completed their task.
 
@@ -271,7 +276,12 @@ Is an important keyword with openMP that we put in the beginning of our code on 
 There are basically two kind of clauses. i.e private or shared. 
 A private variable would be a variable that is private to each thread. 
 
+:::{figure-md}
+
 ![](images/D1P2S18.png)
+
+Private clause.
+:::
 
 So if we execute
 
@@ -517,10 +527,10 @@ Do you know of possible ways of organizing work in parallel? How can the operati
 The work-sharing constructs divide the execution of the code region among different members of team threads. These are the constructs that do not launch the new threads and they are enclosed dynamically within the parallel region.
 Some examples of the work sharing constructs are:
 
-• sections
-• for
-• task
-• single
+* sections
+* for
+* task
+* single
 
 #### Section construct
 
@@ -541,7 +551,12 @@ We will first see a code example for using the sections construct where we can w
 
 When we use sections construct, multiple blocks of code are executed in parallel. When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section, it will execute its task in a different thread. This way we can add these sections inside our `pragma OMP parallel` code by specifying a section per each thread that will be executed in that each individual thread.
 
+:::{figure-md}
+
 ![](images/D1P2S22.png)
+
+Sections construct. 
+:::
 
 In the example code above we can see that inside the section we have specified variables 'a' and 'b'. When this code is executed, a new thread is generated with these variables and the same follows for the variables 'c' and 'd' which are specified in a different section and hence are in a different thread. 
 
@@ -582,7 +597,12 @@ We can see an example of the for construct used in the code.
 
 We start with 'pragma omp parallel' followed by private variable named 'f'. Then we use 'pragma OMP for' construct, followed by a for loop that goes from 0 to 10 (10 different iterations). The private variable 'f' is then fixed in every thread and the 'a' list is updated in parallel. This is because the index each array needs is different from each other. So every thread can access only one place of the array allowing us to update this list in parallel.
 
+:::{figure-md}
+
 ![](images/D1P2S24.png)
+
+Example visualization.
+:::
 
 Here we can see that if we are working on two threads with 10 iterations, then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easily. 
 
@@ -633,7 +653,12 @@ f=10;
 
 We see that we have specified variables 'cnt' and 'f' and in the parallel region we specified the 'for' construct so we can do the iteration. Inside the 'if' statement we specified the 'pragma OMP critical' for the next line which is 'cnt ++'. We can observe what is happening in the execution of the threads on the image below. 
 
+:::{figure-md}
+
 ![](images/D1P2S26.png)
+
+Example with critical clause. 
+:::
 
 Before we enter the pragma 'OMP parallel region', we were in serial execution so that part was executed serially. Then we entered our parallel region. Everything is executed in parallel until the first thread encounters the 'cnt++' statement. At this point the 'cnt++' statement is executed by the first thread that encounters it. During this time, the second thread can't access it because cnt is already being modified by the first thread. So after the first thread finishes with the critical operation, the next thread will get access to the 'cnt' variable and modify it. After all the threads have executed the 'cnt++' statement, the code continues to execute in parallel as well. It continues until we reach the implicit barrier that we have specified at the end, following which we return to the serial execution. 
 

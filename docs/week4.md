@@ -24,11 +24,21 @@ And another way of dividing would be relating to the completion of an operation,
 
 We have seen some problems in the previous modes of communication we have learnt until now. For instance, in the Ring example, where we have a cyclic distribution of processes that we would like to send messages along the ring, we realised that blocking routines are somehow not suitable for this. The problem is that for the second or third process in order to actually receive something, it would have to wait for the message to be sent to the first one and so on. So, evidently we are losing time and not producing a good parallel application.
 
-![Cyclic distribution](images/D2P2S18_1.png)
+:::{figure-md}
+
+![](images/D2P2S18_1.png)
+
+Cyclic distribution.
+:::
 
 While using blocking routines, when we profile the code it happens quite often that we either have some problem with the deadlocks, that we discussed previously, i.e., either there is some *sent* data that we just never received or vice versa. Even though this situation can be solved, however, there is another more complex problem that can arise. Suppose in the previous example, if we would do it using blocking communication. In that case we would basically *serialize* our code (see image below) and as we can see some of the processes would need to wait; our resources are wasted. This clarifies the need for some other clever way to send messages via this ring without so much waiting time and this is where the non-blocking communication comes into play. 
 
-![Serialization](images/D2P2S18_2.png)
+:::{figure-md}
+
+![](images/D2P2S18_2.png)
+
+Serialization.
+:::
 
 As we already saw in the previous Chapter, that non-blocking routine returns immediately and allows the sub-program to perform other work so we can do some work between and this is useful because, for instance, we can send a message, do some operations, and then we can receive the message. So, these three parts are essential in the non-blocking communications.
 
@@ -127,13 +137,23 @@ As we have already learnt in the beginning that in MPI the parallelisation is ba
 
 In two-sided (i.e. point to point communication) and collective communication models the problem is that (even with the non blocking) both sender and receiver have to participate in data exchange operations explicitly, which requires synchronization. 
 
-![Idle time](images/D2P2S24.png)
+:::{figure-md}
+
+![](images/D2P2S24.png)
+
+Idle time.
+:::
 
 In this example we can see when we have the non blocking routine but the problem is that when we call the MPI_Send and until the message has been recieved by the MPI_Recv, there is this time in which both the processes have to wait and they can not do anything. Therefore a significant drawback of this approach is that the sender has to wait for the receiver to be ready to receive the data before it can send the data, or vice versa. This causes idle time. To avoid this we use the one sided communication. 
 
 Although MPI is using a distributed memory approach, the MPI standard introduced Remote Memory Access (RMA) routines also called one-sided communication because it requires only one process to transfer data. Simply put, it enables a process to access some data from the memory of the other processes. The idea is that a process can have direct access to the memory address space of a remote process without intervention of that remote process.
 
-![Idea](images/D2P2S25.png)
+:::{figure-md}
+
+![](images/D2P2S25.png)
+
+Idea.
+:::
 
 So we do not have to explicitly call the 'send' and 'receive' routines from both processes involved in the communication. One process can just 'put' and 'get' the data from the memory of another process. This is helpful because the target process can continue executing its tasks, doing its work without waiting for anything. So the most important benefit of one sided communication is that while a process puts or gets data from remote process, the remote process can continue to compute instead of waiting for the data. This reduces communication time and can resolve some problems with scalability of the programs (i.e. on thousands of MPI processes). 
 
@@ -187,7 +207,12 @@ MPI_Get (void *origin_addr, int origin_count, MPI_Datatype origin_datatype, int 
 
 We will understand in depth about the arguments of these functions in the following excercise. But before we get into that, another important thing that we need to discuss is the synchronization. If you remember we discussed this concept briefly in the second Chapter when we were learning about the concepts of OpenMP.
 
-![One-sided communication](images/D2P2S25.png)
+:::{figure-md}
+
+![](images/D2P2S25.png)
+
+One-sided communication
+:::
 
 In one sided communication in MPI, the target process calls the function to create the window in order to give access of its memory to other processes. However, in the case of multiple users it is already quite plain to see that if these users try to simultaneously access this data can already lead to some problems. For example, lets say two users access the window to put data using the MPI_Put function this is clealry a race condition that needs to be avoided. This is where synchronization comes into the play. So in order to avoid this before and after each 'one sided communication' function, i.e., MPI_Get and MPI_Put, we need to use the function
 
@@ -556,7 +581,12 @@ MPI messages can be passed between any two threads, provided each is enclosed in
 
 So far we have learnt to send messeages that were a continuous sequence of elements and mostly of the basic data types such as buf, count etc. In this section we will learn how to transfer any combination of data in memory in one message. We will learn to communicate strided data, i.e., a chunk of data with holes between the portions, and how to communicate various basic datatypes within one message.
 
+:::{figure-md}
+
 ![](images/D3P2S4.png)
+
+Derived datatypes.
+:::
 
 So if we have many different types of datatypes such as int, float etc. with gaps how would we perform communication in one way with one command. To do this we would first of all need to start by describing the memory layout that we would like to transfer. Following this the processor that compiled the derived type layout will then do the transfer for us in the loop in a correct way. This can even be achieved with all kinds of broadcasts.
 
@@ -572,7 +602,12 @@ Or they could be simple types that are being combined into one data layout witho
 
 A derived datatype is logically a pointer to a list of entries. However, once this data type has been saved somewhere, it is not communicated over the network. When the need comes we just use this type simply as it would be a basic data type. However the only prerequisite is that for each of these data types we need to compute the displacement. Quite obviuosly MPI does not communicate these displacements over the network.
 
-![Example](images/D3P2S7.png)
+:::{figure-md}
+
+![](images/D3P2S7.png)
+
+Example.
+:::
 
 | Basic datatype | Displacement |
 | :-----------------------: | :---------------: |
@@ -587,7 +622,12 @@ Here you can see the description of the memory layout and the displacements. For
 
 This is the simplest derived datatype as it consists of a number of contiguous items of the same datatype.
 
+:::{figure-md}
+
 ![](images/D3P2S8.png)
+
+Contigous data.
+:::
 
 In C we use the following function to define it
 
@@ -636,7 +676,12 @@ MPI_Send(&buffer, 1, buff_datatype, …)
 
 Of course, there can also be some kind of gaps that we would not actually see if we are using some other languages such as Fortran and sometimes we even have memory alignments for it. So there maybe a gap of one integer at the start. But this is not an error on our part but it just an adjustment, like some kind of performance adjustment so the next array starts at the location that is the multiple of four. So while describing such an array the MPI knows how to do it most efficiently. 
 
-![Adjustment](images/D3P2S5.png)
+:::{figure-md}
+
+![](images/D3P2S5.png)
+
+Adjustment.
+:::
 
 ### Exercise: Derived data type
 
@@ -665,7 +710,12 @@ You will use a modified pass-around-the-ring program which already includes a st
 
 What we learnt so far in the previous subsection and the exercise were more like continous vectors. Sometimes we would need to communicate vectors with holes that we do not want to be transferred. This implies that we would not send each element but just selected elements or sequence of elements. Therefore the blocklength and the offset of each can be used to create a "stride". When we want to communicate just a portion of a contionus chunk of memory the destination and source may not be the same. Usually we have one element to receive the results back from the array of cluster. As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could use such vector datatypes.
 
-![Vector](images/D3P2S13.png)
+:::{figure-md}
+
+![](images/D3P2S13.png)
+
+Vector.
+:::
 
 As we saw in the previous pi example how the integrals were collected back so that we could see the complete sums we could do with such vector datatypes. We use the following routine for vector datatypes:
 
@@ -691,7 +741,12 @@ int MPI_Type_create_struct (int count, int *array_of_blocklengths, MPI_Aint *arr
 
 This is how memory layout of struct datatypes could look like with gaps inside that we don't actualy want, but are imposed by the compiler itself or the underlying operating system or hardware processor.
 
+:::{figure-md}
+
 ![Memory layout of struct datatypes](images/D3P2S15.png)
+
+Memory layout of struct datatypes.
+:::
 
 Let us assume that we have the following parameters:
 
@@ -838,7 +893,12 @@ Before we go further into the Parallel file I/O we need to get some basic knowle
 
 For most of the basic datatypes the Size = Extent = number of bytes used by the compiler. This can be seen easily in this image. 
 
+:::{figure-md}
+
 ![Extent](images/D3P2S25.png)
+
+Extent.
+:::
 
 Extent, alignment and holes can be a problem for some compilers or architectures, especially if these are optimised. However, MPI3 has fixed a lot of these problems by introducing new interfaces that solve certain issues and offer a better usable interface. However, in standard these parameters always hold true:
 
@@ -942,11 +1002,21 @@ Some basic principles of MPI-I/O are that:
 - automatic data conversion in heterog. systems
 - file interoperability with external representation
 
+:::{figure-md}
+
 ![](images/D3P3S9.png)
+
+Views of parallel file I/O.
+:::
 
 So we will learn these principles of MPI I/O to see that we could create a file that perhaps looks like a single file. However in reality there are many of the processes that start work on different nodes but actually open the same file and write the results into one physical file, while a logical way there may be gaps that are not allowed to be used or to be written. This is because the striking from a logical way to physical way is done in such a way that we already know what place we can save our portion of the file. 
 
+:::{figure-md}
+
 ![](images/D3P3S10.png)
+
+Tiling a file with filetypes.
+:::
 
 Simply put, we need to know the size of one chunk and the file system just needs to move the file pointer to the correct place where it writes. This is quite simple because even the serial file I/O allows us to move backwards and forwards in the file, if it is in a binary way so that we know with what offset we can expect something. In this case we could have a single file that can create many cores writing at the same time to the different servers and in the end it looks like a single file for you. To ease out these terms:
 
