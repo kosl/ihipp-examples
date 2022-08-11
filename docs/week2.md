@@ -26,18 +26,14 @@ header file to your code in the beginning of the file and then this library incl
  
 * To set the desired number of threads, use
 
- ~~~c
-
- omp_set_num_threads(n)
-
- ~~~
+~~~c
+omp_set_num_threads(n)
+~~~
 
 For example, if you want to 'parallelise'  your program with, let's say, 12 threads, you specify number of threads to the program using the function
 
 ~~~c
-
 omp_set_num_threads(n)
-
 ~~~
 
 With this the program will only work with 12 threads. 

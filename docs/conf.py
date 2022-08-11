@@ -45,7 +45,8 @@ latex_elements = {
 
 # Additional stuff for the LaTeX preamble.
 # See http://tex.stackexchange.com/questions/83020/set-standard-default-scaling-of-includegraphics
-'preamble': r'\usepackage{graphicx}\setkeys{Gin}{width=.60\csname Gin@nat@width\endcsname,keepaspectratio}',
+# Customized header and footer
+'preamble': r'\usepackage{graphicx}\setkeys{Gin}{width=.60\csname Gin@nat@width\endcsname,keepaspectratio}\fancypagestyle{normal}{\fancyhf{}\fancyfoot[LE,RO]{{\thepage}}\fancyfoot[LO]{{\nouppercase{\rightmark}}}\fancyfoot[RE]{{\nouppercase{\leftmark}}}\fancyhead[LE]{Release 1.0.9}\renewcommand{\headrulewidth}{0.4pt}\renewcommand{\footrulewidth}{0.4pt}}',
 
 # Latex figure (float) alignment
 'figure_align': 'htbp',
@@ -62,3 +63,16 @@ latex_documents = [
 
 # Number the Figures, Tables and Listings
 numfig = True
+
+math_number_all = True
+
+# Listing font size
+from sphinx.highlighting import PygmentsBridge
+from pygments.formatters.latex import LatexFormatter
+
+class CustomLatexFormatter(LatexFormatter):
+    def __init__(self, **options):
+        super(CustomLatexFormatter, self).__init__(**options)
+        self.verboptions = r"formatcom=\scriptsize"
+
+PygmentsBridge.latex_formatter = CustomLatexFormatter
