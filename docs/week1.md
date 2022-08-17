@@ -2,7 +2,7 @@
 
 ## Intro to parallel programming
 
-### Chapter 1
+### Introduction to Chapter 1
 [![(Video)](images/video-badge-fp.png)](https://youtu.be/0eD3fmSFf84)
 
 In the first Chapter, we will first introduce the basic principles and paradigms of parallel programming. We will not go deeply into each topic since we will dedicate that to the upcoming Chapters, touching even on some advanced topics in parallel programming. We describe the more advanced topics with the purpose of telling you what is important to know and giving you a starting point on where to learn more. We hope that at some point you will be able to do your coding and advance your learning beyond this course. 

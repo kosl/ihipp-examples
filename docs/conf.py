@@ -46,7 +46,7 @@ latex_elements = {
 # Additional stuff for the LaTeX preamble.
 # See http://tex.stackexchange.com/questions/83020/set-standard-default-scaling-of-includegraphics
 # Customized header and footer
-'preamble': r'\usepackage{graphicx}\setkeys{Gin}{width=.60\csname Gin@nat@width\endcsname,keepaspectratio}\fancypagestyle{normal}{\fancyhf{}\fancyfoot[LE,RO]{{\thepage}}\fancyfoot[LO]{{\nouppercase{\rightmark}}}\fancyfoot[RE]{{\nouppercase{\leftmark}}}\fancyhead[LE]{Release 1.0.9}\renewcommand{\headrulewidth}{0.4pt}\renewcommand{\footrulewidth}{0.4pt}}',
+'preamble': r'\usepackage{graphicx}\setkeys{Gin}{width=.60\csname Gin@nat@width\endcsname,keepaspectratio}\fancypagestyle{normal}{\fancyhf{}\fancyhead[LE,RO]{{\thepage}}\fancyhead[LO]{{\nouppercase{\rightmark}}}\fancyhead[RE]{{\nouppercase{\leftmark}}}\renewcommand{\headrulewidth}{0.4pt}\renewcommand{\footrulewidth}{0pt}}',
 
 # Latex figure (float) alignment
 'figure_align': 'htbp',
