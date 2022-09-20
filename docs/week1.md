@@ -184,7 +184,7 @@ When you consider the execution of the code on a number of processors, the speed
 
 **Source of image: hpc.llnl.gov**
 
-The speed up $$S$$ depends on the parallel portion of the code $$p$$
+The speed up `S` depends on the parallel portion of the code `p`
 
 $$S = \frac{1}{1-p}$$
 
@@ -192,7 +192,7 @@ The ideal speed up for a code that has, e.g., a parallel portion of 50% or in ot
 
 $$S = \frac{1}{1-p+p/N}$$
 
-where $$N$$ is the number of processors. You can deduce that for a large value of $$N$$ this expression is approximated by the expression given first. For the cyan curve (95% parallel portion of the code), one can observe the maximum speed up of 20x for a large number of processors. A nearly 20x speed up is already achieved with about 500 processors, hence using more than 500 processors will not result in much gain of the speed up.
+where `N` is the number of processors. You can deduce that for a large value of `N` this expression is approximated by the expression given first. For the cyan curve (95% parallel portion of the code), one can observe the maximum speed up of 20x for a large number of processors. A nearly 20x speed up is already achieved with about 500 processors, hence using more than 500 processors will not result in much gain of the speed up.
 
 The latter raises the question, why would one invest in one million of processors, if we see that even the best or one of the best programs that are running 95% in parallel, are just going 20x faster? The answer can be given by Gustafson's law that actually interprets the currently available hardware, e.g., if 100, 1000 or a million processors are available to the user.
 
@@ -202,7 +202,7 @@ The expression for speed up according to Gustafson's law is
 
 $$S = 1 + p(N-1)$$
 
-On the figure below speed up curves according to both laws for N = 32 are shown. Amdahl's law is often referred to strong scaling, whereas Gustafson's law to weak scaling.
+On the figure below speed up curves according to both laws for `N = 32` are shown. Amdahl's law is often referred to strong scaling, whereas Gustafson's law to weak scaling.
 
 ![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/W1_Amdahl_vs_Gustafson_color.png)
 
