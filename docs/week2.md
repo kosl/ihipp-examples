@@ -139,7 +139,9 @@ For GCC compiler you can check the link and check the environment variables that
 
 Parallel construct is the basic or the fundamental construct when using OpenMP. So, every thread basically executes the same statements which are inside the *parallel region* simultaneously, as you can see on this image.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S15.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/2-3.png)
+
+**Image courtesy: Rolf Rabenseifner (HLRS)**
 
 So, first we have a master thread that executes the serial portion of the code. Then we come to a `pragma omp` statement. We can see here that the master first encounters this `omp` construct and creates multiple threads, what we call *slave threads* that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier, so when this barrier is reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution, we go back to the master thread that finally resumes the execution of the code. In this step, of course, the slave threads are gone because they have completed their task.
 
@@ -261,7 +263,8 @@ is an important keyword with OpenMP that we put in the beginning of our code on 
 
 There are basically two kind of clauses, i.e., private or shared. A private variable would be a variable that is private to each thread.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S18.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/2-4.png)
+
 **Image courtesy: Rolf Rabenseifner (HLRS)**
 
 So, we execute, e.g.
@@ -409,7 +412,7 @@ Race condition:
 
 Don't worry if you always get a correct output, because a compiler may use a private register on each thread instead of writing directly into memory. 
 
-## Expected output:
+#### Expected output:
 * If compiled with OpenMP, the program should output »hello world« and the ID of each thread.
 
 [![Binder](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/binder-badge-fp.svg)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Parallel-region.ipynb)
@@ -423,38 +426,51 @@ We just covered the basics of OpenMP, runtime functions, constructs and directiv
 1. Directives appear just before a block of code, which is delimited by:
 
 ( ) ( … )
+
 ( ) [ … ]
+
 (x) { … }
+
 ( ) < … >
 
 2. Which of these is a correct way for an OpenMP program to set the number of available threads to 4?
 
 ( ) At the beginning of an OpenMP program, use the library function omp_get_num_threads(4) to set the number of threads to 4.
+
 ( ) At the beginning of an OpenMP program, use the library function num_threads(4) to set the number of threads to 4.
+
 (x) In bash, export OMP_NUM_THREADS=4.
+
 ( ) At the beginning of an OpenMP program, use the library function omp_num_threads(4) to set the number of threads to 4.
 
 3. Variables defined in the shared clause are shared among all threads.
 
 (x) True
+
 ( ) False
 
 4. When compiling an OpenMP program with gcc, what flag must be included?
 
 (x) -fopenmp
+
 ( ) -o hello
+
 ( ) ./openmp
+
 ( ) None of the answers
 
 5. Code in an OpenMP program that is not covered by a pragma is executed by how many threads?
 
 (x) Single thread
+
 ( ) Two threads
+
 ( ) All threads
 
 6. If a variable is defined in the private clause within a construct, a separate copy of the same variable is created for every thread.
 
 (x) True
+
 ( ) False
 
 7. How many iterations are executed if 4 threads execute the below program?
@@ -471,8 +487,11 @@ We just covered the basics of OpenMP, runtime functions, constructs and directiv
 ~~~
 
 ( ) 20
+
 ( ) 40
+
 (x) 25
+
 ( ) 35
 
 ### 2.8 Which thread executes which statement or operation?
@@ -511,7 +530,8 @@ We will first see a code example for using the sections construct where we can s
 
 When we use *sections* construct, multiple blocks of code are executed in parallel. When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section, it will execute its task in a different thread. This way we can add these sections inside our `pragma omp parallel` code by specifying a section per each thread that will be executed in that each individual thread.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S22.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/2-9-1.png)
+
 **Image courtesy: Rolf Rabenseifner (HLRS)**
 
 In the example code above we can see that inside the section we have specified variables `a` and `b`. When this code is executed, a new thread is generated with these variables and the same follows for the variables `c` and `d` which are specified in a different section and hence are in a different thread.
@@ -553,7 +573,8 @@ We can see an example of the `for` construct used in the code.
 
 We start with `pragma omp parallel` followed by private variable named `f`. Then we use `pragma omp for` construct, followed by a for loop that goes from 0 to 10 (10 different iterations). The private variable `f` is then fixed in every thread and the list `a` is updated in parallel. This is because the index each array needs is different from each other. So, every thread can access only one place of the array allowing us to update this list in parallel.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S24.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/2-9-2.png)
+
 **Image courtesy: Rolf Rabenseifner (HLRS)**
 
 Here we can see that if we are working on two threads with 10 iterations, then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on list `a` will be updated by itself and since the iterators are independent of each other, they modify just one place, so we can update each place of the list `a` quite easily. 
@@ -602,7 +623,8 @@ f=10;
 
 We see that we have specified variables `cnt` and `f`, and in the parallel region we specified the `for` construct, so we can do the iteration. Inside the `if` statement we specified the `pragma omp critical` for the next line which is `cnt ++`. We can observe what is happening in the execution of the threads on the image below.
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D1P2S26.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/2-10.png)
+
 **Image courtesy: Rolf Rabenseifner (HLRS)**
 
 Before we enter the `pragma omp parallel` region, we were in serial execution, so that part was executed serially. Then we entered our parallel region. Everything is executed in parallel until the first thread encounters the `cnt++` statement. At this point the `cnt++` statement is executed by the first thread that encounters it. During this time, the second thread can't access it because `cnt` is already being modified by the first thread. So, after the first thread finishes with the critical operation, the next thread will get access to the `cnt` variable and modify it. After all the threads have executed the `cnt++` statement, the code continues to execute in parallel as well. It continues until we reach the implicit barrier that we have specified at the end, following which we return to the serial execution. 
@@ -710,7 +732,7 @@ This integral can be approximated numerically using Riemann sum:
 
 $$\pi \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
-Here, $$n$$ is the number of intervals and $$h = 1/n$$. 
+Here, `n` is the number of intervals and `h = 1/n`.
 
 ~~~c
 #include <stdio.h>
@@ -787,13 +809,17 @@ This quiz covers various aspects of worksharing directives that have been discus
 1. The purpose of `#pragma omp for` is
 
 ( ) Loop work is to be divided into user defined sections
+
 ( ) Work to be done in a loop when done, don’t wait
+
 (x) Work to be done in a loop
 
 2. What is the purpose of `#pragma omp sections`?
 
 (x) Loop work is to be divided into user defined sections
+
 ( ) Work to be done in a loop when done, don’t wait
+
 ( ) Work to be done in a loop
 
 3. What is the output of the following program?
@@ -810,28 +836,39 @@ This quiz covers various aspects of worksharing directives that have been discus
 ~~~
 
 ( ) read input, compute results, write output
+
 ( ) read input, read input, compute results, write output, write output
+
 (x) read input, compute results, compute results, write output
+
 ( ) Error in program
 
 4. What is the purpose of `#pragma omp for nowait`?
 
 ( ) Loop work is to be divided into user defined sections
+
 (x) Work to be done in a loop when done, don’t wait
+
 ( ) Work to be done in a loop
 
 5. Which directive must come before the directive `#pragma omp sections`?
 
 ( ) `#pragma omp section`
+
 (x) `#pragma omp parallel`
+
 ( ) None
+
 ( ) `#pragma omp master`
 
 6. The following code forces threads to wait till all are done:
 
 ( ) `#pragma omp parallel`
+
 (x) `#pragma omp barrier`
+
 ( ) `#pragma omp critical`
+
 ( ) `#pragma omp sections`
 
 7. What is the output of the following code when run with OMP_NUM_THREADS=4?
@@ -865,8 +902,11 @@ printf("%d %d", x, y);
 ~~~
 
 (x) 10, 10
+
 ( ) 10, 40
+
 ( ) 40, 10
+
 ( ) 40, 40
 
 ### 2.14 Private and shared variables
@@ -1093,7 +1133,7 @@ $$df/dt = \Delta f$$
 
 This program solves the heat equation by using explicit scheme: time forwarding and centered space, and it solves the equation on a unit square domain.
 
-The initial condition is very simple. Everywhere inside the square the temperature equals $$f=0$$ and on the edges the temperature is $$f=x$$. This means the temperature goes from $$0$$ to $$1$$ in the direction of $$x$$. 
+The initial condition is very simple. Everywhere inside the square the temperature equals `f=0` and on the edges the temperature is `f=x`. This means the temperature goes from `0` to `1` in the direction of `x`.
 
 The source code is at times hard coded for the purpose of faster loop iterations. Your goal is to: 
 
@@ -1253,8 +1293,11 @@ This quiz tests your knowledge on OpenMP data environment and combined construct
 1. Within a parallel region, declared variables are by default
 
 ( ) private
+
 ( ) local
+
 (x) shared
+
 ( ) firstprivate
 
 2. What is the output of the following code when run with OMP_NUM_THREADS=4?
@@ -1271,15 +1314,21 @@ printf("%d", x);
 ~~~
 
 (x) 24
+
 ( ) 0
+
 ( ) 10
+
 ( ) 4
 
 3. What does the `nowait` clause do?
 
 ( ) Skips to the next OpenMP construct
+
 ( ) Prioritizes the following OpenMP construct
+
 ( ) Removes the synchronization barrier from the previous construct
+
 (x) Removes the synchronization barrier from the current construct
 
 4. What is the data scoping of the variables a, b, c and d in following code snippet in the parallel region?
@@ -1301,13 +1350,21 @@ printf("a=%d, b=%d, c=%d\n", a, b, c);
 ~~~
 
 [ ] a: shared
+
 [x] a: private
+
 [x] b: shared
+
 [ ] b: private
+
 [ ] c: shared
+
 [ ] c: private
+
 [x] c: reduction
+
 [ ] d: shared
+
 [x] d: private
 
 5. What is printed when executing the below code?
@@ -1329,15 +1386,21 @@ printf("a=%d, b=%d, c=%d\n", a, b, c);
 ~~~
 
 ( ) a=0, b=23, c=-3
+
 ( ) a=44, b=23, c=84
+
 ( ) a=0, b=23, c=42
+
 (x) a=0, b=1, c=42
 
 6. Which of the following clauses specifies that the enclosing context’s version of the variable is set equal to the private version of whichever thread executes the final iteration?
 
 ( ) private
+
 ( ) firstprivate
+
 (x) lastprivate
+
 ( ) default
 
 7. The following code will result in a data race:
@@ -1351,13 +1414,17 @@ for (int i = 1; i < 10; i++)
 ~~~
 
 (x) True
+
 ( ) False
 
 8. Which of these parallel programming errors is impossible in the given OpenMP construct?
 
 ( ) Data dependency in #pragma omp for
+
 (x) Data conflict in #pragma omp critical
+
 ( ) Data race in #pragma omp parallel
+
 ( ) Deadlock in #pragma omp parallel
 
 ### 2.21 Tasking model
@@ -1517,12 +1584,15 @@ This quiz tests your knowledge on OpenMP tasking with which we will finish this 
 1. The default clause sets the default scheduling of threads in a loop constructs.
 
 ( ) True
+
 (x) False
 
 2. Which tasks are synchronized with a `taskwait` construct?
 
 ( ) All tasks of the same thread team.
+
 ( ) All descendant tasks.
+
 (x) The direct child tasks.
 
 3. Look at the following code snippet.
@@ -1541,7 +1611,9 @@ printf("x=%d\n", x);
 What is the data scope of x in the task region and what is printed at the end?
 
 ( ) shared, x=3
+
 ( ) firstprivate, x=3
+
 (x) firstprivate, x=42
 
 4. Look at the following code snippet.
@@ -1565,13 +1637,17 @@ printf("y=%d\n", y);
 What is the data scope of y in the task region and what is printed at the end?
 
 ( ) shared, y=42
+
 (x) shared, y=168
+
 ( ) firstprivate, y=168
 
 5. What happens to tasks at a `barrier` construct?
 
 ( ) All existing tasks are guaranteed to be completed at barrier exit.
+
 (x) All tasks of the current thread team are guaranteed to be completed at barrier exit.
+
 ( ) Only the direct child tasks are guaranteed to be completed at barrier exit.
 
 ### 2.26 Test on OpenMP
