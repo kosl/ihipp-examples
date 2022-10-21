@@ -129,41 +129,57 @@ We just covered the basics of MPI, communicators and messages. This quiz tests y
 1. Which is the predefined communicator that can be used to exchange a message from process rank 2 to process rank 4?
 
 ( ) MPI_COMM_DEFAULT
+
 ( ) MPI_COMM_SELF
+
 (x) MPI_COMM_WORLD
+
 ( ) MPI_COMM_NULL
 
 2. What does `MPI_Comm_rank()` return?
 
 ( ) Number of processes in an MPI program
+
 ( ) Priority of the current process
+
 (x) Numerical identifier of the current process within the MPI communicator
+
 ( ) Linux process ID
 
 3. What purpose does a communicator serve?
 
 ( ) It prevents your main program’s MPI calls from being confused with a library’s MPI calls
+
 ( ) It can be used to identify a subgroup of processes that will participate in message passing
+
 ( ) If equal to MPI_COMM_WORLD, it shows that the communication involves all processes
+
 (x) All of the above
 
 4. A rank number from 0 to N-1 is assigned to each process in an MPI process group, and the higher rank processes are given higher resource priority.
 
 ( ) True
+
 (x) False
 
 5. Which of the following is not required for a message passing call:
 
 ( ) The starting memory address of your message
+
 ( ) Message type
+
 (x) Size of the message in number of bytes
+
 ( ) Number of elements of data in the message
 
 6. What does the parameter tag mean in a message passing call:
 
 ( ) The message type of the incoming message
+
 ( ) Type of communication method
+
 (x) A user-assigned number that must match on both sender and receiver
+
 ( ) The type of the process group
 
 ### 3.6 Different types of communication in MPI
@@ -449,6 +465,7 @@ This quiz covers various aspects of point-to-point communication that have been 
 1. You must specify the rank for both source and destination processes, when sending a message using `MPI_Send`:
 
 ( ) True
+
 (x) False
 
 2. In the following function call, a message is sent to which process?
@@ -458,20 +475,27 @@ MPI_Send(message, 4, MPI_CHAR, 5, tag, MPI_COMM_WORLD)
 ~~~
 
 ( ) Process 4
+
 (x) Process 5
 
 3. If you call `MPI_Recv` and there is no incoming message, what happens?
 
 ( ) the Recv fails with an error
+
 ( ) the Recv reports that there is no incoming message
+
 (x) the Recv waits until a message arrives (potentially waiting forever)
+
 ( ) the Recv times out after some system-specified delay
 
 4. The MPI receive routine has a parameter `count` – what does this mean?
 
 ( ) The size of the incoming message (in bytes)
+
 ( ) The size of the incoming message (in items, e.g. integers)
+
 ( ) The size you have reserved dor storing the message (in bytes)
+
 (x) The size you have reserved for storing the message (in items, e.g. integers)
 
 MPI tries to avoid talking about bytes – counting is almost always done in number of items. For the receive, count is the size of the local receive buffer, not of the incoming send buffer, although of course in some programs they may be the same.
@@ -479,8 +503,11 @@ MPI tries to avoid talking about bytes – counting is almost always done in num
 5. What happens if the incoming message is larger than `count`?
 
 (x) The receive fails with an error
+
 ( ) The receive reports zero data received
+
 ( ) The message writes beyond the end of the available storage
+
 ( ) Only the first 'count' items are received
 
 MPI checks that the incoming message will fit into the supplied storage before receiving it. The standard behaviour on error is for the whole MPI program to exit immediately with a fatal error.
@@ -488,7 +515,9 @@ MPI checks that the incoming message will fit into the supplied storage before r
 6. What happens if the incoming message (of size `n`) is smaller than `count`?
 
 ( ) The receive fails with an error
+
 ( ) The receive reports zero data received
+
 (x) Only the first `count` items are received
 
 In some situations you may not know how many items are being sent so you must ensure that you have enough storage locally and you may have more than enough.
@@ -508,21 +537,29 @@ in Fortran: `buf, 5, MPI_DOUBLE_PRECISION`
 8. You want to receive a buffer that is an array `buf` with 5 double precision values. When calling `MPI_Recv` to receive this message which count values would be correct?
 
 [ ] 1
+
 [ ] 2
+
 [x] 5
+
 [x] 6
 
 9. When using one of the MPI send routines, how many messages do you send?
 
 ( ) 1
+
 (x) 2
+
 ( ) 4
 
 10. How is the actual size of the incoming message reported?
 
 ( ) The value of `count` in the receive is updated
+
 ( ) MPI cannot tell you
+
 (x) It is stored in the Status parameter
+
 ( ) With the associated tag
 
 Various pieces of metadata about the received message are stored in the Status such as the origin, tag and its size.
@@ -594,7 +631,7 @@ In the previous exercise you ran a program using the `MPI broadcast` routine and
 
 With the help of the following image you can see the difference between the two algorithms. 
 
-![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/D2P2S5.png)
+![](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/3-15.png)
 
 ### 3.16 Scatter and gather
 
@@ -806,7 +843,9 @@ This quiz covers various aspects of collective communication that have been disc
 Choose the one true statement.
 
 ( ) Only the sending process must call this routine.
+
 ( ) The destination provess of a communicator must call this routine.
+
 (x) All processes of a communicator must call this routine.
 
 2. Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
@@ -814,7 +853,9 @@ Choose the one true statement.
 Choose the one true statement.
 
 ( ) The message size argument on the receive side must be larger than the message size argument on the sender side.
-(x) The message size argument on the receive side must match the message size argument on the sender side. 
+
+(x) The message size argument on the receive side must match the message size argument on the sender side.
+
 ( ) The message size argument on the receive side must be smaller than the message size argument on the sender side.
 
 3. Which are the major rules when using collective communication routines and do not apply to point-to-point communication?
@@ -822,13 +863,17 @@ Choose the one true statement.
 Choose the one true statement.
 
 ( ) Nonblocking collectives match with blocking collectives.
+
 (x) Nonblocking collectives do not match with blocking collectives.
 
 4. Which operation may be though of as the *inverse* of the `MPI_SCATTER` function?
 
 (x) `MPI_GATHER`
+
 ( ) `MPI_RECV`
+
 ( ) `MPI_BROADCAST`
+
 ( ) `MPI_REDUCE`
 
 5. Some MPI collective calls specify both a send type and a receive type, e.g. `MPI_Scatter(sendbuf, sendcount, sendtype, recvbuf, recvcount,  recvtype, …)`. 
@@ -838,8 +883,11 @@ However, most times when you see this call used in practice we have sendtype = r
 Why does MPI make you specify both types?
 
 ( ) So it can check at runtime that you haven't made a silly mistake
+
 ( ) So it can do type conversion if required
+
 (x) The types and counts can be different provided that at least one of them is an MPI derived type
+
 ( ) The types and counts can be different provided that the two buffers are the same length in bytes
 
 The MPI datatypes do not have to be the same, they just have to be compatible. For example, if you create a datatype containing three integers then a send with this type will match a receive of 3 x `MPI_INTEGER`.
@@ -847,12 +895,15 @@ The MPI datatypes do not have to be the same, they just have to be compatible. F
 6. In a scatter operation, what is the best way to use the sending and receiving buffers:
 
 ( ) It is generally OK for the sendbuf and recvbuf to be the same buffer
+
 (x) Allocate the senbuf only on the root process and recvbuf on all other processes
 
 7. Which collective communication call should be used when simple synchronization across a communicator is required?
 
 ( ) `MPI_REDUCE`
+
 (X) `MPI_BARRIER`
+
 ( ) `MPI_BROADCAST`
 
 8. What is the output of this MPI code on 8 processes, i.e. on running ranks 0, 1, 2, 3, 4, 5, 6 and 7?
@@ -869,8 +920,11 @@ if (rank % 2 == 0) { //even processes
 
 Options:
 ( ) evensum = 16, oddsum = 12
+
 (x) evensum = 28, oddsum = 28
+
 ( ) evensum = 12, oddsum = 16
+
 ( ) evensum = 8, oddsum = 7
 
 It does not matter that different processes call a collective routine from different lines of code. MPI as a library has no idea what route a process took before calling any MPI function. Here, since they are all operating in `COMM_WORLD`, all processes participate in the same global collective. 
