@@ -528,25 +528,33 @@ Do you understand how OpenMP can be included and used with MPI? Test your unders
 1. An MPI process is generally single-threaded unless the code has been augmented with multithreading directives or library calls.
 
 (x) True
+
 ( ) False
 
 2. If `MPI_Init_thread` returns `MPI_THREAD_FUNNELED`, MPI messages can only be passed between main threads.
 
 (x) True
+
 ( ) False
 
 3. Which argument to `MPI_Send` may be used to identify the destination thread?
 
 ( ) rank
+
 ( ) count
+
 (x) tag
+
 ( ) communicator
 
 4. MPI messages can be passed between any two threads, provided each is enclosed in an `omp single` construct, when `MPI_Init_thread` returns what value?
 
 ( ) `MPI_THREAD_SINGLE`
+
 ( ) `MPI_THREAD_FUNNELED`
+
 (x) `MPI_THREAD_SERIALIZED`
+
 ( ) `MPI_THREAD_MULTIPLE`
 
 ### 4.11 Derived data type
@@ -794,13 +802,17 @@ This quiz tests your knowledge of user derived data types.
 1. Which of the following general data types assumes that the stride is equal to 1?
 
 (x) Contiguous
+
 ( ) Vector
+
 ( ) Struct
 
 2. Which of the following general data types may consist of more than one basic data type?
 
 ( ) Contiguous
+
 ( ) Vector
+
 (x) Struct
 
 3. If you have an array of a structure in your memory, how would you describe this?
@@ -814,8 +826,11 @@ Using function `MPI_Type_create_struct` for the structure and the `count` argume
 4. Which additional MPI procedure call is required, before a newly generated data type handle can be used in message passing communication?
 
 ( ) `MPI_Type_contiguous`
+
 ( ) `MPI_Type_create_resized`
+
 (x) `MPI_Type_commit`
+
 ( ) `MPI_Type_free`
 
 ### 4.17 Pass-around-the-ring exercise
