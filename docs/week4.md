@@ -58,7 +58,7 @@ We will understand this more clearly with the help of the following two examples
 
 ### Non-blocking send and receive
 
-![Example](https://ugc.futurelearn.com/uploads/assets/90/47/9047bd18-8486-4259-b346-7a890e8d9b81.png)
+![Example](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/4-2_non-blocking.png)
 
 **Image courtesy: Rolf Rabenseifner (HLRS)**
 
@@ -349,7 +349,7 @@ This example notebook shows how to calculate the value of Pi by solving this int
 
 $$\pi = \int_{0}^1 \frac{4}{1+x^2}~dx \approx \sum_{i=0}^{n-1}f(x_i+h/2)h$$
 
-You have already computed this with [OpenMP](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1147436) and [MPI](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming/1/steps/1169705) in the previous weeks. We will use both approaches in this example. The goal is to minimally use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. The complete code is shown below.
+You have already computed this with OpenMP and MPI in the previous weeks. We will use both approaches in this example. The goal is to minimally use MPI for inter-node communication and inside the node to do everything by shared memory computing with OpenMP. The complete code is shown below.
 
 ~~~c
 #include <omp.h>
