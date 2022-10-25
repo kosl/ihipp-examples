@@ -1,13 +1,12 @@
-# Beyond OpenMP and MPI: GPU parallelisation 
+## Beyond OpenMP and MPI: GPU parallelisation 
 
-
-## 5.1 V: Introduction to week 5
+### 5.1 Welcome to Week 5
 
 In this week we will go beyond classical parallelisation paradigms (like OpenMP and MPI) which are generally associated with CPUs. We will talk about Graphics Processing Units (GPUs) that were originally developed for executing graphical tasks (including rendering in computer games) but can also be used for general-purpose computing in many fields.
 
 We have already introduced GPUs in the first week. Through the steps of this week we will give some more details. We shall present the architecture of modern GPUs and then the available GPU execution models for computing acceleration. OpenMP as a means for "off-loading" parallel tasks to GPUs will be shortly introduced, while the main focus will be dedicated to two extensions to C for programming GPUs: CUDA and OpenCL. On one hand, directive-based GPU off-loading is simple to use but it's quite limited, contrary to GPU programming which requires more effort but offers more flexibility. Hopefully, the provided hands-on examples will introduce you to the topic of GPU programming as smoothly as possible.
 
-## 5.2 GPU Architecture
+### 5.2 GPU Architecture
 
 To better understand the capabilities of GPUs in terms of computing acceleration, we will have a look at a typical architecture of a modern GPU.
 
@@ -30,7 +29,7 @@ See also:
 
 [GPU architecture](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#from-graphics-processing-to-general-purpose-parallel-computing__gpu-devotes-more-transistors-to-data-processing)
 
-## 5.3 E: GPUs by numbers
+### 5.3 GPUs by numbers
 
 Desktop PCs or laptops are standardly equipped with a GPU, either integrated or as a standalone card. But how do such GPUs differ from GPUs dedicated to computing, e.g., on supercomputers (HPC clusters)?
 
@@ -181,7 +180,7 @@ See also:
 
 [MARCONI100 cluster](https://www.hpc.cineca.it/hardware/marconi100)
 
-## 5.4 Exer.: Information and compute capabilities of a GPU
+### 5.4 Information and compute capabilities of a GPU
 
 In this exercise, you will check the information and compute capabilities of the GPU available for you in the current session of Colab.
 
@@ -226,9 +225,69 @@ and
 
 How does the information you've gotten compare to the GPU characteristics in the previous step? Leave a comment with your findings.
 
-## 5.5 Quiz: GPU basics and architecture
+### 5.5 GPU basics and architecture
 
-## 5.6 V: GPU execution models and programming solutions
+This quiz tests your knowledge of GPU basics and architecture. For GPU basics you should also go through steps in the Accelerators overview activity in Week 1.
+
+1. Modern supercomputers (clusters) are equipped with (multiple choice answer):
+
+[x] CPUs
+
+[x] CPUs and GPUs
+
+[ ] GPUs
+
+[x] CPUs and GPUs on dedicated compute nodes
+
+Correct.
+
+2. Consumer-grade GPUs compared to professional high-end GPUs (multiple choice answer):
+
+[ ] do not share same technology, do not allow GPGPU computing
+
+[ ] share same technology, do not allow GPGPU computing
+
+[x] share same technology, allow GPGPU computing
+
+[ ] can not have comparable performance
+
+[x] can have comparable performance for single precision (FP32) operations
+
+[ ] can have comparable performance for double precision (FP64) operations
+
+Correct. The theoretical FP32 performances for the gaming card NVIDIA GeForce RTX 3090 and high-end professional card NVIDIA Tesla A100 are 35.58 TFLOPS and 19.49 TFLOPS, respectively, on the other hand the theoretical FP64 performances are 0.556 TFLOPS and 9.746 TFLOPS, respectively. The gaming card is superior for single precision operations, while quite inferior for double precision operations.
+
+3. GPGPU computing is often referred to heterogeneous computing because:
+
+( ) there exist many GPU models to combine into a compute node
+
+( ) a GPU typically runs different kernels over the course of a computation
+
+(x) computing with a GPU typically also involves a CPU, i.e., two different kinds of hardware with different strengths
+
+Correct. In GPGPU computing a GPU can be seen as a coprocessor to a CPU.
+
+4. What are the characteristics of GPU memory compared to CPU memory?
+
+(x) less cache, longer latency, higher memory bandwidth
+
+( ) less cache, shorter latency, higher memory bandwidth
+
+( ) more cache, longer latency, lower memory bandwidth
+
+( ) more cache, shorter latency, lower memory bandwidth
+
+Correct.
+
+5. A GPU core is the same as a CPU core:
+
+( ) True
+
+(x) False
+
+Correct. The equivalent of a CPU core in a GPU is a streaming multiprocessor with many GPU "cores".
+
+### 5.6 GPU execution models and programming solutions
 
 As already mentioned, GPUs serve as accelerators to CPUs, i.e., computationally intensive tasks are off-loaded from CPUs to GPUs. Standard programming languages such as Fortran and C/C++ do not permit such off-loading because they lack addressing distinct memory spaces and don't know the GPU architecture. For that purpose, we need special language extensions that allow GPU programming.
 
@@ -244,11 +303,11 @@ See also:
 
 [Khronos OpenCL Registry](https://www.khronos.org/registry/OpenCL/)
 
-## 5.7 E: Hello world on GPU
+### 5.7 Hello world on GPU
 
 Before explaining CUDA and OpenCL programming/execution models in detail, let's introduce GPU programming with a Hello World example.
 
-### Hello world in C
+#### Hello world in C
 
 Let's first look at the following C code:
 
@@ -261,11 +320,9 @@ for (int i = 0; i < N; ++i) {
 
 What do you think this code will do if executed as a program? If you are familiar with the concept of a for loop, then you know that every iteration of the code is run sequentially (on a CPU) and that the above code will print ''Hello world'' messages in order from iteration 0 to 3. Try to execute it in the notebook to see the expected results.
 
-[Hello_World_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_C.ipynb)
-
 [![Hello_World_C.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1VVqwQS6ui1BlKQiSuq2TTy7pEAR2x2DB)
 
-### Hello world in CUDA
+#### Hello world in CUDA
 
 We have already learnt that GPUs are very good at executing independent parallel tasks. The above for loop is a good candidate for that so let's try to do it in CUDA. 
 
@@ -302,11 +359,9 @@ What is crucial about the kernel execution on a GPU is that the blocks with thre
 
 Try to execute the CUDA Hello world in the notebook a couple of times to see which block indices get printed first. Is the order of block indices always the same, or does it change with any new execution of the code?
 
-[Hello_World_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA.ipynb)
-
 [![Hello_World_CUDA.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1oyh0XGep61-NJha7vei3022wS3Imm-fC)
 
-### Hello world in OpenCL
+#### Hello world in OpenCL
 
 We can also run the ''Hello world'' example on a GPU in OpenCL. Let's look at the solution:
 
@@ -340,13 +395,11 @@ So, the launch parameters of a kernel in OpenCL are a bit different than in CUDA
 
 Try to figure out what does the kernel in OpenCL do in parallel and if there's an equivalent of the block index `idx` for the work-group index in the OpenCL code. (Don't worry if you can't figure this out, you will do an exercise later, which will give you the answer.) Also, try to execute the OpenCL Hello world in the notebook a couple of times to see which indices get printed first. Is the order of indices always the same, or does it change with any new execution of the code?
 
-[Hello_World_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL.ipynb)
-
 [![Hello_World_OpenCL.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1SplcfziDLFPkJxQMuAIcpY0P7TG-HHlk)
 
 Don't worry if you don't understand completely the codes above. We will explain everything in detail (including compiling of the codes) in the following steps.
 
-## 5.8 Exer: Hello world extended on GPU
+### 5.8 Hello world extended on GPU
 
 In this exercise you will extend the Hello world GPU examples to print more information about the executed blocks with threads and work-groups with work-items.
 
@@ -355,8 +408,6 @@ Modify the Hello world CUDA example from the previous step to complete the follo
 - define 2 blocks with 4 threads each
 - print the "Hello World" message and include information on the thread number from each block (hint: use the built-in variable `threadIdx.x`)
 
-[Hello_World_CUDA_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_CUDA_extended.ipynb)
-
 [![Hello_World_CUDA_extended.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Zy6BA-yBo2DJrSgMmkaybe75AuVot3TC)
 
 Similarly, modify the Hello world OpenCL example from the previous step to complete the following tasks:
@@ -364,11 +415,9 @@ Similarly, modify the Hello world OpenCL example from the previous step to compl
 - define 2 blocks (work-groups) with 4 threads (work-items) each
 - print the "Hello World" message and include information on the thread (work-item) number from each block (work-group) (hint: use the built-in variables `get_group_id(0)` for work-groups and `get_local_id(0)` for work-items)
 
-[Hello_World_OpenCL_extended.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Hello_World_OpenCL_extended.ipynb)
-
 [![Hello_World_OpenCL_extended.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1f40HGhyKUiVobYIf_1IcGj5_e1BlQEJu)
 
-## 5.9 CUDA and OpenCL execution model
+### 5.9 CUDA and OpenCL execution model
 
 After exploring the GPU architecture and getting to know the principles of GPU programming, we can abstract everything into a GPU execution model. Let's see how a GPU hardware architecture corresponds to the GPU programming paradigm. We will talk in terms of CUDA terminology but the same applies to OpenCL. We will present the equivalent OpenCL terminology at the end.
 
@@ -382,7 +431,7 @@ The term "device" is a general reference to the GPU, whereas the term "host" is 
 
 So, when a GPU kernel is executed, each thread block is assigned to an SM. A maximum number of thread blocks can be assigned to an SM, depending on GPU hardware resources. The runtime system maintains a list of active blocks and assigns new blocks to SMs when resources are freed or in other words: once a thread block is assigned to an SM the resources on it are reserved until the execution of all threads in the block is not finished. Each thread block execution is independent from another (no synchronization can be done among blocks). Threads in each block are divided into warps of consecutive threads (generally 32 on modern GPU architectures) and the scheduler selects warps for execution from the residing blocks in an SM. A warp executes one common set of instructions at a time and a GPU "core" (scalar processor) executes one thread in the warp.
 
-### CUDA thread hierarchy
+#### CUDA thread hierarchy
 
 Let's recap everything in terms of the GPU CUDA thread hierarchy with some details:
 
@@ -464,7 +513,7 @@ hello<<<4, 2>>>(N);
 
 would print global thread indices in the range from 0 to 6 instead of the total 0 to 7 deployed by invoking the kernel. You can experiment yourself by changing the launch parameters and value of `N`.
 
-### OpenCL work-item hierarchy
+#### OpenCL work-item hierarchy
 
 The GPU OpenCL work-item hierarchy is equivalent to the CUDA thread hierarchy except for terminology and some minor details:
 
@@ -520,7 +569,7 @@ See also:
 
 [OpenCL 1.2 API and C Language Specification ](https://www.khronos.org/registry/OpenCL/specs/opencl-1.2.pdf)
 
-## 5.10 E: Vector addition on GPU
+### 5.10 Vector addition on GPU
 
 A standard introductory example for GPU computing is vector addition. We will first show how it is done on a CPU and then on a GPU. In the next two steps, we will use this example to present a step-by-step approach to GPU programming, both in CUDA and OpenCL.
 
@@ -532,9 +581,7 @@ for(int i = 0; i < N; i++){
 }
 ~~~
 
-You can have a look at the program for vector addition in C and execute it:
-
-[Vector_addition_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_C.ipynb)
+You can have a look at the program for vector addition in C and execute it.
 
 [![Vector_addition_C.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1vx1FVQ3xLgAAkndJD7mK5sebh1tjNsyj)
 
@@ -565,19 +612,15 @@ You can see that the kernel looks basically the same, except for variable type p
 
 If you are curious about the codes for vector addition on GPU, you can have look at the CUDA version 
 
-[Vector_addition_CUDA.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb)
-
 [![Vector_addition_CUDA.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/18G29WIWRwaPgT_cg-rorHM1joPusiSml)
 
 and the OpenCL version
-
-[Vector_addition_OpenCL.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb)
 
 [![Vector_addition_OpenCL.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1-EnE5A7haX3RWyaP2ebm5-sbIuPf4Ydd)
 
 Don't be afraid if you find them difficult to grasp. We will explore and explain them step-by-step in the following steps.
 
-## 5.11 CUDA step-by-step
+### 5.11 CUDA step-by-step
 
 In this step, we will look at vector addition in CUDA, which is a typical GPU program in CUDA, in detail. A typical CUDA program flow consists of the following steps:
 
@@ -589,11 +632,11 @@ In this step, we will look at vector addition in CUDA, which is a typical GPU pr
 
 We have to mention that recent NVIDIA GPUs (Pascal microarchitecture or newer) support unified memory (invoked with `cudaMallocManaged()`) in a single-pointer-to-data model. This means CPUs and GPUs can use the same memory address space. Consequently, transfers from/to GPU memory are no longer needed or are less important in a GPU accelerated code.
 
-Let's analyze the [CUDA vector addition code](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_CUDA.ipynb) step-by-step and explain how to compile it into an executable program.
+Let's analyze the *CUDA vector addition code* step-by-step and explain how to compile it into an executable program.
 
 [![Vector_addition_CUDA.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/18G29WIWRwaPgT_cg-rorHM1joPusiSml)
 
-1. Initialize device
+**1\. Initialize device**
 
 The first available CUDA device (GPU) is automatically set to `0`, but you can set it yourself by:
 
@@ -647,7 +690,7 @@ All the above calls are optional but it is a good approach to control CUDA initi
 
 that are now redundant. Still, you can put these lines at the beginning of CUDA codes to no harm.
 
-2. Allocate GPU memory
+**2\. Allocate GPU memory**
 
 Memory allocation on the device is done with `cudaMalloc()`:
 
@@ -661,7 +704,7 @@ For every variable on the host (CPU), from/to which GPU memory transfers will be
 
 It is also a good approach to use "d" for the variables in GPU memory as an indication for device, e.g., `d_a` or `a_d`. This naming convention is optional but quite useful in terms of code readability.
 
-3. Transfer data from host to device memory
+**3\. Transfer data from host to device memory**
 
 Data transfer from host (CPU) to device (GPU) is done with `cudaMemcpy()` and the option `cudaMemcpyHostToDevice`. In the example of vector addition, we have to transfer data from host variables `a` and `b` to device variables `d_a` and `d_b`:
 
@@ -672,7 +715,7 @@ cudaMemcpy(d_b, b, sizeof(double) * N, cudaMemcpyHostToDevice);
 
 We transfer the values of the components of vectors `a` and `b` from host do device memory. Note that host and device variables must be of the same size and type.
 
-4. Execute kernel on device variables as inputs
+**4\. Execute kernel on device variables as inputs**
 
 After transferring the components of vectors `a` and `b` from host do device memory, we can sum the vector components in parallel on the GPU. In the previous step, we have already shown how to do that, i.e., with the kernel `vector_add`:
 
@@ -707,7 +750,7 @@ vector_add<<<blocksPerGrid, threadsPerBlock>>>(d_out, d_a, d_b, N);
 
 Note that we launched the kernel with the allocated device variables `d_out`, `d_a` and `d_b` as is usually done with function calls. Also, note that integers and constant type variables can be passed to the kernel without device memory allocation. In this case, we passed the vector size `N` in this way.
 
-5. Transfer data back from device to host
+**5\. Transfer data back from device to host**
 
 The kernel `vector_add` calculates the vector sum of `d_a` and `d_b` and puts it into the variable `d_out`. This variable, together with the vector sum, resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable `out`. This is done with `cudaMemcpy()` with a different option, `cudaMemcpyDeviceToHost`:
 
@@ -717,7 +760,7 @@ cudaMemcpy(out, d_out, sizeof(double) * N, cudaMemcpyDeviceToHost);
 
 Again, the counterpart host variable `out` must be of the same size and type as the device variable `d_out`.
 
-6. Deallocate (free) device memory
+**6\. Deallocate (free) device memory**
 
 In the end (after the device variables are not needed anymore), we can free the allocated device memory:
 
@@ -727,39 +770,39 @@ cudaFree(d_b);
 cudaFree(d_out);
 ~~~
 
-7. Compiling the code
+**7\. Compiling the code**
 
 CUDA codes reside in `*.cu` files, and the NVIDIA CUDA (nvcc) compiler can be used to compile them, e.g., in the case of the vector addition CUDA code:
 
-```
+~~~bash
 !nvcc -o vector_add_cuda vector_add_cuda.cu
-```
+~~~
 
 The executable can be run with:
 
-```
+~~~c
 !./vector_add_cuda
-```
+~~~
 
-Hardware design, number of cores, cache size, and supported arithmetic instructions are different for different GPU models. Every NVIDIA GPU supports a compute capability according to its microarchitecture, e.g., the Tesla V100 (Volta microarchitecture) supports CUDA compute capabilities up to 7.0 (see the output in GPUs by numbers). The above code can be compiled specifically for the V100 in the following way:
+Hardware design, number of cores, cache size, and supported arithmetic instructions are different for different GPU models. Every NVIDIA GPU supports a compute capability according to its microarchitecture, e.g., the Tesla V100 (Volta microarchitecture) supports CUDA compute capabilities up to 7.0 (see the output in **GPUs by numbers**). The above code can be compiled specifically for the V100 in the following way:
 
-```
+~~~bash
 !nvcc -arch=sm_70 -gencode=arch=compute_70,code=sm_70 -o vector_add_cuda vector_add_cuda.cu
-```
+~~~
 
 You can compile and run the CUDA vector addition code in the notebook. Check the output to see if the GPU calculates the vector sum correctly.
 
 [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html)
 
-## 5.12 OpenCL step-by-step
+### 5.12 OpenCL step-by-step
 
 In this step, we will look at vector addition in OpenCL in detail. A typical OpenCL program flow basically consists of the same steps as a CUDA program flow, but you will notice that OpenCL is a more low-level programming extension with many calls to the OpenCL API. OpenCL, like CUDA, can also offer shared memory (Shared Virtual Memory) for host and device kernels, thus eliminating costly data transfers between host and device (supported only in OpenCL 2.0 and above). Unfortunately, the NVIDIA GPUs support only OpenCL 1.2 and the before-mentioned features are not available. For that reason, we will follow this standard to explain GPU accelerated programming in OpenCL.
 
-Let's analyze the [OpenCL vector addition code](https://github.com/kosl/ihipp-examples/blob/master/GPU/Vector_addition_OpenCL.ipynb) step-by-step and explain how to compile it into an executable program.
+Let's analyze the *OpenCL vector addition code* step-by-step and explain how to compile it into an executable program.
 
 [![Vector_addition_OpenCL.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1-EnE5A7haX3RWyaP2ebm5-sbIuPf4Ydd)
 
-1. Initialize device
+**1\. Initialize device**
 
 As opposed to CUDA, a specific OpenCL header must be included at the beginning of the code, depending on the operating system:
 
@@ -793,7 +836,7 @@ cl_command_queue command_queue = clCreateCommandQueue(context, device_id, 0, &re
 
 This code snippet is basically the same for every OpenCL program.
 
-2. Create buffers and memory transfer to device
+**2\. Create buffers and memory transfer to device**
 
 Next, we create buffers which is essentially memory allocation on the GPU:
 
@@ -814,7 +857,7 @@ ret = clEnqueueWriteBuffer(command_queue, b_mem_obj, CL_TRUE, 0, N * sizeof(doub
 
 Like in CUDA, the size and the type of the memory buffers of the device variables must be the same as for the host counterparts, in this case: `N * sizeof(double)`.
 
-3. Build program and select kernel
+**3\. Build program and select kernel**
 
 You have probably noticed that the kernel source was loaded at the beginning with:
 
@@ -833,7 +876,7 @@ source_size = fread( source_str, 1, MAX_SOURCE_SIZE, fp);
 fclose( fp );
 ~~~
 
-These lines basically load the OpenCL kernel `vector_add` for vector addition (shown in Vector addition on GPU)
+These lines basically load the OpenCL kernel `vector_add` for vector addition (shown in **Vector addition on GPU**)
 
 ~~~c
 __kernel void vector_add(__global double *a, __global double *b, __global double *out, int n) {
@@ -865,7 +908,7 @@ cl_kernel kernel = clCreateKernel(program, "vector_add", &ret);
 
 Notice the constant use of the variable `ret` of the `cl_int` type defined at the beginning. This variable accepts return values for the OpenCL API. As said before, you can use many of the OpenCL API calls as boiler-plate code as long as you are consistent with the variable definitions in these calls.
 
-4. Set arguments and enqueue kernel
+**4\. Set arguments and enqueue kernel**
 
 After the creation of the OpenCL kernel, we have to first set its arguments with:
 
@@ -902,7 +945,7 @@ ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, 
 
 You will notice that the execution of a kernel in OpenCL is different than in CUDA. The main difference is that the kernel in OpenCL is not called in a function-like manner, i.e., with passing arguments to it. In OpenCL, the arguments of a kernel are set with the `clSetKernelArg()` API function before the kernel is executed. On the other hand, launch parameters for the kernel, i.e., `global_item_size` and `local_item_size` are set at kernel execution, like in CUDA.
 
-5. Transfer back results
+**5\. Transfer back results**
 
 The kernel `vector_add` calculates the vector sum of `a_mem_obj` and `b_mem_obj` and puts it into the memory buffer `out_mem_obj`. Like in CUDA, this vector sum resides in GPU global memory and cannot be accessed by the CPU directly, hence it has to be transferred back to host memory to the variable `out`. The transfer is done with:
 
@@ -910,7 +953,7 @@ The kernel `vector_add` calculates the vector sum of `a_mem_obj` and `b_mem_obj`
 ret = clEnqueueReadBuffer(command_queue, out_mem_obj, CL_TRUE, 0, N * sizeof(double), out, 0, NULL, NULL);
 ~~~
 
-6. Free buffers and resources
+**6\. Free buffers and resources**
 
 In the end, we can free the memory buffers
 
@@ -931,19 +974,19 @@ ret = clReleaseCommandQueue(command_queue);
 ret = clReleaseContext(context);
 ~~~
 
-7. Compiling the code
+**7\. Compiling the code**
 
 OpenCL codes reside in `*.c` files (main code) and `*.cl` files (kernels). Compilers that can link to the OpenCL library (generally with the flag `-lOpenCL`) can be used, e.g., `gcc` or `nvcc`. One should be aware that for running OpenCL codes on a GPU, a Software Developer Kit (SDK) must be installed. For NVIDIA GPUs, the installation of the CUDA SDK is enough and compiling can be done with:
 
-```
+~~~bash
 !nvcc -o vector_add_opencl vector_add_opencl.c -lOpenCL
-```
+~~~
 
 For non-NVIDIA GPUs or CPUs one could compile the code with, e.g.:
 
-```
+~~~bash
 !gcc -o vector_add_opencl vector_add_opencl.c -lOpenCL
-```
+~~~
 
 Of course, OpenCL drivers for the hardware must be installed, generally, as implementations for OpenCL called Installable Client Drivers (ICDs).
 
@@ -957,11 +1000,11 @@ As before, you can compile and run the OpenCL vector addition code in the notebo
 
 [OpenCL 1.2 Quick Reference Card](https://www.khronos.org/registry/OpenCL/sdk/1.2/docs/OpenCL-1.2-refcard.pdf)
 
-## 5.13 CUDA and OpenCL comparison
+### 5.13 CUDA and OpenCL comparison
 
 To sum up, we will give a side by side comparison of both the GPU programming models discussed so far. We haven't looked at everything that you will find in the comparison tables. Some things we will discuss later in the upcoming steps, for others you can have a look at the documentation for CUDA and OpenCL.
 
-### Execution model terminology
+#### Execution model terminology
 
 | CUDA | OpenCL |
 | :---------------------------: | :---------------: |
@@ -973,7 +1016,7 @@ To sum up, we will give a side by side comparison of both the GPU programming mo
 | shared memory | local memory |
 | local memory | private memory |
 
-### Function, variable and built-in variable types
+#### Function, variable and built-in variable types
 
 | CUDA | OpenCL |
 | :-----------------------------: | :---------------: |
@@ -989,7 +1032,7 @@ To sum up, we will give a side by side comparison of both the GPU programming mo
 | `blockIdx * blockDim + threadIdx` | `get_global_id()` |
 | `gridDim * blockDim` | `get_global_size()` |
 
-### Kernel synchronization
+#### Kernel synchronization
 
 | CUDA | OpenCL |
 | :------------------: | :---------------: |
@@ -999,7 +1042,7 @@ To sum up, we will give a side by side comparison of both the GPU programming mo
 | / | `read_mem_fence()` |
 | / | `write_mem_fence()` |
 
-### API calls
+#### API calls
 
 | CUDA | OpenCL |
 | :-----------------------: | :---------------: |
@@ -1009,9 +1052,113 @@ To sum up, we will give a side by side comparison of both the GPU programming mo
 | `cudaFree()` | `clReleaseMemObj()` |
 | `kernel<<<...>>>()` | `clEnqueueNDRangeKernel()` |
 
-## 5.14 Quiz: CUDA and OpenCL programming and execution models
+### 5.14 CUDA and OpenCL programming and execution models
 
-## 5.15 E: Numerical integration: Riemann sum with trapeziums
+This quiz tests your knowledge about the basics of CUDA and OpenCL programming and execution models.
+
+1. What statements about CUDA and OpenCL are correct? (multiple choice answer):
+
+[ ] both CUDA and OpenCL supported by many GPU vendors
+
+[x] CUDA is supported only by NVIDIA GPUs, while OpenCL by many GPU vendors
+
+[x] CUDA and OpenCL execution models are similar, but with a different terminology
+
+[ ] CUDA and OpenCL execution models are different
+
+Correct.
+
+2. Which of the following correctly describes the relationship between warps, thread blocks and CUDA cores?
+
+( ) a warp is divided into one or more thread blocks and each thread block executes on a single CUDA core
+
+( ) a thread block is divided into one or more warps and each warp executes on a single CUDA core
+
+(x) a thread block is divided into one or more warps and in each warp, every thread executes on a separate CUDA core
+
+Correct. Each CUDA core executes a different thread from a single warp.
+
+3. In a CPU, what is the closest equivalent of a GPU warp?
+
+( ) float
+
+(x) vector
+
+( ) thread
+
+( ) core
+
+4. A function with the `__global__` or `__kernel` prefix can be called from the host or the device and can run on either of them.
+
+( ) true
+
+(x) false
+
+Correct. This prefix specifies that the function can be called from either host or device, but it runs on the device alone.
+
+5. Which of the following correctly describes a GPU kernel?
+
+( ) a kernel may contain a mix of host and GPU code
+
+(x) all thread blocks (work-groups with work-items) involved in the same computation use the same kernel
+
+( ) a kernel is part of the GPU's internal micro-operating system, allowing it to act as in independent host
+
+Correct.
+
+6. Threads in a thread block (work-items in a work-group) can be distributed across two or more streaming multiprocessors (SMs).
+
+( ) true
+
+(x) false
+
+Correct. A thread block (work-group) must be run entirely on a single SM.
+
+7. Which internal variable in OpenCL is used to identify the work-item among all other work-items executed in the kernel?
+
+( ) `get_local_id()`
+
+(x) `get_global_id()`
+
+( ) `blockIdx`
+
+( ) `threadIdx`
+
+Correct.
+
+8. CPUs and GPUs can use the same memory address space:
+
+( ) for every CUDA and OpenCL version on every GPU architecture
+
+(x) for newer CUDA and OpenCL versions and newer GPU architectures
+
+( ) for CUDA versions only
+
+( ) same memory address space is not supported yet
+
+Correct. 
+
+9. Threads in CUDA or work-items in OpenCL can synchronize in:
+
+(x) in a single block (work-group)
+
+( ) in many blocks (work-groups) associated with a single kernel
+
+( ) can not synchronize
+
+Correct. Threads (work-items) can synchronize only in shared (local) memory in a single block (work-group).
+
+10. Which of the following statements is true with regard to compute capability in CUDA?
+
+( ) code compiled for hardware of one compute capability will not need to be re-compiled to run on hardware of another
+
+(x) different compute capabilities may imply a different amount of local memory per thread
+
+( ) compute capability is measured by the number of FLOPS a GPU accelerator can compute
+
+Correct. Every NVIDIA GPU supports a compute capability according to its microarchitecture and associated hardware design, number of cores, cache size and supported arithmetic instructions.
+
+### 5.15 Numerical integration: Riemann sum with trapeziums
 
 We are ready for a more complex example in numerical computation to show some extra features of GPU computing: Riemann sum for numerical integration. First, let's show how it's done on a CPU, and after that think of how can we parallelize it on the GPU with CUDA and OpenCL. We will also parallelize the CPU version with OpenMP to show how to also off-load the computation on GPU with OpenMP. 
 
@@ -1040,9 +1187,7 @@ double riemann(int n)
 
 In the code above, we calculate trapezium medians for every sub-interval and add them to the `sum` variable at every iteration. In the end, we multiply this sum of trapezium medians with `(1.0 / sqrt(2.0 * M_PI)) / (double) n` to obtain the Riemann sum. The term `1.0 / (double) n` is in fact the height of the trapezium `(b-a)/n` and is the same for every trapezium since the sub-interval width is the same and we have chosen `a = 0` and `b = 1`.
 
-The whole Riemann sum CPU code can be found in this notebook:
-
-[Riemann_sum_C.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_C.ipynb)
+The whole Riemann sum CPU code can be found in the following notebook.
 
 [![Riemann_sum_C.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1LBqOcLlPN1zAczCh5uaA1C2Xa_gLoy0x)
 
@@ -1064,7 +1209,7 @@ See also:
 
 [Normal Distribution Function](https://mathworld.wolfram.com/NormalDistributionFunction.html)
 
-## 5.16 Exer: Riemann sum with OpenMP
+### 5.16 Riemann sum with OpenMP
 
 In Week 2 of this course, you have learned how to use OpenMP to parallelize parts of the code and speed up the execution. In this exercise, you will use this knowledge and try to speed up the calculation of the Riemann sum code from the previous step.
 
@@ -1077,11 +1222,9 @@ Did you succeed to gain any speed up with the use of OpenMP? Leave a comment wit
 
 If you have any troubles modifying the code or compiling it, you can have a look at the solution given in the notebook below.
 
-[Riemann_sum_OpenMP.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP.ipynb)
-
 [![Riemann_sum_OpenMP.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1x1kDCOkkZZ60v5AI5Qh_woB6M8dahP1l)
 
-## 5.17 OpenMP off-loading to GPU for Riemann sum
+### 5.17 OpenMP off-loading to GPU for Riemann sum
 
 OpenMP is an example of a directive-based method that can be used to off-load computation-intensive tasks to GPUs. From OpenMP 4.0 on, new device constructs have been added to support this. As in CUDA or OpenCL, the execution model relies on the host on which the OpenMP program begins execution and then off-loads tasks or data to a target device, e.g., GPU.
 
@@ -1164,9 +1307,7 @@ double riemann(int n)
 
 Such OpenMP off-loading to the GPU results in speed up greater than in typically many threads OpenMP execution on the host. It is quite close to classical GPU acceleration with CUDA or OpenCL, provided the device (GPU) is supported, and compilers can build programs with OpenMP off-load.
 
-You can have a look at the whole code in this notebook:
-
-[Riemann_sum_OpenMP_GPU.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenMP_GPU.ipynb)
+You can have a look at the whole code in the following notebook.
 
 [![Riemann_sum_OpenMP_GPU.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1Zbum3NETtjJvwzFfOIk3puaf_yMvNWjU)
 
@@ -1178,7 +1319,7 @@ You can see that the code is compiled with the `-fopenmp` flag as with normal Op
 
 [Offloading Support in GCC](https://gcc.gnu.org/wiki/Offloading)
 
-## 5.18 E: Riemann sum with one GPU kernel
+### 5.18 Riemann sum with one GPU kernel
 
 When off-loading codes or part of codes to GPUs, the easiest approach is to search for parts that are embarrassingly parallel, which can be directly (with minimum changes) ported to a GPU programming extension.
 
@@ -1196,7 +1337,7 @@ for(int i = 0; i < n; ++i)
 
 an embarrassingly parallel part is the calculation of trapezium medians `fx` since it is independent. On the other hand, adding the calculated trapezium median to the `sum` at every iteration is a typical sequential task not suited for GPU parallelization. It naturally follows that the calculation of trapezium medians should be off-loaded to the GPU while adding them should be done sequentially on the host (CPU).
 
-### CUDA kernel `medianTrapezium`
+#### CUDA kernel `medianTrapezium`
 
 A suitable CUDA kernel for the calculation of trapezium medians should be something like this:
 
@@ -1243,7 +1384,7 @@ Only the transfer from device to host is needed since the array of trapezium med
 cudaMemcpy(a_h, a_d, sizeof(double)*n, cudaMemcpyDeviceToHost);
 ~~~
 
-### OpenCL kernel `medianTrapezium`
+#### OpenCL kernel `medianTrapezium`
 
 An equivalent OpenCL kernel is of the form:
 
@@ -1287,19 +1428,15 @@ Again, only the transfer from device to host is needed, since the array of trape
 ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0, n * sizeof(double), a, 0, NULL, NULL);
 ~~~
 
-## 5.19 Exer.: Profiling of the Riemann sum codes with one GPU kernel
+### 5.19 Profiling of the Riemann sum codes with one GPU kernel
 
 In this exercise, you will execute the CUDA and OpenCL Riemann sum codes with one GPU kernel and compare their performance to CPU and OpenMP codes. You will also do a profiling of the codes to identify possible bottlenecks.
 
 Execute the CUDA Riemann sum code
 
-[Riemann_sum_CUDA_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_one_kernel.ipynb)
-
 [![Riemann_sum_CUDA_one_kernel.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/17XdBdkOWpiToW-Hcdb8MjMdtf7FHnBNR)
 
 and the OpenCL Riemann sum code
-
-[Riemann_sum_OpenCL_one_kernel.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_one_kernel.ipynb)
 
 [![Riemann_sum_OpenCL_one_kernel.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1dvgXHfyap5Ql47BKIl2kCcewYVyFRnPy)
 
@@ -1309,7 +1446,7 @@ Use `nvprof` to profile the execution of the CUDA code. Can you identify the bot
 
 Analyze the diagnostic outputs of the OpenCL code. Can you identify the bottleneck for this code also? Note that execution time measurements of the GPU parts by the CPU are not necessarily trustful.
 
-## 5.20 Sum reduction
+### 5.20 Sum reduction
 
 In the exercise of the previous step, you have profiled the GPU Riemann sum codes with one kernel. The profiling gave you information on the bottlenecks of the code: memory transfer from device (GPU) to host (CPU) of the array of trapezium medians and the calculation in a `for` loop of the sum of medians.
 
@@ -1335,11 +1472,11 @@ This kind of parallel reduction is called sequential addressing. If we have an a
 
 [Optimizing Parallel Reduction in CUDA](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf)
 
-## 5.21 E: Riemann sum with parallel reduction on GPU
+### 5.21 Riemann sum with parallel reduction on GPU
 
 Let's show how to perform a parallel sum reduction described in the previous step with a GPU kernel. The sum reduction kernel will be added to the previous GPU codes, both in CUDA and OpenCL, to get rid of the bottlenecks.
 
-### Parallel reduction in CUDA
+#### Parallel reduction in CUDA
 
 Sequential addressing with a reversed loop and strided threadID-based indexing described in the previous step can be done in CUDA in the following way:
 
@@ -1408,7 +1545,7 @@ As explained, we use 1 block with 1024 threads for sum reduction. You will notic
 double* r = (double *)malloc(block_size * sizeof(double));
 ~~~
 
-### Parallel reduction in OpenCL
+#### Parallel reduction in OpenCL
 
 Sequential addressing with a reversed loop and strided work-item ID-based indexing can be done in OpenCL in the following way:
 
@@ -1484,19 +1621,15 @@ ret = clEnqueueNDRangeKernel(command_queue, kernel2, 1, NULL, &global_item_size2
 
 As before, we use 1 block (work-group) with 1024 threads (work-items) for sum reduction since the global item size is equal to the local item size of 1024.
 
-## 5.22 Exer.: Profiling of the Riemann sum codes with two GPU kernels
+### 5.22 Profiling of the Riemann sum codes with two GPU kernels
 
 In this exercise you will execute the CUDA and OpenCL Riemann sum codes with two GPU kernels and compare their performance to CPU, OpenMP codes and codes with one GPU kernel. You will also do profiling of the codes to see if we have gotten rid of the bottlenecks. 
 
 Execute the CUDA Riemann sum code with two kernels
 
-[Riemann_sum_CUDA_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_CUDA_two_kernels.ipynb)
-
 [![Riemann_sum_CUDA_two_kernels.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/199tA6Df9xMbI7YgdIu0IPpnuA1CV-Nhi)
 
 and the OpenCL Riemann sum code with two kernels
-
-[Riemann_sum_OpenCL_two_kernels.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_OpenCL_two_kernels.ipynb)
 
 [![Riemann_sum_OpenCL_two_kernels.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1TXsCj_veelAtp4DC8JEhYOpYsZWKE_jF)
 
@@ -1506,7 +1639,7 @@ Use `nvprof` to profile the execution of the CUDA code. How much time does the k
 
 Analyze the diagnostic outputs of the OpenCL code. Have the bottlenecks gotten solved, too? Keep in mind that execution time measurements of the GPU parts by the CPU are not necessarily trustworthy.
 
-## 5.23 V: Visual profiling and tracing of the GPU codes
+### 5.23 Visual profiling and tracing of the GPU codes
 
 In this step, we will present some tools for visual profiling and tracing of the GPU codes. These tools are generally available with the GPU SDK, some of them can also be installed separately. The tools can't be invoked through Jupyter notebooks directly, but you can try them if you have access to a system with direct command-line or GUI execution. Profiling and tracing are useful in terms of code performance analysis and hints at optimization.
 
@@ -1720,7 +1853,13 @@ The latter observation should be clarified in some detail. In CUDA all operation
 
 Similarly, multiple OpenCL kernels enqueued in the same command queue are executed consequently one after another. Concurrent execution of multiple kernels is achieved by creating multiple command queues.
 
-## 5.24 D: Week 5 wrap-up
+### 5.24 Test on GPU parallelisation
+
+With this test we will check your knowledge about using GPU for parallel programming.
+
+Test available on FutureLearn in the MOOC [Introduction to Parallel Programming](https://www.futurelearn.com/courses/interactive-hands-on-introduction-to-parallel-programming).
+
+### 5.25 Week 5 wrap-up
 
 In this week we gave an introduction to Graphical Processing Units (GPUs) as a means to accelerate computing and introduced you to GPU architectures and GPU execution models. Step-by-step examples to the most widely used GPU programming extensions (CUDA and OpenCL), a brief introduction to OpenMP as a means to off-load computation to GPUs and a GPU numerical example should have prepared you to use accelerated programming approaches in your own codes.
 
@@ -1731,13 +1870,11 @@ We are interested in your opinion on the Week 5 content:
 - what were the parts of Week 5 that were the most difficult to understand?
 - do you think GPU computation techniques you learned about will be useful for you?
 
-## 5.25 Extra content: GPU programming in Python
+### 5.26 Extra content: GPU programming in Python
 
 In the introductory week you have also run the CUDA "Hello World!" example in Python, i.e., in PyCUDA. Both Python wrappers of CUDA and OpenCL exist, although not officially suported. As an extra content we give here Riemann sum scripts (with one kernel) in PyCUDA and PyOpenCL.
 
-The scripts are available in this notebook:
-
-[Riemann_sum_GPU_Python.ipynb](https://github.com/kosl/ihipp-examples/blob/master/GPU/Riemann_sum_GPU_Python.ipynb)
+The scripts are available in the following notebook.
 
 [![Riemann_sum_GPU_Python.ipynb](https://raw.githubusercontent.com/kosl/ihipp-examples/master/docs/images/colab-badge-fp.svg)](https://colab.research.google.com/drive/1bBC9O2qLTGbaQ0uSwpv0QRCfrmhx-nbi)
 
