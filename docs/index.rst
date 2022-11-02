@@ -15,6 +15,7 @@ Introduction to parallel programming
    week3.md
    week4.md
    week5.md
+   appendix.md
 
 .. Indices and tables
    ==================

@@ -14,7 +14,7 @@ Work sharing directives and synchronisation of threads will be discussed within 
 
 #### Runtime functions
 
-The purpose of runtime functions is the management or modification of the parallel processes that we want to use in our code. They come with the OMP library.  
+The purpose of runtime functions is the management or modification of the parallel processes that we want to use in our code. They come with the OpenMP library.  
 
 For C++ and C, you can add the 
 
@@ -30,15 +30,17 @@ header file to your code in the beginning of the file and then this library incl
 omp_set_num_threads(n)
 ~~~
 
-For example, if you want to 'parallelise'  your program with, let's say, 12 threads, you specify number of threads to the program using the function
+For example, if you want to *parallelise*  your program with, let's say, 12 threads, you specify the number of threads in the program using the function
 
 ~~~c
-omp_set_num_threads(n)
+
+omp_set_num_threads(12)
+
 ~~~
 
 With this the program will only work with 12 threads. 
 
-* To return the current number of threads
+* To return the current number of threads, use
 
 ~~~c
 omp_get_num_threads()
@@ -46,21 +48,21 @@ omp_get_num_threads()
 
 With this we set a number of threads and we will return the current number of threads. So, like our previous example, if you specify the number of threads to 12 then calling this function will return the number of threads that are being used in the program. 
 
-* To return the ID of this thread
+* To return the ID of this thread, use
 
 ~~~c
 omp_get_thread_num() 
 ~~~
 
-So, calling this function, when you are in a specific thread would return an integer that is unique for every thread that is used in the code to 'parallelise'  your task. 
+So, calling this function, when you are in a specific thread, would return an integer that is unique for every thread that is used in the code to *parallelise*  your task.
 
-* To return 'true' if inside parallel region
+* To return `true` if inside parallel region, use
 
 ~~~c
 omp_in_parallel()
 ~~~
 
-This function returns 'true' if it is specified inside a parallel region. If it is not, i.e., if it is specified in serial region it will return false. And again, so if you want to use those functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in OpenMP. 
+This function returns `true` if it is specified inside a parallel region. If it is not, i.e., if it is specified in serial region, it will return `false`. And again, if you want to use these functions, you need to specify the appropriate header file at the beginning of your C code. Of course, there are multiple other runtime functions that are available in OpenMP.
 
 #### Example 
 
@@ -94,10 +96,8 @@ Take a moment and try to understand what is happening in the code above.
 
 * What would happen if we change the number of threads to 12? 
 
-Now go to the exercise, try it out and check if your answers were correct. 
+Now go to the exercise, try it out and check if your answers were correct.
 
-
-[Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Runtime-functions.ipynb)
 
@@ -109,7 +109,7 @@ Now go to the exercise, try it out and check if your answers were correct.
 
 #### Environment Variables
 
-The next thing that we have to take a look at are environment variables. Contrary to runtime functions, environment variables are not used in the code but are specified in the environment, where you are compiling and running your code. Purpose of environment variables is to control the execution of parallel program at runtime. As these are not specified in the code, you could specify them for example in a linux terminal before you compile and run your program. Let's go through the three most common environment variables.
+The next thing that we have to take a look at are environment variables. Contrary to runtime functions, environment variables are not used in the code but are specified in the environment, where you are compiling and running your code. The purpose of environment variables is to control the execution of parallel program at runtime. As these are not specified in the code, you could specify them for example in a Linux terminal before you compile and run your program. Let's go through the three most common environment variables.
 
 To specify the number of threads to use
 
@@ -117,19 +117,19 @@ To specify the number of threads to use
 export OMP_NUM_THREADS=4
 ~~~
 
-With this you can set the environment variable. For example, if you're using the bash terminal you can export this variable and specify a fixed number of threads and the program will only work with this specified number of threads. The same goes if you are using other terminals. For example, TCSH, the usage of the environment variable is achieved through using the word set and the key word 'setenv' and you can specify the number of threads to be used in the similar way :
+With this you can set the environment variable. For example, if you're using the bash terminal you can export this variable and specify a fixed number of threads and the program will only work with this specified number of threads. The same goes if you are using other terminals. For example, in TCSH, the usage of the environment variable is achieved through using the key word `setenv` and you can specify the number of threads to be used in a similar way
 
 ~~~csh
 setenv OMP_NUM_THREADS n
 ~~~
 
-To specify on which CPUs the threads should be placed
+To specify on which CPUs the threads should be placed, use
 
 ~~~sh
 OMP_PLACES 
 ~~~
 
-To show OpenMP version and environment
+To show OpenMP version and environment, use
 
 ~~~sh
 OMP_DISPLAY_ENV  
@@ -137,22 +137,22 @@ OMP_DISPLAY_ENV
 
 This basically shows the OpenMP version that you are in. 
 Of course, there are multiple other environmental variables that you can use. 
-For GCC compiler you can check the link and check the environment variables that you want to use yourself along with all the explanation and examples on how to use those environment.
+For GCC compiler you can check the link and check the environment variables that you want to use yourself along with all the explanation and examples on how to use those environment variables.
 
 #### Parallel constructs
 
-Parallel construct is the basic or the fundamental construct when using OpenMP. So every thread basically executes the same statements which are inside the 'parallel region' simultaneously, as you can see on this image. 
+Parallel construct is the basic or the fundamental construct when using OpenMP. So, every thread basically executes the same statements which are inside the *parallel region* simultaneously, as you can see on this image.
 
 :::{figure-md}
 
-![](images/D1P2S15.png)
+![](images/2-3.png)
 
-Parallel construct.
+Parallel construct. (Image courtesy: Rolf Rabenseifner (HLRS))
 :::
 
-So first, we have a master thread that executes the serial portion of the code. Then we come to a 'pragma omp' statement. We can see here that the master first encounters this omp construct and creates multiple, what we call 'slave threads' that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier, so when this barrier is reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution we go back to master thread that finally resumes the execution of the code. In this step, of course, the slave threads are gone because they have completed their task.
+So, first we have a master thread that executes the serial portion of the code. Then we come to a `pragma omp` statement. We can see here that the master first encounters this `omp` construct and creates multiple threads, what we call *slave threads* that run in parallel. Subsequently the master and slave threads divide the tasks between each other. In the end, we specify an implicit barrier, so when this barrier is reached, the threads finish and we wait for all threads to finish the execution. Following this, when all the threads have finished the execution, we go back to the master thread that finally resumes the execution of the code. In this step, of course, the slave threads are gone because they have completed their task.
 
-In 'C' this implicit barrier is specified with:   
+In C this implicit barrier is specified with
 
 ~~~c
 #pragma omp parallel
@@ -186,8 +186,6 @@ int main ()
 Take a moment and try to understand what is happening in the code
 above. Note the usage of the construct and runtime functions defined earlier in the article.
 
-[Jupyter notebook: Runtime functions](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Runtime-functions.ipynb)
-
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Runtime-functions.ipynb)
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/158oODa_ZJFLhynei0jZBQkxPNUcbLlaN)
@@ -197,14 +195,17 @@ above. Note the usage of the construct and runtime functions defined earlier in 
 
 #### Directive format
 
-So far we have just specified a parallel region and the code was executed in serial. Now we will move ahead to see directives for the openMP. The format for using a directive is as follows
+So far we have just specified a parallel region and the code was executed in serial. Now we will move ahead to see directives for the OpenMP. The format for using a directive is as follows
 
 ~~~c
 #pragma omp directive_name [clause[clause]...]
 ~~~
 
-We have already seen and used 'pragma omp parallel' that was a directive to execute the region in parallel. In this format we also have 'clauses' in order to specify different parameters. For example, a 'private' variable is a variable that is private to each thread whereas a 'shared' variable is one that is shared for all threads and any thread can access and modify it. 
-We will explore the clauses more in the following subsection. For now we will learn about the  'conditionals'. Similar to any programming language OpenMP also has conditional statements. So for example we can also specify an 'if' statement in OpenMP in the following way
+We have already seen and used `pragma omp parallel` that was a directive to execute the region in parallel. In this format we also have *clauses* in order to specify different parameters. For example, a `private` variable is a variable that is private to each thread whereas a `shared` variable is one that is shared for all threads and any thread can access and modify it.
+
+We will explore the clauses more in the following subsection. For now we will learn about the *conditionals*. Similar to any programming language OpenMP also has
+conditional statements. So for example, we can also specify an `if`
+statement in OpenMP in the following way
 
 ~~~c
 #ifdef _OPENMP
@@ -215,9 +216,9 @@ We will explore the clauses more in the following subsection. For now we will le
 #endif
 ~~~
 
-When we specify  '#ifdef _OPENMP' then the code will execute and when it comes to this 'if' statement, it will track whether the code is compiled with OpenMP. In this case if it was compiled with OpenMP with the flag ' #ifdef _OPENMP'  then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled 'serially', the block of code following the 'else' statement would be executed . And of course we close the conditional statements with 'endif'
+When we specify `#ifdef _OPENMP` then the code will execute and when it comes to this `if` statement, it will track whether the code is compiled with OpenMP. In this case if it was compiled with OpenMP with the flag `#ifdef _OPENMP`, then it will enter the subsequent block of code to execute it. Otherwise, if the code was compiled *serially*, the block of code following the `else` statement would be executed . And of course we close the conditional statements with `endif`.
 
-The following example illustrates the use of conditional compilation. With OpenMP compilation, the `_OPENMP` becomes defined. 
+The following example illustrates the use of conditional compilation. With OpenMP compilation, the `_OPENMP` becomes defined.
 
 ~~~c
 #include <stdio.h>
@@ -253,33 +254,31 @@ int main ()
 > >      I am thread 0 of 4 threads
 
 
-[Jupyter notebook: Conditionals](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Conditionals.ipynb)
-
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Conditionals.ipynb)
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/16bmVcGqPCfqTgFdAMVsiPkiwKqilLAam)
 
 #### Clauses
 
-The directive format we just learnt:
+The directive format we just have learnt
 
 ~~~c
 #pragma omp directive_name [clause[clause]...]
 ~~~
 
-Is an important keyword with openMP that we put in the beginning of our code on the line where we want the 'parallel' region to start and then we mention  the 'directive name' and the 'clause'. In this subsection we will learn about 'clauses'.
+is an important keyword with OpenMP that we put in the beginning of our code on the line where we want the *parallel* region to start and then we mention the *directive name* and the *clause*. In this subsection we will learn about *clauses*.
 
-There are basically two kind of clauses. i.e private or shared. 
-A private variable would be a variable that is private to each thread. 
+There are basically two kind of clauses, i.e., private or shared. A private variable would be a variable that is private to each thread.
+
 
 :::{figure-md}
 
-![](images/D1P2S18.png)
+![](images/2-4.png)
 
-Private clause.
+Private clause. (Image courtesy: Rolf Rabenseifner (HLRS))
 :::
 
-So if we execute
+So, we execute, e.g.
 
 ~~~c
 int A;
@@ -290,20 +289,17 @@ int A;
 }
 ~~~
 
-So, here we define an integer A in C code Then we Define the OMP directive, i.e., the 'omp parallel' and the 'private A'. So what happens here is that any time we will get a new thread this variable 'A' will be assigned inside of each thread individually. This would imply that the value of 'A' will go to the number of threads. So in the in the first thread it will be '0' in the second thread the value of this variable will be '1' because this would be the 'id' of the thread and in the third the value will be '2' and so on. We can see clearly that these variables are basically private, meaning that they are existing inside each thread.  This implies that the variable 'A' (0) in the first thread can not be accessed by the variable 'A' (1) in the second thread. 
-So this infers that this variable is basically private to each individual thread in our program. 
-And of course the opposite of this is the shared variable. If we specify that a variable is a shared variable this would signify that  the variable will be shared between the threads. If we specify the variable outside of the parallel region, so right before the 
+Here we define an integer `A` in C code. Then we define the OpenMP directive, i.e., the `omp parallel` and the `private A`. So, what happens here is that any time we will get a new thread, this variable `A` will be assigned inside of each thread individually. This would imply that the value of `A` will go to the number of threads. So, in the first thread it will be `0`, in the second thread the value of this variable will be `1` because this would be the `ID` of the thread and in the third the value will be `2`, and so on. We can see clearly that these variables are basically private, meaning that they are existing inside each thread. This implies that the variable `A` (0) in the first thread cannot be accessed by the variable `A` (1) in the second thread. So, this infers that this variable is basically private to each individual thread in our program.  And of course the opposite of this is the shared variable. If we specify that a variable is a shared variable this would signify that the variable will be shared between the threads. If we specify the variable outside of the parallel region, so right before the 
 
 ~~~c
 #pragma omp parallel
 ~~~
 
-this variable will be accessed by every thread. To exemplify, let's say if we have a 'for' loop and we add a number to it  in every iteration we can just specify it to be a shared variable. In this case,
-whenever any thread will update the shared variable, it will add numbers to it. This is an adequate way to use the 'for' Loop that we will see soon in the following subsections. 
+this variable will be accessed by every thread. To exemplify, let's say if we have a `for` loop and we add a number to it in every iteration, we can just specify it to be a shared variable. In this case, whenever any thread will update the shared variable, it will add numbers to it. This is an adequate way to use the `for` loop that we will see soon in the following subsections.
 
-So, to sum up the distinction between private and shared, the private variable is available only to one thread and cannot be accessed by any other thread whereas a  shared variable can not only be accessed by every thread in the part of the program but it can also be updated by each thread simultaneously. 
+So, to sum up, the distinction between private and shared: the private variable is available only to one thread and cannot be accessed by any other thread whereas a shared variable cannot only be accessed by every thread in the part of the program but it can also be updated by each thread simultaneously.
 
-Let's have a look at the code below
+Let's have a look at the code below.
 
 ~~~c
 #include <stdio.h>
@@ -329,14 +325,9 @@ int main ()
 }
 ~~~
 
-Run the code above and observe the output. How does the value of
-private and shared variable changes when accessed by different
-threads. Does the value of shared variable increase when being
-modified by multiple threads? Why? 
+Run the code above and observe the output. How does the value of private and shared variable changes when accessed by different threads? Does the value of shared variable increase when being modified by multiple threads? Why? 
 
-There might also be a race condition here. The write and immediate read of the variable inside the parallel region is a write-read race condition. Two or more threads access the same shared variable and modify it and these accesses are unsynchronized. We will see a more clear example of a race condition in Parallel region exercise. 
-
-[Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
+There might also be a race condition here. The write and immediate read of the variable inside the parallel region is a write-read race condition. Two or more threads access the same shared variable and modify it and these accesses are unsynchronized. We will see a more clear example of a race condition in *Parallel region* exercise.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Clauses.ipynb)
 
@@ -355,8 +346,8 @@ int main()
     int num_threads = 4;
     omp_set_num_threads(num_threads);
 
-    int private_var = 0;
-    int shared_var = 0;
+    int private_var = 1000;
+    int shared_var = 5000;
     int rank;
     #pragma omp parallel private(private_var) shared(shared_var)
     {
@@ -378,9 +369,7 @@ Take a moment and try to understand what is happening in the code above.
 
 * Does the value of private variable increase when being modified by multiple threads?
 
-Now go to the exercise, try it out and check if your answers were correct. 
-
-[Jupyter notebook: Clauses](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Clauses.ipynb)
+Now go to the exercise, try it out and check if your answers were correct.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Clauses.ipynb)
 
@@ -390,7 +379,7 @@ Now go to the exercise, try it out and check if your answers were correct.
 
 In this exercise you will get to practice using basic runtime functions, directive format, parallel constructs and clauses which we have learned so far. 
 
-The code for this exercise is under the following instructions in a Jupyter notebook. You will start from this provided Hello world template. What is the expected output?
+The code for this exercise is under the following instructions in a Jupyter notebook. You will start from this provided *Hello world* template. What is the expected output?
 
 ~~~c
 #include <stdio.h>
@@ -409,7 +398,7 @@ int main()
 
 1. Go to the exercise and set the desired number of threads to 4 using one of the runtime functions. 
 
-2. Set variable i to ID of this thread using one of the runtime functions. 
+2. Set variable `i` to ID of this thread using one of the runtime functions. 
 
 3. Add a parallel region to make the code run in parallel. 
 
@@ -417,15 +406,15 @@ int main()
 
 Before you run the program, what do you think will happen?
 
-Now run the program and observe the output. You can change the number of threads to 12 or other and observe the output. 
+Now, run the program and observe the output. You can change the number of threads to 12 or other and observe the output. 
 
-5. Add a private clause to the parallel region for the variable i.
+5. Add a private clause to the parallel region for the variable `i`.
 
 What will happen? Observe the difference in the output. Why is the output different? Check if you get a race condition. 
 
 Race condition: 
 
-* Two threads access the same shared variable and at least one thread modifies the variable and accesses are unsynchonized. 
+* Two threads access the same shared variable and at least one thread modifies the variable and accesses are not synchonized. 
 
 * The outcome of the program depends on timing of the threads in the team.
 
@@ -434,9 +423,7 @@ Race condition:
 Don't worry if you always get a correct output, because a compiler may use a private register on each thread instead of writing directly into memory. 
 
 #### Expected output:
-* If compiled with OpenMP, the program should output »hello world« and the ID of each thread. 
-
-[Jupyter notebook: Exercise: Parallel region](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Parallel-region.ipynb)
+* If compiled with OpenMP, the program should output »hello world« and the ID of each thread.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Parallel-region.ipynb)
 
@@ -449,18 +436,18 @@ We just covered the basics of OpenMP, runtime functions, constructs and directiv
 #### Question 1
 Directives appear just before a block of code, which is delimited by:
  
-* ( … )
-* [ … ]
-* { … }
-* < … >
+* `( … )`
+* `[ … ]`
+* `{ … }`
+* `< … >`
 
 #### Question 2
 Which of these is a correct way for an OpenMP program to set the number of available threads to 4?
  
-* At the beginning of an OpenMP program, use the library function omp_get_num_threads(4) to set the number of threads to 4.
-* At the beginning of an OpenMP program, use the library function num_threads(4) to set the number of threads to 4.
-* In bash, export OMP_NUM_THREADS=4.
-* At the beginning of an OpenMP program, use the library function omp_num_threads(4) to set the number of threads to 4.
+* At the beginning of an OpenMP program, use the library function `omp_get_num_threads(4)` to set the number of threads to 4.
+* At the beginning of an OpenMP program, use the library function `num_threads(4)` to set the number of threads to 4.
+* In bash, `export OMP_NUM_THREADS=4`.
+* At the beginning of an OpenMP program, use the library function `omp_num_threads(4)` to set the number of threads to 4.
 
 #### Question 3
 Variables defined in the shared clause are shared among all threads.
@@ -471,9 +458,9 @@ Variables defined in the shared clause are shared among all threads.
 #### Question 4
 When compiling an OpenMP program with gcc, what flag must be included?
 
-* -fopenmp
-* -o hello
-* ./openmp
+* `-fopenmp`
+* `-o hello`
+* `./openmp`
 * None of the answers
 
 #### Question 5
@@ -512,7 +499,7 @@ How many iterations are executed if 4 threads execute the below program?
 
 ### Which thread executes which statement or operation?
 
-In the following steps we learn how to really organize our work in parallel. Please share your ideas on how we can achieve that.
+In the following steps we learn how to really organize our work in parallel. Please, share your ideas on how we can achieve that.
 
 Do you know of possible ways of organizing work in parallel? How can the operations be distributed between threads? Is there a way to control the order of threads?
 
@@ -530,7 +517,7 @@ Some examples of the work sharing constructs are:
 
 #### Section construct
 
-We will first see a code example for using the sections construct where we can we specify it through directive `sections`.
+We will first see a code example for using the sections construct where we can specify it through directive `sections`.
 
 ~~~c
 #pragma omp parallel
@@ -545,40 +532,40 @@ We will first see a code example for using the sections construct where we can w
 }// end of parallel
 ~~~
 
-When we use sections construct, multiple blocks of code are executed in parallel. When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section, it will execute its task in a different thread. This way we can add these sections inside our `pragma OMP parallel` code by specifying a section per each thread that will be executed in that each individual thread.
+When we use `sections` construct, multiple blocks of code are executed in parallel. When we specify section and we put a task into it, this specific task will execute in one thread. And then when we go on to another section, it will execute its task in a different thread. This way we can add these sections inside our `pragma omp parallel` code by specifying a section per each thread that will be executed in that each individual thread.
 
 :::{figure-md}
 
-![](images/D1P2S22.png)
+![](images/2-9-1.png)
 
-Sections construct. 
+Sections construct. (Image courtesy: Rolf Rabenseifner (HLRS))
 :::
 
-In the example code above we can see that inside the section we have specified variables 'a' and 'b'. When this code is executed, a new thread is generated with these variables and the same follows for the variables 'c' and 'd' which are specified in a different section and hence are in a different thread. 
+In the example code above we can see that inside the section we have specified variables `a` and `b`. When this code is executed, a new thread is generated with these variables and the same follows for the variables `c` and `d` which are specified in a different section and hence are in a different thread.
 
 #### For construct
 
-In computer science,  for-loop is a control flow statement which specifies iteration. This allows code to be executed repeatedly. Such tasks, similar in action and executed multiple times, can be parallelised as well. In OpenMP, we can use 'for' construct in
-'#pragma omp'. Simply put, a 'for' construct can be seen as a parallelised 'for' loop. We can specify the for construct as
+In computer science,  for-loop is a control flow statement which specifies iteration. This allows code to be executed repeatedly. Such tasks, similar in action and executed multiple times, can be parallelised as well. In OpenMP, we can use the `for` construct in
+`#pragma omp`. Simply put, a `for` construct can be seen as a parallelised `for` loop. We can specify the `for` construct as
 
 ~~~c
 #pragma omp for [clause[[,]clause]...]
 ~~~
 
-Here we also start with `pragma OMP` followed by the 'for' keyword and we can use different clauses again, i.e., private, shared and so on. The corresponding fo-loop must have a canonical shape. 
+Here we also start with `pragma omp` followed by the `for` keyword and we can use different clauses again, i.e., private, shared and so on. The corresponding for-loop must have a canonical shape.
 
 ~~~c
 for (int i=it; i<M; i++)
 ~~~
 
-Since each iterator is by default a private variable and is shared by only one thread, the iterator is not modified inside the loop body. If it was accessed by every threads, our for-loop would get corrupted. 
+Since each iterator is by default a private variable and is shared by only one thread, the iterator is not modified inside the loop body. If it was accessed by every thread, our for-loop would get corrupted. 
 
-We have a few other clauses than just 'private'. For example:
+We have a few other clauses than just `private`. For example:
 
-- schedule : It classifies how the iterations of loops are divided among the threads.
-- collapse (n) : The iterations of 'n' loops are collapsed into one larger iteration space.
+- `schedule`: It classifies how the iterations of loops are divided among the threads.
+- `collapse(n)`: The iterations of `n` loops are collapsed into one larger iteration space.
 
-We can see an example of the for construct used in the code.
+We can see an example of the `for` construct used in the code.
 
 ~~~c
 #pragma omp parallel private(f)
@@ -591,22 +578,20 @@ We can see an example of the for construct used in the code.
 } // end of parallel
 ~~~
 
-We start with 'pragma omp parallel' followed by private variable named 'f'. Then we use 'pragma OMP for' construct, followed by a for loop that goes from 0 to 10 (10 different iterations). The private variable 'f' is then fixed in every thread and the 'a' list is updated in parallel. This is because the index each array needs is different from each other. So every thread can access only one place of the array allowing us to update this list in parallel.
+We start with `pragma omp parallel` followed by private variable named `f`. Then we use `pragma omp for` construct, followed by a for loop that goes from 0 to 10 (10 different iterations). The private variable `f` is then fixed in every thread and the list `a` is updated in parallel. This is because the index each array needs is different from each other. So, every thread can access only one place of the array allowing us to update this list in parallel.
 
 :::{figure-md}
 
-![](images/D1P2S24.png)
+![](images/2-9-2.png)
 
-Example visualization.
+Example visualization. (Image courtesy: Rolf Rabenseifner (HLRS))
 :::
 
-Here we can see that if we are working on two threads with 10 iterations, then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on 'a' list will be updated by itself and since the iterators are independent of each other they modify just one place so we can can update the each place of the 'a' list quite easily. 
+Here we can see that if we are working on two threads with 10 iterations, then these iterations will be split between two threads from 0 to 4 and 5 to 9. Each place on list `a` will be updated by itself and since the iterators are independent of each other, they modify just one place, so we can update each place of the list `a` quite easily.
 
 #### Example
 
-Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output.
-
-[Jupyter notebook: Worksharing constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Worksharing-Constructs.ipynb)
+Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your understanding matches the actual output.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Worksharing-Constructs.ipynb)
 
@@ -615,15 +600,15 @@ Go to the provided examples and try to understand what is happening in the code.
 ### Synchronization
 [![(Video)](images/video-badge-fp.png)](https://youtu.be/QIpsVJKuAKs)
 
-Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at a time. This is achieved with so called 'barriers'. Synchronization can be achieved by two ways, i.e., through an implicit barrier or an explicit barrier. 
+Sometimes in parallel programming, when dealing with multiple threads running in parallel, we want to pause the execution of threads and instead run only one thread at a time. This is achieved with so called *barriers*. Synchronization can be achieved by two ways, i.e., through an implicit barrier or an explicit barrier. 
 
 - Implicit barrier
 
-We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is achieved with curly brackets. As we saw in the previous examples, the '{' is the implicit barrier where we specify the entry into parallel region and the last '}' is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the serial execution of the code. Implicit synchronization can be removed with a 'nowait' clause but we will not discuss it in this section. 
+We have already seen the use of an implicit barrier in the previous two examples. It is a barrier for beginning and end of parallel constructs, as well as all other control constructs. In C++ this is achieved with curly brackets. As we saw in the previous examples, the `{` is the implicit barrier where we specify the entry into parallel region and the last `}` is basically the implicit barrier that specifies the end of the parallel construct and denotes moving to the serial execution of the code. Implicit synchronization can be removed with a `nowait` clause but we will not discuss it in this section. 
 
 - Explicit barrier
 
-For applying an explicit barrier we use a 'critical' clause that basically specifies the presence of the barrier. While using an explicit barrier, the code which is enclosed in critical clause is executed by all threads, but is restricted to only one thread at the time. The critical clause in C/C++ is defined with
+For applying an explicit barrier we use a `critical` clause that basically specifies the presence of the barrier. While using an explicit barrier, the code which is enclosed in a critical clause is executed by all threads, but is restricted to only one thread at the time. The critical clause in C/C++ is defined with
 
 ~~~c
 #pragma omp critical [(name)]
@@ -647,24 +632,22 @@ f=10;
 } /*omp end parallel */
 ~~~
 
-We see that we have specified variables 'cnt' and 'f' and in the parallel region we specified the 'for' construct so we can do the iteration. Inside the 'if' statement we specified the 'pragma OMP critical' for the next line which is 'cnt ++'. We can observe what is happening in the execution of the threads on the image below. 
+We see that we have specified variables `cnt` and `f`, and in the parallel region we specified the `for` construct, so we can do the iteration. Inside the `if` statement we specified the `pragma omp critical` for the next line which is `cnt ++`. We can observe what is happening in the execution of the threads on the image below.
 
 :::{figure-md}
 
-![](images/D1P2S26.png)
+![](images/2-10.png)
 
-Example with critical clause. 
+Example with critical clause. (Image courtesy: Rolf Rabenseifner (HLRS))
 :::
 
-Before we enter the pragma 'OMP parallel region', we were in serial execution so that part was executed serially. Then we entered our parallel region. Everything is executed in parallel until the first thread encounters the 'cnt++' statement. At this point the 'cnt++' statement is executed by the first thread that encounters it. During this time, the second thread can't access it because cnt is already being modified by the first thread. So after the first thread finishes with the critical operation, the next thread will get access to the 'cnt' variable and modify it. After all the threads have executed the 'cnt++' statement, the code continues to execute in parallel as well. It continues until we reach the implicit barrier that we have specified at the end, following which we return to the serial execution. 
+Before we enter the `pragma omp parallel` region, we were in serial execution, so that part was executed serially. Then we entered our parallel region. Everything is executed in parallel until the first thread encounters the `cnt++` statement. At this point the `cnt++` statement is executed by the first thread that encounters it. During this time, the second thread can't access it because `cnt` is already being modified by the first thread. So, after the first thread finishes with the critical operation, the next thread will get access to the `cnt` variable and modify it. After all the threads have executed the `cnt++` statement, the code continues to execute in parallel as well. It continues until we reach the implicit barrier that we have specified at the end, following which we return to the serial execution. 
 
-We owe it to the critical clause that only one thread is executed at a time for this cnt variable. Therefore when we use the critical clause in a parallel program, only one thread will be able to execute that part of code that you specified in the critical clause.
+We owe it to the critical clause that only one thread is executed at a time for this `cnt` variable. Therefore, when we use the critical clause in a parallel program, only one thread will be able to execute that part of code that you specified in the critical clause.
 
 #### Example
 
-Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your undestanding matches the actual output. Have fun and experiment.
-
-[Jupyter notebook: Synchronization constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Synchronization-Constructs.ipynb)
+Go to the provided examples and try to understand what is happening in the code. Run the examples and see if your understanding matches the actual output. Have fun and experiment.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Synchronization-Constructs.ipynb)
 
@@ -674,13 +657,13 @@ Go to the provided examples and try to understand what is happening in the code.
 
 #### Directive Scoping
 
-OpenMP specifies a number of scoping rules on how directives may associate (bind) and nest within each other. That is why incorrect programs may result if the OpenMP binding and nesting rules are ignored. These terms are used to explain the impact of OpenMP directives. 
+OpenMP specifies a number of scoping rules on how directives may associate (bind) and nest within each other. That is why incorrect programs may result, if the OpenMP binding and nesting rules are ignored. These terms are used to explain the impact of OpenMP directives. 
 
 Static (Lexical) Extent:
 
 * The code textually enclosed between the beginning and the end of a structured block following a directive.
 
-* The static extent of a directives does not span multiple routines or code files.
+* The static extent of a directive does not span multiple routines or code files.
 
 Dynamic Extent:
 
@@ -743,17 +726,17 @@ void sub2() {
 }
 ~~~
 
-In this example
+In this example:
 
-* The static extent of our parallel region are exactly this, the calls inside the parallel region. The FOR directive occurs within an enclosing parallel region. 
+* The static extent of our parallel region is exactly this, the calls inside the parallel region. The FOR directive occurs within an enclosing parallel region. 
 
 * The dynamic extent of our parallel region is the static extent plus including the 2 subroutines that are called inside the parallel region. The CRITICAL and SECTIONS directives occur within the dynamic extent of the FOR and PARALLEL directives.
 
-* In the dynamic extent but not in the static extent we have orphaned CRITICAL and SECTIONS directives. 
+* In the dynamic extent but not in the static extent we have orphaned CRITICAL and SECTIONS directives.
 
 ### Exercise: Calculate pi!
 
-In this exercise you will get to practice using worksharing construct for and critical directive.
+In this exercise you will get to practice using worksharing construct `for` and `critical` directive.
 
 Pi is a mathematical constant. It is defined as a ratio of a circle's circumference to its diameter. It also appears in many other areas of mathematics. There are also many integrals yielding Pi. One of them is shown below.
 
@@ -811,25 +794,23 @@ int main()
 }
 ~~~
 
-The code above calculates the solution of integral in serial. This template should be a starting point for this exercise. The heavy part of computation is performed in the for loop, so this is the part that needs parallelization.
+The code above calculates the solution of the integral in serial. This template should be a starting point for this exercise. The heavy part of computation is performed in the for loop, so this is the part that needs parallelization.
 
 #### Exercise
 
-1. Go to the exercise and add a parallel region and for directive to the part that computes pi. Is the calculation of pi correct? Test it out more than once, change number of threads to 2 or 12 and try to find the race-condition.
+1. Go to the exercise and add a parallel region and `for` directive to the part that computes Pi. Is the calculation of Pi correct? Test it out more than once, change the number of threads to 2 or 12 and try to find the race condition.
 
-2. Add private(x) clause. Is it still incorrect?
+2. Add `private(x)` clause. Is it still incorrect?
 
-3. Add a critical directive around the sum statement and compile. Is the value of pi correct? What is the CPU time? How can you optimize your code?
+3. Add a `critical` directive around the sum statement and compile. Is the value of Pi correct? What is the CPU time? How can you optimize your code?
 
-4. Move the critical directive outside for loop to decrease computational time.
+4. Move the `critical` directive outside the for loop to decrease computational time.
 
 Compare the CPU time for the template program and CPU time for our solution. Have we significantly optimized our code?
 
 #### Expected result
 
 * Faster execution of the parallel program that calculates the correct value of Pi.
-
-[Jupyter notebook: Exercise: Compute pi](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi.ipynb)
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Compute-Pi.ipynb)
 
@@ -953,11 +934,11 @@ The private clause always creates a local instance of the variable. For each thr
 
 `firstprivate(var)` specifies that each thread should have its own instance of a variable, and that the variable should be initialized with the value of the shared variable existing before the parallel construct.
 
-`lastprivate(var)` specifies that the variable's value after the parallel construct is set equal to the private version of whichever thread executes the final iteration (for-loop construct) or last section (#pragma sections). 
+`lastprivate(var)` specifies that the variable's value after the parallel construct is set equal to the private version of whichever thread executes the final iteration (for-loop construct) or last section (`#pragma sections`).
 
 Nested `private(var)` with same variable name allocate new private storage again. 
 
-Let's explain by observing the following code
+Let's explain by observing the following code.
 
 ~~~ c
 #include <stdio.h>
@@ -994,13 +975,11 @@ Take a moment and try to guess the values of variables after the parallel region
 
 `var_shared` is a shared variable and it is normally updated by the parallel region. 
 
-`var_private` is specified as private so every thread has it's own instance and after the parallel region the value remains the same as before.  
+`var_private` is specified as private so every thread has its own instance and after the parallel region the value remains the same as before.  
 
 `var_firstprivate` is specified as private and initialized with the value in the shared scope but after the parallel region the value remains the same. 
 
-`var_lastprivate` is updated in the last iteration of the foor loop to use after the parallel region. 
-
-[Jupyter notebook: Data scope](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Data-scope.ipynb)
+`var_lastprivate` is updated in the last iteration of the for loop to use after the parallel region.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Data-scope.ipynb)
 
@@ -1024,10 +1003,10 @@ For each list item, a private copy is created in each iteration and is initializ
 | -  | var = 0    |
 | *   | var = 1            |
 | & | var = ~ 0 |
-| `|` | var = 0 |
+| `\|` | var = 0 |
 | ^ | var = 0        |
 | &&  | var = 1    |
-| `||` | var = 0 |
+| `\|\|` | var = 0 |
 | max   | var = most negative number            |
 | min | var = most positive number |
 
@@ -1051,9 +1030,7 @@ int main()
 }
 ~~~
 
-The reduction variable is `sum` and the reduction operation is `+`.  The reduction does the operation automatically. It produces a private variable `sum` inside the loop and in the end it sums up the private partial sum to the global variable. 
-
-[Jupyter notebook: Combined Constructs](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Combined-Constructs.ipynb)
+The reduction variable is `sum` and the reduction operation is `+`.  The reduction does the operation automatically. It produces a private variable `sum` inside the loop and in the end it sums up the private partial sum to the global variable.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Combined-Constructs.ipynb)
 
@@ -1104,8 +1081,6 @@ int main()
 Then answer this:
 * What happens when we try to make people "shared"? Why can't you?
 
-[Jupyter notebook: Reduction](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Reduction.ipynb)
-
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Reduction.ipynb)
 
 [![Colab](images/colab-badge-fp.png)](https://colab.research.google.com/drive/1Dbl9FSZUWN5UGbHKYfyVnqCseHOF4ldH)
@@ -1124,7 +1099,7 @@ When we are using a parallel region that contains only a single `for` directive 
 
 This directive admits all the clauses of the `parallel` directive and `for` directive except the `nowait` clause is forbidden. 
 
-This combined directive must be directly in from of the `for` loop. An example of the combined construct is shown below: 
+This combined directive must be directly in front of the `for` loop. An example of the combined construct is shown below: 
 
 ~~~c
 int i;
@@ -1138,17 +1113,15 @@ int f = 7;
 
 ### Exercise: Calculate Pi with combined constructs
 
-In this exercise you will get to practice using combined constructs. You will get to use the reduction clause and combined construct parallel for.
+In this exercise you will get to practice using combined constructs. You will get to use the `reduction` clause and combined construct `parallel for`. 
 
-This is a continuation of the previous exercise when we computed pi using worsharing constructs and critical directive. You will start from the provided solution of that exercise and use the newly learned constructs.
+This is a continuation of the previous exercise when we computed Pi using worksharing constructs and critical directive. You will start from the provided solution of that exercise and use the newly learned constructs.
 
 #### Exercise
 
-Go to the exercise and remove the critical directive and the additional partial sum variable. Then add reduction clause and compile. Is the value of pi correct?
+1. Go to the exercise and remove the critical directive and the additional partial sum variable. Then add the `reduction` clause and compile. Is the value of Pi correct?
 
-Now change the parallel region so you use the combined construct parallel for and compile.
-
-[Jupyter notebook: Exercise: Compute pi again](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Compute-Pi-again.ipynb)
+2. Now change the parallel region, so that you use the combined construct `parallel for` and compile.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Compute-Pi-again.ipynb)
 
@@ -1252,8 +1225,8 @@ int main()
     for (it = 1; it <= itmax; it++){
         dphimax = 0.;
         dphimax0 = dphimax;
-        for (k = 1; k < imax; k++){
-            for (i = 0; i < kmax; i++){
+        for (k = 1; k < kmax; k++){
+            for (i = 1; i < imax; i++){
                 dphi = (phi[i+1][k]+phi[i-1][k]-2.*phi[i][k])*dy2i
                     +(phi[i][k+1]+phi[i][k-1]-2.*phi[i][k])*dx2i;
                 dphi = dphi*dt;
@@ -1264,7 +1237,7 @@ int main()
         dphimax = max(dphimax,dphimax0);
         /* save values */
         for (i = 1; i < imax; i++){
-            for (k = 0; k < kmax; k++){
+            for (k = 1; k < kmax; k++){
                 phi[i][k] = phin[i][k];
             }
         }
@@ -1294,8 +1267,8 @@ Then run the example. Run it with 1, 2, 3, 4 threads and look at the execution t
 You may see that with more threads it is slower than expected. Do you have any idea about why the parallel version is slower by looking at the code?
 
 ~~~c
-for (k = 1; k < imax; k++){
-    for (i = 0; i < kmax; i++){
+for (k = 1; k < kmax; k++){
+    for (i = 1; i < imax; i++){
         dphi = (phi[i+1][k]+phi[i-1][k]-2.*phi[i][k])*dy2i
             +(phi[i][k+1]+phi[i][k-1]-2.*phi[i][k])*dx2i;
         dphi = dphi*dt;
@@ -1311,10 +1284,7 @@ The sequence of the nested loops is wrong. In C/C++, the last array index is run
 
 Run the code again with 1, 2, 3, 4 threads and look at the execution time. 
 
-Now the parallel version should be a little bit faster. The reason for only a slight improvement might be that the problem is too small and the parallelization overhead is too large. 
-
-
-[Jupyter notebook: Exercise: Heat](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Exercise-Heat.ipynb)
+Now the parallel version should be a little bit faster. The reason for only a slight improvement might be that the problem is too small and the parallelization overhead is too large.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Exercise-Heat.ipynb)
 
@@ -1333,7 +1303,7 @@ Within a parallel region, declared variables are by default
 * firstprivate
 
 #### Question 2
-What is the output of the following code when run with OMP_NUM_THREADS=4?
+What is the output of the following code when run with `OMP_NUM_THREADS=4`?
 
 ~~~c
 int arr[4] = {1,2,3,4};
@@ -1360,7 +1330,7 @@ What does the `nowait` clause do?
 * Removes the synchronization barrier from the current construct
 
 #### Question 4
-What is the data scoping of the variables a, b, c and d in following code snippet in the parallel region?
+What is the data scoping of the variables a, b, c and d in following code snippet in the parallel region? (multiple choice answer)
 
 ~~~c
 int a = 0;
@@ -1437,10 +1407,10 @@ for (int i = 1; i < 10; i++)
 #### Question 8
 Which of these parallel programming errors is impossible in the given OpenMP construct?
 
-* Data dependency in #pragma omp for
-* Data conflict in #pragma omp critical
-* Data race in #pragma omp parallel
-* Deadlock in #pragma omp parallel
+* Data dependency in `#pragma omp for`
+* Data conflict in `#pragma omp critical`
+* Data race in `#pragma omp parallel`
+* Deadlock in `#pragma omp parallel`
 
 ## Tasking
 
@@ -1465,24 +1435,24 @@ execute them until the pool is empty. A thread that executes a task
 might be different than the one that originally encountered it.
 
 The code associated with the task construct will be executed only
-once. A task is named to be tied, if it is executed by the same thread
-from beginning to end. A task is untied if the code can be executed by
+once. A task is named to be *tied*, if it is executed by the same thread
+from beginning to end. A task is *untied* if the code can be executed by
 more than one thread, so that different threads execute different
-parts of the code. By default, tasks are tied. 
+parts of the code. **By default, tasks are tied**. 
 
-We also want to mention there are several task scheduling points where a task can be put from living into sleeping and back from sleeping to living state. 
+We also want to mention that there are several task scheduling points where a task can be put from living into sleeping and back from sleeping to a living state:
 
 - In the generating task: after the task generates an explicit task, it can be put into a sleeping state. 
 
-- In the generated task: after the last instruction of the task region
+- In the generated task: after the last instruction of the task region.
 
-- If task is "untied": everywhere inside the task. 
+- If task is *untied*: everywhere inside the task. 
 
 - In implicit and explicit barriers.
 
 - In `taskwait`.
 
-Competion of a task can be guaranteed using task synchronization constructs such as `taskwait` directive. The taskwait construct specifies a wait on the completion of child tasks of the current task. The taskwait construct is a stand-alone directive. 
+Completion of a task can be guaranteed using task synchronization constructs such as `taskwait` directive. The taskwait construct specifies a wait on the completion of child tasks of the current task. The taskwait construct is a stand-alone directive. 
 
 ~~~c
 #pragma omp taskwait [clause[ [,] clause] ... ]
@@ -1493,32 +1463,32 @@ Competion of a task can be guaranteed using task synchronization constructs such
 
 There are additional clauses that are available with the task directive:
 
-* untied
+* `untied`
 
-If the task is tied, it is guaranteed that the same thread will execute all the parts of the task. So the untied clause allows code to be executed by more than one thread. 
+If the task is tied, it is guaranteed that the same thread will execute all the parts of the task. So, the untied clause allows code to be executed by more than one thread. 
 
-* default (shared `|` none `|` private `|` firstprivate )
+* `default (shared | none | private | firstprivate)`
 
-Default defines the default data scope of variable in each
-task. Only one default clause can be specified on an omp task directive.
+Default defines the default data scope of a variable in each
+task. Only one default clause can be specified on an OpenMP task directive.
 
-* shared (list)
+* `shared (list)`
 
 Shared declares the scope of the comma-separated data variables in
-list to be shared across all threads. 
+`list` to be shared across all threads. 
 
-* private (list)
+* `private (list)`
 
-Private declares the scope od the data variables in list to be
+Private declares the scope of the data variables in `list` to be
 private in each thread. 
 
-* firstprivate (list)
+* `firstprivate (list)`
 
 Firstprivate declares the scope of the data variables to be private
 in each thread. Each new private object is initialized with the value
 of the original variable.
 
-* if (scalar expression)
+* `if (scalar expression)`
 
 Only if the scalar expression is true will the task be started, otherwise a normal sequential execution will be done. Useful for a good load balancing but limiting the parallelization overhead by doing a limited number of the tasks in total. 
 
@@ -1560,18 +1530,16 @@ int main()
 ~~~
 
 The parallel directive is used to define the parallel region which
-will be executed by four threads. Inside parallel construct, the
-single directive is used to indicate that only one of the threads will execute the print statement that calls finb(n).
+will be executed by four threads. Inside `parallel` construct, the
+`single` directive is used to indicate that only one of the threads will execute the print statement that calls `fib(n)`.
 
-In the code, two tasks are generated using the task directive. One of the tasks computes fib(n-1) and the other computes fib(n-2). The return values of both tasks are then added together to obtain the value returned by fib(n). Every time functions fib(n-1) and fib(n-2) are called, two tasks are generated recursively until argument passed to fib() is less than 2.
+In the code, two tasks are generated using the task directive. One of the tasks computes `fib(n-1)` and the other computes `fib(n-2)`. The return values of both tasks are then added together to obtain the value returned by `fib(n)`. Every time functions `fib(n-1)` and `fib(n-2)` are called, two tasks are generated recursively until argument passed to `fib()` is less than 2.
 
-Furthermore, the taskwait directive ensures that the two tasks
+Furthermore, the `taskwait` directive ensures that the two tasks
 generated are first completed, before moving on to new stage of
 recursive computation.
 
-Go to the example to see it being done step by step and try it out for yourself. 
-
-[Jupyter notebook: Example: Fibonacci](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Fibonacci.ipynb)
+Go to the example to see it being done step by step and try it out for yourself.
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Fibonacci.ipynb)
 
@@ -1587,15 +1555,13 @@ Parallelize the provided program using parallel region, tasks and other directiv
 
 #### Exercise
 
-1. Go to the exercise and parallelize the part where we do processwork for all the nodes. 
+1. Go to the exercise and parallelize the part where we do process work for all the nodes. 
 
 2. The printing of the number of threads should be only done by the master thread. Think about what else must be done by one thread only. 
 
 3. Add a task directive. 
 
 Did the parallelization give faster results?
-
-[Jupyter notebook: Exercise: Traversing of a tree](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=/OpenMP/Traversing-tree.ipynb)
 
 [![Binder](images/binder-badge-fp.png)](https://mybinder.org/v2/gh/kosl/ihipp-examples/HEAD?filepath=OpenMP/Traversing-tree.ipynb)
 
