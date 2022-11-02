@@ -213,20 +213,20 @@ Now you can complete the following tasks:
 - find the diagnostic programs `deviceQuery` and `bandwidthTest` by:
 
 ```
-!ls -l /usr/local/cuda-11.0/extras/demo_suite
+!ls -l /usr/local/cuda-11.2/extras/demo_suite
 
 ```
 
 - execute the diagnostic utilities to determine the main characteristics of the GPU (number of SMs, number of CUDA cores, global memory available, memory bandwidth) by:
 
 ```
-!/usr/local/cuda-11.0/extras/demo_suite/deviceQuery
+!/usr/local/cuda-11.2/extras/demo_suite/deviceQuery
 ```
 
 and
 
 ```
-!/usr/local/cuda-11.0/extras/demo_suite/bandwidthTest
+!/usr/local/cuda-11.2/extras/demo_suite/bandwidthTest
 ```
 
 How does the information you've gotten compare to the GPU characteristics in the previous step?
