@@ -233,7 +233,7 @@ How does the information you've gotten compare to the GPU characteristics in the
 
 ### Quiz: GPU basics and architecture
 
-This quiz tests your knowledge of GPU basics and architecture. For GPU basics you should also go through steps in the Accelerators overview activity in Week 1.
+This quiz tests your knowledge of GPU basics and architecture. For GPU basics you should also go through steps in the Accelerators overview activity in Chapter 1.
 
 #### Question 1
 Modern supercomputers (clusters) are equipped with (multiple choice answer):
