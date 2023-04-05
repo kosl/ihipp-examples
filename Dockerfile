@@ -28,7 +28,7 @@ USER ${NB_USER}
 RUN conda config --set allow_conda_downgrades true
 RUN conda config --set notify_outdated_conda false
 
-RUN conda install -c conda-forge xeus-cling=0.12.1 openmpi=4.1.2 openmp openssh mpi4py gfortran_linux-64 numpy
+RUN conda install -c conda-forge xeus-cling=0.12.1 openmpi=4.1.2 openmp openssh mpi4py gfortran numpy
 #RUN conda install openmpi -c conda-forge
 #RUN conda install openmp -c conda-forge
 #RUN conda install openssh -c conda-forge
